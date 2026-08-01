@@ -1,0 +1,100 @@
+import { API_ENDPOINTS, STORAGE_KEYS } from "@/config"
+import { api } from "@/lib/api"
+import {
+  isRecord,
+  unwrapEmployerEntity,
+} from "@/features/employer/shared/services/employerResponse.utils"
+
+export interface RoleObject {
+  key: string
+  value: string
+}
+
+export interface StatusObject {
+  key: string
+  value: string
+}
+
+export interface AuthUser {
+  id: string | number
+  name: string
+  email: string
+  role: RoleObject
+  status?: StatusObject
+}
+
+export interface AuthSession {
+  accessToken: string
+  refreshToken?: string
+  user: AuthUser
+}
+
+export interface LoginCredentials {
+  email: string
+  password: string
+}
+
+function normalizeSession(response: unknown): AuthSession {
+  console.log("Login response:", response)
+  const payload = unwrapEmployerEntity<Record<string, unknown>>(response)
+  const token = payload.access_token ?? payload.token
+  const user = payload.user
+
+  if (typeof token !== "string" || !isRecord(user)) {
+    throw new Error("The login response does not contain a valid token and user.")
+  }
+
+  return {
+    accessToken: token,
+    refreshToken: typeof payload.refresh_token === "string" ? payload.refresh_token : undefined,
+    user: user as unknown as AuthUser,
+  }
+}
+
+export const authService = {
+  async login(credentials: LoginCredentials): Promise<AuthSession> {
+    return normalizeSession(await api.post(API_ENDPOINTS.auth.login, credentials))
+  },
+
+  async me(): Promise<AuthUser> {
+    const payload = unwrapEmployerEntity<Record<string, unknown>>(
+      await api.get(API_ENDPOINTS.auth.me),
+    )
+    return (isRecord(payload.user) ? payload.user : payload) as unknown as AuthUser
+  },
+
+  async logout(): Promise<void> {
+    await api.post(API_ENDPOINTS.auth.logout)
+  },
+
+  storeSession(session: AuthSession): void {
+    localStorage.setItem(STORAGE_KEYS.accessToken, session.accessToken)
+    if (session.refreshToken) localStorage.setItem(STORAGE_KEYS.refreshToken, session.refreshToken)
+    localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(session.user))
+  },
+
+  clearSession(): void {
+    localStorage.removeItem(STORAGE_KEYS.accessToken)
+    localStorage.removeItem(STORAGE_KEYS.refreshToken)
+    localStorage.removeItem(STORAGE_KEYS.user)
+  },
+
+  getSession(): AuthSession | null {
+    const accessToken = localStorage.getItem(STORAGE_KEYS.accessToken)
+    const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken)
+    const userStr = localStorage.getItem(STORAGE_KEYS.user)
+
+    if (!accessToken || !userStr) return null
+
+    try {
+      const user = JSON.parse(userStr)
+      return {
+        accessToken,
+        refreshToken: refreshToken || undefined,
+        user,
+      }
+    } catch {
+      return null
+    }
+  },
+}

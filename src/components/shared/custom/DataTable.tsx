@@ -157,6 +157,7 @@ function DataTablePagination({
           <PaginationItem>
             <PaginationPrevious
               href="#"
+              label={t("pagination.previous", { defaultValue: "Previous" })}
               onClick={(e) => {
                 e.preventDefault()
                 if (page > 1) onPageChange(page - 1)
@@ -187,6 +188,7 @@ function DataTablePagination({
           <PaginationItem>
             <PaginationNext
               href="#"
+              label={t("pagination.next", { defaultValue: "Next" })}
               onClick={(e) => {
                 e.preventDefault()
                 if (page < lastPage) onPageChange(page + 1)
@@ -216,7 +218,7 @@ export function DataTable<T = any>({
   emptyImageAlt,
   className = "",
 }: DataTableProps<T>) {
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTranslation("common")
   const isAr = i18n.language === "ar"
   const [isMobile, setIsMobile] = useState(false)
 

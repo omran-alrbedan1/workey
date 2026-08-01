@@ -1,5 +1,6 @@
-import { MoreHorizontal, ShieldCheck, ShieldOff } from "lucide-react"
+import { MoreHorizontal, ShieldCheck, ShieldOff, User, Shield, Clock } from "lucide-react"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
@@ -41,6 +42,7 @@ export default function AdminUsersTable({
   onStatusChange,
   isUpdating,
 }: AdminUsersTableProps) {
+  const { t } = useTranslation("adminUsers")
   const [selectedUser, setSelectedUser] = useState<AdminUserRecord | null>(null)
   const [selectedAction, setSelectedAction] = useState<UserStatusAction | null>(null)
 
@@ -69,10 +71,18 @@ export default function AdminUsersTable({
     setSelectedUser(null)
   }
 
+  const getRoleDisplay = (role: string | any) => {
+    if (typeof role === 'object' && role !== null) {
+      return role.value
+    }
+    return role
+  }
+
   const columns: Column<AdminUserRecord>[] = [
     {
       key: "user",
-      header: "User",
+      header: t("list.columns.user"),
+      headerIcon: User,
       cell: (user) => (
         <div>
           <p className="font-semibold text-text-primary">{user.name}</p>
@@ -82,22 +92,25 @@ export default function AdminUsersTable({
     },
     {
       key: "role",
-      header: "Role",
-      cell: (user) => <span className="capitalize">{user.role}</span>,
+      header: t("list.columns.role"),
+      headerIcon: Shield,
+      cell: (user) => <span className="capitalize">{getRoleDisplay(user.role)}</span>,
     },
     {
       key: "status",
-      header: "Status",
+      header: t("list.columns.status"),
+      headerIcon: ShieldCheck,
       cell: (user) => <StatusBadge status={user.status} variant="soft" />,
     },
     {
       key: "joined",
-      header: "Joined",
+      header: t("list.columns.joined"),
+      headerIcon: Clock,
       cell: (user) => (user.created_at ? new Date(user.created_at).toLocaleDateString() : "—"),
     },
     {
       key: "actions",
-      header: "Actions",
+      header: t("list.columns.actions"),
       className: "text-center",
       cell: (user) => {
         const statusKey = keyOf(user.status)
@@ -116,7 +129,7 @@ export default function AdminUsersTable({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("actions.menuLabel")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="gap-2 text-emerald-700 focus:bg-emerald-50 focus:text-emerald-800"
@@ -124,7 +137,7 @@ export default function AdminUsersTable({
                   onSelect={() => openAction(user, "activate")}
                 >
                   <ShieldCheck className="h-4 w-4" />
-                  Activate
+                  {t("actions.activate")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
@@ -132,7 +145,7 @@ export default function AdminUsersTable({
                   onSelect={() => openAction(user, "suspend")}
                 >
                   <ShieldOff className="h-4 w-4" />
-                  Suspend
+                  {t("actions.suspend")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -155,10 +168,10 @@ export default function AdminUsersTable({
           perPage: pagination?.perPage,
         }}
         onPageChange={onPageChange}
-        emptyMessage="No users were returned."
-        emptyDescription="No user accounts match the current view."
+        emptyMessage={t("list.emptyTitle")}
+        emptyDescription={t("list.emptyDescription")}
         emptyImage={images.usersManagement}
-        emptyImageAlt="No users"
+        emptyImageAlt={t("list.emptyImageAlt")}
         className="rounded-2xl bg-background-card shadow-card"
       />
 

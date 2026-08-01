@@ -1,7 +1,7 @@
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
 import { Form } from "@/components/ui/form"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import { images } from "@/constants/images"
@@ -9,9 +9,10 @@ import { LogIn, Mail, Lock } from "lucide-react"
 import { SubmitButton } from "@/components/shared/buttons/SubmitButton"
 import { loginFormSchema, LoginFormValues } from "@/shared/auth/validation/auth.validation"
 import { ROUTES } from "@/config"
+import { authService } from "../services/auth.service"
+import { showSuccessToast } from "@/lib/toast"
 
 const Login: React.FC = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const form = useForm<LoginFormValues>({
@@ -22,18 +23,32 @@ const Login: React.FC = () => {
     },
   })
 
-  const handleSubmit = async (data: LoginFormValues) => {
-    setIsLoading(true)
-    try {
+  const loginMutation = useMutation({
+    mutationFn: authService.login,
+    onSuccess: (session) => {
+      authService.storeSession(session)
+      showSuccessToast("Welcome back!", "You have been logged in successfully")
       
-      navigate(ROUTES.admin.root, { replace: true })
-    } catch (err) {
+      // Redirect based on role
+      const role = session.user.role.key
+      if (role === "admin") {
+        navigate(ROUTES.admin.root, { replace: true })
+      } else if (role === "employer") {
+        navigate(ROUTES.employer.root, { replace: true })
+      } else {
+        // Default fallback
+        navigate("/", { replace: true })
+      }
+    },
+    onError: (error: any) => {
       form.setError("root", {
-        message: "Unable to login. Please check your credentials.",
+        message: error.message || "Unable to login. Please check your credentials.",
       })
-    } finally {
-      setIsLoading(false)
-    }
+    },
+  })
+
+  const handleSubmit = async (data: LoginFormValues) => {
+    loginMutation.mutate(data)
   }
 
   return (
@@ -64,7 +79,7 @@ const Login: React.FC = () => {
                     name="email"
                     label="Email"
                     placeholder="name@example.com"
-                    disabled={isLoading}
+                    disabled={loginMutation.isPending}
                     leftIcon={Mail}  
                     iconPosition="left"
                   />
@@ -77,7 +92,7 @@ const Login: React.FC = () => {
                     name="password"
                     label="Password"
                     placeholder="••••••••••••"
-                    disabled={isLoading}
+                    disabled={loginMutation.isPending}
                     leftIcon={Lock}  
                     iconPosition="left"
                   />
@@ -90,7 +105,7 @@ const Login: React.FC = () => {
                 )}
 
                 <SubmitButton 
-                  isLoading={isLoading}
+                  isLoading={loginMutation.isPending}
                   text="Login"
                   loadingText="Logging in..."
                   icon={<LogIn className="h-4 w-4" />}
@@ -104,7 +119,7 @@ const Login: React.FC = () => {
       {/* Right Panel: Image */}
       <div className="relative hidden w-1/2 md:block">
         <img
-        src={images.login}
+        src={images.workeyLoginHero}
           alt="Workey recruitment platform"
           className="h-screen w-full object-cover "
         />

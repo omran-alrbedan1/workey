@@ -121,6 +121,10 @@
     "previousAria": "Go to previous page",
     "nextAria": "Go to next page"
   },
+  "table": {
+    "showing": "Showing {{from}} to {{to}} of {{total}} results",
+    "noData": "No data available"
+  },
   "statuses": {
     "pending": "Pending",
     "approved": "Approved",
