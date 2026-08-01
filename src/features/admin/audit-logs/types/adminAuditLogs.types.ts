@@ -2,8 +2,8 @@ import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.
 
 export interface AdminAuditLogActor {
   id?: string | number
-  name?: string
-  email?: string
+  name?: AdminKeyValueField
+  email?: AdminKeyValueField
 }
 
 export interface AdminAuditLogRecord {

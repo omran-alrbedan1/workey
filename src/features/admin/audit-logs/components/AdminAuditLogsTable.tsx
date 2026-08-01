@@ -46,8 +46,12 @@ export default function AdminAuditLogsTable({
         const actor = log.actor ?? log.user
         return (
           <div>
-            <p className="font-medium text-text-primary">{actor?.name || t("unknownActor")}</p>
-            <p className="text-xs text-text-muted">{actor?.email || `#${log.actor_user_id ?? "-"}`}</p>
+            <p className="font-medium text-text-primary">
+              {valueOf(actor?.name, t("unknownActor"))}
+            </p>
+            <p className="text-xs text-text-muted">
+              {valueOf(actor?.email, `#${log.actor_user_id ?? "-"}`)}
+            </p>
           </div>
         )
       },

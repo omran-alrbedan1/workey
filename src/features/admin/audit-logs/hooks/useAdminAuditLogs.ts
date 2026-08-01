@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { adminAuditLogsService } from "../services/adminAuditLogs.service"
 import type { AdminAuditLogFilters } from "../types/adminAuditLogs.types"
@@ -11,6 +11,7 @@ export function useAdminAuditLogs() {
   const query = useQuery({
     queryKey: ["admin", "audit-logs", page, filters],
     queryFn: () => adminAuditLogsService.list(filters, page),
+    placeholderData: keepPreviousData,
     retry: false,
   })
 

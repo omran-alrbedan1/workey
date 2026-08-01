@@ -11,7 +11,7 @@ export default function AdminAuditLogsPage() {
   const { t } = useTranslation("adminAuditLogs")
   const logs = useAdminAuditLogs()
 
-  if (logs.isError) {
+  if (logs.isError && !logs.data) {
     return <AdminFeatureError title={t("title")} error={logs.error} retry={() => void logs.refetch()} />
   }
 
