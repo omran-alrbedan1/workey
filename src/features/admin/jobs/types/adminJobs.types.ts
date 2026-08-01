@@ -9,9 +9,9 @@ export interface AdminJobRecord {
   requirements?: string | null
   benefits?: string | null
   status: AdminKeyValueField
-  employment_type?: string
-  experience_level?: string
-  work_mode?: string | null
+  employment_type?: AdminKeyValueField
+  experience_level?: AdminKeyValueField
+  work_mode?: AdminKeyValueField
   location?: string
   application_deadline?: string | null
   is_accepting_applications?: boolean

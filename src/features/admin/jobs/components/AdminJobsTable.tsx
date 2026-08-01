@@ -12,6 +12,7 @@ import type { AdminPagination } from "@/features/admin/shared/types/adminApi.typ
 import type { AdminJobRecord } from "../types/adminJobs.types"
 import { images } from "@/constants/images"
 import { ROUTES } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
@@ -50,7 +51,7 @@ export default function AdminJobsTable({
       key: "type",
       header: t("columns.employment"),
       headerIcon: ClipboardList,
-      cell: (job) => job.employment_type || "-",
+      cell: (job) => valueOf(job.employment_type, "-"),
     },
     {
       key: "location",
@@ -62,7 +63,12 @@ export default function AdminJobsTable({
       key: "work_mode",
       header: t("columns.workMode"),
       headerIcon: MapPinned,
-      cell: (job) => job.work_mode ? t(`workModes.${job.work_mode}`, job.work_mode) : "-",
+      cell: (job) => {
+        const workModeKey = keyOf(job.work_mode)
+        return workModeKey
+          ? t(`workModes.${workModeKey}`, { defaultValue: valueOf(job.work_mode, workModeKey) })
+          : "-"
+      },
     },
     {
       key: "accepting",

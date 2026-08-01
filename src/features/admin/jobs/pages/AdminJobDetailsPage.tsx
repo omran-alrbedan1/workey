@@ -20,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
 import { normalizeKeyValueLabel } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import { useAdminJobDetails } from "../hooks/useAdminJobDetails"
 
 function display(value?: string | number | null) {
@@ -28,6 +29,11 @@ function display(value?: string | number | null) {
 
 function displayKeyValue(value?: AdminKeyValueField) {
   return normalizeKeyValueLabel(value, "-") || "-"
+}
+
+function translatedKeyValue(namespace: string, value?: AdminKeyValueField) {
+  const key = keyOf(value)
+  return key ? `${namespace}.${key}` : ""
 }
 
 function formatDate(value?: string | null) {
@@ -141,8 +147,18 @@ export default function AdminJobDetailsPage() {
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <DetailItem icon={ClipboardList} label={t("columns.status")} value={<StatusBadge status={data.status} variant="soft" />} />
-        <DetailItem icon={MapPin} label={t("columns.workMode")} value={data.work_mode ? t(`workModes.${data.work_mode}`, data.work_mode) : "-"} />
-        <DetailItem icon={BriefcaseBusiness} label={t("columns.employment")} value={display(data.employment_type)} />
+        <DetailItem
+          icon={MapPin}
+          label={t("columns.workMode")}
+          value={
+            keyOf(data.work_mode)
+              ? t(translatedKeyValue("workModes", data.work_mode), {
+                  defaultValue: valueOf(data.work_mode),
+                })
+              : "-"
+          }
+        />
+        <DetailItem icon={BriefcaseBusiness} label={t("columns.employment")} value={valueOf(data.employment_type, "-")} />
         <DetailItem icon={UsersRound} label={t("columns.applications")} value={display(data.applications_count)} />
         <DetailItem icon={MapPin} label={t("columns.location")} value={display(data.location)} />
         <DetailItem icon={CalendarClock} label={t("details.deadline")} value={formatDate(data.application_deadline)} />
@@ -161,7 +177,7 @@ export default function AdminJobDetailsPage() {
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-2">
             <DetailItem icon={BriefcaseBusiness} label={t("details.department")} value={display(data.department)} />
-            <DetailItem icon={ClipboardList} label={t("details.experienceLevel")} value={display(data.experience_level)} />
+            <DetailItem icon={ClipboardList} label={t("details.experienceLevel")} value={valueOf(data.experience_level, "-")} />
             <DetailItem icon={CalendarClock} label={t("details.createdAt")} value={formatDate(data.created_at)} />
             <DetailItem icon={CalendarClock} label={t("details.publishedAt")} value={formatDate(data.published_at)} />
           </CardContent>
