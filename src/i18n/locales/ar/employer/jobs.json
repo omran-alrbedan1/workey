@@ -7,6 +7,11 @@
   "detailsDescription": "عرض تفاصيل الوظيفة والمتقدمين المرتبين.",
   "editTitle": "تعديل الوظيفة",
   "editDescription": "حدّث إعلان الوظيفة واحفظ التغييرات.",
+  "tabs": {
+    "overview": "نظرة عامة",
+    "screeningQuestions": "أسئلة الفرز",
+    "rankedCandidates": "المتقدمون المرتبون"
+  },
   "fields": {
     "title": "المسمى الوظيفي",
     "description": "الوصف",
@@ -44,6 +49,9 @@
     "description": "راجع المتقدمين قبل تقديمهم من خلال أسئلة فرز مخصصة.",
     "addButton": "إضافة سؤال",
     "empty": "لم تتم إضافة أسئلة فرز بعد.",
+    "emptyTitle": "لا توجد أسئلة فرز",
+    "emptyDescription": "لم تتم إضافة أسئلة فرز لهذه الوظيفة بعد.",
+    "emptyImageAlt": "لا توجد أسئلة فرز",
     "fields": {
       "questionText": "السؤال",
       "questionType": "نوع السؤال",
@@ -85,6 +93,9 @@
     "selectedCount": "تم اختيار {{count}} مهارة",
     "attach": "إرفاق المهارات",
     "empty": "لم يتم إرفاق مهارات بعد.",
+    "emptyTitle": "لا توجد مهارات مرفقة",
+    "emptyDescription": "لم يتم إرفاق أي مهارات بهذه الوظيفة بعد.",
+    "emptyImageAlt": "لا توجد مهارات",
     "detachLabel": "إزالة {{name}}"
   },
   "columns": {

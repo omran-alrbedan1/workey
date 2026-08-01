@@ -20,13 +20,54 @@ export interface EmployerApplicant {
   cover_letter?: string | null
   consent_flags?: Record<string, boolean>
   screening_answers?: ApplicationScreeningAnswer[]
+  job_seeker_profile?: {
+    id?: string | number
+    user_id?: string | number
+    headline?: string
+    summary?: string
+    phone?: string
+    location?: string
+    city?: string | null
+    portfolio_url?: string
+    linkedin_url?: string
+    github_url?: string
+    name?: string
+    full_name?: string
+    first_name?: string
+    last_name?: string
+    email?: string
+    user?: {
+      id?: string | number
+      name?: string
+      email?: string
+      role?: {
+        key?: string
+        value?: string
+      }
+      status?: {
+        key?: string
+        value?: string
+      }
+    }
+  }
   candidate?: {
     id?: string | number
     name?: string
     full_name?: string
+    first_name?: string
+    last_name?: string
     email?: string
     headline?: string | null
+    summary?: string
     profile?: { headline?: string | null }
+    user?: {
+      id?: string | number
+      name?: string
+      full_name?: string
+      first_name?: string
+      last_name?: string
+      email?: string
+    }
   }
   job?: { id?: string | number; title?: string }
   tests_count?: number

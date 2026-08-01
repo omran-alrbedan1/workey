@@ -88,15 +88,26 @@ export default function EmployerApplicantsTable({
       key: "candidate",
       header: t("columns.candidate"),
       cell: (application) => {
-        const candidate = application.candidate
+        const candidate = application.job_seeker_profile || application.candidate
+        const displayName =
+          candidate?.user?.name ||
+          candidate?.full_name ||
+          candidate?.name ||
+          candidate?.first_name ||
+          candidate?.last_name ||
+          candidate?.user?.email ||
+          candidate?.email ||
+          t("unknownCandidate")
+        const displayEmail =
+          candidate?.user?.email ||
+          candidate?.email ||
+          candidate?.headline ||
+          candidate?.summary ||
+          "—"
         return (
           <div>
-            <p className="font-semibold text-text-primary">
-              {candidate?.full_name || candidate?.name || candidate?.email || t("unknownCandidate")}
-            </p>
-            <p className="text-xs text-text-muted">
-              {candidate?.headline || candidate?.profile?.headline || candidate?.email || "—"}
-            </p>
+            <p className="font-semibold text-text-primary">{displayName}</p>
+            <p className="text-xs text-text-muted">{displayEmail}</p>
           </div>
         )
       },

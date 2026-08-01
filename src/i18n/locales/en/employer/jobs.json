@@ -7,6 +7,11 @@
   "detailsDescription": "View job posting details and ranked candidates.",
   "editTitle": "Edit Job",
   "editDescription": "Update this job posting and save your changes.",
+  "tabs": {
+    "overview": "Overview",
+    "screeningQuestions": "Screening Questions",
+    "rankedCandidates": "Ranked Candidates"
+  },
   "fields": {
     "title": "Job title",
     "description": "Description",
@@ -46,6 +51,9 @@
     "description": "Review applicants before they apply with custom screening questions.",
     "addButton": "Add question",
     "empty": "No screening questions added yet.",
+    "emptyTitle": "No screening questions",
+    "emptyDescription": "No screening questions have been added to this job yet.",
+    "emptyImageAlt": "No screening questions",
     "fields": {
       "questionText": "Question",
       "questionType": "Question type",
@@ -89,6 +97,9 @@
     "selectedCount_other": "{{count}} skills selected",
     "attach": "Attach skills",
     "empty": "No skills are attached yet.",
+    "emptyTitle": "No skills attached",
+    "emptyDescription": "No skills have been attached to this job yet.",
+    "emptyImageAlt": "No skills",
     "detachLabel": "Detach {{name}}"
   },
   "columns": {
