@@ -33,7 +33,9 @@ export default function AdminCandidatesPage() {
         pagination={candidates.data?.pagination}
         onPageChange={candidates.setPage}
         isUpdating={candidates.statusMutation.isPending}
-        onStatusChange={(id, status) => candidates.statusMutation.mutate({ id, status })}
+        onStatusChange={(id, status, reason) =>
+          candidates.statusMutation.mutateAsync({ id, status, reason })
+        }
       />
     </div>
   )

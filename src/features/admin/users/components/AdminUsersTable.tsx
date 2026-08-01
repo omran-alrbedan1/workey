@@ -1,19 +1,35 @@
-import { ShieldCheck, ShieldOff } from "lucide-react"
+import { MoreHorizontal, ShieldCheck, ShieldOff } from "lucide-react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
+import { ActivateModal, SuspendModal } from "@/components/shared/modals"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { keyOf } from "@/lib/keyValue"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 import type { AdminUserRecord, AdminUserStatus } from "../types/adminUsers.types"
 import { images } from "@/constants/images"
+
+type UserStatusAction = "activate" | "suspend"
 
 interface AdminUsersTableProps {
   users: AdminUserRecord[]
   isLoading: boolean
   pagination?: AdminPagination
   onPageChange: (page: number) => void
-  onStatusChange: (id: string | number, status: AdminUserStatus) => void
+  onStatusChange: (
+    id: string | number,
+    status: AdminUserStatus,
+    reason?: string,
+  ) => void | Promise<unknown>
   isUpdating: boolean
 }
 
@@ -25,6 +41,34 @@ export default function AdminUsersTable({
   onStatusChange,
   isUpdating,
 }: AdminUsersTableProps) {
+  const [selectedUser, setSelectedUser] = useState<AdminUserRecord | null>(null)
+  const [selectedAction, setSelectedAction] = useState<UserStatusAction | null>(null)
+
+  const openAction = (user: AdminUserRecord, action: UserStatusAction) => {
+    setSelectedUser(user)
+    setSelectedAction(action)
+  }
+
+  const closeAction = () => {
+    if (isUpdating) return
+    setSelectedAction(null)
+    setSelectedUser(null)
+  }
+
+  const confirmActivate = async () => {
+    if (!selectedUser) return
+    await onStatusChange(selectedUser.id, "active")
+    setSelectedAction(null)
+    setSelectedUser(null)
+  }
+
+  const confirmSuspend = async (reason?: string) => {
+    if (!selectedUser) return
+    await onStatusChange(selectedUser.id, "suspended", reason)
+    setSelectedAction(null)
+    setSelectedUser(null)
+  }
+
   const columns: Column<AdminUserRecord>[] = [
     {
       key: "user",
@@ -54,47 +98,85 @@ export default function AdminUsersTable({
     {
       key: "actions",
       header: "Actions",
-      className: "text-right",
-      cell: (user) =>
-        keyOf(user.status) === "suspended" ? (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={isUpdating}
-            onClick={() => onStatusChange(user.id, "active")}
-          >
-            <ShieldCheck /> Activate
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={isUpdating}
-            onClick={() => onStatusChange(user.id, "suspended")}
-          >
-            <ShieldOff /> Suspend
-          </Button>
-        ),
+      className: "text-center",
+      cell: (user) => {
+        const statusKey = keyOf(user.status)
+        return (
+          <div className="flex justify-center" onClick={(event) => event.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  disabled={isUpdating}
+                  className="h-8 w-8"
+                  aria-label={`Open actions for ${user.name}`}
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="gap-2 text-emerald-700 focus:bg-emerald-50 focus:text-emerald-800"
+                  disabled={statusKey === "active"}
+                  onSelect={() => openAction(user, "activate")}
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Activate
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
+                  disabled={statusKey === "suspended"}
+                  onSelect={() => openAction(user, "suspend")}
+                >
+                  <ShieldOff className="h-4 w-4" />
+                  Suspend
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
+      },
     },
   ]
   return (
-    <DataTable
-      data={users}
-      columns={columns}
-      getRowId={(user) => user.id}
-      loading={isLoading}
-      pagination={{
-        total: pagination?.total ?? users.length,
-        page: pagination?.currentPage ?? 1,
-        lastPage: pagination?.lastPage ?? 1,
-        perPage: pagination?.perPage,
-      }}
-      onPageChange={onPageChange}
-      emptyMessage="No users were returned."
-      emptyDescription="No user accounts match the current view."
-      emptyImage={images.usersManagement}
-      emptyImageAlt="No users"
-      className="rounded-2xl bg-background-card shadow-card"
-    />
+    <>
+      <DataTable
+        data={users}
+        columns={columns}
+        getRowId={(user) => user.id}
+        loading={isLoading}
+        pagination={{
+          total: pagination?.total ?? users.length,
+          page: pagination?.currentPage ?? 1,
+          lastPage: pagination?.lastPage ?? 1,
+          perPage: pagination?.perPage,
+        }}
+        onPageChange={onPageChange}
+        emptyMessage="No users were returned."
+        emptyDescription="No user accounts match the current view."
+        emptyImage={images.usersManagement}
+        emptyImageAlt="No users"
+        className="rounded-2xl bg-background-card shadow-card"
+      />
+
+      <ActivateModal
+        open={selectedAction === "activate"}
+        name={selectedUser?.name ?? "user"}
+        loading={isUpdating}
+        onClose={closeAction}
+        onConfirm={confirmActivate}
+      />
+
+      <SuspendModal
+        open={selectedAction === "suspend"}
+        name={selectedUser?.name ?? "user"}
+        loading={isUpdating}
+        onClose={closeAction}
+        onConfirm={confirmSuspend}
+      />
+    </>
   )
 }

@@ -64,7 +64,9 @@ export default function AdminUsersPage() {
         pagination={users.data?.pagination}
         onPageChange={users.setPage}
         isUpdating={users.statusMutation.isPending}
-        onStatusChange={(id, status) => users.statusMutation.mutate({ id, status })}
+        onStatusChange={(id, status, reason) =>
+          users.statusMutation.mutateAsync({ id, status, reason })
+        }
       />
     </div>
   )
