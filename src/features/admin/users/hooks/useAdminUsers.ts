@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 
-import { APP_CONFIG } from "@/config"
 import { adminUsersService } from "../services/adminUsers.service"
 import { showSuccessToast } from "@/lib/toast"
 import {
   ADMIN_USER_FILTER_DEFAULTS,
   type AdminUserFilterForm,
 } from "../types/adminUsers.types"
+
+const adminUsersPageSize = 10
 
 export const adminUsersKeys = {
   all: ["admin", "users"] as const,
@@ -47,7 +48,7 @@ export function useAdminUsers(filters: AdminUserFilterForm | string = ADMIN_USER
     queryFn: () =>
       adminUsersService.list({
         page,
-        per_page: APP_CONFIG.pagination.defaultPageSize,
+        per_page: adminUsersPageSize,
         search: asApiValue(normalizedFilters.search),
         role: asApiValue(normalizedFilters.role),
         status: asApiValue(normalizedFilters.status),

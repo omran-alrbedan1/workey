@@ -278,7 +278,13 @@ export function DataTable<T = any>({
                   className={column.className}
                   style={{ width: column.width }}
                 >
-                  <span className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <span
+                    className={cn(
+                      "flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground",
+                      column.className?.includes("text-center") && "justify-center",
+                      column.className?.includes("text-right") && "justify-end",
+                    )}
+                  >
                     {column.headerIcon && (
                       <column.headerIcon className="h-3.5 w-3.5 text-primary" />
                     )}
@@ -299,7 +305,7 @@ export function DataTable<T = any>({
                 onClick={() => onRowClick?.(item)}
               >
                 {columns.map((column) => (
-                  <TableCell key={column.key} className="text-sm">
+                  <TableCell key={column.key} className={cn("text-sm", column.className)}>
                     {column.cell ? column.cell(item) : (item as any)[column.key] || "—"}
                   </TableCell>
                 ))}
