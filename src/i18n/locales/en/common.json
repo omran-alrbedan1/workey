@@ -191,6 +191,12 @@
       "reasonPlaceholder": "Provide a reason for suspension...",
       "hint": "This action cannot be undone"
     },
+    "logout": {
+      "title": "Logout",
+      "description": "Are you sure you want to logout?",
+      "confirm": "Logout",
+      "hint": "You will need to login again to access your account"
+    },
     "sendMessage": {
       "title": "Send Message",
       "description": "Send a message to the recipient",

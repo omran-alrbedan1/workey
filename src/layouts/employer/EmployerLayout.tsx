@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
 import { useEmployerLogout } from "@/features/employer/auth/hooks/useEmployerLogout"
 import { useEmployerSession } from "@/features/employer/auth/hooks/useEmployerSession"
+import { LogoutModal } from "@/components/shared/modals"
 import EmployerHeader from "./EmployerHeader"
 import EmployerSidebar from "./EmployerSidebar"
 
@@ -11,6 +12,16 @@ export default function EmployerLayout() {
   const session = useEmployerSession()
   const logout = useEmployerLogout()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
+  }
+
+  const handleLogoutConfirm = () => {
+    logout.mutate()
+    setShowLogoutModal(false)
+  }
 
   useEffect(() => {
     if (!isMobileMenuOpen) return
@@ -54,13 +65,20 @@ export default function EmployerLayout() {
         <EmployerHeader
           employerName={session.data?.name}
           isLoggingOut={logout.isPending}
-          onLogout={() => logout.mutate()}
+          onLogout={handleLogoutClick}
           onMenuToggle={() => setIsMobileMenuOpen((open) => !open)}
         />
         <main className="flex-1 overflow-auto bg-background p-4 sm:p-6">
           <Outlet />
         </main>
       </div>
+
+      <LogoutModal
+        open={showLogoutModal}
+        onConfirm={handleLogoutConfirm}
+        onClose={() => setShowLogoutModal(false)}
+        loading={logout.isPending}
+      />
     </div>
   )
 }
