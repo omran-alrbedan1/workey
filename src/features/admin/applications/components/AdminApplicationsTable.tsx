@@ -4,6 +4,7 @@ import type { AdminPagination } from "@/features/admin/shared/types/adminApi.typ
 import type { AdminApplicationRecord } from "../types/adminApplications.types"
 import { images } from "@/constants/images"
 import { useTranslation } from "react-i18next"
+import { User, BriefcaseBusiness, ShieldCheck, Target, Calendar } from "lucide-react"
 
 type CandidateLike = NonNullable<ReturnType<typeof candidateFor>>
 
@@ -115,6 +116,7 @@ export default function AdminApplicationsTable({
     {
       key: "candidate",
       header: t("columns.candidate"),
+      headerIcon: User,
       cell: (item) => (
         <div>
           <p className="font-semibold text-text-primary">
@@ -127,6 +129,7 @@ export default function AdminApplicationsTable({
     {
       key: "job",
       header: t("columns.job"),
+      headerIcon: BriefcaseBusiness,
       cell: (item) => (
         <div>
           <p className="text-text-primary">{jobFor(item)?.title || "-"}</p>
@@ -137,11 +140,13 @@ export default function AdminApplicationsTable({
     {
       key: "status",
       header: t("columns.status"),
+      headerIcon: ShieldCheck,
       cell: (item) => <StatusBadge status={item.status} variant="soft" />,
     },
     {
       key: "match",
       header: t("columns.match"),
+      headerIcon: Target,
       cell: (item) => {
         const score = item.match_score ?? item.matching_score
         return score != null ? `${score}%` : "-"
@@ -150,6 +155,7 @@ export default function AdminApplicationsTable({
     {
       key: "created",
       header: t("columns.applied"),
+      headerIcon: Calendar,
       cell: (item) =>
         appliedAtFor(item) ? new Date(appliedAtFor(item)!).toLocaleDateString() : "-",
     },
