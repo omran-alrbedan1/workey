@@ -1,5 +1,6 @@
 import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
+import { keyOf } from "@/lib/keyValue"
 import {
   unwrapCollection,
   unwrapEntity,
@@ -13,28 +14,13 @@ import type {
 } from "../types/adminUsers.types"
 
 function normalizeRole(role: unknown): string {
-  if (typeof role === "string") return role
-  if (typeof role === "object" && role !== null) {
-    const r = role as Record<string, unknown>
-    if (typeof r.key === "string") return r.key
-  }
-  return String(role ?? "")
-}
-
-function normalizeStatus(status: unknown): string {
-  if (typeof status === "string") return status
-  if (typeof status === "object" && status !== null) {
-    const s = status as Record<string, unknown>
-    if (typeof s.key === "string") return s.key
-  }
-  return String(status ?? "")
+  return keyOf(role)
 }
 
 function normalizeRecord<T extends { role?: unknown; status?: unknown }>(record: T): T {
   return {
     ...record,
     role: normalizeRole(record.role),
-    status: normalizeStatus(record.status),
   }
 }
 

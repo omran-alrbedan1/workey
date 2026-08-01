@@ -35,9 +35,7 @@ export interface AdminApiEnvelope<T> {
   data: T
 }
 
-export interface AdminKeyValue {
-  key?: string | number | null
-  value?: string | number | null
-}
+export type AdminKeyValue = KeyValueLike
 
-export type AdminKeyValueField = string | number | AdminKeyValue | null | undefined
+export type AdminKeyValueField = KeyValueField
+import type { KeyValueField, KeyValueLike } from "@/lib/keyValue"

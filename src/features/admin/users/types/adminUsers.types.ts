@@ -1,3 +1,5 @@
+import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
+
 export type AdminUserRole = "admin" | "job_seeker" | "employer"
 export type AdminUserStatus = "active" | "suspended"
 
@@ -6,7 +8,7 @@ export interface AdminUserRecord {
   name: string
   email: string
   role: AdminUserRole | string
-  status: AdminUserStatus | string
+  status: AdminUserStatus | string | AdminKeyValueField
   created_at?: string
   phone?: string | null
   avatar_url?: string | null
@@ -28,7 +30,7 @@ export interface AdminUserActivityItem {
 
 export interface AdminUserLoginItem {
   id: string | number
-  status?: string | null
+  status?: AdminKeyValueField
   ip_address?: string | null
   user_agent?: string | null
   device?: string | null
@@ -48,7 +50,7 @@ export interface AdminUserSessionItem {
 export interface AdminUserRelatedItem {
   id: string | number
   title: string
-  status?: string | null
+  status?: AdminKeyValueField
   subtitle?: string | null
   created_at?: string | null
 }
@@ -72,7 +74,7 @@ export interface AdminUserDetails extends AdminUserRecord {
   suspension_reason?: string | null
   updated_at?: string | null
   deleted_at?: string | null
-  company?: { id?: string | number; name?: string | null; status?: string | null } | null
+  company?: { id?: string | number; name?: string | null; status?: AdminKeyValueField } | null
   counts?: {
     applications?: number
     jobs?: number

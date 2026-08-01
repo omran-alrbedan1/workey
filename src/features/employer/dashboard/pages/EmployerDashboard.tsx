@@ -16,6 +16,7 @@ import PageHeader from "@/components/shared/headers/PageHeader"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
+import { valueOf } from "@/lib/keyValue"
 import { useEmployerDashboard } from "../hooks/useEmployerDashboard"
 
 const quickActions = [
@@ -186,7 +187,7 @@ export default function EmployerDashboard() {
                   <p className="text-xs text-text-muted">
                     {t("recentJobs.meta", {
                       applications: job.applications_count ?? 0,
-                      status: job.status ?? t("recentJobs.unknownStatus"),
+                      status: valueOf(job.status, t("recentJobs.unknownStatus")),
                     })}
                   </p>
                 </div>

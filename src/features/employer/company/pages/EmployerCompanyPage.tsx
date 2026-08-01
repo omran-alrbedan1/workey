@@ -10,13 +10,6 @@ export default function EmployerCompanyPage() {
   const { t } = useTranslation("employerCompany")
   const company = useEmployerCompany()
 
-  const getStatusKey = (v: unknown): string => {
-    if (!v) return ""
-    if (typeof v === "string") return v
-    if (typeof v === "object") return (v as { key?: string }).key ?? ""
-    return ""
-  }
-
   if (company.isError) {
     return (
       <ErrorState
@@ -28,8 +21,8 @@ export default function EmployerCompanyPage() {
     )
   }
 
-  const statusKey = company.data
-    ? getStatusKey(company.data.approval_status ?? company.data.status ?? "pending") || "pending"
+  const status = company.data
+    ? company.data.approval_status ?? company.data.status ?? "pending"
     : "pending"
 
   return (
@@ -40,7 +33,7 @@ export default function EmployerCompanyPage() {
         icon={Building2}
         rightContent={
           company.data ? (
-            <StatusBadge status={statusKey} variant="soft" />
+            <StatusBadge status={status} variant="soft" />
           ) : null
         }
       />

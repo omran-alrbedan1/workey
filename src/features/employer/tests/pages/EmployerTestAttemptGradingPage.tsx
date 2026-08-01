@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
+import { valueOf } from "@/lib/keyValue"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -179,7 +180,7 @@ export default function EmployerTestAttemptGradingPage() {
         <CardContent className="grid gap-4 p-5 sm:grid-cols-3">
           <div>
             <p className="text-xs text-text-muted">{t("tests.gradingStatus")}</p>
-            <p className="font-medium">{result.data?.grading_status ?? result.data?.status ?? "-"}</p>
+            <p className="font-medium">{valueOf(result.data?.grading_status ?? result.data?.status, "-")}</p>
           </div>
           <div>
             <p className="text-xs text-text-muted">{t("tests.currentScore")}</p>

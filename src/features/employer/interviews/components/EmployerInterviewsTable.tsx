@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { ROUTES } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import type { EmployerInterview } from "../types/employerInterviews.types"
 import { DataTable } from "@/components/shared/custom/DataTable"
 
@@ -50,19 +51,22 @@ export default function EmployerInterviewsTable({
     {
       key: "status",
       header: t("columns.status"),
-      cell: (item: EmployerInterview) => (
-        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-          item.status === "completed"
-            ? "bg-green-100 text-green-700"
-            : item.status === "cancelled"
-              ? "bg-red-100 text-red-700"
-              : item.status === "scheduled"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-gray-100 text-gray-700"
-        }`}>
-          {item.status ? t(`statuses.${item.status}`, item.status) : "-"}
-        </span>
-      ),
+      cell: (item: EmployerInterview) => {
+        const statusKey = keyOf(item.status)
+        return (
+          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+            statusKey === "completed"
+              ? "bg-green-100 text-green-700"
+              : statusKey === "cancelled"
+                ? "bg-red-100 text-red-700"
+                : statusKey === "scheduled"
+                  ? "bg-blue-100 text-blue-700"
+                  : "bg-gray-100 text-gray-700"
+          }`}>
+            {valueOf(item.status) || "-"}
+          </span>
+        )
+      },
     },
     {
       key: "actions",

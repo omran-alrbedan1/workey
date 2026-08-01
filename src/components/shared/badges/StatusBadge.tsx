@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { keyOf, valueOf, type KeyValueField } from "@/lib/keyValue"
 import { useTranslation } from "react-i18next"
 import {
   Clock,
@@ -26,7 +27,7 @@ import {
 } from "lucide-react"
 
 interface StatusBadgeProps {
-  status?: string | number | { key?: string | number | null; value?: string | number | null } | null
+  status?: KeyValueField
   label?: string
   variant?: "default" | "pill" | "rounded" | "soft" | "outline" | "minimal"
   size?: "sm" | "md" | "lg"
@@ -521,19 +522,11 @@ const variantStyles = {
 }
 
 function statusKeyFor(status: StatusBadgeProps["status"]): string {
-  if (typeof status === "string" || typeof status === "number") return String(status)
-  if (status && typeof status === "object") {
-    if (status.key !== undefined && status.key !== null) return String(status.key)
-    if (status.value !== undefined && status.value !== null) return String(status.value)
-  }
-  return "unknown"
+  return keyOf(status, "unknown")
 }
 
 function statusLabelFor(status: StatusBadgeProps["status"]): string {
-  if (status && typeof status === "object" && status.value !== undefined && status.value !== null) {
-    return String(status.value)
-  }
-  return statusKeyFor(status)
+  return valueOf(status, statusKeyFor(status))
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({

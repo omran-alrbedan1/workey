@@ -23,23 +23,18 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import { cn } from "@/lib/utils"
 import { useEmployerJob } from "../hooks/useEmployerJob"
 import { useRankedCandidates } from "../hooks/useRankedCandidates"
 import EmployerJobRankedCandidates from "../components/EmployerJobRankedCandidates"
 
 function getKey(v: unknown): string {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") return (v as { key?: string }).key ?? ""
-  return ""
+  return keyOf(v)
 }
 
 function getValue(v: unknown): string {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") return (v as { value?: string }).value ?? (v as { key?: string }).key ?? ""
-  return ""
+  return valueOf(v)
 }
 
 function InfoRow({
@@ -143,7 +138,7 @@ export default function EmployerJobDetailsPage() {
                           : "bg-blue-100 text-blue-800",
                   )}
                 >
-                  {getKey(job.data.status) || "draft"}
+                  {getValue(job.data.status) || "draft"}
                 </Badge>
               </div>
             </CardHeader>

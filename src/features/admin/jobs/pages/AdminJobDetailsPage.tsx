@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
-import { normalizeKeyValue } from "@/features/admin/shared/services/adminResponse.utils"
+import { normalizeKeyValueLabel } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
 import { useAdminJobDetails } from "../hooks/useAdminJobDetails"
 
@@ -27,7 +27,7 @@ function display(value?: string | number | null) {
 }
 
 function displayKeyValue(value?: AdminKeyValueField) {
-  return normalizeKeyValue(value, "-") || "-"
+  return normalizeKeyValueLabel(value, "-") || "-"
 }
 
 function formatDate(value?: string | null) {

@@ -14,15 +14,16 @@ import {
 import { useTranslation } from "react-i18next"
 
 import { DetailItem, SectionCard } from "@/components/shared/cards/SectionCard"
+import { valueOf, type KeyValueField } from "@/lib/keyValue"
 
 import type { AdminUserDetails } from "../types/adminUsers.types"
 
 export default function AdminUserOverview({ user }: { user: AdminUserDetails }) {
   const { t, i18n } = useTranslation("adminUsers")
-  const value = (input?: string | number | null) =>
+  const value = (input?: KeyValueField) =>
     input === undefined || input === null || input === ""
       ? t("fallbacks.notAvailable")
-      : String(input)
+      : valueOf(input)
   const date = (input?: string | null) => {
     if (!input) return t("fallbacks.noDate")
     const parsed = new Date(input)

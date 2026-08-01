@@ -15,21 +15,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ROUTES } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
 import type { EmployerJob } from "../types/employerJobs.types"
 
 function getKey(v: unknown): string {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") return (v as { key?: string }).key ?? ""
-  return ""
+  return keyOf(v)
 }
 
 function getValue(v: unknown): string {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") return (v as { value?: string }).value ?? (v as { key?: string }).key ?? ""
-  return ""
+  return valueOf(v)
 }
 
 export default function EmployerJobsTable({
@@ -67,7 +62,7 @@ export default function EmployerJobsTable({
     {
       key: "status",
       header: t("columns.status"),
-      cell: (job) => <StatusBadge status={getKey(job.status) || "draft"} variant="soft" />,
+      cell: (job) => <StatusBadge status={job.status ?? "draft"} variant="soft" />,
     },
     { key: "type", header: t("columns.type"), cell: (job) => getValue(job.employment_type) },
     { key: "applications", header: t("columns.applications"), cell: (job) => job.applications_count ?? 0 },

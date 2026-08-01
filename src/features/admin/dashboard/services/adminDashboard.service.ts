@@ -75,8 +75,6 @@ function normalizeUser(user: AdminUser): AdminUser {
 function normalizeCompany(company: AdminCompany): AdminCompany {
   return {
     ...company,
-    status: normalizeKeyValue(company.status),
-    approval_status: normalizeKeyValue(company.approval_status),
   }
 }
 

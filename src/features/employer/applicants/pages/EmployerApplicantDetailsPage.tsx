@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ROUTES } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import { cn } from "@/lib/utils"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { useEmployerApplicantDetail, useDownloadCv } from "../hooks/useEmployerApplicantDetail"
@@ -48,10 +49,7 @@ const nextStatuses = [
 ] as const
 
 function getKey(v: unknown): string {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") return (v as { key?: string }).key ?? ""
-  return ""
+  return keyOf(v)
 }
 
 function AnswerDisplay({ answer }: { answer: ApplicationScreeningAnswer }) {
@@ -185,7 +183,7 @@ export default function EmployerApplicantDetailsPage() {
                     variant="secondary"
                     className="self-start bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
                   >
-                    {getKey(application.status) || "applied"}
+                    {valueOf(application.status, "applied")}
                   </Badge>
                 </div>
               </div>

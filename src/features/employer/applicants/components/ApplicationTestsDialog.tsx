@@ -17,6 +17,7 @@ import {
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { StatusBadge } from "@/components/shared/badges"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -375,7 +376,8 @@ export default function ApplicationTestsDialog({
               const score = attemptScore(attempt)
               const max = attemptMaxScore(attempt)
               const passed = score != null && score >= max * 0.7
-              const submitted = Boolean(attempt.submitted_at) || attempt.status === "submitted" || attempt.status === "completed"
+              const attemptStatusKey = keyOf(attempt.status)
+              const submitted = Boolean(attempt.submitted_at) || attemptStatusKey === "submitted" || attemptStatusKey === "completed"
               const isOpen = showAnswers[String(id)]
               const deadline = assignmentDeadline(attempt)
               const assignment = assignmentId(attempt)
@@ -525,7 +527,7 @@ export default function ApplicationTestsDialog({
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div className="rounded-md border border-border bg-background p-3">
                     <p className="text-xs text-text-muted">{t("tests.gradingStatus")}</p>
-                    <p className="mt-1 font-medium">{result?.grading_status ?? gradingAttempt.status ?? "-"}</p>
+                    <p className="mt-1 font-medium">{valueOf(result?.grading_status ?? gradingAttempt.status, "-")}</p>
                   </div>
                   <div className="rounded-md border border-border bg-background p-3">
                     <p className="text-xs text-text-muted">{t("tests.currentScore")}</p>

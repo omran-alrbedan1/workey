@@ -3,7 +3,11 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 
 import { ROUTES } from "@/config"
-import { normalizeKeyValue } from "@/features/admin/shared/services/adminResponse.utils"
+import {
+  normalizeKeyValue,
+  normalizeKeyValueLabel,
+} from "@/features/admin/shared/services/adminResponse.utils"
+import { keyOf } from "@/lib/keyValue"
 import {
   ADMIN_DASHBOARD_STALE_TIME,
   adminDashboardQueryKeys,
@@ -21,6 +25,10 @@ import type {
 
 function statusOf(company: AdminCompany): string {
   return normalizeKeyValue(company.approval_status ?? company.status, "pending").toLowerCase()
+}
+
+function statusLabelOf(company: AdminCompany): string {
+  return normalizeKeyValueLabel(company.approval_status ?? company.status, "pending")
 }
 
 function dateValue(value?: string): number {
@@ -45,7 +53,7 @@ function createActivity(
   const companyActivity: ActivityItem[] = companies.slice(0, 6).map((company) => ({
     id: `company-${company.id}`,
     title: company.name,
-    description: t("companyStatus", { status: statusOf(company) }),
+    description: t("companyStatus", { status: statusLabelOf(company) }),
     timestamp: company.created_at,
     type: "company",
   }))
@@ -98,7 +106,7 @@ export function useAdminDashboard() {
     const employers = users.items.filter((user) => user.role === "employer").length
     const admins = users.items.filter((user) => user.role === "admin").length
     const suspendedUsers = users.items.filter(
-      (user) => user.status?.toLowerCase() === "suspended",
+      (user) => keyOf(user.status).toLowerCase() === "suspended",
     ).length
     const pendingCompanies = companies.items.filter(
       (company) => statusOf(company) === "pending",

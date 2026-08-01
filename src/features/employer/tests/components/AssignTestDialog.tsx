@@ -18,6 +18,7 @@ import {
 import { Form } from "@/components/ui/form"
 import { Skeleton } from "@/components/ui/skeleton"
 import { employerApplicantsService } from "@/features/employer/applicants/services/employerApplicants.service"
+import { keyOf } from "@/lib/keyValue"
 import type { AssignTestPayload, EmployerTest } from "../types/employerTests.types"
 
 const noApplicantsValue = "__no_applicants__"
@@ -96,7 +97,7 @@ export default function AssignTestDialog({
       .list(selectedJobId, 1)
       .then((data) => {
         const shortlisted = data.items.filter(
-          (a) => a.status === "shortlisted" || a.status === "test_pending",
+          (a) => keyOf(a.status) === "shortlisted" || keyOf(a.status) === "test_pending",
         )
         setApplicants(
           shortlisted.map((a) => ({

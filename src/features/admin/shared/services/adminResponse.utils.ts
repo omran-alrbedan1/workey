@@ -1,4 +1,5 @@
 import { APP_CONFIG } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import type { AdminCollection } from "../types/adminApi.types"
 
 type UnknownRecord = Record<string, unknown>
@@ -8,13 +9,11 @@ export function isRecord(value: unknown): value is UnknownRecord {
 }
 
 export function normalizeKeyValue(value: unknown, fallback = ""): string {
-  if (typeof value === "string") return value
-  if (typeof value === "number") return String(value)
-  if (isRecord(value)) {
-    if (typeof value.key === "string" || typeof value.key === "number") return String(value.key)
-    if (typeof value.value === "string" || typeof value.value === "number") return String(value.value)
-  }
-  return value === undefined || value === null || value === "" ? fallback : String(value)
+  return keyOf(value, fallback)
+}
+
+export function normalizeKeyValueLabel(value: unknown, fallback = ""): string {
+  return valueOf(value, fallback)
 }
 
 function asNumber(value: unknown, fallback: number): number {

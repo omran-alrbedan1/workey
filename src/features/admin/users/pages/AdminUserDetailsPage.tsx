@@ -21,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
 import { images } from "@/constants/images"
 import { AdminFeatureError } from "@/features/admin/shared/components"
+import { keyOf } from "@/lib/keyValue"
 
 import AdminUserActivityPanel from "../components/AdminUserActivityPanel"
 import AdminUserOverview from "../components/AdminUserOverview"
@@ -58,7 +59,7 @@ export default function AdminUserDetailsPage() {
   const user = query.user
   if (!user) return null
   const updating = query.statusMutation.isPending || query.roleMutation.isPending
-  const isSuspended = user.status === "suspended"
+  const isSuspended = keyOf(user.status) === "suspended"
   const closeStatusModal = () => {
     if (!query.statusMutation.isPending) setStatusAction(null)
   }

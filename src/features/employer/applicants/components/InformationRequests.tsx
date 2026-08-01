@@ -8,6 +8,7 @@ import { StatusBadge } from "@/components/shared/badges"
 import { useInformationRequests, useDownloadAttachment } from "../hooks/useInformationRequests"
 import InformationRequestDialog from "./InformationRequestDialog"
 import { DeleteModal } from "@/components/shared/modals"
+import { keyOf } from "@/lib/keyValue"
 import { showErrorToast } from "@/lib/toast"
 import type { InformationRequest } from "../types/employerApplicants.types"
 
@@ -68,7 +69,7 @@ export default function InformationRequests({ applicationId }: { applicationId: 
     }
   }
 
-  const canCreate = !requests.some((r) => r.status === "pending")
+  const canCreate = !requests.some((r) => keyOf(r.status) === "pending")
 
   if (isLoading) {
     return (
@@ -149,7 +150,7 @@ export default function InformationRequests({ applicationId }: { applicationId: 
                     )}
                   </div>
                   <div className="flex gap-1">
-                    {request.status === "pending" && (
+                    {keyOf(request.status) === "pending" && (
                       <>
                         <Button
                           size="icon"
@@ -173,7 +174,7 @@ export default function InformationRequests({ applicationId }: { applicationId: 
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-text-muted">
-                  <StatusBadge status={String(request.status || "pending")} variant="soft" />
+                  <StatusBadge status={request.status || "pending"} variant="soft" />
                   {request.due_at && (
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />

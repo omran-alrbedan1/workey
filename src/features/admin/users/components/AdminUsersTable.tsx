@@ -3,6 +3,7 @@ import { ShieldCheck, ShieldOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
+import { keyOf } from "@/lib/keyValue"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 import type { AdminUserRecord, AdminUserStatus } from "../types/adminUsers.types"
 import { images } from "@/constants/images"
@@ -55,7 +56,7 @@ export default function AdminUsersTable({
       header: "Actions",
       className: "text-right",
       cell: (user) =>
-        user.status === "suspended" ? (
+        keyOf(user.status) === "suspended" ? (
           <Button
             size="sm"
             variant="outline"

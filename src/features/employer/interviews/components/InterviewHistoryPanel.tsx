@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { valueOf } from "@/lib/keyValue"
 import { employerInterviewsService } from "../services/employerInterviews.service"
 import type {
   EmployerInterviewHistoryItem,
@@ -32,7 +33,7 @@ function StatusHistoryList({ items }: { items: EmployerInterviewHistoryItem[] })
         <div key={item.id} className="rounded-md border border-border p-3">
           <div className="flex flex-wrap justify-between gap-2">
             <p className="text-sm font-medium">
-              {item.from_status || "-"} {"->"} {item.to_status || item.status || "-"}
+              {valueOf(item.from_status, "-")} {"->"} {valueOf(item.to_status ?? item.status, "-")}
             </p>
             <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
           </div>

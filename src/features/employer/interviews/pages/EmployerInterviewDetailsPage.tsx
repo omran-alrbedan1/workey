@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import CompleteInterviewDialog from "../components/CompleteInterviewDialog"
 import AttendanceInterviewDialog from "../components/AttendanceInterviewDialog"
 import CancelInterviewDialog from "../components/CancelInterviewDialog"
@@ -56,8 +57,9 @@ export default function EmployerInterviewDetailsPage() {
   }
 
   const data = interview.data
-  const isScheduled = data.status === "scheduled"
-  const isCompleted = data.status === "completed"
+  const statusKey = keyOf(data.status)
+  const isScheduled = statusKey === "scheduled"
+  const isCompleted = statusKey === "completed"
   const scheduledStart = data.scheduled_start_at ?? data.scheduled_at
   const scheduledEnd = data.scheduled_end_at
   const interviewType = data.type ?? data.interview_type
@@ -136,15 +138,15 @@ export default function EmployerInterviewDetailsPage() {
           </div>
           <div>
             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              data.status === "completed"
+              statusKey === "completed"
                 ? "bg-green-100 text-green-700"
-                : data.status === "cancelled"
+                : statusKey === "cancelled"
                   ? "bg-red-100 text-red-700"
-                  : data.status === "scheduled"
+                  : statusKey === "scheduled"
                     ? "bg-blue-100 text-blue-700"
                     : "bg-gray-100 text-gray-700"
             }`}>
-              {data.status ? t(`statuses.${data.status}`, data.status) : "-"}
+              {valueOf(data.status) || "-"}
             </span>
           </div>
           {(data.internal_note || data.candidate_message || data.notes) && (

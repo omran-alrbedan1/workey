@@ -1,7 +1,6 @@
 import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
 import {
-  normalizeKeyValue,
   unwrapCollection,
   unwrapEntity,
 } from "@/features/admin/shared/services/adminResponse.utils"
@@ -11,14 +10,6 @@ import type { AdminCompanyDetails, AdminCompanyRecord } from "../types/adminComp
 function normalizeCompany<T extends AdminCompanyRecord>(company: T): T {
   return {
     ...company,
-    status: normalizeKeyValue(company.status),
-    approval_status: normalizeKeyValue(company.approval_status),
-    employer: company.employer
-      ? {
-          ...company.employer,
-          status: normalizeKeyValue(company.employer.status),
-        }
-      : company.employer,
   }
 }
 

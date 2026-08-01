@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ROUTES } from "@/config"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { employerApplicantsService } from "../services/employerApplicants.service"
 
@@ -31,20 +32,11 @@ const nextStatuses = [
 ] as const
 
 function getKey(v: unknown): string {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") return (v as { key?: string }).key ?? ""
-  return ""
+  return keyOf(v)
 }
 
 function getValue(v: unknown): string {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") {
-    const record = v as { value?: string; label?: string; name?: string; key?: string }
-    return record.value ?? record.label ?? record.name ?? record.key ?? ""
-  }
-  return ""
+  return valueOf(v)
 }
 
 function useHandleDownload() {
@@ -125,7 +117,7 @@ export default function EmployerApplicantsTable({
         const statusValue = getValue(application.status)
         return (
           <StatusBadge
-            status={statusKey}
+            status={application.status ?? statusKey}
             label={statusValue || t(`statuses.${statusKey}`, { defaultValue: statusKey })}
             variant="soft"
           />
