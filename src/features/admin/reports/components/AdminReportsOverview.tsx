@@ -35,10 +35,31 @@ const overviewFields: Array<{
   { key: "audit_logs", icon: ScrollText, translationKey: "overview.auditLogs" },
 ]
 
-function extractValue(value: number | Record<string, number> | undefined): number {
+function numericValue(value: unknown): number | null {
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function extractValue(value: unknown): number {
   if (value == null) return 0
   if (typeof value === "number") return value
-  return Object.values(value).reduce((sum, val) => sum + val, 0)
+  if (typeof value === "string") return numericValue(value) ?? 0
+  if (Array.isArray(value)) return value.length
+  if (typeof value !== "object") return 0
+
+  const record = value as Record<string, unknown>
+  const directTotal =
+    numericValue(record.total) ??
+    numericValue(record.count) ??
+    numericValue(record.total_count) ??
+    numericValue(record.value)
+
+  if (directTotal !== null) return directTotal
+
+  return Object.values(record).reduce((sum, entry) => {
+    const parsed = numericValue(entry)
+    return parsed === null ? sum : sum + parsed
+  }, 0)
 }
 
 export default function AdminReportsOverview({

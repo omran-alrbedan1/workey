@@ -7,15 +7,15 @@ export interface AdminReportFilters {
 }
 
 export interface AdminOverviewReport {
-  users?: number | Record<string, number>
-  companies?: number | Record<string, number>
-  jobs?: number | Record<string, number>
-  applications?: number | Record<string, number>
-  tests?: number | Record<string, number>
-  interviews?: number | Record<string, number>
-  notifications?: number | Record<string, number>
-  cvs?: number | Record<string, number>
-  audit_logs?: number | Record<string, number>
+  users?: unknown
+  companies?: unknown
+  jobs?: unknown
+  applications?: unknown
+  tests?: unknown
+  interviews?: unknown
+  notifications?: unknown
+  cvs?: unknown
+  audit_logs?: unknown
 }
 
 export interface AdminApplicationsReport {
