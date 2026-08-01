@@ -1,3 +1,5 @@
+import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
+
 export interface AdminAuditLogActor {
   id?: string | number
   name?: string
@@ -6,13 +8,13 @@ export interface AdminAuditLogActor {
 
 export interface AdminAuditLogRecord {
   id: string | number
-  action: string
+  action: AdminKeyValueField
   actor_user_id?: string | number | null
   actor?: AdminAuditLogActor | null
   user?: AdminAuditLogActor | null
-  entity_type?: string | null
+  entity_type?: AdminKeyValueField
   entity_id?: string | number | null
-  description?: string | null
+  description?: AdminKeyValueField
   metadata?: Record<string, unknown> | null
   properties?: Record<string, unknown> | null
   ip_address?: string | null

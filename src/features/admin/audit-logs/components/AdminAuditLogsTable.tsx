@@ -3,10 +3,11 @@ import { useTranslation } from "react-i18next"
 
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
+import { valueOf } from "@/lib/keyValue"
 import type { AdminAuditLogRecord } from "../types/adminAuditLogs.types"
 
-function entityName(value?: string | null) {
-  return value?.split("\\").pop() || "-"
+function entityName(value: unknown) {
+  return valueOf(value).split("\\").pop() || "-"
 }
 
 export default function AdminAuditLogsTable({
@@ -28,8 +29,12 @@ export default function AdminAuditLogsTable({
       headerIcon: Activity,
       cell: (log) => (
         <div>
-          <p className="font-semibold text-text-primary">{log.action}</p>
-          {log.description && <p className="mt-1 max-w-sm text-xs text-text-muted">{log.description}</p>}
+          <p className="font-semibold text-text-primary">{valueOf(log.action, "-")}</p>
+          {log.description && (
+            <p className="mt-1 max-w-sm text-xs text-text-muted">
+              {valueOf(log.description)}
+            </p>
+          )}
         </div>
       ),
     },
