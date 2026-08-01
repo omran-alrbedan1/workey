@@ -7,6 +7,16 @@ export function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
+export function normalizeKeyValue(value: unknown, fallback = ""): string {
+  if (typeof value === "string") return value
+  if (typeof value === "number") return String(value)
+  if (isRecord(value)) {
+    if (typeof value.key === "string" || typeof value.key === "number") return String(value.key)
+    if (typeof value.value === "string" || typeof value.value === "number") return String(value.value)
+  }
+  return value === undefined || value === null || value === "" ? fallback : String(value)
+}
+
 function asNumber(value: unknown, fallback: number): number {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : fallback

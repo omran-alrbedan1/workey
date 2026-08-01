@@ -34,3 +34,10 @@ export interface AdminApiEnvelope<T> {
   message?: string
   data: T
 }
+
+export interface AdminKeyValue {
+  key?: string | number | null
+  value?: string | number | null
+}
+
+export type AdminKeyValueField = string | number | AdminKeyValue | null | undefined

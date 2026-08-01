@@ -26,7 +26,7 @@ import {
 } from "lucide-react"
 
 interface StatusBadgeProps {
-  status: string
+  status?: string | number | { key?: string | number | null; value?: string | number | null } | null
   label?: string
   variant?: "default" | "pill" | "rounded" | "soft" | "outline" | "minimal"
   size?: "sm" | "md" | "lg"
@@ -520,6 +520,22 @@ const variantStyles = {
   minimal: "rounded-md border-0 bg-transparent",
 }
 
+function statusKeyFor(status: StatusBadgeProps["status"]): string {
+  if (typeof status === "string" || typeof status === "number") return String(status)
+  if (status && typeof status === "object") {
+    if (status.key !== undefined && status.key !== null) return String(status.key)
+    if (status.value !== undefined && status.value !== null) return String(status.value)
+  }
+  return "unknown"
+}
+
+function statusLabelFor(status: StatusBadgeProps["status"]): string {
+  if (status && typeof status === "object" && status.value !== undefined && status.value !== null) {
+    return String(status.value)
+  }
+  return statusKeyFor(status)
+}
+
 const StatusBadge: React.FC<StatusBadgeProps> = ({
   status,
   label,
@@ -530,7 +546,8 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
   className,
 }) => {
   const { t } = useTranslation("common")
-  const statusKey = status.toLowerCase()
+  const statusLabel = statusLabelFor(status)
+  const statusKey = statusKeyFor(status).toLowerCase()
   const config = statusConfig[statusKey] ?? fallbackConfig
   const Icon = config.icon
   const sizeStyle = sizeStyles[size]
@@ -560,7 +577,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
         )
       )}
       <span className={cn(variant === "minimal" && "font-normal")}>
-        {label ?? t(`statuses.${config.translationKey}`, { defaultValue: status })}
+        {label ?? t(`statuses.${config.translationKey}`, { defaultValue: statusLabel })}
       </span>
     </>
   )

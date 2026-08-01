@@ -1,3 +1,5 @@
+import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
+
 export type UserRole = "admin" | "job_seeker" | "employer"
 export type UserStatus = "active" | "suspended"
 
@@ -16,8 +18,8 @@ export interface AdminCompany {
   name: string
   industry?: string | null
   location?: string | null
-  status?: string
-  approval_status?: string
+  status?: AdminKeyValueField
+  approval_status?: AdminKeyValueField
   created_at?: string
   updated_at?: string
 }

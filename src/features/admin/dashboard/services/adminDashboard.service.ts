@@ -1,5 +1,6 @@
 import { API_ENDPOINTS, APP_CONFIG } from "@/config"
 import { api } from "@/lib/api"
+import { normalizeKeyValue } from "@/features/admin/shared/services/adminResponse.utils"
 
 import type {
   AdminCompany,
@@ -63,20 +64,19 @@ function normalizeCollection<T>(response: unknown): CollectionResult<T> {
 
 const dashboardPageSize = 100
 
-function normalizeKeyValue(value: unknown): string {
-  if (typeof value === "string") return value
-  if (typeof value === "object" && value !== null) {
-    const obj = value as Record<string, unknown>
-    if (typeof obj.key === "string") return obj.key
-  }
-  return String(value ?? "")
-}
-
 function normalizeUser(user: AdminUser): AdminUser {
   return {
     ...user,
     role: normalizeKeyValue(user.role) as AdminUser["role"],
     status: normalizeKeyValue(user.status) as AdminUser["status"],
+  }
+}
+
+function normalizeCompany(company: AdminCompany): AdminCompany {
+  return {
+    ...company,
+    status: normalizeKeyValue(company.status),
+    approval_status: normalizeKeyValue(company.approval_status),
   }
 }
 
@@ -93,7 +93,8 @@ export const adminDashboardService = {
     const response = await api.get<unknown>(API_ENDPOINTS.admin.companies, {
       params: { per_page: dashboardPageSize },
     })
-    return normalizeCollection<AdminCompany>(response)
+    const collection = normalizeCollection<AdminCompany>(response)
+    return { ...collection, items: collection.items.map(normalizeCompany) }
   },
 
   async getSkills(): Promise<CollectionResult<AdminSkill>> {

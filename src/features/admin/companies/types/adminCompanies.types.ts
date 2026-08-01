@@ -1,13 +1,15 @@
+import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
+
 export interface AdminCompanyRecord {
   id: string | number
   name: string
   industry?: string | null
   website?: string | null
   location?: string | null
-  status?: string
-  approval_status?: string
+  status?: AdminKeyValueField
+  approval_status?: AdminKeyValueField
   created_at?: string
-  employer?: { name?: string; email?: string }
+  employer?: { name?: string; email?: string; status?: AdminKeyValueField }
 }
 
 export interface AdminCompanyContact {
@@ -22,7 +24,7 @@ export interface AdminCompanyEmployerSummary {
   name?: string | null
   email?: string | null
   phone?: string | null
-  status?: string | null
+  status?: AdminKeyValueField
 }
 
 export interface AdminCompanyVerificationItem {

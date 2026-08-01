@@ -1,4 +1,5 @@
 import type { FilterConfig } from "@/hooks/useFilter"
+import { normalizeKeyValue } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminCompanyRecord } from "../types/adminCompanies.types"
 
 export const adminCompanyFilterConfig: FilterConfig<AdminCompanyRecord>[] = [
@@ -18,7 +19,8 @@ export const adminCompanyFilterConfig: FilterConfig<AdminCompanyRecord>[] = [
     key: "status",
     label: "Status",
     type: "select",
-    getValue: (company) => (company.approval_status ?? company.status ?? "pending").toLowerCase(),
+    getValue: (company) =>
+      normalizeKeyValue(company.approval_status ?? company.status, "pending").toLowerCase(),
   },
   {
     key: "industry",

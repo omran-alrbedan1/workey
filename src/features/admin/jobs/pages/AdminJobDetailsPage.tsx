@@ -18,10 +18,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
+import { normalizeKeyValue } from "@/features/admin/shared/services/adminResponse.utils"
+import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
 import { useAdminJobDetails } from "../hooks/useAdminJobDetails"
 
 function display(value?: string | number | null) {
   return value === undefined || value === null || value === "" ? "-" : String(value)
+}
+
+function displayKeyValue(value?: AdminKeyValueField) {
+  return normalizeKeyValue(value, "-") || "-"
 }
 
 function formatDate(value?: string | null) {
@@ -172,7 +178,7 @@ export default function AdminJobDetailsPage() {
             </div>
             <div>
               <p className="text-xs font-medium text-text-muted">{t("details.companyStatus")}</p>
-              <p className="font-medium">{display(data.company?.approval_status ?? data.company?.status)}</p>
+              <p className="font-medium">{displayKeyValue(data.company?.approval_status ?? data.company?.status)}</p>
             </div>
             <div>
               <p className="text-xs font-medium text-text-muted">{t("details.employer")}</p>

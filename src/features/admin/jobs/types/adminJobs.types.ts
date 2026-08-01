@@ -1,3 +1,5 @@
+import type { AdminKeyValueField } from "@/features/admin/shared/types/adminApi.types"
+
 export interface AdminJobRecord {
   id: string | number
   title: string
@@ -6,7 +8,7 @@ export interface AdminJobRecord {
   responsibilities?: string | null
   requirements?: string | null
   benefits?: string | null
-  status: string
+  status: AdminKeyValueField
   employment_type?: string
   experience_level?: string
   work_mode?: string | null
@@ -34,8 +36,8 @@ export interface AdminJobRecord {
   company?: {
     id?: string | number
     name?: string
-    approval_status?: string
-    status?: string
+    approval_status?: AdminKeyValueField
+    status?: AdminKeyValueField
     employer?: { id?: string | number; name?: string; email?: string }
   }
 }

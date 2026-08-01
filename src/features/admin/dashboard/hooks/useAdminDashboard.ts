@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 
 import { ROUTES } from "@/config"
+import { normalizeKeyValue } from "@/features/admin/shared/services/adminResponse.utils"
 import {
   ADMIN_DASHBOARD_STALE_TIME,
   adminDashboardQueryKeys,
@@ -19,7 +20,7 @@ import type {
 } from "../types/adminDashboard.types"
 
 function statusOf(company: AdminCompany): string {
-  return (company.approval_status ?? company.status ?? "pending").toLowerCase()
+  return normalizeKeyValue(company.approval_status ?? company.status, "pending").toLowerCase()
 }
 
 function dateValue(value?: string): number {
