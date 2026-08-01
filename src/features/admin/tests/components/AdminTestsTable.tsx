@@ -1,4 +1,4 @@
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react"
+import { Edit, MoreHorizontal, Trash2, FileText, Clock, Target, ShieldCheck } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -50,6 +50,7 @@ export default function AdminTestsTable({
     {
       key: "title",
       header: t("columns.assessment"),
+      headerIcon: FileText,
       cell: (test) => (
         <div>
           <p className="font-semibold text-text-primary">{test.title}</p>
@@ -62,16 +63,19 @@ export default function AdminTestsTable({
     {
       key: "duration",
       header: t("columns.duration"),
+      headerIcon: Clock,
       cell: (test) => t("minutes", { count: test.duration_minutes }),
     },
     {
       key: "score",
       header: t("columns.passing"),
+      headerIcon: Target,
       cell: (test) => `${test.passing_score} / ${test.max_score}`,
     },
     {
       key: "status",
       header: t("columns.status"),
+      headerIcon: ShieldCheck,
       cell: (test) => (
         <StatusBadge status={test.is_active ? "active" : "inactive"} variant="soft" />
       ),

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react"
+import { Edit, MoreHorizontal, Trash2, Badge, Hash, Calendar } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -150,11 +150,13 @@ export default function AdminSkillsTable({
     {
       key: "name",
       header: t("columns.skill"),
+      headerIcon: Badge,
       cell: (skill) => <span className="font-semibold text-text-primary">{skill.name}</span>,
     },
     {
       key: "slug",
       header: t("columns.slug"),
+      headerIcon: Hash,
       cell: (skill) => (
         <code className="rounded bg-background-secondary px-2 py-1 text-xs">{skill.slug}</code>
       ),
@@ -162,6 +164,7 @@ export default function AdminSkillsTable({
     {
       key: "created",
       header: t("columns.created"),
+      headerIcon: Calendar,
       cell: (skill) =>
         skill.created_at ? new Date(skill.created_at).toLocaleDateString(i18n.language) : "-",
     },
