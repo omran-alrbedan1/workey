@@ -9,6 +9,7 @@ import {
   FileWarning,
   LucideIcon
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button" 
 
 export type ErrorVariant = 
@@ -142,12 +143,32 @@ const ErrorState: React.FC<ErrorStateProps> = ({
   className,
   size = "md"
 }) => {
+  const { t } = useTranslation('common')
   const config = variantConfig[variant]
   const styles = sizeStyles[size]
+
+  const titleKey: Record<ErrorVariant, string> = {
+    default:  'somethingWentWrong',
+    '404':    'pageNotFound',
+    '500':    'errors.serverError',
+    '403':    'errors.accessDenied',
+    network:  'errors.networkError',
+    timeout:  'errors.timeoutError',
+    custom:   'error',
+  }
+  const descKey: Record<ErrorVariant, string> = {
+    default:  'errors.defaultErrorDesc',
+    '404':    'errors.pageNotFoundDesc',
+    '500':    'errors.serverErrorDesc',
+    '403':    'errors.accessDeniedDesc',
+    network:  'errors.networkErrorDesc',
+    timeout:  'errors.timeoutErrorDesc',
+    custom:   'errors.customErrorDesc',
+  }
   
   const IconComponent = icon || config.icon
-  const displayTitle = title || config.defaultTitle
-  const displayDescription = description || config.defaultDescription
+  const displayTitle = title || t(titleKey[variant])
+  const displayDescription = description || t(descKey[variant])
   
   // Extract error message if error object is provided
   const errorMessage = error instanceof Error ? error.message : error
@@ -232,7 +253,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({
               className="gap-2"
             >
               <RefreshCw className="w-4 h-4" />
-              Try Again
+              {t('tryAgain')}
             </Button>
         </div>
       )}
@@ -246,7 +267,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({
             className="gap-2"
           >
             <RefreshCw className="w-4 h-4" />
-            Try Again
+            {t('tryAgain')}
           </Button>
         </div>
       )}

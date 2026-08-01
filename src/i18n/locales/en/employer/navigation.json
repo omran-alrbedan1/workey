@@ -1,0 +1,25 @@
+{
+  "portalName": "Workey Employer",
+  "portalLabel": "Employer portal",
+  "logoAlt": "Workey logo",
+  "openMenu": "Open menu",
+  "closeMenu": "Close menu",
+  "logout": "Logout",
+  "sections": {
+    "overview": "Overview",
+    "recruitment": "Recruitment",
+    "organization": "Organization",
+    "account": "Account"
+  },
+  "items": {
+    "dashboard": "Dashboard",
+    "jobs": "Jobs",
+    "applicants": "Applicants",
+    "interviews": "Interviews",
+    "tests": "Assessment Tests",
+    "company": "Company Profile",
+    "profile": "My Profile",
+    "notifications": "Notifications",
+    "settings": "Settings"
+  }
+}

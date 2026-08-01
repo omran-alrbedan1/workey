@@ -1,0 +1,174 @@
+{
+  "title": "الوظائف",
+  "description": "أنشئ وأدر إعلانات الوظائف الخاصة بشركتك.",
+  "createTitle": "إنشاء وظيفة",
+  "createDescription": "أنشئ مسودة إعلان وظيفي لشركتك.",
+  "detailsTitle": "تفاصيل الوظيفة",
+  "detailsDescription": "عرض تفاصيل الوظيفة والمتقدمين المرتبين.",
+  "editTitle": "تعديل الوظيفة",
+  "editDescription": "حدّث إعلان الوظيفة واحفظ التغييرات.",
+  "fields": {
+    "title": "المسمى الوظيفي",
+    "description": "الوصف",
+    "department": "القسم",
+    "responsibilities": "المسؤوليات",
+    "benefits": "المزايا",
+    "requirements": "المتطلبات",
+    "employmentType": "نوع التوظيف",
+    "experienceLevel": "مستوى الخبرة",
+    "workMode": "نمط العمل",
+    "location": "الموقع",
+    "applicationDeadline": "الموعد النهائي للتقديم",
+    "salaryMin": "الحد الأدنى للراتب",
+    "salaryMax": "الحد الأعلى للراتب"
+  },
+  "employmentTypes": {
+    "full_time": "دوام كامل",
+    "part_time": "دوام جزئي",
+    "contract": "عقد",
+    "freelance": "عمل حر"
+  },
+  "experienceLevels": {
+    "junior": "مبتدئ",
+    "mid": "متوسط",
+    "senior": "كبير",
+    "lead": "قائد فريق"
+  },
+  "workModes": {
+    "remote": "Remote",
+    "on_site": "On-site",
+    "hybrid": "Hybrid"
+  },
+  "screeningQuestions": {
+    "title": "أسئلة الفرز",
+    "description": "راجع المتقدمين قبل تقديمهم من خلال أسئلة فرز مخصصة.",
+    "addButton": "إضافة سؤال",
+    "empty": "لم تتم إضافة أسئلة فرز بعد.",
+    "fields": {
+      "questionText": "السؤال",
+      "questionType": "نوع السؤال",
+      "isRequired": "إجباري",
+      "options": "خيارات",
+      "optionPlaceholder": "نص الخيار",
+      "addOption": "إضافة خيار",
+      "isCorrect": "صحيح"
+    },
+    "types": {
+      "short_text": "نص قصير",
+      "number": "رقم",
+      "boolean": "نعم / لا",
+      "single_choice": "اختيار واحد",
+      "multiple_choice": "اختيار متعدد"
+    },
+    "required": "إجباري",
+    "optional": "اختياري",
+    "confirmDelete": "حذف هذا السؤال؟",
+    "confirmDeleteDescription": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف السؤال نهائياً.",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "toasts": {
+      "created": "تمت إضافة سؤال الفرز",
+      "updated": "تم تحديث سؤال الفرز",
+      "deleted": "تم حذف سؤال الفرز"
+    }
+  },
+  "skills": {
+    "title": "المهارات المطلوبة",
+    "description": "أرفق مهارات موجودة في المنصة بهذه الوظيفة.",
+    "searchPlaceholder": "ابحث في المهارات المتاحة...",
+    "loading": "جارٍ تحميل المهارات...",
+    "loadError": "تعذر تحميل المهارات.",
+    "noResults": "لا توجد مهارات متاحة.",
+    "selectHint": "اختر مهارة واحدة أو أكثر من قائمة المنصة.",
+    "selectedCount": "تم اختيار {{count}} مهارة",
+    "attach": "إرفاق المهارات",
+    "empty": "لم يتم إرفاق مهارات بعد.",
+    "detachLabel": "إزالة {{name}}"
+  },
+  "columns": {
+    "job": "الوظيفة",
+    "status": "الحالة",
+    "type": "نوع التوظيف",
+    "applications": "الطلبات",
+    "created": "تاريخ الإنشاء",
+    "actions": "الإجراءات"
+  },
+  "actions": {
+    "new": "وظيفة جديدة",
+    "create": "إنشاء مسودة",
+    "creating": "جارٍ الإنشاء...",
+    "view": "عرض التفاصيل",
+    "edit": "تعديل",
+    "save": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ...",
+    "back": "العودة إلى الوظائف",
+    "label": "إجراءات الوظيفة",
+    "menuFor": "إجراءات {{title}}",
+    "applicants": "عرض المتقدمين",
+    "publish": "نشر",
+    "close": "إغلاق",
+    "delete": "حذف"
+  },
+  "empty": {
+    "title": "لا توجد وظائف",
+    "description": "أنشئ أول مسودة وظيفة لبدء التوظيف."
+  },
+  "toasts": {
+    "created": "تم إنشاء مسودة الوظيفة",
+    "updated": "تم تحديث الوظيفة",
+    "skillsAttached": "تم إرفاق المهارات بالوظيفة",
+    "skillDetached": "تمت إزالة المهارة من الوظيفة",
+    "published": "تم نشر الوظيفة",
+    "closed": "تم إغلاق الوظيفة",
+    "deleted": "تم حذف الوظيفة"
+  },
+  "filters": {
+    "title": "تصفية",
+    "workMode": "نمط العمل",
+    "employmentType": "نوع التوظيف",
+    "acceptingApplications": "قبول الطلبات",
+    "allWorkModes": "جميع أنماط العمل",
+    "allEmploymentTypes": "جميع الأنواع",
+    "allApplicationStates": "الكل",
+    "accepting": "يقبل",
+    "notAccepting": "لا يقبل",
+    "sortBy": "ترتيب حسب",
+    "sortDirection": "الاتجاه"
+  },
+  "sort": {
+    "createdAt": "تاريخ الإنشاء",
+    "publishedAt": "تاريخ النشر",
+    "applicationDeadline": "الموعد النهائي",
+    "title": "العنوان",
+    "desc": "الأحدث",
+    "asc": "الأقدم"
+  },
+  "rankedCandidates": {
+    "title": "ترتيب المتقدمين",
+    "description": "ترتيب المدعوم بالذكاء الاصطناعي للمتقدمين بناءً على ملاءمتهم للوظيفة.",
+    "score": "نسبة التطابق",
+    "version": "الإصدار",
+    "matchedSkills": "المهارات المتطابقة",
+    "missingSkills": "المهارات المفقودة",
+    "reasons": "ملاحظات",
+    "empty": "لا يوجد متقدمون مرتبون بعد.",
+    "loadError": "تعذر تحميل ترتيب المتقدمين.",
+    "retry": "حاول مرة أخرى",
+    "breakdown": {
+      "title": "تفصيل النتيجة",
+      "skills": "المهارات",
+      "experience": "الخبرة",
+      "education": "التعليم",
+      "recency": "حداثة النشاط",
+      "profileCompleteness": "اكتمال الملف"
+    }
+  },
+  "errors": {
+    "title": "تعذر تحميل الوظائف",
+    "description": "تحقق من صلاحية صاحب العمل وحاول مجدداً.",
+    "editTitle": "تعذر تحميل الوظيفة",
+    "editDescription": "قد تكون الوظيفة غير موجودة أو لا تنتمي إلى شركتك."
+  }
+}

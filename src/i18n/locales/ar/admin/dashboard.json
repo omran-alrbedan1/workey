@@ -1,0 +1,29 @@
+{
+  "eyebrow": "نظرة عامة على عمليات المنصة", "title": "لوحة تحكم الإدارة",
+  "loading": "جارٍ تحميل لوحة تحكم الإدارة", "errorTitle": "تعذر تحميل لوحة تحكم الإدارة",
+  "errorDescription": "تعذر الوصول إلى واجهات الإدارة. تحقق من عنوان API ورمز المصادقة وخادم الواجهة الخلفية.",
+  "description": "راقب حسابات المنصة والشركات والكتالوجات والعناصر التي تحتاج إلى متابعة.", "refresh": "تحديث البيانات",
+  "partialTitle": "بيانات لوحة التحكم جزئية.", "partialDescription": "تعذر تحميل: {{sources}}. بقية الأدوات ما زالت متاحة.",
+  "coverageTitle": "تغطية الواجهة الخلفية.", "coverageDescription": "ما زالت نقاط نهاية الإدارة العامة للوظائف والطلبات والمقابلات والتحليلات وسجل النشاط مطلوبة لإكمال أقسام لوحة التحكم.",
+  "attentionTitle": "يحتاج إلى انتباهك", "attentionSubtitle": "أعداد مباشرة من واجهات الإدارة",
+  "recentTitle": "أحدث سجلات المنصة", "recentSubtitle": "أحدث المستخدمين والشركات المعادة من الواجهات", "noRecent": "لم يتم إرجاع سجلات حديثة.",
+  "dateUnavailable": "التاريخ غير متاح", "sample": "عينة", "noChartData": "لم تُرجع هذه الواجهة أي سجلات.",
+  "usersByRole": "المستخدمون حسب الدور", "loadedSample": "التوزيع ضمن عينة البيانات المحملة", "platformDistribution": "توزيع حسابات المنصة", "usersLoaded": "مستخدمون محملون",
+  "companyApprovals": "اعتمادات الشركات", "statusSample": "توزيع الحالات ضمن العينة المحملة", "companyOutcomes": "نتائج مراجعة الشركات الحالية", "companiesLoaded": "شركات محملة",
+  "registeredAs": "سُجّل بصفة {{role}}", "companyStatus": "حالة الشركة: {{status}}",
+  "sources": { "users": "المستخدمون", "companies": "الشركات", "skills": "المهارات", "tests": "الاختبارات" },
+  "roles": { "jobSeekers": "الباحثون عن عمل", "employers": "أصحاب العمل", "admins": "المسؤولون" },
+  "statuses": { "approved": "معتمدة", "pending": "قيد الانتظار", "rejected": "مرفوضة" },
+  "metrics": {
+    "totalUsers": "إجمالي المستخدمين", "totalUsersSub": "حسابات المنصة المسجلة", "jobSeekers": "الباحثون عن عمل", "candidateAccounts": "حسابات المرشحين",
+    "employers": "أصحاب العمل", "employerAccounts": "حسابات أصحاب العمل", "sampleSub": "من عينة المستخدمين المحملة", "companies": "الشركات",
+    "companiesSub": "المؤسسات المسجلة", "pendingCompanies": "الشركات المعلقة", "pendingCompaniesSub": "بانتظار مراجعة الإدارة",
+    "suspendedUsers": "المستخدمون الموقوفون", "suspendedUsersSub": "حسابات تحتاج إلى متابعة", "skills": "المهارات", "skillsSub": "دليل المهارات المشترك",
+    "activeTests": "الاختبارات النشطة", "activeTestsSub": "التقييمات المتاحة"
+  },
+  "attention": {
+    "companyApprovals": "اعتمادات الشركات", "companyApprovalsSub": "شركات بانتظار التحقق",
+    "suspended": "الحسابات الموقوفة", "suspendedSub": "الحسابات الموقوفة حالياً",
+    "inactiveTests": "التقييمات غير النشطة", "inactiveTestsSub": "اختبارات غير متاحة للإسناد"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "title": "المقابلات / المواعيد", "description": "راقب مواعيد التوظيف المجدولة عبر المنصة.",
+  "columns": { "candidate": "المرشح", "jobCompany": "الوظيفة والشركة", "type": "النوع", "dateTime": "التاريخ والوقت", "duration": "المدة", "mode": "النمط", "status": "الحالة", "overallScore": "التقييم العام" },
+  "minutes": "{{count}} دقيقة", "empty": "لم يتم العثور على مقابلات", "emptyDescription": "لا توجد مقابلات تطابق عوامل التصفية.",
+  "filters": {
+    "title": "تصفية المقابلات", "candidate": "المرشح", "candidatePlaceholder": "اسم المرشح أو بريده",
+    "company": "الشركة", "companyPlaceholder": "اسم الشركة", "job": "الوظيفة", "jobPlaceholder": "المسمى الوظيفي",
+    "status": "الحالة", "allStatuses": "كل الحالات", "scheduled": "مجدولة", "completed": "مكتملة", "cancelled": "ملغاة",
+    "type": "النوع", "allTypes": "كل الأنواع", "screening": "فرز أولي", "technical": "تقنية", "behavioral": "سلوكية", "final": "نهائية",
+    "mode": "النمط", "allModes": "كل الأنماط", "video": "فيديو", "phone": "هاتف", "inPerson": "حضورية", "dateRange": "نطاق التاريخ"
+  },
+  "missingTitle": "مراقبة المقابلات تحتاج إلى دعم الواجهة الخلفية",
+  "missingDescription": "تتضمن مجموعة Postman مسارات مقابلات المرشح وصاحب العمل، لكنها لا تتضمن GET /admin/interviews. أضف هذه النقطة بصلاحية الإدارة لتعبئة القسم."
+}

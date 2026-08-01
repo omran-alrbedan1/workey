@@ -1,0 +1,17 @@
+{
+  "title": "Company Profile",
+  "description": "Review and update your company's public information.",
+  "fields": {
+    "name": "Company name",
+    "industry": "Industry",
+    "website": "Website",
+    "location": "Location",
+    "description": "Description"
+  },
+  "actions": { "save": "Save company", "saving": "Saving..." },
+  "toasts": { "updated": "Company profile updated" },
+  "errors": {
+    "title": "Unable to load company profile",
+    "description": "Check your employer access and try again."
+  }
+}

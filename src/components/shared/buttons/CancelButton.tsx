@@ -1,6 +1,7 @@
 import React from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useTranslation } from "react-i18next"
 
 interface CancelButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string
@@ -15,6 +16,7 @@ export const CancelButton = ({
   className,
   ...props
 }: CancelButtonProps) => {
+  const {t} = useTranslation('common')
   return (
     <Button
       variant="outline"
@@ -25,7 +27,7 @@ export const CancelButton = ({
       {...props}
     >
       {icon && <span className="mr-2">{icon}</span>}
-      {text || children || "Cancel"}
+      {text || children || t('cancel')}
     </Button>
   )
 }

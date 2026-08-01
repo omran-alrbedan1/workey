@@ -1,8 +1,12 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { useTranslation } from 'react-i18next'
-import { X, Ban } from 'lucide-react'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { AlertTriangle, Ban, X } from "lucide-react"
+import { useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import { z } from "zod"
+
+import { CancelButton, SubmitButton } from "@/components/shared/buttons"
+import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import {
   Dialog,
   DialogContent,
@@ -10,95 +14,122 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Form } from '@/components/ui/form'
-import CustomFormField, { FormFieldType } from '@/components/shared/inputs/CustomFormField'
-import { CancelButton, SubmitButton } from '@/components/shared/buttons'
+} from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import { images } from "@/constants/images"
+
+type RejectFormValues = { reason?: string }
 
 interface RejectModalProps {
   open: boolean
-  onConfirm: (reason: string) => void
+  onConfirm: (reason: string) => void | Promise<unknown>
   onClose: () => void
   loading?: boolean
   name: string
+  title?: string
+  description?: string
+  confirmText?: string
+  reasonRequired?: boolean
 }
 
-const RejectModal: React.FC<RejectModalProps> = ({
+export default function RejectModal({
   open,
   onConfirm,
   onClose,
-  loading,
+  loading = false,
   name,
-}) => {
-  const { t } = useTranslation('common')
-
+  title,
+  description,
+  confirmText,
+  reasonRequired = false,
+}: RejectModalProps) {
+  const { t } = useTranslation("common")
   const rejectSchema = z.object({
-    reason: z.string().max(255, 'Reason is too long').optional(),
+    reason: reasonRequired
+      ? z
+          .string()
+          .trim()
+          .min(1, t("modals.reject.reasonRequired"))
+          .max(255, t("modals.reasonTooLong"))
+      : z.string().max(255, t("modals.reasonTooLong")).optional(),
   })
-
-  type RejectFormValues = z.infer<typeof rejectSchema>
-
   const form = useForm<RejectFormValues>({
     resolver: zodResolver(rejectSchema),
-    defaultValues: { reason: '' },
+    defaultValues: { reason: "" },
   })
 
-  const handleSubmit = (data: RejectFormValues) => {
-    onConfirm(data.reason || '')
-  }
+  useEffect(() => {
+    if (!open) form.reset({ reason: "" })
+  }, [form, open])
+
+  const handleSubmit = (data: RejectFormValues) => onConfirm(data.reason?.trim() ?? "")
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <DialogContent className="overflow-hidden border-primary/15 bg-background-card p-0 shadow-2xl sm:max-w-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <DialogHeader>
-              <div className="flex items-center gap-3 rtl:text-start">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-red-500/20 to-red-500/10">
-                  <Ban className="h-5 w-5 text-red-600" />
-                </div>
-                <div className="space-y-1">
-                  <DialogTitle className="text-xl">{t('modals.reject.title')}</DialogTitle>
-                  <DialogDescription>
-                    {t('modals.reject.description', { name })}
-                  </DialogDescription>
-                </div>
-              </div>
-            </DialogHeader>
-
-            <div className="py-4">
-              <CustomFormField
-                fieldType={FormFieldType.TEXTAREA}
-                control={form.control}
-                name="reason"
-                placeholder={t('modals.reject.reasonPlaceholder')}
-                disabled={loading}
-                rows={4}
-                maxLength={255}
-                containerClassName="space-y-2 "
-              />
+            <div className="relative bg-red-100 px-6 pb-12 pt-6">
+              <img src={images.logo} alt="Workey" className="relative h-16 w-auto mx-auto " />
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-2 mt-4 w-fit ml-auto">
-              <CancelButton
-                onClick={onClose}
-                disabled={loading}
-                text={t('modals.cancel')}
-                icon={<X className="h-4 w-4" />}
-              />
-              <SubmitButton
-                isLoading={loading}
-                text={t('modals.reject.confirm')}
-                loadingText={t('modals.processing')}
-                icon={<Ban className="h-4 w-4" />}
-                className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
-              />
-            </DialogFooter>
+            <div className="relative -mt-8 px-6 pb-6">
+              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-4 border-background-card bg-red-600 text-white shadow-lg shadow-red-600/20">
+                <Ban className="h-8 w-8" />
+              </div>
+
+              <DialogHeader className="text-left">
+                <DialogTitle className="text-2xl font-bold text-text-primary">
+                  {title ?? t("modals.reject.title")}
+                </DialogTitle>
+                <DialogDescription className="pt-2 text-sm leading-6 text-text-secondary">
+                  {description ?? t("modals.reject.description", { name })}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="py-5">
+                <CustomFormField
+                  fieldType={FormFieldType.TEXTAREA}
+                  control={form.control}
+                  name="reason"
+                  label={t(
+                    reasonRequired ? "modals.reject.reason" : "modals.reject.reasonOptional",
+                  )}
+                  placeholder={t("modals.reject.reasonPlaceholder")}
+                  disabled={loading}
+                  rows={4}
+                  maxLength={255}
+                  containerClassName="space-y-2"
+                  inputClassName="focus-visible:ring-1 focus-visible:ring-red-500 "
+                />
+              </div>
+
+              <div className="flex items-start gap-3 rounded-xl border border-red-200  p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{t("modals.reject.statusWarning")}</span>
+              </div>
+
+              <DialogFooter className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2">
+                <CancelButton
+                  type="button"
+                  onClick={onClose}
+                  disabled={loading}
+                  text={t("modals.cancel")}
+                  icon={<X className="h-4 w-4" />}
+                  className="w-full"
+                />
+                <SubmitButton
+                  isLoading={loading}
+                  text={confirmText ?? t("modals.reject.confirm")}
+                  loadingText={t("modals.processing")}
+                  icon={<Ban className="h-4 w-4" />}
+                  className="w-full bg-red-600 shadow-lg shadow-red-600/20 hover:bg-red-700 "
+                />
+              </DialogFooter>
+            </div>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
   )
 }
-
-export default RejectModal

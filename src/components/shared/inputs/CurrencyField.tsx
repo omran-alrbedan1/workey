@@ -13,6 +13,12 @@ interface CurrencyFieldProps {
   locale?: string
 }
 
+const currencySymbols: Record<string, string> = {
+  USD: "$",
+  EUR: "EUR",
+  GBP: "GBP",
+}
+
 export const CurrencyField: React.FC<CurrencyFieldProps> = ({
   field,
   placeholder,
@@ -21,32 +27,31 @@ export const CurrencyField: React.FC<CurrencyFieldProps> = ({
   ariaLabel,
   ariaDescribedBy,
   currency = "USD",
-  locale = "en-US",
 }) => {
   const [displayValue, setDisplayValue] = useState("")
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^\d.]/g, "")
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.replace(/[^\d.]/g, "")
     const numValue = parseFloat(value) || 0
     setDisplayValue(value)
     field.onChange(numValue)
   }
-  
+
   return (
-    <div className="relative group">
+    <div className="group relative">
       <Input
         {...field}
         type="text"
         placeholder={placeholder || "0.00"}
         disabled={disabled}
-        className={cn(inputClassName, "px-6 py-5 text-base pl-14")}
+        className={cn(inputClassName, "px-6 py-5 text-base ltr:pl-14 rtl:pr-14")}
         value={displayValue}
         onChange={handleChange}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}
       />
-      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground group-focus-within:text-primary transition-colors">
-        {currency === "USD" ? "$" : currency === "EUR" ? "€" : currency === "GBP" ? "£" : currency}
+      <div className="absolute top-1/2 -translate-y-1/2 text-sm text-muted-foreground transition-colors group-focus-within:text-primary ltr:left-4 rtl:right-4">
+        {currencySymbols[currency] ?? currency}
       </div>
     </div>
   )

@@ -1,0 +1,20 @@
+{
+  "title": "Audit logs",
+  "description": "Review important actions performed across the platform.",
+  "columns": {
+    "action": "Action",
+    "actor": "Performed by",
+    "entity": "Entity",
+    "date": "Date and time"
+  },
+  "filters": {
+    "actionPlaceholder": "Action, e.g. job.published",
+    "entityPlaceholder": "Entity class, e.g. App\\Models\\JobPosting",
+    "actorPlaceholder": "Actor user ID",
+    "apply": "Apply filters",
+    "reset": "Reset filters"
+  },
+  "unknownActor": "System or unknown user",
+  "empty": "No audit logs found",
+  "emptyDescription": "Try changing the filters or check back after platform activity occurs."
+}

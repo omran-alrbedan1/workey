@@ -1,0 +1,8 @@
+{
+  "title": "Notifications", "description": "{{count}} unread platform notifications.",
+  "columns": { "notification": "Notification", "status": "Status", "received": "Received", "action": "Action" },
+  "platformNotification": "Platform notification", "details": "Open this notification for details.", "markRead": "Mark read",
+  "markAllRead": "Mark all as read", "markingAllRead": "Marking all...",
+  "empty": "No notifications were returned.", "emptyDescription": "You have no platform notifications right now.",
+  "markedRead": "Notification marked as read", "markedAllRead": "All notifications marked as read"
+}

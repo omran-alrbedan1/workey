@@ -1,0 +1,181 @@
+{
+  "title": "Jobs",
+  "description": "Create and manage your company's job postings.",
+  "createTitle": "Create Job",
+  "createDescription": "Create a draft job posting for your company.",
+  "detailsTitle": "Job Details",
+  "detailsDescription": "View job posting details and ranked candidates.",
+  "editTitle": "Edit Job",
+  "editDescription": "Update this job posting and save your changes.",
+  "fields": {
+    "title": "Job title",
+    "description": "Description",
+    "department": "Department",
+    "responsibilities": "Responsibilities",
+    "benefits": "Benefits",
+    "requirements": "Requirements",
+    "employmentType": "Employment type",
+    "experienceLevel": "Experience level",
+    "workMode": "Work mode",
+    "location": "Location",
+    "applicationDeadline": "Application deadline",
+    "salaryMin": "Minimum salary",
+    "salaryMax": "Maximum salary"
+  },
+  "employmentTypes": {
+    "full_time": "Full Time",
+    "part_time": "Part Time",
+    "contract": "Contract",
+    "freelance": "Freelance"
+  },
+  "experienceLevels": {
+    "junior": "Junior",
+    "mid": "Mid Level",
+    "senior": "Senior",
+    "lead": "Lead"
+  },
+  "workModes": {
+    "remote": "Remote",
+    "on_site": "On-site",
+    "hybrid": "Hybrid"
+  },
+  "screeningQuestions": {
+    "title": "Screening Questions",
+    "pageTitle": "Screening questions",
+    "pageDescription": "Create and manage screening questions for this job.",
+    "description": "Review applicants before they apply with custom screening questions.",
+    "addButton": "Add question",
+    "empty": "No screening questions added yet.",
+    "fields": {
+      "questionText": "Question",
+      "questionType": "Question type",
+      "isRequired": "Required",
+      "options": "Options",
+      "optionPlaceholder": "Option text",
+      "addOption": "Add option",
+      "isCorrect": "Correct"
+    },
+    "types": {
+      "short_text": "Short text",
+      "number": "Number",
+      "boolean": "Yes / No",
+      "single_choice": "Single choice",
+      "multiple_choice": "Multiple choice"
+    },
+    "questionTypeLabel": "{{label}}",
+    "required": "Required",
+    "optional": "Optional",
+    "confirmDelete": "Delete this question?",
+    "confirmDeleteDescription": "This action cannot be undone. The question will be permanently removed.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "toasts": {
+      "created": "Screening question added",
+      "updated": "Screening question updated",
+      "deleted": "Screening question deleted"
+    }
+  },
+  "skills": {
+    "title": "Required skills",
+    "description": "Attach existing platform skills to this job.",
+    "searchPlaceholder": "Search available skills...",
+    "loading": "Loading skills...",
+    "loadError": "Skills could not be loaded.",
+    "noResults": "No available skills found.",
+    "selectHint": "Select one or more skills from the platform catalog.",
+    "selectedCount": "{{count}} skill selected",
+    "selectedCount_other": "{{count}} skills selected",
+    "attach": "Attach skills",
+    "empty": "No skills are attached yet.",
+    "detachLabel": "Detach {{name}}"
+  },
+  "columns": {
+    "job": "Job",
+    "status": "Status",
+    "type": "Employment",
+    "applications": "Applications",
+    "created": "Created",
+    "actions": "Actions"
+  },
+  "actions": {
+    "new": "New job",
+    "create": "Create draft",
+    "creating": "Creating...",
+    "view": "View details",
+    "edit": "Edit",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "back": "Back to jobs",
+    "label": "Job actions",
+    "menuFor": "Actions for {{title}}",
+    "applicants": "View applicants",
+    "publish": "Publish",
+    "close": "Close",
+    "delete": "Delete",
+    "backToJob": "Back to job"
+  },
+  "empty": {
+    "title": "No jobs found",
+    "description": "Create your first draft job to begin hiring."
+  },
+  "toasts": {
+    "created": "Job draft created",
+    "updated": "Job updated",
+    "skillsAttached": "Skills attached to the job",
+    "skillDetached": "Skill removed from the job",
+    "published": "Job published",
+    "closed": "Job closed",
+    "deleted": "Job deleted"
+  },
+  "filters": {
+    "title": "Filters",
+    "workMode": "Work mode",
+    "employmentType": "Employment type",
+    "acceptingApplications": "Accepting applications",
+    "allWorkModes": "All work modes",
+    "allEmploymentTypes": "All types",
+    "allApplicationStates": "All",
+    "accepting": "Accepting",
+    "notAccepting": "Not accepting",
+    "sortBy": "Sort by",
+    "sortDirection": "Direction"
+  },
+  "sort": {
+    "createdAt": "Created date",
+    "publishedAt": "Published date",
+    "applicationDeadline": "Deadline",
+    "title": "Title",
+    "desc": "Newest",
+    "asc": "Oldest"
+  },
+  "rankedCandidates": {
+    "title": "Ranked Candidates",
+    "pageTitle": "Ranked candidates",
+    "pageDescription": "Review AI-ranked candidates for this job.",
+    "description": "AI-powered ranking of applicants based on job fit.",
+    "score": "Match score",
+    "version": "Version",
+    "matchedSkills": "Matched skills",
+    "missingSkills": "Missing skills",
+    "reasons": "Notes",
+    "empty": "No ranked candidates yet.",
+    "loadError": "Could not load ranked candidates.",
+    "retry": "Try again",
+    "breakdown": {
+      "title": "Score breakdown",
+      "skills": "Skills",
+      "experience": "Experience",
+      "education": "Education",
+      "recency": "Recency",
+      "profileCompleteness": "Profile completeness"
+    }
+  },
+  "errors": {
+    "title": "Unable to load jobs",
+    "description": "Check your employer access and try again.",
+    "editTitle": "Unable to load this job",
+    "editDescription": "The job may not exist or may not belong to your company."
+  }
+}

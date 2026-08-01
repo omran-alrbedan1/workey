@@ -1,0 +1,33 @@
+{
+  "title": "الإشعارات",
+  "description": "راجع إشعارات التوظيف ونشاط الشركة.",
+  "columns": {
+    "title": "الإشعار",
+    "type": "النوع",
+    "date": "التاريخ"
+  },
+  "types": {
+    "interview_scheduled": "مقابلة مجدولة",
+    "interview_completed": "مقابلة مكتملة",
+    "interview_cancelled": "مقابلة ملغاة",
+    "application_received": "طلب استقبال",
+    "application_status": "حالة الطلب",
+    "test_assigned": "اختبار مخصص",
+    "test_completed": "اختبار مكتمل",
+    "general": "عام"
+  },
+  "empty": {
+    "title": "لا توجد إشعارات",
+    "description": "ليست لديك أي إشعارات بعد."
+  },
+  "actions": {
+    "markAllRead": "تحديد الكل كمقروء"
+  },
+  "toasts": {
+    "allRead": "تم تحديد جميع الإشعارات كمقروءة"
+  },
+  "errors": {
+    "title": "تعذر تحميل الإشعارات",
+    "description": "حدث خطأ أثناء تحميل الإشعارات. حاول مرة أخرى."
+  }
+}

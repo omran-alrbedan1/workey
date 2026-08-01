@@ -1,0 +1,25 @@
+{
+  "portalName": "وركي لأصحاب العمل",
+  "portalLabel": "بوابة صاحب العمل",
+  "logoAlt": "شعار وركي",
+  "openMenu": "فتح القائمة",
+  "closeMenu": "إغلاق القائمة",
+  "logout": "تسجيل الخروج",
+  "sections": {
+    "overview": "نظرة عامة",
+    "recruitment": "التوظيف",
+    "organization": "المؤسسة",
+    "account": "الحساب"
+  },
+  "items": {
+    "dashboard": "لوحة التحكم",
+    "jobs": "الوظائف",
+    "applicants": "المتقدمون",
+    "interviews": "المقابلات",
+    "tests": "اختبارات التقييم",
+    "company": "ملف الشركة",
+    "profile": "ملفي الشخصي",
+    "notifications": "الإشعارات",
+    "settings": "الإعدادات"
+  }
+}

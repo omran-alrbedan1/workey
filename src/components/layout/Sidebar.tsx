@@ -1,83 +1,27 @@
-import React, { useEffect } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
-import { useTranslation } from "react-i18next"
+import type { LucideIcon } from "lucide-react"
 import {
-  Home,
-  DollarSign,
-  Users,
-  ShoppingCart,
-  Truck,
-  FileText,
-  Video,
-  Heart,
-  Settings,
-  HelpCircle,
-  Store,
-  ClipboardList,
-  BookOpen,
-  MessageCircle,
-  X,
-  ShoppingBag,
+  BarChart3,
+  Bell,
+  BriefcaseBusiness,
+  Building2,
   ChevronDown,
+  ClipboardList,
+  FlaskConical,
+  HelpCircle,
+  LayoutDashboard,
+  Settings,
+  ScrollText,
+  UserRoundCheck,
+  Users,
+  Wrench,
+  X,
 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { NavLink, useLocation, useNavigate } from "react-router-dom"
+
 import { images } from "@/constants/images"
-
-interface MenuItem {
-  titleKey: string
-  path?: string
-  icon: any
-  notifs?: number
-  children?: MenuItem[]
-}
-
-const menuItems: MenuItem[] = [
-  { titleKey: "sidebar.menu.dashboard", path: "/", icon: Home },
-  { titleKey: "sidebar.menu.users", path: "/users", icon: Users },
-  {
-    titleKey: "sidebar.menu.vendorsGroup",
-    icon: Store,
-    children: [
-      { titleKey: "sidebar.menu.vendors", path: "/vendors", icon: Store, notifs: 3 },
-      { titleKey: "sidebar.menu.vendorsApproval", path: "/admin/vendor-approval", icon: ClipboardList },
-    ],
-  },
-  {
-    titleKey: "sidebar.menu.productsGroup",
-    icon: ShoppingCart,
-    children: [
-      { titleKey: "sidebar.menu.products", path: "/products", icon: ShoppingCart, notifs: 12 },
-      { titleKey: "sidebar.menu.productsApproval", path: "/admin/product-approval", icon: ClipboardList },
-    ],
-  },
-  { titleKey: "sidebar.menu.paymentsMonitoring", path: "/payments", icon: DollarSign },
-  { titleKey: "sidebar.menu.orders", path: "/orders", icon: ShoppingBag },
-  {
-    titleKey: "sidebar.menu.driversGroup",
-    icon: Truck,
-    children: [
-      { titleKey: "sidebar.menu.drivers", path: "/drivers", icon: Truck },
-      { titleKey: "sidebar.menu.driversApproval", path: "/admin/driver-approval", icon: ClipboardList },
-    ],
-  },
-]
-
-const contentItems: MenuItem[] = [
-  { titleKey: "sidebar.menu.articles", path: "/content/articles", icon: FileText },
-  { titleKey: "sidebar.menu.videos", path: "/content/videos", icon: Video },
-  { titleKey: "sidebar.menu.guides", path: "/content/guides", icon: BookOpen },
-]
-
-const communityItems: MenuItem[] = [
-  { titleKey: "sidebar.menu.posts", path: "/community/posts", icon: MessageCircle, notifs: 5 },
-  { titleKey: "sidebar.menu.reports", path: "/community/reports", icon: Heart },
-]
-
-const reportItems: MenuItem[] = [
-  { titleKey: "sidebar.menu.sales", path: "/reports/sales", icon: DollarSign },
-  { titleKey: "sidebar.menu.vendors", path: "/reports/vendors", icon: Store },
-  { titleKey: "sidebar.menu.delivery", path: "/reports/delivery", icon: Truck },
-  { titleKey: "sidebar.menu.users", path: "/reports/users", icon: Users },
-]
+import { ROUTES } from "@/config"
 
 interface SidebarProps {
   isOpen?: boolean
@@ -85,375 +29,195 @@ interface SidebarProps {
   onClose?: () => void
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, isMobile = false, onClose }) => {
-  const isVisible = isMobile ? isOpen : true
-
-  useEffect(() => {
-    if (!isMobile || !isOpen) return
-
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && onClose) {
-        onClose()
-      }
-    }
-
-    document.addEventListener('keydown', handleEsc)
-    
-    // Prevent body scroll when mobile menu is open
-    document.body.style.overflow = 'hidden'
-    
-    return () => {
-      document.removeEventListener('keydown', handleEsc)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isMobile, isOpen, onClose])
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    if (!isMobile || !isOpen) return
-
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      if (!target.closest('.mobile-sidebar-content') && !target.closest('.menu-toggle-button')) {
-        onClose?.()
-      }
-    }
-
-    // Delay to avoid immediate close when opening
-    setTimeout(() => {
-      document.addEventListener('click', handleClickOutside)
-    }, 100)
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [isMobile, isOpen, onClose])
-
-  // Listen for custom close event from navigation
-  useEffect(() => {
-    const handleCloseEvent = () => {
-      onClose?.()
-    }
-
-    window.addEventListener('closeMobileMenu', handleCloseEvent)
-    
-    return () => {
-      window.removeEventListener('closeMobileMenu', handleCloseEvent)
-    }
-  }, [onClose])
-
-  return (
-    <>
-      {/* Mobile Sidebar Overlay */}
-      {isMobile && isOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-300"
-          onClick={onClose}
-        />
-      )}
-
-      {/* Mobile Sidebar (Drawer) */}
-      {isMobile && (
-        <div
-          className={`mobile-sidebar-content fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out ${
-            isVisible ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <SidebarContent open={true} isMobile={true} onClose={onClose} />
-        </div>
-      )}
-
-      {/* Desktop Sidebar (Always visible) */}
-      {!isMobile && <SidebarContent open={true} isMobile={false} onClose={onClose} />}
-    </>
-  )
+interface NavigationItem {
+  label: string
+  path?: string
+  icon: LucideIcon
+  badge?: number
+  children?: NavigationItem[]
 }
 
-interface SidebarContentProps {
-  open: boolean
-  isMobile: boolean
-  onClose?: () => void
-}
+const navigation: Array<{ label: string; items: NavigationItem[] }> = [
+  {
+    label: "sections.overview",
+    items: [{ label: "items.dashboard", path: ROUTES.admin.root, icon: LayoutDashboard }],
+  },
+  {
+    label: "sections.people",
+    items: [
+      { label: "items.allUsers", path: ROUTES.admin.users, icon: Users },
+      { label: "items.candidates", path: ROUTES.admin.candidates, icon: UserRoundCheck },
+      { label: "items.employers", path: ROUTES.admin.employers, icon: BriefcaseBusiness },
+      { label: "items.companies", path: ROUTES.admin.companies, icon: Building2 },
+    ],
+  },
+  {
+    label: "sections.recruitment",
+    items: [
+      { label: "items.jobs", path: ROUTES.admin.jobs, icon: BriefcaseBusiness },
+      { label: "items.applications", path: ROUTES.admin.applications, icon: ClipboardList },
+    ],
+  },
+  {
+    label: "sections.platform",
+    items: [
+      { label: "items.skills", path: ROUTES.admin.skills, icon: Wrench },
+      { label: "items.assessmentTests", path: ROUTES.admin.tests, icon: FlaskConical },
+      { label: "items.notifications", path: ROUTES.admin.notifications, icon: Bell },
+      { label: "items.reports", path: ROUTES.admin.reports.root, icon: BarChart3 },
+      { label: "items.auditLogs", path: ROUTES.admin.auditLogs, icon: ScrollText },
+    ],
+  },
+]
 
-const SidebarContent: React.FC<SidebarContentProps> = ({ open, isMobile, onClose }) => {
-  const location = useLocation()
-  const { t } = useTranslation()
+function NavigationLink({ item, onNavigate }: { item: NavigationItem; onNavigate?: () => void }) {
+  const { t } = useTranslation("adminNavigation")
+  if (!item.path) return null
+  const Icon = item.icon
 
   return (
-    <nav
-      className={`relative flex h-screen flex-col shrink-0 w-64 bg-background-card shadow-lg ${
-        isMobile ? "shadow-xl" : "border-r border-border"
-      }`}
+    <NavLink
+      to={item.path}
+      end={item.path === ROUTES.admin.root}
+      onClick={onNavigate}
+      className={({ isActive }) =>
+        `flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition ${
+          isActive
+            ? "bg-gradient-primary text-white shadow-md"
+            : "text-text-secondary hover:bg-background-secondary hover:text-text-primary"
+        }`
+      }
     >
-      {/* Close button for mobile */}
-      {isMobile && (
-        <button
-          onClick={onClose}
-          className="absolute right-3 top-3 z-10 rounded-lg p-2 text-text-secondary hover:bg-background-secondary transition-colors"
-          aria-label="Close menu"
-        >
-          <X className="h-5 w-5" />
-        </button>
-      )}
-
-      <TitleSection isMobile={isMobile} onClose={onClose} />
-
-      <div className="flex-grow overflow-y-auto overflow-x-hidden pb-20 px-2">
-        <div className="space-y-1 mb-6">
-          <div className="px-3 py-2 text-xs font-medium text-text-muted uppercase tracking-wide">
-            {t("sidebar.sections.main")}
-          </div>
-          {menuItems.map((item) =>
-            item.children ? (
-              <GroupOption
-                key={item.titleKey}
-                Icon={item.icon}
-                titleKey={item.titleKey}
-                childrenItems={item.children}
-                currentPath={location.pathname}
-                isMobile={isMobile}
-                onClose={onClose}
-              />
-            ) : (
-              <Option
-                key={item.path}
-                Icon={item.icon}
-                titleKey={item.titleKey}
-                path={item.path!}
-                currentPath={location.pathname}
-                notifs={item.notifs}
-                isMobile={isMobile}
-                onClose={onClose}
-              />
-            )
-          )}
-        </div>
-
-        <div className="space-y-1 mb-6">
-          <div className="px-3 py-2 text-xs font-medium text-text-muted uppercase tracking-wide">
-            {t("sidebar.sections.content")}
-          </div>
-          {contentItems.map((item) => (
-            <Option
-              key={item.path}
-              Icon={item.icon}
-              titleKey={item.titleKey}
-              path={item.path}
-              currentPath={location.pathname}
-              notifs={item.notifs}
-              isMobile={isMobile}
-              onClose={onClose}
-            />
-          ))}
-        </div>
-
-        <div className="space-y-1 mb-6">
-          <div className="px-3 py-2 text-xs font-medium text-text-muted uppercase tracking-wide">
-            {t("sidebar.sections.community")}
-          </div>
-          {communityItems.map((item) => (
-            <Option
-              key={item.path}
-              Icon={item.icon}
-              titleKey={item.titleKey}
-              path={item.path}
-              currentPath={location.pathname}
-              notifs={item.notifs}
-              isMobile={isMobile}
-              onClose={onClose}
-            />
-          ))}
-        </div>
-
-        <div className="space-y-1 mb-6">
-          <div className="px-3 py-2 text-xs font-medium text-text-muted uppercase tracking-wide">
-            {t("sidebar.sections.reports")}
-          </div>
-          {reportItems.map((item) => (
-            <Option
-              key={item.path}
-              Icon={item.icon}
-              titleKey={item.titleKey}
-              path={item.path}
-              currentPath={location.pathname}
-              notifs={item.notifs}
-              isMobile={isMobile}
-              onClose={onClose}
-            />
-          ))}
-        </div>
-
-        <div className="border-t border-border pt-4 space-y-1">
-          <div className="px-3 py-2 text-xs font-medium text-text-muted uppercase tracking-wide">
-            {t("sidebar.sections.account")}
-          </div>
-          <Option 
-            Icon={Settings} 
-            titleKey="sidebar.menu.settings" 
-            path="/settings" 
-            currentPath={location.pathname} 
-            isMobile={isMobile}
-            onClose={onClose}
-          />
-          <Option 
-            Icon={HelpCircle} 
-            titleKey="sidebar.menu.help_support" 
-            path="/help" 
-            currentPath={location.pathname} 
-            isMobile={isMobile}
-            onClose={onClose}
-          />
-        </div>
-      </div>
-    </nav>
+      <Icon className="h-[18px] w-[18px] shrink-0" />
+      <span className="flex-1">{t(item.label)}</span>
+      {item.badge ? (
+        <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold text-white">
+          {item.badge}
+        </span>
+      ) : null}
+    </NavLink>
   )
 }
 
-interface OptionProps {
-  Icon: any
-  titleKey: string
-  path: string
-  currentPath: string
-  notifs?: number
-  isMobile?: boolean
-  onClose?: () => void
+function NavigationGroup({ item, onNavigate }: { item: NavigationItem; onNavigate?: () => void }) {
+  const { t } = useTranslation("adminNavigation")
+  const location = useLocation()
+  const isChildActive =
+    item.children?.some((child) => child.path && location.pathname.startsWith(child.path)) ?? false
+  const [open, setOpen] = useState(isChildActive)
+  const Icon = item.icon
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-text-secondary transition hover:bg-background-secondary hover:text-text-primary"
+      >
+        <Icon className="h-[18px] w-[18px]" />
+        <span className="flex-1 text-start">{t(item.label)}</span>
+        <ChevronDown className={`h-4 w-4 transition ${open ? "rotate-0" : "-rotate-90"}`} />
+      </button>
+      {open && (
+        <div className="ml-4 mt-1 space-y-1 border-l border-border pl-2">
+          {item.children?.map((child) => (
+            <NavigationLink key={child.path} item={child} onNavigate={onNavigate} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
-const Option: React.FC<OptionProps> = ({ Icon, titleKey, path, currentPath, notifs, isMobile, onClose }) => {
+function SidebarContent({ isMobile, onClose }: { isMobile: boolean; onClose?: () => void }) {
+  const { t } = useTranslation("adminNavigation")
   const navigate = useNavigate()
-  const { t } = useTranslation()
-  const isSelected =
-    path === "/"
-      ? currentPath === "/"
-      : currentPath === path || currentPath.startsWith(`${path}/`)
 
-  const handleClick = () => {
-    navigate(path)
-    if (isMobile && onClose) {
-      onClose()
+  return (
+    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-border bg-background-card shadow-lg">
+      <div className="relative border-b border-border p-4">
+        {isMobile && (
+          <button
+            type="button"
+            aria-label={t("closeMenu")}
+            onClick={onClose}
+            className="absolute top-3 rounded-lg p-2 text-text-secondary hover:bg-background-secondary ltr:right-3 rtl:left-3"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            navigate(ROUTES.admin.root)
+            onClose?.()
+          }}
+          className="mx-auto flex h-16 items-center justify-center"
+        >
+          <img src={images.logo} alt={t("logoAlt")} className="h-14 w-auto" />
+        </button>
+      </div>
+
+      <div className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+        {navigation.map((section) => (
+          <section key={section.label}>
+            <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">
+              {t(section.label)}
+            </p>
+            <div className="space-y-1">
+              {section.items.map((item) =>
+                item.children ? (
+                  <NavigationGroup key={item.label} item={item} onNavigate={onClose} />
+                ) : (
+                  <NavigationLink key={item.path} item={item} onNavigate={onClose} />
+                ),
+              )}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <div className="space-y-1 border-t border-border p-3">
+        <NavigationLink
+          item={{ label: "items.settings", path: ROUTES.admin.settings, icon: Settings }}
+          onNavigate={onClose}
+        />
+        <NavigationLink
+          item={{ label: "items.helpSupport", path: ROUTES.admin.help, icon: HelpCircle }}
+          onNavigate={onClose}
+        />
+      </div>
+    </aside>
+  )
+}
+
+export default function Sidebar({ isOpen = true, isMobile = false, onClose }: SidebarProps) {
+  const { t } = useTranslation("adminNavigation")
+  useEffect(() => {
+    if (!isMobile || !isOpen) return
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = "unset"
     }
-  }
+  }, [isMobile, isOpen])
+
+  if (!isMobile) return <SidebarContent isMobile={false} />
 
   return (
     <div
-      role="button"
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handleClick()}
-      className={`cursor-pointer relative flex h-11 w-full items-center rounded-md transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-        isSelected
-          ? "bg-gradient-primary text-white shadow-md"
-          : "text-text-secondary hover:bg-background-secondary hover:text-text"
-      }`}
+      className={`fixed inset-0 z-50 lg:hidden ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
     >
-      <div className="grid h-full w-12 place-content-center">
-        <Icon className={`h-4 w-4 ${isSelected ? 'text-white' : 'text-primary'}`} />
-      </div>
-
-      <span className="text-sm font-medium flex-1">
-        {t(titleKey)}
-      </span>
-
-      {notifs && (
-        <span className={`absolute right-3 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium ${
-          isSelected ? 'bg-white text-primary' : 'bg-primary text-text-on-primary'
-        }`}>
-          {notifs}
-        </span>
-      )}
-    </div>
-  )
-}
-
-interface GroupOptionProps {
-  Icon: any
-  titleKey: string
-  childrenItems: MenuItem[]
-  currentPath: string
-  isMobile?: boolean
-  onClose?: () => void
-}
-
-const GroupOption: React.FC<GroupOptionProps> = ({ Icon, titleKey, childrenItems, currentPath, isMobile, onClose }) => {
-  const [expanded, setExpanded] = React.useState(
-    childrenItems.some((child) =>
-      child.path === "/"
-        ? currentPath === "/"
-        : child.path
-          ? currentPath === child.path || currentPath.startsWith(`${child.path}/`)
-          : false
-    )
-  )
-  const { t } = useTranslation()
-
-  return (
-    <div className="space-y-1">
+      <button
+        type="button"
+        aria-label={t("closeMenu")}
+        onClick={onClose}
+        className={`absolute inset-0 bg-black/50 transition-opacity ${isOpen ? "opacity-100" : "opacity-0"}`}
+      />
       <div
-        role="button"
-        tabIndex={0}
-        onClick={() => setExpanded((prev) => !prev)}
-        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setExpanded((prev) => !prev)}
-        className={`cursor-pointer relative flex h-11 w-full items-center rounded-md transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring text-text-secondary hover:bg-background-secondary hover:text-text`}
+        className={`relative h-full w-64 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="grid h-full w-12 place-content-center">
-          <Icon className="h-4 w-4 text-primary" />
-        </div>
-        <span className="text-sm font-medium flex-1">{t(titleKey)}</span>
-        <ChevronDown
-          className={`mr-3 h-4 w-4 text-text-muted transition-transform duration-200 ${
-            expanded ? 'rotate-0' : '-rotate-90'
-          }`}
-        />
-      </div>
-      {expanded && (
-        <div className="ml-4 mb-4 space-y-0.5">
-          {childrenItems.map((child) => (
-            <Option
-              key={child.path}
-              Icon={child.icon}
-              titleKey={child.titleKey}
-              path={child.path!}
-              currentPath={currentPath}
-              notifs={child.notifs}
-              isMobile={isMobile}
-              onClose={onClose}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-interface TitleSectionProps {
-  isMobile?: boolean
-  onClose?: () => void
-}
-
-const TitleSection: React.FC<TitleSectionProps> = ({ isMobile, onClose }) => {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    navigate("/")
-    if (isMobile && onClose) {
-      onClose()
-    }
-  }
-
-  return (
-    <div className="mb-6 border-b border-border pb-4 px-2">
-      <div
-        onClick={handleClick}
-        className="flex cursor-pointer items-center justify-center rounded-md p-2 transition-colors hover:bg-background-secondary"
-      >
-        <img
-          src={images.logo}
-          alt='Beyond Gluten Logo'
-          className='h-16 w-auto'
-        />
+        <SidebarContent isMobile onClose={onClose} />
       </div>
     </div>
   )
 }
-
-export default Sidebar

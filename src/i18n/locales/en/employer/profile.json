@@ -1,0 +1,11 @@
+{
+  "title": "My Profile",
+  "description": "Maintain your employer contact and professional details.",
+  "fields": { "jobTitle": "Job title", "phone": "Phone", "bio": "Bio" },
+  "actions": { "save": "Save profile", "saving": "Saving..." },
+  "toasts": { "updated": "Employer profile updated" },
+  "errors": {
+    "title": "Unable to load employer profile",
+    "description": "Check your employer access and try again."
+  }
+}

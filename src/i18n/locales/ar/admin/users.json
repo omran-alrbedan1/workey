@@ -1,0 +1,127 @@
+{
+  "list": {
+    "title": "جميع المستخدمين",
+    "description": "إدارة حسابات المشرفين وأصحاب العمل والباحثين عن عمل.",
+    "imageAlt": "إدارة المستخدمين",
+    "errorTitle": "المستخدمون",
+    "columns": {
+      "user": "المستخدم",
+      "role": "الدور",
+      "status": "الحالة",
+      "joined": "تاريخ الانضمام",
+      "actions": "الإجراءات"
+    },
+    "emptyTitle": "لم يتم العثور على مستخدمين.",
+    "emptyDescription": "لا توجد حسابات مستخدمين تطابق العرض الحالي.",
+    "emptyImageAlt": "لا يوجد مستخدمون"
+  },
+  "filters": {
+    "title": "تصفية المستخدمين",
+    "searchLabel": "بحث",
+    "searchPlaceholder": "ابحث بالاسم أو البريد",
+    "roleLabel": "الدور",
+    "allRoles": "كل الأدوار",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات"
+  },
+  "details": {
+    "errorTitle": "تفاصيل المستخدم",
+    "missingId": "معرّف المستخدم غير موجود في الرابط.",
+    "back": "العودة إلى المستخدمين",
+    "imageAlt": "تفاصيل المستخدم",
+    "backendCoverageWarning": "تتوفر حاليًا بيانات القائمة المخزنة مؤقتًا فقط. لا تتضمن استجابة تفاصيل المستخدم بعد الملف الكامل والسجلات وسجل الأمان والجلسات والسجلات المرتبطة.",
+    "tabs": {
+      "overview": "نظرة عامة",
+      "activity": "النشاط والسجلات",
+      "security": "الأمان",
+      "related": "السجلات المرتبطة"
+    },
+    "metrics": {
+      "applications": "طلبات التقديم",
+      "jobs": "الوظائف",
+      "interviews": "المقابلات",
+      "tests": "التقييمات"
+    }
+  },
+  "actions": {
+    "menuAria": "إجراءات المستخدم {{name}}",
+    "menuLabel": "إجراءات المستخدم",
+    "view": "عرض التفاصيل",
+    "activate": "تفعيل",
+    "suspend": "تعليق",
+    "changeRole": "تغيير الدور",
+    "updating": "جارٍ التحديث..."
+  },
+  "roles": { "admin": "مشرف", "employer": "صاحب عمل", "job_seeker": "باحث عن عمل" },
+  "statuses": { "active": "نشط", "suspended": "معلق" },
+  "fallbacks": {
+    "notAvailable": "غير متاح",
+    "noDate": "لا يوجد تاريخ",
+    "unknown": "غير معروف",
+    "system": "النظام"
+  },
+  "overview": {
+    "profileTitle": "معلومات الملف الشخصي",
+    "accountTitle": "إدارة الحساب",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "dateOfBirth": "تاريخ الميلاد",
+    "gender": "الجنس",
+    "location": "الموقع",
+    "address": "العنوان",
+    "locale": "اللغة",
+    "timezone": "المنطقة الزمنية",
+    "bio": "النبذة التعريفية",
+    "profileCompletion": "اكتمال الملف",
+    "userId": "معرّف المستخدم",
+    "role": "الدور",
+    "status": "الحالة",
+    "company": "الشركة",
+    "createdAt": "تاريخ الانضمام",
+    "updatedAt": "آخر تحديث",
+    "lastActive": "آخر نشاط",
+    "deletedAt": "تاريخ الحذف",
+    "suspensionReason": "سبب التعليق"
+  },
+  "activity": {
+    "title": "نشاط المستخدم",
+    "auditTitle": "سجل تدقيق الإدارة",
+    "empty": "لم تُرجع الواجهة الخلفية أي سجلات نشاط.",
+    "auditEmpty": "لم تُرجع الواجهة الخلفية أي سجلات تدقيق إداري.",
+    "meta": "{{actor}} · {{date}}",
+    "network": "عنوان IP: {{ip}} · {{agent}}"
+  },
+  "security": {
+    "title": "حالة الأمان",
+    "twoFactor": "المصادقة الثنائية",
+    "enabled": "مفعلة",
+    "disabled": "غير مفعلة",
+    "emailVerified": "توثيق البريد الإلكتروني",
+    "verified": "موثق",
+    "unverified": "غير موثق",
+    "failedAttempts": "محاولات الدخول الفاشلة",
+    "passwordChanged": "آخر تغيير لكلمة المرور",
+    "lastLogin": "آخر تسجيل دخول",
+    "loginHistory": "سجل تسجيل الدخول",
+    "sessions": "الجلسات النشطة",
+    "loginEmpty": "سجل تسجيل الدخول غير متاح من الواجهة الخلفية.",
+    "sessionsEmpty": "بيانات الجلسات النشطة غير متاحة من الواجهة الخلفية.",
+    "currentSession": "الجلسة الحالية",
+    "sessionMeta": "{{ip}} · آخر نشاط {{date}}"
+  },
+  "related": {
+    "applications": "طلبات التقديم",
+    "jobs": "الوظائف",
+    "interviews": "المقابلات",
+    "tests": "التقييمات",
+    "empty": "لم تُرجع الواجهة الخلفية أي سجلات من نوع {{type}}.",
+    "itemDate": "أُنشئ في {{date}}"
+  },
+  "toasts": {
+    "activated": "تم تفعيل المستخدم",
+    "suspended": "تم تعليق المستخدم",
+    "roleUpdated": "تم تحديث دور المستخدم",
+    "roleUpdatedDescription": "أصبح دور الحساب الآن {{role}}."
+  }
+}

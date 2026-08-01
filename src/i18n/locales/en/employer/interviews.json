@@ -1,0 +1,168 @@
+{
+  "title": "Interviews",
+  "description": "Schedule, conduct, and evaluate recruitment interviews.",
+  "back": "Back to interviews",
+  "unknownCandidate": "Unknown candidate",
+  "noJobs": "No jobs available",
+  "jobFilter": "Select a job to view its interviews",
+  "columns": {
+    "candidate": "Candidate",
+    "type": "Type",
+    "scheduled": "Scheduled",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "statuses": {
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "no_show": "No-show"
+  },
+  "interviewTypes": {
+    "technical": "Technical",
+    "behavioral": "Behavioral",
+    "cultural": "Cultural",
+    "hr": "HR",
+    "final": "Final"
+  },
+  "interviewModes": {
+    "video": "Video Call",
+    "in_person": "In Person",
+    "phone": "Phone"
+  },
+  "recommendations": {
+    "advance": "Advance",
+    "consider": "Consider",
+    "reject": "Reject"
+  },
+  "empty": {
+    "title": "No interviews found",
+    "description": "Schedule an interview for an applicant to get started."
+  },
+  "actions": {
+    "reschedule": "Reschedule",
+    "complete": "Mark completed",
+    "evaluate": "Evaluate",
+    "attendance": "Attendance",
+    "noShow": "No-show",
+    "cancel": "Cancel interview"
+  },
+  "cancel": {
+    "title": "Cancel interview",
+    "description": "Cancel this interview using the dedicated cancellation workflow.",
+    "reason": "Cancellation reason",
+    "reasonPlaceholder": "Internal cancellation reason.",
+    "candidateMessage": "Candidate message",
+    "candidateMessagePlaceholder": "This interview has been cancelled.",
+    "close": "Close",
+    "submit": "Cancel interview",
+    "submitting": "Cancelling..."
+  },
+  "attendance": {
+    "title": "Record attendance",
+    "description": "Record whether the candidate and interviewer attended.",
+    "candidateStatus": "Candidate",
+    "interviewerStatus": "Interviewer",
+    "present": "Present",
+    "absent": "Absent",
+    "note": "Note",
+    "notePlaceholder": "Both parties attended.",
+    "cancel": "Cancel",
+    "submit": "Save attendance",
+    "submitting": "Saving..."
+  },
+  "noShow": {
+    "title": "Mark no-show",
+    "description": "Mark the party that did not attend the interview.",
+    "party": "Party",
+    "candidate": "Candidate",
+    "interviewer": "Interviewer",
+    "reason": "Reason",
+    "reasonPlaceholder": "Candidate did not attend.",
+    "cancel": "Cancel",
+    "submit": "Mark no-show",
+    "submitting": "Saving..."
+  },
+  "history": {
+    "statusTitle": "Status history",
+    "scheduleTitle": "Schedule history",
+    "refresh": "Refresh",
+    "empty": "No history entries yet.",
+    "loadError": "History could not be loaded.",
+    "actor": "Changed by {{actor}}"
+  },
+  "schedule": {
+    "title": "Schedule interview",
+    "description": "Set up a new interview for {{name}}.",
+    "interviewType": "Interview type",
+    "scheduledAt": "Date & time",
+    "duration": "Duration (minutes)",
+    "mode": "Interview mode",
+    "meetingLink": "Meeting link",
+    "location": "Location",
+    "locationPlaceholder": "e.g. Meeting Room 3",
+    "notes": "Notes",
+    "notesPlaceholder": "Any additional instructions or notes...",
+    "cancel": "Cancel",
+    "submit": "Schedule interview",
+    "submitting": "Scheduling..."
+  },
+  "reschedule": {
+    "title": "Reschedule interview",
+    "description": "Change the date and time for this interview.",
+    "newDateTime": "New date & time",
+    "reason": "Reason for rescheduling",
+    "reasonPlaceholder": "Optional notes about the reschedule...",
+    "cancel": "Cancel",
+    "submit": "Save changes",
+    "submitting": "Saving..."
+  },
+  "complete": {
+    "title": "Mark interview as completed",
+    "description": "Confirm that the interview has taken place.",
+    "note": "Completion note",
+    "notePlaceholder": "Any notes about the completed interview...",
+    "cancel": "Cancel",
+    "submit": "Mark completed",
+    "submitting": "Completing..."
+  },
+  "evaluate": {
+    "title": "Evaluate interview",
+    "description": "Provide a recommendation and score the candidate.",
+    "recommendation": "Recommendation",
+    "overallComment": "Overall comment",
+    "commentPlaceholder": "Write your overall assessment...",
+    "evaluationItems": "Evaluation criteria",
+    "addItem": "Add criterion",
+    "itemNumber": "Criterion #{{n}}",
+    "criterion": "Criterion",
+    "criterionPlaceholder": "e.g. Communication",
+    "score": "Score (0-10)",
+    "comment": "Comment",
+    "cancel": "Cancel",
+    "submit": "Submit evaluation",
+    "submitting": "Submitting..."
+  },
+  "details": {
+    "notes": "Notes",
+    "completionNote": "Completion note",
+    "recommendation": "Recommendation",
+    "overallComment": "Overall comment",
+    "evaluationItems": "Evaluation items"
+  },
+  "toasts": {
+    "created": "Interview scheduled successfully",
+    "updated": "Interview updated successfully",
+    "deleted": "Interview cancelled successfully",
+    "cancelled": "Interview cancelled successfully",
+    "attendanceUpdated": "Attendance recorded successfully",
+    "noShowMarked": "No-show marked successfully",
+    "completed": "Interview marked as completed",
+    "evaluated": "Evaluation submitted successfully"
+  },
+  "errors": {
+    "title": "Unable to load interviews",
+    "description": "Check your employer access and try again.",
+    "notFound": "Interview not found."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "title": "Skills Catalog",
+  "description": "Maintain the shared skills used by profiles and job listings.",
+  "form": {
+    "name": "Skill name",
+    "namePlaceholder": "API Design",
+    "slug": "Slug",
+    "slugPlaceholder": "api-design",
+    "add": "Add skill"
+  },
+  "edit": {
+    "action": "Edit",
+    "title": "Edit skill",
+    "description": "Update the shared skill name and slug.",
+    "save": "Save changes",
+    "cancel": "Cancel"
+  },
+  "columns": { "skill": "Skill", "slug": "Slug", "created": "Created", "actions": "Actions" },
+  "actions": "Skill actions",
+  "actionsFor": "Actions for {{name}}",
+  "delete": "Delete",
+  "empty": "No skills were returned.",
+  "emptyDescription": "The shared skills catalog is currently empty.",
+  "created": "Skill created",
+  "updated": "Skill updated",
+  "deleted": "Skill deleted"
+}

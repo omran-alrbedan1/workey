@@ -1,0 +1,168 @@
+{
+  "title": "المقابلات",
+  "description": "جدول مقابلات التوظيف، أجرها، وقيّمها.",
+  "back": "العودة إلى المقابلات",
+  "unknownCandidate": "مرشح غير معروف",
+  "noJobs": "لا توجد وظائف متاحة",
+  "jobFilter": "اختر وظيفة لعرض مقابلاتها",
+  "columns": {
+    "candidate": "المرشح",
+    "type": "النوع",
+    "scheduled": "موعد المقابلة",
+    "status": "الحالة",
+    "actions": "الإجراءات"
+  },
+  "statuses": {
+    "scheduled": "مجدولة",
+    "completed": "مكتملة",
+    "cancelled": "ملغاة",
+    "no_show": "لم يحضر"
+  },
+  "interviewTypes": {
+    "technical": "تقنية",
+    "behavioral": "سلوكية",
+    "cultural": "ثقافية",
+    "hr": "موارد بشرية",
+    "final": "نهائية"
+  },
+  "interviewModes": {
+    "video": "مكالمة فيديو",
+    "in_person": "حضورية",
+    "phone": "هاتف"
+  },
+  "recommendations": {
+    "advance": "تقديم",
+    "consider": "دراسة",
+    "reject": "رفض"
+  },
+  "empty": {
+    "title": "لا توجد مقابلات",
+    "description": "جدول مقابلة لأحد المتقدمين للبدء."
+  },
+  "actions": {
+    "reschedule": "إعادة جدولة",
+    "complete": "تحديد كمكتملة",
+    "evaluate": "تقييم",
+    "attendance": "الحضور",
+    "noShow": "عدم الحضور",
+    "cancel": "إلغاء المقابلة"
+  },
+  "cancel": {
+    "title": "إلغاء المقابلة",
+    "description": "إلغاء هذه المقابلة باستخدام إجراء الإلغاء المخصص.",
+    "reason": "سبب الإلغاء",
+    "reasonPlaceholder": "سبب الإلغاء الداخلي.",
+    "candidateMessage": "رسالة للمرشح",
+    "candidateMessagePlaceholder": "تم إلغاء هذه المقابلة.",
+    "close": "إغلاق",
+    "submit": "إلغاء المقابلة",
+    "submitting": "جارٍ الإلغاء..."
+  },
+  "attendance": {
+    "title": "تسجيل الحضور",
+    "description": "سجل ما إذا كان المرشح والمحاور قد حضرا.",
+    "candidateStatus": "المرشح",
+    "interviewerStatus": "المحاور",
+    "present": "حاضر",
+    "absent": "غائب",
+    "note": "ملاحظة",
+    "notePlaceholder": "حضر الطرفان.",
+    "cancel": "إلغاء",
+    "submit": "حفظ الحضور",
+    "submitting": "جارٍ الحفظ..."
+  },
+  "noShow": {
+    "title": "تسجيل عدم الحضور",
+    "description": "حدد الطرف الذي لم يحضر المقابلة.",
+    "party": "الطرف",
+    "candidate": "المرشح",
+    "interviewer": "المحاور",
+    "reason": "السبب",
+    "reasonPlaceholder": "لم يحضر المرشح.",
+    "cancel": "إلغاء",
+    "submit": "تسجيل عدم الحضور",
+    "submitting": "جارٍ الحفظ..."
+  },
+  "history": {
+    "statusTitle": "سجل الحالة",
+    "scheduleTitle": "سجل الجدولة",
+    "refresh": "تحديث",
+    "empty": "لا توجد سجلات بعد.",
+    "loadError": "تعذر تحميل السجل.",
+    "actor": "تم التغيير بواسطة {{actor}}"
+  },
+  "schedule": {
+    "title": "جدولة مقابلة",
+    "description": "إنشاء مقابلة جديدة لـ {{name}}.",
+    "interviewType": "نوع المقابلة",
+    "scheduledAt": "التاريخ والوقت",
+    "duration": "المدة (بالدقائق)",
+    "mode": "طريقة المقابلة",
+    "meetingLink": "رابط الاجتماع",
+    "location": "الموقع",
+    "locationPlaceholder": "مثال: غرفة الاجتماعات 3",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "أي تعليمات أو ملاحظات إضافية...",
+    "cancel": "إلغاء",
+    "submit": "جدولة المقابلة",
+    "submitting": "جارٍ الجدولة..."
+  },
+  "reschedule": {
+    "title": "إعادة جدولة المقابلة",
+    "description": "تغيير تاريخ ووقت هذه المقابلة.",
+    "newDateTime": "التاريخ والوقت الجديد",
+    "reason": "سبب إعادة الجدولة",
+    "reasonPlaceholder": "ملاحظات اختيارية حول إعادة الجدولة...",
+    "cancel": "إلغاء",
+    "submit": "حفظ التغييرات",
+    "submitting": "جارٍ الحفظ..."
+  },
+  "complete": {
+    "title": "تحديد المقابلة كمكتملة",
+    "description": "تأكيد أن المقابلة قد تمت.",
+    "note": "ملاحظة الإكمال",
+    "notePlaceholder": "أي ملاحظات حول المقابلة المكتملة...",
+    "cancel": "إلغاء",
+    "submit": "تحديد كمكتملة",
+    "submitting": "جارٍ الإكمال..."
+  },
+  "evaluate": {
+    "title": "تقييم المقابلة",
+    "description": "تقديم توصية وتقييم للمرشح.",
+    "recommendation": "التوصية",
+    "overallComment": "تعليق عام",
+    "commentPlaceholder": "اكتب تقييمك العام...",
+    "evaluationItems": "معايير التقييم",
+    "addItem": "إضافة معيار",
+    "itemNumber": "المعيار #{{n}}",
+    "criterion": "المعيار",
+    "criterionPlaceholder": "مثال: التواصل",
+    "score": "الدرجة (0-10)",
+    "comment": "تعليق",
+    "cancel": "إلغاء",
+    "submit": "إرسال التقييم",
+    "submitting": "جارٍ الإرسال..."
+  },
+  "details": {
+    "notes": "ملاحظات",
+    "completionNote": "ملاحظة الإكمال",
+    "recommendation": "التوصية",
+    "overallComment": "التعليق العام",
+    "evaluationItems": "عناصر التقييم"
+  },
+  "toasts": {
+    "created": "تم جدولة المقابلة بنجاح",
+    "updated": "تم تحديث المقابلة بنجاح",
+    "deleted": "تم إلغاء المقابلة بنجاح",
+    "cancelled": "تم إلغاء المقابلة بنجاح",
+    "attendanceUpdated": "تم تسجيل الحضور بنجاح",
+    "noShowMarked": "تم تسجيل عدم الحضور بنجاح",
+    "completed": "تم تحديد المقابلة كمكتملة",
+    "evaluated": "تم إرسال التقييم بنجاح"
+  },
+  "errors": {
+    "title": "تعذر تحميل المقابلات",
+    "description": "تحقق من صلاحية صاحب العمل وحاول مجدداً.",
+    "notFound": "المقابلة غير موجودة."
+  }
+}

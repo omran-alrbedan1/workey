@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "overview": "نظرة عامة",
+    "people": "الأشخاص",
+    "recruitment": "التوظيف",
+    "platform": "المنصة"
+  },
+  "items": {
+    "dashboard": "لوحة التحكم",
+    "userManagement": "إدارة المستخدمين",
+    "allUsers": "جميع المستخدمين",
+    "candidates": "المرشحون",
+    "jobSeekers": "الباحثون عن عمل",
+    "employers": "أصحاب العمل",
+    "companies": "الشركات",
+    "jobs": "الوظائف",
+    "applications": "طلبات التقديم",
+    "interviews": "المقابلات",
+    "skills": "المهارات",
+    "assessmentTests": "اختبارات التقييم",
+    "notifications": "الإشعارات",
+    "reports": "التقارير",
+    "auditLogs": "سجلات التدقيق",
+    "settings": "الإعدادات",
+    "helpSupport": "المساعدة والدعم"
+  },
+  "closeMenu": "إغلاق القائمة",
+  "logoAlt": "شعار وركي",
+  "portalName": "إدارة وركي"
+}

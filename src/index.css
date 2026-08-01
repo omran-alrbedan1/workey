@@ -2,23 +2,23 @@
 
 @theme {
   /* Primary Colors */
-  --color-primary: #7A8F4E;
-  --color-primary-dark: #6B7E44;
-  --color-primary-light: #95A86A;
+  --color-primary: #0645A5;
+  --color-primary-dark: #052A7D;
+  --color-primary-light: #3357A8;
   
   /* Background Colors */
-  --color-background: #F5F4EF;
+  --color-background: #F5F7FB;
   --color-background-secondary: #FFFFFF;
-  --color-background-sidebar: #4A5C2A;
+  --color-background-sidebar: #052A7D;
   --color-background-card: #FFFFFF;
   
   --color-popover: #FFFFFF;
   --color-popover-foreground: #1A1A1A;
   
-  /* Secondary Colors */
-  --color-secondary: #7D8263;
-  --color-secondary-dark: #6B6F55;
-  --color-secondary-light: #9A9F81;
+  /* Secondary Colors - Now matching primary blue */
+  --color-secondary: #0645A5;
+  --color-secondary-dark: #052A7D;
+  --color-secondary-light: #3357A8;
 
   /* Text Colors */
   --color-text-primary: #1A1A1A;
@@ -47,32 +47,32 @@
   --radius-default: 0.5rem;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #7A8F4E, #95A86A);
-  --gradient-sidebar: linear-gradient(180deg, #4A5C2A, #3D4A22);
-  --gradient-forest: linear-gradient(135deg, #5C6B3A, #3d4827);
-  --gradient-mist: linear-gradient(135deg, #F0F2E8, #e0e5d0);
+  --gradient-primary: linear-gradient(135deg, #052A7D, #3357A8);
+  --gradient-sidebar: linear-gradient(180deg, #0645A5, #052A7D);
+  --gradient-forest: linear-gradient(135deg, #3357A8, #052A7D);
+  --gradient-mist: linear-gradient(135deg, #F2F5FC, #E3E9F6);
 }
 
 /* Default light theme */
 :root {
   /* Background Colors - Light */
-  --color-background: #F5F4EF;
+  --color-background: #F5F7FB;
   --color-background-secondary: #FFFFFF;
-  --color-background-sidebar: #4A5C2A;
+  --color-background-sidebar: #052A7D;
   --color-background-card: #FFFFFF;
   
   --color-popover: #FFFFFF;
   --color-popover-foreground: #1A1A1A;
   
   /* Primary Colors - Light */
-  --color-primary: #7A8F4E;
-  --color-primary-dark: #6B7E44;
-  --color-primary-light: #95A86A;
+  --color-primary: #0645A5;
+  --color-primary-dark: #052A7D;
+  --color-primary-light: #3357A8;
   
-  /* Secondary Colors - Light */
-  --color-secondary: #7D8263;
-  --color-secondary-dark: #6B6F55;
-  --color-secondary-light: #9A9F81;
+  /* Secondary Colors - Light (matching primary) */
+  --color-secondary: #0645A5;
+  --color-secondary-dark: #052A7D;
+  --color-secondary-light: #3357A8;
   
   /* Text Colors - Light */
   --color-text-primary: #1A1A1A;
@@ -87,33 +87,33 @@
   --color-border-light: #F3F4F6;
   
   /* Focus Ring Colors - Light */
-  --color-ring: #7A8F4E;
+  --color-ring: #0645A5;
   --color-ring-offset: #FFFFFF;
   
   /* Gradients - Light */
-  --gradient-primary: linear-gradient(135deg, #7A8F4E, #95A86A);
-  --gradient-sidebar: linear-gradient(180deg, #4A5C2A, #3D4A22);
-  --gradient-forest: linear-gradient(135deg, #5C6B3A, #3d4827);
-  --gradient-mist: linear-gradient(135deg, #F0F2E8, #e0e5d0);
+  --gradient-primary: linear-gradient(135deg, #052A7D, #3357A8);
+  --gradient-sidebar: linear-gradient(180deg, #0645A5, #052A7D);
+  --gradient-forest: linear-gradient(135deg, #3357A8, #052A7D);
+  --gradient-mist: linear-gradient(135deg, #F2F5FC, #E3E9F6);
 }
 
 .dark {
-  --color-background: #0D0F2B;
-  --color-background-secondary: #12154A;
-  --color-background-sidebar: #131641;
-  --color-background-card: #111635; 
+  --color-background: #071226;
+  --color-background-secondary: #0B1B36;
+  --color-background-sidebar: #052A7D;
+  --color-background-card: #0D2040; 
   
-  --color-popover: #111635;
+  --color-popover: #0D2040;
   --color-popover-foreground: #FAFAFA;
   
-  --color-primary: #9CBC5E;
-  --color-primary-dark: #87A651;
-  --color-primary-light: #B2D07A;
+  --color-primary: #4F7BD4;
+  --color-primary-dark: #3357A8;
+  --color-primary-light: #7B9CE0;
   
-  /* Secondary Colors - Dark */
-  --color-secondary: #93977A;
-  --color-secondary-dark: #7C8065;
-  --color-secondary-light: #B1B498;
+  /* Secondary Colors - Dark (matching primary dark) */
+  --color-secondary: #4F7BD4;
+  --color-secondary-dark: #3357A8;
+  --color-secondary-light: #7B9CE0;
 
   /* Text Colors - Dark */
   --color-text-primary: #FAFAFA;
@@ -123,17 +123,17 @@
   --color-text-on-primary: #FFFFFF;
   --color-text-subtitle: #D1D5DB;
   
-  --color-border: #1E224A;
-  --color-border-light: #191C42;
+  --color-border: #203A61;
+  --color-border-light: #172F52;
   
-  --color-ring: #9CBC5E;
-  --color-ring-offset: #111635;
+  --color-ring: #6C8FD8;
+  --color-ring-offset: #0D2040;
   
   /* Gradients - Dark */
-  --gradient-primary: linear-gradient(135deg, #7A8F4E, #9CBC5A);
-  --gradient-sidebar: linear-gradient(180deg, #0E1138, #070926);
-  --gradient-forest: linear-gradient(135deg, #5C6B3A, #3d4827);
-  --gradient-mist: linear-gradient(135deg, #1E224A, #191C42);
+  --gradient-primary: linear-gradient(135deg, #3357A8, #4F7BD4);
+  --gradient-sidebar: linear-gradient(180deg, #052A7D, #031A4E);
+  --gradient-forest: linear-gradient(135deg, #3357A8, #052A7D);
+  --gradient-mist: linear-gradient(135deg, #203A61, #172F52);
 }
 
 @layer base {

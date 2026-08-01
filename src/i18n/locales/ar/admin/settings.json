@@ -1,0 +1,4 @@
+{
+  "title": "إعدادات المنصة", "description": "راجع الإعدادات المطبقة حالياً على واجهة وركي.",
+  "fields": { "appName": "اسم التطبيق", "description": "الوصف", "version": "الإصدار", "supportEmail": "بريد الدعم", "apiBaseUrl": "عنوان API الأساسي", "defaultLocale": "اللغة الافتراضية", "defaultTheme": "السمة الافتراضية", "pageSize": "حجم الصفحة" }
+}

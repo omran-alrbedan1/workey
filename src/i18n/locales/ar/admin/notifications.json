@@ -1,0 +1,8 @@
+{
+  "title": "الإشعارات", "description": "{{count}} إشعارات غير مقروءة.",
+  "columns": { "notification": "الإشعار", "status": "الحالة", "received": "تاريخ الاستلام", "action": "الإجراء" },
+  "platformNotification": "إشعار المنصة", "details": "افتح الإشعار لعرض التفاصيل.", "markRead": "تحديد كمقروء",
+  "markAllRead": "تحديد الكل كمقروء", "markingAllRead": "جارٍ تحديد الكل...",
+  "empty": "لم يتم إرجاع إشعارات.", "emptyDescription": "لا توجد إشعارات للمنصة حالياً.",
+  "markedRead": "تم تحديد الإشعار كمقروء", "markedAllRead": "تم تحديد جميع الإشعارات كمقروءة"
+}

@@ -53,8 +53,8 @@ export const NumberField: React.FC<NumberFieldProps> = ({
         className={cn(
           inputClassName,
           "px-6 py-5 text-base",
-          hasLeftIcon && "pl-14",
-          hasRightIcon && "pr-14"
+          hasLeftIcon && "ltr:pl-14 rtl:pr-14",
+          hasRightIcon && "ltr:pr-14 rtl:pl-14"
         )}
         min={min}
         max={max}

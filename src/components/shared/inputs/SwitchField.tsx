@@ -16,12 +16,13 @@ export const SwitchField: React.FC<SwitchFieldProps> = ({
   disabled,
 }) => {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center gap-2">
       <Switch
         id={name}
         checked={field.value}
         onCheckedChange={field.onChange}
         disabled={disabled}
+        dir="ltr"
       />
       <Label htmlFor={name} className="text-sm font-medium">
         {label}

@@ -1,0 +1,157 @@
+import { env } from "./env"
+
+export const API_CONFIG = Object.freeze({
+  baseUrl: env.apiBaseUrl,
+  timeout: 30_000,
+  enableTokenRefresh: false,
+} as const)
+
+export const API_ENDPOINTS = Object.freeze({
+  auth: {
+    login: "/auth/login",
+    logout: "/auth/logout",
+    logoutAll: "/auth/logout-all",
+    me: "/auth/me",
+    refresh: "/auth/refresh",
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
+    changePassword: "/auth/change-password",
+    registerEmployer: "/auth/register/employer",
+    registerJobSeeker: "/auth/register/job-seeker",
+  },
+  company: "/company",
+  employerProfile: "/employer/profile",
+  skills: "/skills",
+  jobs: {
+    list: "/jobs",
+    mine: "/jobs/my",
+    create: "/jobs",
+    byId: (id: string | number) => `/jobs/${id}`,
+    screeningQuestions: (id: string | number) => `/jobs/${id}/screening-questions`,
+    screeningQuestionById: (jobId: string | number, questionId: string | number) =>
+      `/jobs/${jobId}/screening-questions/${questionId}`,
+    skills: (id: string | number) => `/jobs/${id}/skills`,
+    detachSkill: (jobId: string | number, skillId: string | number) =>
+      `/jobs/${jobId}/skills/${skillId}`,
+    publish: (id: string | number) => `/jobs/${id}/publish`,
+    close: (id: string | number) => `/jobs/${id}/close`,
+    applications: (id: string | number) => `/jobs/${id}/applications`,
+    rankedCandidates: (id: string | number) => `/jobs/${id}/candidates/ranked`,
+  },
+  applications: {
+    mine: "/applications/my",
+    byId: (id: string | number) => `/applications/${id}`,
+    status: (id: string | number) => `/applications/${id}/status`,
+    assignTest: (id: string | number) => `/applications/${id}/assign-test`,
+    tests: (id: string | number) => `/applications/${id}/tests`,
+    interviews: (id: string | number) => `/applications/${id}/interviews`,
+    internalNotes: (id: string | number) => `/applications/${id}/internal-notes`,
+    informationRequests: (id: string | number) => `/applications/${id}/information-requests`,
+    cvDownload: (id: string | number) => `/applications/${id}/cv/download`,
+  },
+  applicationInternalNotes: {
+    byId: (id: string | number) => `/application-internal-notes/${id}`,
+    revisions: (id: string | number) => `/application-internal-notes/${id}/revisions`,
+  },
+  informationRequests: {
+    byId: (id: string | number) => `/information-requests/${id}`,
+    cancel: (id: string | number) => `/information-requests/${id}/cancel`,
+    responseAttachmentDownload: (id: string | number) =>
+      `/information-response-attachments/${id}/download`,
+  },
+  tests: {
+    list: "/tests",
+    create: "/tests",
+    byId: (id: string | number) => `/tests/${id}`,
+    evaluate: (attemptId: string | number) => `/tests/${attemptId}/evaluate`,
+    questions: {
+      list: (testId: string | number) => `/tests/${testId}/questions`,
+      create: (testId: string | number) => `/tests/${testId}/questions`,
+      byId: (testId: string | number, questionId: string | number) =>
+        `/tests/${testId}/questions/${questionId}`,
+      reorder: (testId: string | number) => `/tests/${testId}/questions/reorder`,
+      options: (testId: string | number, questionId: string | number) =>
+        `/tests/${testId}/questions/${questionId}/options`,
+      optionById: (
+        testId: string | number,
+        questionId: string | number,
+        optionId: string | number,
+      ) => `/tests/${testId}/questions/${questionId}/options/${optionId}`,
+      reorderOptions: (testId: string | number, questionId: string | number) =>
+        `/tests/${testId}/questions/${questionId}/options/reorder`,
+    },
+    start: (assignmentId: string | number) => `/tests/${assignmentId}/start`,
+    submit: (assignmentId: string | number) => `/tests/${assignmentId}/submit`,
+  },
+  testAttempts: {
+    answers: (id: string | number) => `/test-attempts/${id}/answers`,
+    result: (id: string | number) => `/test-attempts/${id}/result`,
+    answerFile: (id: string | number, questionId: string | number) =>
+      `/test-attempts/${id}/answers/${questionId}/file`,
+    grading: (id: string | number, questionId: string | number) =>
+      `/test-attempts/${id}/answers/${questionId}/grading`,
+    bulkGradings: (id: string | number) => `/test-attempts/${id}/gradings/bulk`,
+  },
+  testAssignments: {
+    deadline: (id: string | number) => `/test-assignments/${id}/deadline`,
+    deadlineHistory: (id: string | number) => `/test-assignments/${id}/deadline-history`,
+    retakePolicy: (id: string | number) => `/test-assignments/${id}/retake-policy`,
+    retake: (id: string | number) => `/test-assignments/${id}/retake`,
+    attemptSeries: (id: string | number) => `/test-assignments/${id}/attempt-series`,
+  },
+  interviews: {
+    forApplication: (id: string | number) => `/applications/${id}/interviews`,
+    byId: (id: string | number) => `/interviews/${id}`,
+    reschedule: (id: string | number) => `/interviews/${id}/reschedule`,
+    cancel: (id: string | number) => `/interviews/${id}/cancel`,
+    attendance: (id: string | number) => `/interviews/${id}/attendance`,
+    noShow: (id: string | number) => `/interviews/${id}/no-show`,
+    statusHistory: (id: string | number) => `/interviews/${id}/status-history`,
+    scheduleHistory: (id: string | number) => `/interviews/${id}/schedule-history`,
+    complete: (id: string | number) => `/interviews/${id}/complete`,
+    evaluate: (id: string | number) => `/interviews/${id}/evaluate`,
+  },
+  employer: {
+    company: "/company",
+    profile: "/employer/profile",
+    jobs: "/jobs/my",
+    jobApplications: (id: string | number) => `/jobs/${id}/applications`,
+    rankedCandidates: (id: string | number) => `/jobs/${id}/candidates/ranked`,
+  },
+  admin: {
+    auditLogs: "/admin/audit-logs",
+    users: "/admin/users",
+    userById: (id: string | number) => `/admin/users/${id}`,
+    userRole: (id: string | number) => `/admin/users/${id}/role`,
+    userStatus: (id: string | number) => `/admin/users/${id}/status`,
+    activateUser: (id: string | number) => `/admin/users/${id}/activate`,
+    suspendUser: (id: string | number) => `/admin/users/${id}/suspend`,
+    companies: "/admin/companies",
+    companyById: (id: string | number) => `/admin/companies/${id}`,
+    jobs: "/jobs",
+    jobById: (id: string | number) => `/jobs/${id}`,
+    applications: "/admin/applications",
+    applicationById: (id: string | number) => `/admin/applications/${id}`,
+    interviews: "/admin/interviews",
+    interviewById: (id: string | number) => `/admin/interviews/${id}`,
+    approveCompany: (id: string | number) => `/admin/companies/${id}/approve`,
+    rejectCompany: (id: string | number) => `/admin/companies/${id}/reject`,
+    suspendCompany: (id: string | number) => `/admin/companies/${id}/suspend`,
+    skills: "/admin/skills",
+    skillById: (id: string | number) => `/admin/skills/${id}`,
+    tests: "/admin/tests",
+    testById: (id: string | number) => `/admin/tests/${id}`,
+    reports: {
+      overview: "/admin/reports/overview",
+      applications: "/admin/reports/applications",
+      jobs: "/admin/reports/jobs",
+      cvParsing: "/admin/reports/cv-parsing",
+    },
+  },
+  notifications: {
+    list: "/notifications",
+    unreadCount: "/notifications/unread-count",
+    markRead: (id: string | number) => `/notifications/${id}/read`,
+    markAllRead: "/notifications/read-all",
+  },
+} as const)

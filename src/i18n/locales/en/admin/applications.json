@@ -1,0 +1,6 @@
+{
+  "title": "Applications", "description": "Monitor candidate progress across recruitment workflows.",
+  "columns": { "candidate": "Candidate", "job": "Job", "status": "Status", "match": "Match", "applied": "Applied" },
+  "unknownCandidate": "Unknown candidate", "empty": "No applications were returned.",
+  "emptyDescription": "No candidate applications are available in this view."
+}

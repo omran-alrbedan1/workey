@@ -1,15 +1,14 @@
 import React, { useState } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import Sidebar from "./Sidebar"
 import Header from "./Header"
+import { useAdminLogout } from "@/features/admin/auth/hooks/useAdminLogout"
 
 const MainLayout: React.FC = () => {
-  const navigate = useNavigate()
+  const logout = useAdminLogout()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
-  const handleLogout = () => {
-    navigate("/login", { replace: true })
-  }
+  const handleLogout = () => logout.mutate()
 
   const handleMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)

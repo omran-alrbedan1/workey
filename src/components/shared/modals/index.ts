@@ -1,5 +1,7 @@
 export { default as ActivateModal } from './ActivateModal'
 export { default as ApproveModal } from './ApproveModal'
+export { default as DeleteModal } from './DeleteModal'
+export { default as DeactivateModal } from './DeactivateModal'
 export { default as RejectModal } from './RejectModal'
 export { default as SuspendModal } from './SuspendModal'
 export { default as SendMessageModal } from './SendMessageModal'

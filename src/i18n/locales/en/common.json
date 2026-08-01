@@ -121,10 +121,37 @@
     "previousAria": "Go to previous page",
     "nextAria": "Go to next page"
   },
+  "statuses": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "active": "Active",
+    "inactive": "Inactive",
+    "suspended": "Suspended",
+    "open": "Open",
+    "closed": "Closed",
+    "completed": "Completed",
+    "failed": "Failed",
+    "success": "Success",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "reviewed": "Reviewed",
+    "draft": "Draft",
+    "test_pending": "Test Pending",
+    "test_completed": "Test Completed",
+    "final_review": "Final Review",
+    "on_hold": "On Hold"
+  },
   "modals": {
     "cancel": "Cancel",
     "processing": "Processing...",
     "reasonTooLong": "Reason is too long",
+    "delete": {
+      "title": "Delete item?",
+      "description": "Are you sure you want to delete {{name}}?",
+      "confirm": "Delete",
+      "hint": "This action cannot be undone."
+    },
     "approve": {
       "title": "Approve",
       "description": "Are you sure you want to approve {{name}}?",
@@ -137,11 +164,21 @@
       "confirm": "Activate",
       "hint": "This action cannot be undone"
     },
+    "deactivate": {
+      "title": "Deactivate",
+      "description": "Are you sure you want to deactivate {{name}}?",
+      "confirm": "Deactivate",
+      "hint": "This action cannot be undone"
+    },
     "reject": {
       "title": "Reject",
       "description": "Are you sure you want to reject {{name}}?",
       "confirm": "Reject",
-      "reasonPlaceholder": "Provide a reason for rejection..."
+      "reason": "Reason",
+      "reasonOptional": "Reason (optional)",
+      "reasonRequired": "A reason is required",
+      "reasonPlaceholder": "Provide a reason for rejection...",
+      "statusWarning": "This action will change the current approval status."
     },
     "suspend": {
       "title": "Suspend Account",

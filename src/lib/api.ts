@@ -1,7 +1,6 @@
-// lib/api.ts
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { API_CONFIG, API_ENDPOINTS, ROUTES, STORAGE_KEYS } from '@/config';
 
-// Define response types
 export interface ApiResponse<T = any> {
   data: T;
   message?: string;
@@ -11,21 +10,22 @@ export interface ApiResponse<T = any> {
 export interface ApiError {
   message: string;
   statusCode?: number;
-  errors?: Record<string, string[]>;
+  code?: string;
+  errors?: Record<string, string[] | string | number | boolean | null>;
 }
 
 // Create axios instance with default config
-const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  timeout: 30000,
+const API: AxiosInstance = axios.create({
+  baseURL: API_CONFIG.baseUrl,
+  timeout: API_CONFIG.timeout,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-api.interceptors.request.use(
+API.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+    const token = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEYS.accessToken) : null;
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -38,7 +38,7 @@ api.interceptors.request.use(
   }
 );
 
-api.interceptors.response.use(
+API.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
     return response;
   },
@@ -46,38 +46,43 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     
     // Handle 401 Unauthorized - token refresh
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (API_CONFIG.enableTokenRefresh && error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
       try {
-        const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refresh_token') : null;
+        const refreshToken = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEYS.refreshToken) : null;
         
         if (refreshToken) {
-          const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/refresh`, {
+          const response = await axios.post(`${API_CONFIG.baseUrl}${API_ENDPOINTS.auth.refresh}`, {
             refresh_token: refreshToken,
           });
           
           const { access_token } = response.data;
-          localStorage.setItem('access_token', access_token);
+          localStorage.setItem(STORAGE_KEYS.accessToken, access_token);
           
           // Retry original request with new token
           originalRequest.headers.Authorization = `Bearer ${access_token}`;
-          return api(originalRequest);
+          return API(originalRequest);
         }
       } catch (refreshError) {
         // Redirect to login if refresh fails
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          window.location.href = '/login';
+          localStorage.removeItem(STORAGE_KEYS.accessToken);
+          localStorage.removeItem(STORAGE_KEYS.refreshToken);
+          window.location.href = ROUTES.auth.login;
         }
         return Promise.reject(refreshError);
       }
     }
     
+    if (error.response?.status === 401 && typeof window !== 'undefined' && !API_CONFIG.enableTokenRefresh) {
+      localStorage.removeItem(STORAGE_KEYS.accessToken);
+    }
+
     const apiError: ApiError = {
       message: error.response?.data?.message || error.message || 'An error occurred',
       statusCode: error.response?.status,
+      code: error.response?.data?.code,
       errors: error.response?.data?.errors,
     };
     
@@ -86,23 +91,24 @@ api.interceptors.response.use(
 );
 
 // Generic wrapper methods with types
-const apiWrapper = {
+const api = {
   get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => 
-    api.get(url, config).then((response) => response.data),
+    API.get(url, config).then((response) => response.data),
   
   post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
-    api.post(url, data, config).then((response) => response.data),
+    API.post(url, data, config).then((response) => response.data),
   
   put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
-    api.put(url, data, config).then((response) => response.data),
+    API.put(url, data, config).then((response) => response.data),
   
   patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
-    api.patch(url, data, config).then((response) => response.data),
+    API.patch(url, data, config).then((response) => response.data),
   
   delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => 
-    api.delete(url, config).then((response) => response.data),
+    API.delete(url, config).then((response) => response.data),
 };
 
-export default api;
 
-export { api as rawApi, apiWrapper };
+export default API;
+
+export { API as rawApi,  api };

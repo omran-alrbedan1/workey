@@ -24,7 +24,7 @@ export const RadioField: React.FC<RadioFieldProps> = ({
       className={cn(inputClassName)}
     >
       {options.map((option) => (
-        <div key={option.value} className="flex items-center space-x-2">
+        <div key={option.value} className="flex items-center rtl:flex-row-reverse gap-2  space-x-2">
           <RadioGroupItem value={option.value} id={option.value} disabled={option.disabled} />
           <Label htmlFor={option.value}>{option.label}</Label>
         </div>

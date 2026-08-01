@@ -49,8 +49,8 @@ export const InputField: React.FC<InputFieldProps> = ({
         className={cn(
           inputClassName,
           "px-6 py-4 text-base",
-          hasLeftIcon && "pl-14",
-          hasRightIcon && "pr-14"
+          hasLeftIcon && "ltr:pl-14 rtl:pr-14",
+          hasRightIcon && "ltr:pr-14 rtl:pl-14"
         )}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}

@@ -1,8 +1,0 @@
-export { default as VendorFilters } from './VendorFilters'
-export { default as VendorsTable } from './VendorsTable'
-export { VendorOverview } from './VendorOverview'
-export { VendorProducts } from './VendorProducts'
-export { VendorDetailsSkeleton } from './VendorDetailsSkeleton'
-export { default as VendorApprovalFilters } from './VendorApprovalFilters'
-export { default as VendorApprovalCard } from './VendorApprovalCard'
-export { default as VendorApprovalLoadingSkeleton } from './VendorApprovalLoadingSkeleton'

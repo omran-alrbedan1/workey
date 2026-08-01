@@ -1,8 +1,0 @@
-export { default as UserCard } from './UserCard'
-export { default as UserFilters } from './UserFilters'
-export { default as UsersTable } from './UsersTable'
-export { UserOverview } from './UserOverview'
-export { UserOrdersList } from './UserOrdersList'
-export { UserPaymentsList } from './UserPaymentsList'
-export { UserActivity } from './UserActivity'
-export { UserEditModal } from './UserEditModal'

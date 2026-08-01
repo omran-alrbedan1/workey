@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -27,13 +28,15 @@ export const PasswordField: React.FC<PasswordFieldProps> = ({
   iconPosition,
   iconClassName,
 }) => {
+  const { i18n } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const hasLeftIcon = LeftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
+  const isRtl = i18n.dir() === "rtl"
 
   return (
     <div className="relative group">
       {hasLeftIcon && LeftIcon && (
-        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors group-focus-within:text-primary">
+        <div className="pointer-events-none absolute top-1/2 -translate-y-1/2 transition-colors group-focus-within:text-primary ltr:left-4 rtl:right-4">
           <LeftIcon className={cn("h-5 w-5 group-focus:text-primary", iconClassName)} />
         </div>
       )}
@@ -44,10 +47,11 @@ export const PasswordField: React.FC<PasswordFieldProps> = ({
         disabled={disabled}
         className={cn(
           inputClassName,
-          "px-6 py-5 text-base",
-          hasLeftIcon && "pl-14",
-          "pr-14"
+          "px-6 py-5 text-base text-left",
+          hasLeftIcon && "ltr:pl-14 rtl:pr-14",
+          "ltr:pr-14 rtl:pl-14"
         )}
+        dir="ltr"
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}
       />
@@ -55,7 +59,10 @@ export const PasswordField: React.FC<PasswordFieldProps> = ({
         type="button"
         variant="ghost"
         size="sm"
-        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+        className={cn(
+          "absolute top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full p-0 hover:bg-transparent",
+          isRtl ? "left-3" : "right-3"
+        )}
         onClick={() => setShowPassword(!showPassword)}
         disabled={disabled}
       >

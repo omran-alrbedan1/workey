@@ -1,4 +1,6 @@
-export const TOKEN_KEY = "auth_token"
+import { STORAGE_KEYS } from "@/config"
+
+export const TOKEN_KEY = STORAGE_KEYS.accessToken
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY)

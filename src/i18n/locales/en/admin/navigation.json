@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "overview": "Overview",
+    "people": "People",
+    "recruitment": "Recruitment",
+    "platform": "Platform"
+  },
+  "items": {
+    "dashboard": "Dashboard",
+    "userManagement": "User management",
+    "allUsers": "All users",
+    "candidates": "Candidates",
+    "jobSeekers": "Job seekers",
+    "employers": "Employers",
+    "companies": "Companies",
+    "jobs": "Jobs",
+    "applications": "Applications",
+    "interviews": "Interviews",
+    "skills": "Skills",
+    "assessmentTests": "Assessment tests",
+    "notifications": "Notifications",
+    "reports": "Reports",
+    "auditLogs": "Audit logs",
+    "settings": "Settings",
+    "helpSupport": "Help & support"
+  },
+  "closeMenu": "Close menu",
+  "logoAlt": "Workey logo",
+  "portalName": "Workey Admin"
+}

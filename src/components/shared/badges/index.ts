@@ -1,6 +1,1 @@
-export { PaymentMethodBadge } from './PaymentMethodBadge'
-export { PaymentStatusBadge } from './PaymentStatusBadge'
 export { default as StatusBadge } from './StatusBadge'
-export { default as OrderStatusBadge } from './OrderStatusBadge'
-export { default as VendorStatusBadge } from './VendorStatusBadge'
-export { default as ProductStatusBadge } from './ProductStatusBadge'

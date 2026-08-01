@@ -1,0 +1,53 @@
+{
+  "title": "Assessment Tests",
+  "description": "Manage reusable assessments available to Admins and employers.",
+  "form": {
+    "company": "Company",
+    "companyPlaceholder": "Select a company",
+    "loadingCompanies": "Loading companies...",
+    "title": "Test title",
+    "titlePlaceholder": "Backend Assessment",
+    "description": "Description",
+    "descriptionPlaceholder": "Backend screening test.",
+    "duration": "Duration",
+    "passingScore": "Passing score",
+    "maxScoreManaged": "Maximum score is calculated by the backend from the test questions. Set passing score after adding questions.",
+    "add": "Add test"
+  },
+  "edit": {
+    "action": "Edit",
+    "title": "Edit assessment",
+    "description": "Update editable assessment fields. Maximum score is system-managed.",
+    "save": "Save changes",
+    "cancel": "Cancel"
+  },
+  "create": {
+    "title": "Create assessment",
+    "description": "Add a reusable assessment. Maximum score is calculated from questions."
+  },
+  "columns": {
+    "assessment": "Assessment",
+    "duration": "Duration",
+    "passing": "Passing",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "actions": "Test actions",
+  "actionsFor": "Actions for {{name}}",
+  "noDescription": "No description",
+  "minutes": "{{count}} min",
+  "delete": "Delete",
+  "empty": "No assessment tests were returned.",
+  "emptyDescription": "The assessment catalog is currently empty.",
+  "created": "Assessment created",
+  "updated": "Assessment updated",
+  "deleted": "Assessment deleted",
+  "validation": {
+    "companyRequired": "Company is required",
+    "titleRequired": "Title must be at least 3 characters",
+    "titleMax": "Title must not exceed 150 characters",
+    "descriptionMax": "Description must not exceed 2000 characters",
+    "durationMin": "Duration must be at least 1 minute",
+    "passingScoreMin": "Passing score cannot be negative"
+  }
+}

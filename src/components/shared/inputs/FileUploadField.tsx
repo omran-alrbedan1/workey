@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Upload, X, Image as ImageIcon, FileText } from "lucide-react"
+import { Upload, Image as ImageIcon, FileText, Trash2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { FileUploadOption } from "@/types/customFormField.types"
 
 interface FileUploadFieldProps {
@@ -19,12 +20,13 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
   inputClassName,
   fileUploadOptions,
 }) => {
+  const { t } = useTranslation('common')
   const [dragActive, setDragActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  
+
   const handleFiles = (files: FileList | null) => {
     if (!files) return
-    
+
     const validFiles = Array.from(files).filter((file) => {
       if (fileUploadOptions?.maxSize && file.size > fileUploadOptions.maxSize) {
         return false
@@ -34,14 +36,14 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
       }
       return true
     })
-    
+
     if (fileUploadOptions?.multiple) {
       field.onChange([...(field.value || []), ...validFiles])
     } else {
       field.onChange(validFiles[0] || null)
     }
   }
-  
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -51,14 +53,14 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
       setDragActive(false)
     }
   }
-  
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
     handleFiles(e.dataTransfer.files)
   }
-  
+
   const handleRemoveFile = (index: number) => {
     if (fileUploadOptions?.multiple) {
       field.onChange(field.value?.filter((_: File, i: number) => i !== index))
@@ -66,61 +68,103 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
       field.onChange(null)
     }
   }
-  
-  const renderFilePreview = (file: File, index: number) => {
-    const isImage = file.type.startsWith("image/")
-    
+
+  const getFileUrl = (file: File | string): string => {
+    return typeof file === 'string' ? file : URL.createObjectURL(file)
+  }
+
+  const getFileName = (file: File | string): string => {
+    return typeof file === 'string' ? file.split('/').pop() || t('fileUpload.imageFallback') : file.name
+  }
+
+  const getFileSize = (file: File | string): string => {
+    return typeof file === 'string' ? '' : `${(file.size / 1024).toFixed(1)} KB`
+  }
+
+  const isImageFile = (file: File | string): boolean => {
+    return typeof file === 'string'
+      ? /\.(jpg|jpeg|png|webp|gif|svg|avif|bmp)$/i.test(file)
+      : file.type.startsWith("image/")
+  }
+
+  const renderFilePreview = (file: File | string, index: number) => {
+    const isImage = isImageFile(file)
+
     return (
-      <div key={index} className="relative group">
+      <div key={index} className="relative group overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm transition-all hover:shadow-md">
         {isImage && fileUploadOptions?.showPreview ? (
-          <div className="relative w-20 h-20 rounded-md overflow-hidden border">
+          <div className="relative w-full aspect-video max-h-48 overflow-hidden">
             <img
-              src={URL.createObjectURL(file)}
-              alt={file.name}
-              className="w-full h-full object-cover"
+              src={getFileUrl(file)}
+              alt={getFileName(file)}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         ) : (
-          <div className="flex items-center gap-2 p-2 border rounded-md">
-            {isImage ? (
-              <ImageIcon className="h-4 w-4" />
-            ) : (
-              <FileText className="h-4 w-4" />
-            )}
-            <span className="text-sm truncate max-w-50">{file.name}</span>
+          <div className="flex items-center gap-3 p-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary shrink-0">
+              {isImage ? <ImageIcon className="h-5 w-5" /> : <FileText className="h-5 w-5" />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium truncate">{getFileName(file)}</p>
+              {getFileSize(file) && (
+                <p className="text-xs text-muted-foreground">{getFileSize(file)}</p>
+              )}
+            </div>
           </div>
         )}
         <Button
           type="button"
-          variant="destructive"
+          variant="ghost"
           size="sm"
-          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-2 right-2 h-8 w-8 rounded-full p-0 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-destructive-foreground"
           onClick={() => handleRemoveFile(index)}
+          aria-label={t('fileUpload.removeFile')}
         >
-          <X className="h-3 w-3" />
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
     )
   }
-  
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div
         className={cn(
-          "border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors",
-          dragActive ? "border-primary bg-primary/10" : "border-muted-foreground/25",
+          "relative overflow-hidden rounded-xl border-2 border-dashed transition-all duration-200",
+          dragActive
+            ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
+            : "border-border hover:border-muted-foreground/40 hover:bg-muted/30",
+          disabled && "opacity-50 cursor-not-allowed",
           inputClassName
         )}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => !disabled && fileInputRef.current?.click()}
       >
-        <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">
-          {placeholder || "Drag and drop files here, or click to select"}
-        </p>
+        <div className="flex flex-col items-center justify-center py-8 px-6">
+          <div className={cn(
+            "flex items-center justify-center w-14 h-14 rounded-full mb-4 transition-colors",
+            dragActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+          )}>
+            <Upload className={cn("h-6 w-6 transition-transform", dragActive && "translate-y-0.5")} />
+          </div>
+          <p className="text-sm font-medium">
+            {placeholder || (
+              <>
+                <span className="text-primary">{t('fileUpload.clickToUpload')}</span> {t('fileUpload.dragAndDrop')}
+              </>
+            )}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {fileUploadOptions?.hint || (fileUploadOptions?.accept === "image/*"
+              ? t('fileUpload.imageHint')
+              : t('fileUpload.fileHint'))}
+          </p>
+        </div>
         <input
           ref={fileInputRef}
           type="file"
@@ -131,9 +175,9 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
           disabled={disabled}
         />
       </div>
-      
+
       {field.value && (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid gap-3">
           {fileUploadOptions?.multiple ? (
             field.value.map((file: File, index: number) => renderFilePreview(file, index))
           ) : (

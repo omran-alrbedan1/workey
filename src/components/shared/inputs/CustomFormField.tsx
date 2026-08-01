@@ -1,6 +1,7 @@
   "use client"
 
   import  { useCallback } from "react"
+  import { useTranslation } from "react-i18next"
   import { Controller, FieldValues } from "react-hook-form"
   import { cn } from "@/lib/utils"
   import { Label } from "@/components/ui/label"
@@ -64,6 +65,7 @@
 
 
   const CustomFormField = <T extends FieldValues>(props: CustomFormFieldProps<T>) => {
+    const { i18n } = useTranslation()
     const {
       fieldType,
       control,
@@ -78,7 +80,7 @@
       inputClassName,
       containerClassName,
       tooltip,
-      dir = "ltr",
+      dir,
       leftIcon,
       rightIcon,
       iconPosition,
@@ -103,6 +105,7 @@
       currency,
       locale,
     } = props
+    const resolvedDir = dir ?? i18n.dir()
 
     const renderField = useCallback((field: any) => {
       const commonProps = {
@@ -167,7 +170,7 @@
           return <RadioField {...commonProps} options={options} />
         
         case FormFieldType.SWITCH:
-          return <SwitchField {...commonProps} name={name} label={label} />
+          return <SwitchField {...commonProps} name={name} label={label}  />
         
         case FormFieldType.SLIDER:
           return <SliderField {...commonProps} min={min} max={max} step={step} sliderMarks={sliderMarks} />
@@ -234,9 +237,8 @@
         name={name}
         control={control}
         render={({ field, fieldState }) => (
-          <div className={cn("space-y-4 rtl:text-end", containerClassName, className)} dir={dir}>
+          <div className={cn("space-y-4 text-start", containerClassName, className)} dir={resolvedDir}>
             {renderLabel()}
-            
             {loading ? (
               <Skeleton className={cn("h-10 w-full", inputClassName)} />
             ) : (
@@ -253,7 +255,7 @@
             )}
             
             {fieldState.error && (
-              <p className={cn("text-xs text-destructive", props.errorClassName)}>
+              <p className={cn("text-xs text-destructive text-red-500", props.errorClassName)}>
                 {fieldState.error.message}
               </p>
             )}

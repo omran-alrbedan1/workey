@@ -1,0 +1,124 @@
+{
+  "page": {
+    "title": "الشركات",
+    "description": "راجع منشآت أصحاب العمل وتحكم في حالة الموافقة عليها.",
+    "imageAlt": "الشركات"
+  },
+  "errors": {
+    "listTitle": "الشركات",
+    "detailsTitle": "تفاصيل الشركة",
+    "missingId": "معرّف الشركة غير موجود في الرابط."
+  },
+  "filters": {
+    "title": "عوامل تصفية الشركات",
+    "searchLabel": "البحث في الشركات",
+    "searchPlaceholder": "الاسم، صاحب العمل، الموقع...",
+    "statusLabel": "حالة الموافقة",
+    "allStatuses": "جميع الحالات",
+    "suspended": "موقوفة",
+    "industryLabel": "القطاع",
+    "allIndustries": "جميع القطاعات"
+  },
+  "table": {
+    "company": "الشركة",
+    "location": "الموقع",
+    "employer": "صاحب العمل",
+    "status": "الحالة",
+    "review": "المراجعة",
+    "noDetails": "لا توجد تفاصيل للشركة",
+    "emptyTitle": "لم يتم العثور على شركات.",
+    "emptyDescription": "لا توجد شركات تطابق عوامل التصفية المحددة.",
+    "emptyImageAlt": "لا توجد شركات"
+  },
+  "actions": {
+    "reviewAria": "مراجعة {{name}}",
+    "reviewCompany": "مراجعة الشركة",
+    "approvalActions": "إجراءات الموافقة",
+    "viewDetails": "عرض التفاصيل",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "suspend": "إيقاف",
+    "visitSite": "زيارة الموقع"
+  },
+  "fallbacks": {
+    "notAvailable": "غير متاح",
+    "industryMissing": "لم يتم تحديد القطاع",
+    "locationMissing": "لم يتم تحديد الموقع",
+    "employerMissing": "بيانات صاحب العمل غير متاحة",
+    "company": "هذه الشركة",
+    "noDate": "لا يوجد تاريخ",
+    "system": "النظام"
+  },
+  "modals": {
+    "approveTitle": "الموافقة على الشركة؟",
+    "approveDescription": "أنت على وشك الموافقة على {{name}}. ستصبح متاحة عبر منصة وركي.",
+    "approveConfirm": "الموافقة على الشركة",
+    "rejectTitle": "رفض الشركة؟",
+    "rejectDescription": "اذكر سبب عدم الموافقة على {{name}}. إضافة السبب اختيارية.",
+    "rejectConfirm": "رفض الشركة"
+  },
+  "details": {
+    "descriptionFallback": "تفاصيل ملف الشركة",
+    "back": "العودة إلى الشركات",
+    "imageAlt": "تفاصيل الشركة",
+    "backendCoverageWarning": "تعرض الصفحة بيانات القائمة المخزنة مؤقتًا للمعلومات الأساسية. لا تزال الواجهة الخلفية بحاجة إلى نقطة نهاية مخصصة لتفاصيل الشركة تشمل التحقق والوظائف والنشاط وملاحظات الإدارة.",
+    "approvalStatus": "حالة الموافقة",
+    "employer": "صاحب العمل",
+    "location": "الموقع",
+    "companyId": "معرّف الشركة",
+    "tabs": {
+      "overview": "نظرة عامة",
+      "recruitment": "التوظيف",
+      "verification": "التحقق"
+    }
+  },
+  "overview": {
+    "title": "نظرة عامة على الشركة",
+    "legalName": "الاسم القانوني",
+    "industry": "القطاع",
+    "website": "الموقع الإلكتروني",
+    "location": "الموقع",
+    "phone": "الهاتف",
+    "contactEmail": "بريد التواصل",
+    "companySize": "حجم الشركة",
+    "registrationNumber": "رقم التسجيل",
+    "description": "الوصف",
+    "descriptionFallback": "لا تزال واجهة تفاصيل الشركة الخلفية مطلوبة لتوفير الوصف وبيانات الملف الأكثر تفصيلًا."
+  },
+  "ownership": {
+    "title": "ملكية صاحب العمل",
+    "primaryAccount": "حساب صاحب العمل الرئيسي",
+    "employerName": "اسم صاحب العمل",
+    "employerEmail": "بريد صاحب العمل",
+    "employerPhone": "هاتف صاحب العمل",
+    "createdBy": "أنشأه"
+  },
+  "recruitment": {
+    "activeJobs": "الوظائف النشطة",
+    "totalJobs": "إجمالي الوظائف",
+    "applications": "طلبات التقديم",
+    "profileCompletion": "اكتمال الملف",
+    "recentJobs": "أحدث الوظائف",
+    "jobMeta": "{{count}} طلبات · أُنشئت في {{date}}",
+    "jobsUnavailable": "تحتاج أحدث الوظائف إلى قائمة مخصصة من نقطة نهاية تفاصيل الشركة.",
+    "recentActivity": "أحدث نشاطات الإدارة",
+    "activityMeta": "{{actor}} · {{date}}",
+    "activityUnavailable": "سجل نشاط الشركات غير متاح من الواجهة الخلفية حتى الآن."
+  },
+  "verification": {
+    "title": "التحقق والموافقة",
+    "noReviewerNote": "لا توجد ملاحظة من المراجع.",
+    "recordsUnavailable": "لم تُرجع الواجهة الخلفية سجلات التحقق بعد. الواجهة جاهزة لعرضها عند إضافتها إلى نقطة نهاية التفاصيل.",
+    "latestApprovalNote": "أحدث ملاحظة موافقة",
+    "noApprovalNote": "لم يتم إرجاع أي ملاحظة موافقة.",
+    "activityTimestamps": "التواريخ والنشاط",
+    "created": "تاريخ الإنشاء: {{date}}",
+    "approved": "تاريخ الموافقة: {{date}}",
+    "lastActive": "آخر نشاط: {{date}}"
+  },
+  "toasts": {
+    "approved": "تمت الموافقة على الشركة",
+    "rejected": "تم رفض الشركة"
+    ,"suspended": "تم إيقاف الشركة"
+  }
+}

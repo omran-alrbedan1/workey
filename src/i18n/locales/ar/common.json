@@ -121,10 +121,37 @@
     "previousAria": "الانتقال إلى الصفحة السابقة",
     "nextAria": "الانتقال إلى الصفحة التالية"
   },
+  "statuses": {
+    "pending": "قيد الانتظار",
+    "approved": "تمت الموافقة",
+    "rejected": "مرفوض",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "suspended": "معلّق",
+    "open": "مفتوح",
+    "closed": "مغلق",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "success": "نجاح",
+    "verified": "تم التحقق",
+    "unverified": "غير موثق",
+    "reviewed": "تمت المراجعة",
+    "draft": "مسودة",
+    "test_pending": "بانتظار الاختبار",
+    "test_completed": "اكتمل الاختبار",
+    "final_review": "المراجعة النهائية",
+    "on_hold": "معلق"
+  },
   "modals": {
     "cancel": "إلغاء",
     "processing": "جاري المعالجة...",
     "reasonTooLong": "السبب طويل جدًا",
+    "delete": {
+      "title": "حذف العنصر؟",
+      "description": "هل أنت متأكد من رغبتك في حذف {{name}}؟",
+      "confirm": "حذف",
+      "hint": "لا يمكن التراجع عن هذا الإجراء."
+    },
     "approve": {
       "title": "قبول",
       "description": "هل أنت متأكد من رغبتك في قبول {{name}}؟",
@@ -137,11 +164,21 @@
       "confirm": "تفعيل",
       "hint": "لا يمكن التراجع عن هذا الإجراء"
     },
+    "deactivate": {
+      "title": "إلغاء التفعيل",
+      "description": "هل أنت متأكد من رغبتك في إلغاء تفعيل {{name}}؟",
+      "confirm": "إلغاء التفعيل",
+      "hint": "لا يمكن التراجع عن هذا الإجراء"
+    },
     "reject": {
       "title": "رفض",
       "description": "هل أنت متأكد من رغبتك في رفض {{name}}؟",
       "confirm": "رفض",
-      "reasonPlaceholder": "قدم سببًا للرفض..."
+      "reason": "السبب",
+      "reasonOptional": "السبب (اختياري)",
+      "reasonRequired": "السبب مطلوب",
+      "reasonPlaceholder": "قدم سببًا للرفض...",
+      "statusWarning": "سيؤدي هذا الإجراء إلى تغيير حالة الموافقة الحالية."
     },
     "suspend": {
       "title": "تعليق الحساب",

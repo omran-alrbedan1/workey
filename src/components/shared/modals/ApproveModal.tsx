@@ -1,5 +1,7 @@
-import { useTranslation } from 'react-i18next'
-import { X, Check, AlertCircle } from 'lucide-react'
+import { AlertCircle, Check, ShieldCheck, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
+
+import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import {
   Dialog,
   DialogContent,
@@ -7,77 +9,83 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { CancelButton, SubmitButton } from '@/components/shared/buttons'
+} from "@/components/ui/dialog"
+import { images } from "@/constants/images"
 
 interface ApproveModalProps {
   open: boolean
-  onConfirm: () => void
+  onConfirm: () => void | Promise<unknown>
   onClose: () => void
   loading?: boolean
   name: string
+  title?: string
+  description?: string
+  confirmText?: string
 }
 
-const ApproveModal: React.FC<ApproveModalProps> = ({
+export default function ApproveModal({
   open,
   onConfirm,
   onClose,
-  loading,
+  loading = false,
   name,
-}) => {
-  const { t } = useTranslation('common')
+  title,
+  description,
+  confirmText,
+}: ApproveModalProps) {
+  const { t } = useTranslation("common")
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <div className="flex flex-col items-center gap-4 text-center">
-            {/* Centered Icon */}
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-green-500/20 to-green-500/10">
-              <Check className="h-6 w-6 text-green-600" />
-            </div>
-            
-            {/* Title */}
-            <DialogTitle className="text-xl">
-              {t('modals.approve.title')}
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <DialogContent className="overflow-hidden border-primary/15 bg-background-card p-0 shadow-2xl sm:max-w-md">
+        <div className="relative bg-primary/15  bg-gradient-primary/30 px-6 pb-12 pt-6">
+          <img
+            src={images.logo}
+            alt="Workey"
+            className="relative h-16 w-auto mx-auto "
+          />
+        </div>
+
+        <div className="relative -mt-8 px-6 pb-6">
+          <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-4 border-background-card bg-primary text-white shadow-lg shadow-primary/20">
+            <ShieldCheck className="h-8 w-8" />
+          </div>
+
+          <DialogHeader className="text-left">
+            <DialogTitle className="text-2xl font-bold text-text-primary">
+              {title ?? t("modals.approve.title")}
             </DialogTitle>
-            
-            {/* Description */}
-            <DialogDescription>
-              {t('modals.approve.description', { name })}
+            <DialogDescription className="pt-2 text-sm leading-6 text-text-secondary">
+              {description ?? t("modals.approve.description", { name })}
             </DialogDescription>
-          </div>
-        </DialogHeader>
+          </DialogHeader>
 
-        {/* Actions */}
-        <DialogFooter className="gap-2 sm:gap-2 mt-6 w-fit mx-auto">
-          <CancelButton
-            onClick={onClose}
-            disabled={loading}
-            text={t('modals.cancel')}
-            icon={<X className="h-4 w-4" />}
-            className="flex-1"
-          />
-          <SubmitButton
-            onClick={onConfirm}
-            isLoading={loading}
-            text={t('modals.approve.confirm')}
-            loadingText={t('modals.processing')}
-            icon={<Check className="h-4 w-4" />}
-            className="bg-green-600 hover:bg-green-700 focus:ring-green-500 flex-1"
-          />
-        </DialogFooter>
-
-        {/* Hint - under the footer with icon */}
-        <div className="mt-4 pt-3 border-t border-border/50">
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-            <AlertCircle className="h-3.5 w-3.5 text-red-400" />
-            <span>{t('modals.approve.hint')}</span>
+          <div className="mt-5 flex items-start gap-3 rounded-xl border border-primary/10 bg-primary/5 p-3 text-sm text-text-secondary">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <span>{t("modals.approve.hint")}</span>
           </div>
+
+          <DialogFooter className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2">
+            <CancelButton
+              type="button"
+              onClick={onClose}
+              disabled={loading}
+              text={t("modals.cancel")}
+              icon={<X className="h-4 w-4" />}
+              className="w-full"
+            />
+            <SubmitButton
+              type="button"
+              onClick={onConfirm}
+              isLoading={loading}
+              text={confirmText ?? t("modals.approve.confirm")}
+              loadingText={t("modals.processing")}
+              icon={<Check className="h-4 w-4" />}
+              className="w-full shadow-lg shadow-primary/20"
+            />
+          </DialogFooter>
         </div>
       </DialogContent>
     </Dialog>
   )
 }
-
-export default ApproveModal

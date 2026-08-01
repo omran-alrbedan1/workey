@@ -1,0 +1,48 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { showSuccessToast } from "@/lib/toast"
+import { employerNotificationsService } from "../services/employerNotifications.service"
+
+export function useEmployerNotifications() {
+  const { t } = useTranslation("employerNotifications")
+  const client = useQueryClient()
+  const [page, setPage] = useState(1)
+  const rootKey = ["employer", "notifications"] as const
+
+  const listQuery = useQuery({
+    queryKey: [...rootKey, page],
+    queryFn: () => employerNotificationsService.list(page),
+  })
+
+  const unreadCountQuery = useQuery({
+    queryKey: [...rootKey, "unreadCount"],
+    queryFn: () => employerNotificationsService.getUnreadCount(),
+    refetchInterval: 30_000,
+  })
+
+  const markReadMutation = useMutation({
+    mutationFn: (id: string | number) => employerNotificationsService.markRead(id),
+    onSuccess: async () => {
+      await client.invalidateQueries({ queryKey: rootKey })
+    },
+  })
+
+  const markAllReadMutation = useMutation({
+    mutationFn: () => employerNotificationsService.markAllRead(),
+    onSuccess: async () => {
+      await client.invalidateQueries({ queryKey: rootKey })
+      showSuccessToast(t("toasts.allRead"))
+    },
+  })
+
+  return {
+    ...listQuery,
+    unreadCount: unreadCountQuery.data?.count ?? 0,
+    isUnreadCountPending: unreadCountQuery.isPending,
+    markReadMutation,
+    markAllReadMutation,
+    page,
+    setPage,
+  }
+}

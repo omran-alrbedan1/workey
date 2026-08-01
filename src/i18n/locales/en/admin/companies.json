@@ -1,0 +1,124 @@
+{
+  "page": {
+    "title": "Companies",
+    "description": "Review employer organizations and control approval status.",
+    "imageAlt": "Companies"
+  },
+  "errors": {
+    "listTitle": "companies",
+    "detailsTitle": "company details",
+    "missingId": "Missing company id in route."
+  },
+  "filters": {
+    "title": "Company filters",
+    "searchLabel": "Search companies",
+    "searchPlaceholder": "Name, employer, location...",
+    "statusLabel": "Approval status",
+    "allStatuses": "All statuses",
+    "suspended": "Suspended",
+    "industryLabel": "Industry",
+    "allIndustries": "All industries"
+  },
+  "table": {
+    "company": "Company",
+    "location": "Location",
+    "employer": "Employer",
+    "status": "Status",
+    "review": "Review",
+    "noDetails": "No company details",
+    "emptyTitle": "No companies were returned.",
+    "emptyDescription": "No companies match the selected filters.",
+    "emptyImageAlt": "No companies"
+  },
+  "actions": {
+    "reviewAria": "Review {{name}}",
+    "reviewCompany": "Review company",
+    "approvalActions": "Approval actions",
+    "viewDetails": "View details",
+    "approve": "Approve",
+    "reject": "Reject",
+    "suspend": "Suspend",
+    "visitSite": "Visit site"
+  },
+  "fallbacks": {
+    "notAvailable": "Not available",
+    "industryMissing": "Industry not provided",
+    "locationMissing": "Location not provided",
+    "employerMissing": "Employer unavailable",
+    "company": "this company",
+    "noDate": "No date",
+    "system": "System"
+  },
+  "modals": {
+    "approveTitle": "Approve company?",
+    "approveDescription": "You are about to approve {{name}}. It will become available across the Workey platform.",
+    "approveConfirm": "Approve company",
+    "rejectTitle": "Reject company?",
+    "rejectDescription": "Tell us why {{name}} should not be approved. The reason is optional.",
+    "rejectConfirm": "Reject company"
+  },
+  "details": {
+    "descriptionFallback": "Company profile details",
+    "back": "Back to companies",
+    "imageAlt": "Company details",
+    "backendCoverageWarning": "The page is using cached list data for the basics. Backend still needs a dedicated company details endpoint for verification, jobs, activity, and admin notes.",
+    "approvalStatus": "Approval status",
+    "employer": "Employer",
+    "location": "Location",
+    "companyId": "Company id",
+    "tabs": {
+      "overview": "Overview",
+      "recruitment": "Recruitment",
+      "verification": "Verification"
+    }
+  },
+  "overview": {
+    "title": "Company overview",
+    "legalName": "Legal name",
+    "industry": "Industry",
+    "website": "Website",
+    "location": "Location",
+    "phone": "Phone",
+    "contactEmail": "Contact email",
+    "companySize": "Company size",
+    "registrationNumber": "Registration number",
+    "description": "Description",
+    "descriptionFallback": "Backend details API is still needed to provide company description and richer profile data."
+  },
+  "ownership": {
+    "title": "Employer ownership",
+    "primaryAccount": "Primary employer account",
+    "employerName": "Employer name",
+    "employerEmail": "Employer email",
+    "employerPhone": "Employer phone",
+    "createdBy": "Created by"
+  },
+  "recruitment": {
+    "activeJobs": "Active jobs",
+    "totalJobs": "Total jobs",
+    "applications": "Applications",
+    "profileCompletion": "Profile completion",
+    "recentJobs": "Recent jobs",
+    "jobMeta": "{{count}} applications · Created {{date}}",
+    "jobsUnavailable": "Recent jobs need a dedicated array from the company details endpoint.",
+    "recentActivity": "Recent admin activity",
+    "activityMeta": "{{actor}} · {{date}}",
+    "activityUnavailable": "Activity history is not available yet from backend for companies."
+  },
+  "verification": {
+    "title": "Verification and approval",
+    "noReviewerNote": "No reviewer note provided.",
+    "recordsUnavailable": "Verification records are not returned yet by backend. The frontend is ready to display them once the details endpoint includes verification items.",
+    "latestApprovalNote": "Latest approval note",
+    "noApprovalNote": "No approval note has been returned.",
+    "activityTimestamps": "Activity timestamps",
+    "created": "Created: {{date}}",
+    "approved": "Approved: {{date}}",
+    "lastActive": "Last active: {{date}}"
+  },
+  "toasts": {
+    "approved": "Company approved",
+    "rejected": "Company rejected"
+    ,"suspended": "Company suspended"
+  }
+}

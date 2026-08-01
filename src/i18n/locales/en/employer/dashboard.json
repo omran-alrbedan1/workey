@@ -1,0 +1,47 @@
+{
+  "title": "Employer Dashboard",
+  "description": "Manage your company's hiring workflow and take the next recruitment action.",
+  "createJob": "Create job",
+  "stats": {
+    "title": "Live hiring stats",
+    "description": "Pulled from employer jobs, tests, and notification APIs.",
+    "refresh": "Refresh",
+    "error": "Unable to load dashboard stats right now.",
+    "totalJobs": {
+      "label": "Total jobs",
+      "description": "All roles owned by your company."
+    },
+    "activeJobs": {
+      "label": "Active jobs",
+      "description": "Jobs currently accepting applications."
+    },
+    "totalApplications": {
+      "label": "Applications",
+      "description": "Applications reported by loaded jobs."
+    },
+    "totalTests": {
+      "label": "Tests",
+      "description": "Assessment tests available to assign."
+    },
+    "unreadNotifications": {
+      "label": "Unread alerts",
+      "description": "Notifications that still need attention."
+    }
+  },
+  "recentJobs": {
+    "title": "Recent jobs",
+    "description": "Latest roles from your employer jobs API.",
+    "viewAll": "View all",
+    "meta": "{{applications}} applications · {{status}}",
+    "unknownStatus": "unknown",
+    "empty": "No jobs have been created yet."
+  },
+  "quickActions": {
+    "title": "Hiring workspace",
+    "description": "Open the areas you use most often.",
+    "jobs": { "title": "Jobs", "description": "Manage drafts and published roles." },
+    "applicants": { "title": "Applicants", "description": "Review candidates by job." },
+    "company": { "title": "Company", "description": "Maintain company information." },
+    "profile": { "title": "My Profile", "description": "Update your professional details." }
+  }
+}

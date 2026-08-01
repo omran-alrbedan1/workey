@@ -1,0 +1,127 @@
+{
+  "list": {
+    "title": "All Users",
+    "description": "Manage admin, employer, and job seeker accounts.",
+    "imageAlt": "User management",
+    "errorTitle": "users",
+    "columns": {
+      "user": "User",
+      "role": "Role",
+      "status": "Status",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "emptyTitle": "No users were returned.",
+    "emptyDescription": "No user accounts match the current view.",
+    "emptyImageAlt": "No users"
+  },
+  "filters": {
+    "title": "Filter users",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search name or email",
+    "roleLabel": "Role",
+    "allRoles": "All roles",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses"
+  },
+  "details": {
+    "errorTitle": "user details",
+    "missingId": "Missing user id in route.",
+    "back": "Back to users",
+    "imageAlt": "User details",
+    "backendCoverageWarning": "Only cached list data is available. The backend user details response does not yet include the full profile, logs, security history, sessions, and related records.",
+    "tabs": {
+      "overview": "Overview",
+      "activity": "Activity & logs",
+      "security": "Security",
+      "related": "Related records"
+    },
+    "metrics": {
+      "applications": "Applications",
+      "jobs": "Jobs",
+      "interviews": "Interviews",
+      "tests": "Assessments"
+    }
+  },
+  "actions": {
+    "menuAria": "Actions for {{name}}",
+    "menuLabel": "User actions",
+    "view": "View details",
+    "activate": "Activate",
+    "suspend": "Suspend",
+    "changeRole": "Change role",
+    "updating": "Updating..."
+  },
+  "roles": { "admin": "Admin", "employer": "Employer", "job_seeker": "Job seeker" },
+  "statuses": { "active": "Active", "suspended": "Suspended" },
+  "fallbacks": {
+    "notAvailable": "Not available",
+    "noDate": "No date",
+    "unknown": "Unknown",
+    "system": "System"
+  },
+  "overview": {
+    "profileTitle": "Profile information",
+    "accountTitle": "Account administration",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "dateOfBirth": "Date of birth",
+    "gender": "Gender",
+    "location": "Location",
+    "address": "Address",
+    "locale": "Language",
+    "timezone": "Timezone",
+    "bio": "Biography",
+    "profileCompletion": "Profile completion",
+    "userId": "User id",
+    "role": "Role",
+    "status": "Status",
+    "company": "Company",
+    "createdAt": "Joined",
+    "updatedAt": "Last updated",
+    "lastActive": "Last active",
+    "deletedAt": "Deleted at",
+    "suspensionReason": "Suspension reason"
+  },
+  "activity": {
+    "title": "User activity",
+    "auditTitle": "Administrative audit log",
+    "empty": "No activity records were returned by the backend.",
+    "auditEmpty": "No administrative audit records were returned by the backend.",
+    "meta": "{{actor}} · {{date}}",
+    "network": "IP: {{ip}} · {{agent}}"
+  },
+  "security": {
+    "title": "Security posture",
+    "twoFactor": "Two-factor authentication",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "emailVerified": "Email verification",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "failedAttempts": "Failed login attempts",
+    "passwordChanged": "Password last changed",
+    "lastLogin": "Last login",
+    "loginHistory": "Login history",
+    "sessions": "Active sessions",
+    "loginEmpty": "Login history is not available from the backend.",
+    "sessionsEmpty": "Active session data is not available from the backend.",
+    "currentSession": "Current session",
+    "sessionMeta": "{{ip}} · Last active {{date}}"
+  },
+  "related": {
+    "applications": "Applications",
+    "jobs": "Jobs",
+    "interviews": "Interviews",
+    "tests": "Assessments",
+    "empty": "No {{type}} records were returned by the backend.",
+    "itemDate": "Created {{date}}"
+  },
+  "toasts": {
+    "activated": "User activated",
+    "suspended": "User suspended",
+    "roleUpdated": "User role updated",
+    "roleUpdatedDescription": "The account is now {{role}}."
+  }
+}
