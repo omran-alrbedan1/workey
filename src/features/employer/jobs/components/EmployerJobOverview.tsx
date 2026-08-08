@@ -22,6 +22,7 @@ import type { EmployerJob } from "../types/employerJobs.types"
 
 interface EmployerJobOverviewProps {
   job: EmployerJob
+  showSkills?: boolean
 }
 
 function getKey(v: unknown): string {
@@ -56,7 +57,7 @@ function InfoRow({
   )
 }
 
-export default function EmployerJobOverview({ job }: EmployerJobOverviewProps) {
+export default function EmployerJobOverview({ job, showSkills = true }: EmployerJobOverviewProps) {
   const { t } = useTranslation("employerJobs")
 
   return (
@@ -217,7 +218,7 @@ export default function EmployerJobOverview({ job }: EmployerJobOverviewProps) {
       </Card>
 
       {/* Skills Card */}
-      {job.skills && job.skills.length > 0 ? (
+      {showSkills && job.skills && job.skills.length > 0 ? (
         <Card className="border-border bg-background-card shadow-card">
           <CardHeader className="border-b border-border pb-3">
             <div className="flex items-center gap-3">
@@ -245,13 +246,13 @@ export default function EmployerJobOverview({ job }: EmployerJobOverviewProps) {
             </div>
           </CardContent>
         </Card>
-      ) : (
+      ) : showSkills ? (
         <EmptyState
           title={t("skills.emptyTitle")}
           description={t("skills.emptyDescription")}
           icon={Wrench}
         />
-      )}
+      ) : null}
     </div>
   )
 }

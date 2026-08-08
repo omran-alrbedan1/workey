@@ -7,8 +7,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
 import { useEmployerJob } from "../hooks/useEmployerJob"
+import { useEmployerSkills } from "../hooks/useEmployerSkills"
 import { useRankedCandidates } from "../hooks/useRankedCandidates"
 import EmployerJobOverview from "../components/EmployerJobOverview"
+import EmployerJobSkills from "../components/EmployerJobSkills"
 import EmployerJobScreeningQuestionsTab from "../components/EmployerJobScreeningQuestionsTab"
 import EmployerJobRankedCandidatesTab from "../components/EmployerJobRankedCandidatesTab"
 
@@ -17,6 +19,7 @@ export default function EmployerJobDetailsPage() {
   const navigate = useNavigate()
   const { id } = useParams()
   const job = useEmployerJob(id)
+  const skills = useEmployerSkills()
   const rankedCandidates = useRankedCandidates(id)
 
   if (job.isError) {
@@ -60,8 +63,19 @@ export default function EmployerJobDetailsPage() {
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview">
-            <EmployerJobOverview job={job.data} />
+          <TabsContent value="overview" className="space-y-6">
+            <EmployerJobOverview job={job.data} showSkills={false} />
+            <EmployerJobSkills
+              skills={job.data.skills ?? []}
+              availableSkills={skills.data?.items ?? []}
+              isLoadingSkills={skills.isPending}
+              skillsError={skills.isError}
+              isPending={
+                job.attachSkillsMutation.isPending || job.detachSkillMutation.isPending
+              }
+              onAttach={job.attachSkillsMutation.mutateAsync}
+              onDetach={(skillId) => job.detachSkillMutation.mutate(skillId)}
+            />
           </TabsContent>
 
           {/* Screening Questions Tab */}

@@ -137,6 +137,22 @@
     "delete": "Delete",
     "backToJob": "Back to job"
   },
+  "publishModal": {
+    "title": "Publish job?",
+    "description": "Publish \"{{name}}\" so candidates can see and apply to it.",
+    "hint": "You can close the job later when you are no longer accepting applications.",
+    "confirm": "Publish job",
+    "cancel": "Cancel",
+    "processing": "Publishing..."
+  },
+  "closeModal": {
+    "title": "Close job?",
+    "description": "Close \"{{name}}\" and stop accepting new applications for it.",
+    "hint": "Existing applications will remain available for review.",
+    "confirm": "Close job",
+    "cancel": "Cancel",
+    "processing": "Closing..."
+  },
   "empty": {
     "title": "No jobs found",
     "description": "Create your first draft job to begin hiring."

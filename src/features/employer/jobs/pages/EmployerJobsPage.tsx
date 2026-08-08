@@ -61,8 +61,8 @@ export default function EmployerJobsPage() {
         isLoading={jobs.isPending}
         isUpdating={isUpdating}
         onPageChange={jobs.setPage}
-        onPublish={(id) => jobs.publishMutation.mutate(id)}
-        onClose={(id) => jobs.closeMutation.mutate(id)}
+        onPublish={jobs.publishMutation.mutateAsync}
+        onClose={jobs.closeMutation.mutateAsync}
         onDelete={jobs.deleteMutation.mutateAsync}
       />
     </div>
