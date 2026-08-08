@@ -35,6 +35,7 @@ import { ROUTES } from "@/config"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { employerTestsService } from "@/features/employer/tests/services/employerTests.service"
 import { useApplicationTests } from "../hooks/useApplicationTests"
+import { candidateDisplayName } from "../utils/candidateDisplay"
 import TestAssignmentDeadlinePanel from "./TestAssignmentDeadlinePanel"
 import TestAssignmentRetakePanel from "./TestAssignmentRetakePanel"
 import type { EmployerApplicant, EmployerTestAttempt } from "../types/employerApplicants.types"
@@ -334,10 +335,7 @@ export default function ApplicationTestsDialog({
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-5xl">
         <DialogHeader>
           <DialogTitle>{t("tests.title")}</DialogTitle>
-          <DialogDescription>
-            {application?.candidate_summary?.name ||
-              application?.candidate_summary?.email}
-          </DialogDescription>
+          <DialogDescription>{candidateDisplayName(application, t("unknownCandidate"))}</DialogDescription>
         </DialogHeader>
 
         {tests.isPending ? (

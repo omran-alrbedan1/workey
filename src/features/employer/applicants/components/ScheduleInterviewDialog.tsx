@@ -19,6 +19,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import type { Option } from "@/types/customFormField.types"
 import type { EmployerApplicant, EmployerInterviewInput } from "../types/employerApplicants.types"
+import { candidateDisplayName } from "../utils/candidateDisplay"
 
 const interviewTypeOptions: Option[] = [
   { value: "hr", label: "interview.types.hr" },
@@ -124,12 +125,7 @@ export default function ScheduleInterviewDialog({
     onOpenChange(false)
   }
 
-  const candidate =
-    application?.candidate_summary?.name ||
-    application?.submitted_snapshot?.profile?.identity?.full_name ||
-    application?.submitted_snapshot?.profile?.identity?.email ||
-    application?.candidate_summary?.email ||
-    t("unknownCandidate")
+  const candidate = candidateDisplayName(application, t("unknownCandidate"))
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

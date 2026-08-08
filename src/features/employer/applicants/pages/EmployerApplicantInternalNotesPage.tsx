@@ -5,15 +5,14 @@ import PageHeader from "@/components/shared/headers/PageHeader"
 import { ROUTES } from "@/config"
 import InternalNotes from "../components/InternalNotes"
 import { useEmployerApplicantDetail } from "../hooks/useEmployerApplicantDetail"
+import { candidateDisplayName } from "../utils/candidateDisplay"
 
 export default function EmployerApplicantInternalNotesPage() {
   const { t } = useTranslation("employerApplicants")
   const navigate = useNavigate()
   const { id } = useParams()
   const applicant = useEmployerApplicantDetail(id)
-  const candidate = applicant.data?.candidate
-  const candidateName =
-    candidate?.full_name || candidate?.name || candidate?.email || t("unknownCandidate")
+  const candidateName = candidateDisplayName(applicant.data, t("unknownCandidate"))
 
   return (
     <div className="space-y-6">

@@ -31,11 +31,7 @@ import InterviewsTab from "../components/tabs/InterviewsTab"
 import FinalReviewPanel from "../components/FinalReviewPanel"
 import { keyOf } from "@/lib/keyValue"
 import type { ApplicationStatusKey, EmployerApplicantDetail, EmployerInterviewInput } from "../types/employerApplicants.types"
-
-function getCandidateName(application: EmployerApplicantDetail | undefined, fallback: string) {
-  const identity = application?.submitted_snapshot?.profile?.identity
-  return application?.candidate_summary?.name || identity?.full_name || identity?.email || application?.candidate_summary?.email || fallback
-}
+import { candidateDisplayName } from "../utils/candidateDisplay"
 
 function shouldShowFinalReview(application: EmployerApplicantDetail) {
   const status = keyOf(application.status)
@@ -113,7 +109,7 @@ export default function EmployerApplicantDetailsPage() {
     )
   }
 
-  const candidateName = getCandidateName(application, t("unknownCandidate"))
+  const candidateName = candidateDisplayName(application, t("unknownCandidate"))
 
   return (
     <div className="space-y-6">

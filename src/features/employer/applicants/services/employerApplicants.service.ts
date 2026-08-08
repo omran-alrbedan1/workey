@@ -21,14 +21,39 @@ import type {
   EmployerInterviewInput,
   EmployerInterviewEvaluationInput,
 } from "../types/employerApplicants.types"
+import { hasCandidateDisplayData } from "../utils/candidateDisplay"
 
 export const employerApplicantsService = {
   async list(jobId: string | number, page = 1): Promise<EmployerCollection<EmployerApplicantDetail>> {
-    return unwrapEmployerCollection<EmployerApplicantDetail>(
+    const collection = unwrapEmployerCollection<EmployerApplicantDetail>(
       await api.get(API_ENDPOINTS.employer.jobApplications(jobId), {
         params: { page, per_page: 15 },
       }),
     )
+
+    const missingCandidateData = collection.items.filter((item) => !hasCandidateDisplayData(item))
+    if (missingCandidateData.length === 0) return collection
+
+    const details = await Promise.all(
+      missingCandidateData.map(async (item) => {
+        try {
+          return unwrapEmployerEntity<EmployerApplicantDetail>(
+            await api.get(API_ENDPOINTS.applications.byId(item.id)),
+          )
+        } catch {
+          return item
+        }
+      }),
+    )
+    const detailsById = new Map(details.map((item) => [String(item.id), item]))
+
+    return {
+      ...collection,
+      items: collection.items.map((item) => ({
+        ...item,
+        ...detailsById.get(String(item.id)),
+      })),
+    }
   },
 
   async updateStatus(

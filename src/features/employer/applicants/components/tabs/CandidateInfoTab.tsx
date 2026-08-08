@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { keyOf, valueOf } from "@/lib/keyValue"
+import { candidateHeadline } from "../../utils/candidateDisplay"
 import type { ApplicationStatusKey, EmployerApplicantDetail } from "../../types/employerApplicants.types"
 
 interface CandidateInfoTabProps {
@@ -46,6 +47,7 @@ export default function CandidateInfoTab({
 }: CandidateInfoTabProps) {
   const { t } = useTranslation("employerApplicants")
   const profile = application.submitted_snapshot?.profile
+  const matchScore = application.match_score ?? application.matching_score
   const nextStatuses = application.allowed_status_transitions?.map((status) => status.key) ?? []
 
   return (
@@ -60,9 +62,9 @@ export default function CandidateInfoTab({
             </div>
             <div>
               <h2 className="text-xl font-bold text-text-primary">{candidateName}</h2>
-              {(profile?.identity?.full_name || profile?.identity?.first_name || profile?.identity?.last_name) && (
+              {(candidateHeadline(application) || profile?.identity?.email) && (
                 <p className="mt-1 text-sm text-text-muted">
-                  {profile.professional?.headline || profile.identity?.email || ""}
+                  {candidateHeadline(application) || profile?.identity?.email || ""}
                 </p>
               )}
               <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-text-muted">
@@ -78,10 +80,10 @@ export default function CandidateInfoTab({
                     {profile.identity.phone}
                   </span>
                 )}
-                {(profile?.location?.city || profile?.location?.full_address) && (
+                {(profile?.location?.city || profile?.location?.full_address || profile?.location?.location_text) && (
                   <span className="flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5" />
-                    {profile.location.city || profile.location.full_address}
+                    {profile.location.city || profile.location.full_address || profile.location.location_text}
                   </span>
                 )}
               </div>
@@ -130,16 +132,16 @@ export default function CandidateInfoTab({
               >
                 {valueOf(application.status, "applied")}
               </Badge>
-              {application.match_score != null && (
+              {matchScore != null && (
                 <div className={cn(
                   "rounded-lg px-3 py-1 text-center text-sm font-medium",
-                  application.match_score >= 70 ? "bg-emerald-100 text-emerald-700" :
-                  application.match_score >= 40 ? "bg-amber-100 text-amber-700" :
+                  matchScore >= 70 ? "bg-emerald-100 text-emerald-700" :
+                  matchScore >= 40 ? "bg-amber-100 text-amber-700" :
                   "bg-red-100 text-red-700"
                 )}>
-                  {application.match_score <= 1
-                    ? Math.round(application.match_score * 100)
-                    : Math.round(application.match_score)}% {t("columns.match")}
+                  {matchScore <= 1
+                    ? Math.round(matchScore * 100)
+                    : Math.round(matchScore)}% {t("columns.match")}
                 </div>
               )}
             </div>

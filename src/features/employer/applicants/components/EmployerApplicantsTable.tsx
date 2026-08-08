@@ -1,11 +1,9 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import { CalendarPlus, Download, Eye, MoreHorizontal } from "lucide-react"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
-import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
-import type { EmployerApplicant, ApplicationStatusKey } from "../types/employerApplicants.types"
-import { CalendarPlus, Download, Eye, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -17,8 +15,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ROUTES } from "@/config"
 import { keyOf, valueOf } from "@/lib/keyValue"
-import { showSuccessToast, showErrorToast } from "@/lib/toast"
+import { showErrorToast, showSuccessToast } from "@/lib/toast"
+import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
+import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerApplicants.types"
 import { employerApplicantsService } from "../services/employerApplicants.service"
+import { candidateDisplayName, candidateSecondaryText } from "../utils/candidateDisplay"
 import ApplicationStatusChangeDialog from "./ApplicationStatusChangeDialog"
 
 const nextStatuses = [
@@ -48,6 +49,7 @@ function hasAllowedAction(application: EmployerApplicant, actions: string[]) {
 
 function useHandleDownload() {
   const [downloadingId, setDownloadingId] = useState<string | number | null>(null)
+
   const handleDownload = async (applicationId: string | number) => {
     setDownloadingId(applicationId)
     try {
@@ -67,6 +69,7 @@ function useHandleDownload() {
       setDownloadingId(null)
     }
   }
+
   return { downloadingId, handleDownload }
 }
 
@@ -108,40 +111,26 @@ export default function EmployerApplicantsTable({
     setStatusDialogApplication(null)
     setTargetStatus(null)
   }
+
   const columns: Column<EmployerApplicant>[] = [
     {
       key: "candidate",
       header: t("columns.candidate"),
-      cell: (application) => {
-        const candidate = application.candidate_summary || (application as any).candidate || (application as any).job_seeker_profile
-        const displayName =
-          candidate?.name ||
-          candidate?.full_name ||
-          candidate?.user?.name ||
-          candidate?.first_name ||
-          candidate?.last_name ||
-          candidate?.user?.email ||
-          candidate?.email ||
-          t("unknownCandidate")
-        const displayEmail =
-          candidate?.email ||
-          candidate?.headline ||
-          candidate?.summary ||
-          "—"
-        return (
-          <div>
-            <p className="font-semibold text-text-primary">{displayName}</p>
-            <p className="text-xs text-text-muted">{displayEmail}</p>
-          </div>
-        )
-      },
+      cell: (application) => (
+        <div>
+          <p className="font-semibold text-text-primary">
+            {candidateDisplayName(application, t("unknownCandidate"))}
+          </p>
+          <p className="text-xs text-text-muted">{candidateSecondaryText(application, "-")}</p>
+        </div>
+      ),
     },
     {
       key: "applied",
       header: t("columns.applied"),
       cell: (application) => {
         const date = application.applied_at || application.created_at
-        return date ? new Date(date).toLocaleDateString(i18n.language) : "—"
+        return date ? new Date(date).toLocaleDateString(i18n.language) : "-"
       },
     },
     {
@@ -162,10 +151,10 @@ export default function EmployerApplicantsTable({
     {
       key: "match",
       header: t("columns.match"),
-      cell: (application) =>
-        application.match_score == null
-          ? "—"
-          : `${application.match_score <= 1 ? Math.round(application.match_score * 100) : Math.round(application.match_score)}%`,
+      cell: (application) => {
+        const score = application.match_score ?? application.matching_score
+        return score == null ? "-" : `${score <= 1 ? Math.round(score * 100) : Math.round(score)}%`
+      },
     },
     {
       key: "assessments",
@@ -178,14 +167,25 @@ export default function EmployerApplicantsTable({
         return (
           <div className="flex flex-col items-start gap-1">
             {hasData ? (
-              <button type="button" className="text-start text-sm text-primary hover:underline" onClick={() => onReviewTests(application)}>
-                {t("assessmentCounts", { tests: application.tests_count ?? 0, interviews: application.interviews_count ?? 0 })}
+              <button
+                type="button"
+                className="text-start text-sm text-primary hover:underline"
+                onClick={() => onReviewTests(application)}
+              >
+                {t("assessmentCounts", {
+                  tests: application.tests_count ?? 0,
+                  interviews: application.interviews_count ?? 0,
+                })}
               </button>
             ) : (
-              <span className="text-sm text-text-muted">—</span>
+              <span className="text-sm text-text-muted">-</span>
             )}
             {hasAllowedAction(application, ["schedule_interview", "create_interview", "MANAGE_INTERVIEWS"]) && (
-              <button type="button" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline" onClick={() => onScheduleInterview(application)}>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                onClick={() => onScheduleInterview(application)}
+              >
                 <CalendarPlus className="h-3.5 w-3.5" /> {t("actions.scheduleInterview")}
               </button>
             )}
@@ -201,13 +201,15 @@ export default function EmployerApplicantsTable({
         <div className="flex justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="ghost" className="h-8 w-8" disabled={isUpdating} aria-label={t("actions.menuFor", {
-                name:
-                  application.candidate_summary?.name ||
-                  (application as any).candidate?.full_name ||
-                  (application as any).candidate?.name ||
-                  t("unknownCandidate"),
-              })}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                disabled={isUpdating}
+                aria-label={t("actions.menuFor", {
+                  name: candidateDisplayName(application, t("unknownCandidate")),
+                })}
+              >
                 <MoreHorizontal />
               </Button>
             </DropdownMenuTrigger>
@@ -224,12 +226,11 @@ export default function EmployerApplicantsTable({
                 <Download /> {t("actions.downloadCv")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {/* Use allowed_status_transitions if available, otherwise filter hardcoded list */}
-              {(application.allowed_status_transitions?.map(s => s.key) || nextStatuses)
+              {(application.allowed_status_transitions?.map((s) => s.key) || nextStatuses)
                 .filter((status) => status !== getKey(application.status))
                 .map((status) => (
-                  <DropdownMenuItem 
-                    key={status} 
+                  <DropdownMenuItem
+                    key={status}
                     onSelect={() => handleStatusClick(application, status as ApplicationStatusKey)}
                   >
                     {t(`statuses.${status}`)}

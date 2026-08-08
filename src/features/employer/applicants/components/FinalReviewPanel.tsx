@@ -37,6 +37,7 @@ import { keyOf, valueOf } from "@/lib/keyValue"
 import { useInternalNotes } from "../hooks/useInternalNotes"
 import { useRankedCandidates } from "@/features/employer/jobs/hooks/useRankedCandidates"
 import ApplicationStatusHistory from "./ApplicationStatusHistory"
+import { candidateDisplayName } from "../utils/candidateDisplay"
 import type {
   ApplicationStatusKey,
   EmployerApplicantDetail,
@@ -92,8 +93,7 @@ function isTerminal(statusKey: string) {
 }
 
 function candidateName(application: EmployerApplicantDetail, fallback: string) {
-  const identity = application.submitted_snapshot?.profile?.identity
-  return application.candidate_summary?.name || identity?.full_name || identity?.email || application.candidate_summary?.email || fallback
+  return candidateDisplayName(application, fallback)
 }
 
 function findMatchingContext(application: EmployerApplicantDetail, candidates?: RankedCandidate[]) {
@@ -203,7 +203,7 @@ function SnapshotSection({ application }: { application: EmployerApplicantDetail
         ) : (
           <>
             <div className="grid gap-4 md:grid-cols-3">
-              <EvidenceItem label={t("finalReview.snapshot.name")} value={identity?.full_name} />
+              <EvidenceItem label={t("finalReview.snapshot.name")} value={identity?.name || identity?.full_name} />
               <EvidenceItem label={t("finalReview.snapshot.email")} value={identity?.email} />
               <EvidenceItem label={t("finalReview.snapshot.phone")} value={identity?.phone} />
               <EvidenceItem label={t("finalReview.snapshot.location")} value={location?.full_address || location?.city || location?.country} />

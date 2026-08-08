@@ -37,17 +37,22 @@ export interface ApplicationSnapshot {
 
 export interface ApplicationSnapshotProfile {
   identity?: {
+    name?: string
     full_name?: string
     first_name?: string
     last_name?: string
     email?: string
     phone?: string
+    headline?: string
+    summary?: string
   }
   location?: {
     city?: string
     country?: string
     full_address?: string
+    location_text?: string
   }
+  professional_links?: Array<{ label?: string; url?: string }>
   professional?: {
     headline?: string
     summary?: string
@@ -118,7 +123,21 @@ export interface EmployerApplicantListItem {
     headline?: string
     city?: string
   }
+  job_seeker_profile?: {
+    id?: string | number
+    headline?: string | null
+    summary?: string | null
+    phone?: string | null
+    location?: string | null
+    name?: string
+    user?: {
+      id?: string | number
+      name?: string
+      email?: string
+    }
+  }
   match_score?: number | null
+  matching_score?: number | null
   tests_count?: number | null
   interviews_count?: number | null
 }
@@ -156,7 +175,7 @@ export interface ApplicationStatusHistoryEntry {
   changed_by?: {
     id: string | number
     name?: string
-    role?: string
+    role?: string | KeyValueField
   }
   note?: string | null
   changed_at: string
