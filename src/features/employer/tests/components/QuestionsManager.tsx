@@ -40,32 +40,15 @@ const choiceTypes: TestQuestion["question_type"][] = [
   "single_choice",
   "multiple_choice",
   "true_false",
-  "objective",
 ]
 
-function optionText(option: string | TestQuestionOption): string {
-  return typeof option === "string" ? option : option.option_text ?? option.text ?? ""
-}
-
-function normalizeOption(
-  option: string | TestQuestionOption,
-  index: number,
-): TestQuestionOption {
-  if (typeof option === "string") {
-    return {
-      option_text: option,
-      is_correct: false,
-      sort_order: index + 1,
-      order_index: index + 1,
-    }
-  }
-
+function normalizeOption(option: TestQuestionOption, index: number): TestQuestionOption {
   return {
-    ...option,
-    option_text: option.option_text ?? option.text ?? "",
-    sort_order: option.sort_order ?? option.order_index ?? index + 1,
-    order_index: option.order_index ?? option.sort_order ?? index + 1,
-    is_correct: option.is_correct ?? false,
+    id: option.id,
+    test_question_id: option.test_question_id,
+    option_text: option.option_text,
+    order_index: option.order_index ?? index,
+    is_correct: Boolean(option.is_correct),
   }
 }
 
@@ -73,8 +56,11 @@ function normalizeOptions(options: TestQuestion["options"] = []): TestQuestionOp
   return options.map((option, index) => normalizeOption(option, index))
 }
 
-function correctAnswerValue(option: TestQuestionOption): string | number {
-  return option.id ?? option.option_text ?? option.text ?? ""
+function trueFalseOptions(correctValue: "true" | "false" = "true"): TestQuestionOption[] {
+  return [
+    { option_text: "True", order_index: 0, is_correct: correctValue === "true" },
+    { option_text: "False", order_index: 1, is_correct: correctValue === "false" },
+  ]
 }
 
 export default function QuestionsManager({ questions, onChange, testId }: QuestionsManagerProps) {
@@ -97,10 +83,9 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
   const addQuestion = useCallback(() => {
     const newQuestion: TestQuestion = {
       question_text: "",
-      question_type: "essay",
+      question_type: "short_text",
       points: 1,
-      sort_order: questions.length,
-      order_index: questions.length + 1,
+      order_index: questions.length,
       is_required: true,
       options: [],
     }
@@ -111,7 +96,7 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
     (index: number) => {
       const updated = questions
         .filter((_, i) => i !== index)
-        .map((question, i) => ({ ...question, sort_order: i, order_index: i + 1 }))
+        .map((question, i) => ({ ...question, order_index: i }))
       onChange(updated)
     },
     [onChange, questions],
@@ -124,8 +109,8 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
 
       const updated = [...questions]
       const current = updated[index]
-      updated[index] = { ...updated[target], sort_order: index, order_index: index + 1 }
-      updated[target] = { ...current, sort_order: target, order_index: target + 1 }
+      updated[index] = { ...updated[target], order_index: index }
+      updated[target] = { ...current, order_index: target }
       onChange(updated)
     },
     [onChange, questions],
@@ -151,8 +136,7 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
       const draftOption: TestQuestionOption = {
         option_text: "",
         is_correct: false,
-        sort_order: options.length + 1,
-        order_index: options.length + 1,
+        order_index: options.length,
       }
 
       const option =
@@ -176,7 +160,7 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
       const current = options[optionIndex]
       if (!current) return
 
-      const localOption = { ...current, option_text: text, text }
+      const localOption = { ...current, option_text: text }
       const persistedOption = await persistOption(question, current, { option_text: text })
       const nextOptions = [...options]
       nextOptions[optionIndex] = normalizeOption(
@@ -194,7 +178,7 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
       const question = questions[questionIndex]
       const options = normalizeOptions(question.options)
       const isSingleCorrect =
-        question.question_type === "single_choice" || question.question_type === "objective"
+        question.question_type === "single_choice" || question.question_type === "true_false"
 
       const nextOptions = options.map((option, index) => ({
         ...option,
@@ -219,14 +203,6 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
       replaceQuestion(questionIndex, {
         ...question,
         options: nextOptions,
-        correct_answer:
-          isSingleCorrect && selected?.is_correct ? correctAnswerValue(selected) : isSingleCorrect ? "" : question.correct_answer,
-        correct_answers:
-          question.question_type === "multiple_choice"
-            ? nextOptions
-                .filter((option) => option.is_correct)
-                .map((option) => correctAnswerValue(option))
-            : question.correct_answers,
       })
     },
     [questions, replaceQuestion, testId],
@@ -245,18 +221,11 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
 
       const nextOptions = options
         .filter((_, index) => index !== optionIndex)
-        .map((item, index) => ({ ...item, sort_order: index + 1, order_index: index + 1 }))
+        .map((item, index) => ({ ...item, order_index: index }))
 
       replaceQuestion(questionIndex, {
         ...question,
         options: nextOptions,
-        correct_answer: option.is_correct ? "" : question.correct_answer,
-        correct_answers:
-          question.question_type === "multiple_choice"
-            ? nextOptions
-                .filter((item) => item.is_correct)
-                .map((item) => correctAnswerValue(item))
-            : question.correct_answers,
       })
     },
     [questions, replaceQuestion, testId],
@@ -271,15 +240,15 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
 
       const nextOptions = [...options]
       const current = nextOptions[optionIndex]
-      nextOptions[optionIndex] = { ...nextOptions[target], sort_order: optionIndex + 1, order_index: optionIndex + 1 }
-      nextOptions[target] = { ...current, sort_order: target + 1, order_index: target + 1 }
+      nextOptions[optionIndex] = { ...nextOptions[target], order_index: optionIndex }
+      nextOptions[target] = { ...current, order_index: target }
 
       const allOptionsHaveIds = nextOptions.every((option) => option.id)
       if (testId && question.id && allOptionsHaveIds) {
         const reordered = await employerTestsService.reorderQuestionOptions(testId, question.id, {
           options: nextOptions.map((option, index) => ({
             option_id: option.id!,
-            order_index: index + 1,
+            order_index: index,
           })),
         })
         replaceQuestion(questionIndex, { ...question, options: normalizeOptions(reordered) })
@@ -294,14 +263,16 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
   const handleQuestionTypeChange = useCallback(
     (index: number, questionType: TestQuestion["question_type"]) => {
       const question = questions[index]
-      const keepsOptions = choiceTypes.includes(questionType) && questionType !== "true_false"
+      const keepsOptions = questionType === "single_choice" || questionType === "multiple_choice"
 
       replaceQuestion(index, {
         ...question,
         question_type: questionType,
-        options: keepsOptions ? normalizeOptions(question.options) : [],
-        correct_answer: "",
-        correct_answers: [],
+        options: questionType === "true_false"
+          ? trueFalseOptions()
+          : keepsOptions
+            ? normalizeOptions(question.options)
+            : [],
       })
     },
     [questions, replaceQuestion],
@@ -427,8 +398,6 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
                             <SelectItem value="short_text">{t("questions.shortText")}</SelectItem>
                             <SelectItem value="long_text">{t("questions.longText")}</SelectItem>
                             <SelectItem value="file_upload">{t("questions.fileUpload")}</SelectItem>
-                            <SelectItem value="essay">{t("questions.essay")}</SelectItem>
-                            <SelectItem value="objective">{t("questions.objective")}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -440,7 +409,7 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
                         <Input
                           id={`q-points-${index}`}
                           type="number"
-                          min={0.5}
+                          min={0}
                           step={0.5}
                           value={question.points}
                           onChange={(event) => updateQuestion(index, "points", event.target.value)}
@@ -456,26 +425,20 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
                         </Label>
                         {question.question_type === "true_false" ? (
                           <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Checkbox
-                                id={`tf-true-${index}`}
-                                checked={question.correct_answer === "true"}
-                                onCheckedChange={(checked) =>
-                                  updateQuestion(index, "correct_answer", checked ? "true" : "")
-                                }
-                              />
-                              <Label htmlFor={`tf-true-${index}`}>{t("questions.true")}</Label>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Checkbox
-                                id={`tf-false-${index}`}
-                                checked={question.correct_answer === "false"}
-                                onCheckedChange={(checked) =>
-                                  updateQuestion(index, "correct_answer", checked ? "false" : "")
-                                }
-                              />
-                              <Label htmlFor={`tf-false-${index}`}>{t("questions.false")}</Label>
-                            </div>
+                            {normalizeOptions(question.options?.length === 2 ? question.options : trueFalseOptions()).map((option, optionIndex) => (
+                              <div key={option.option_text} className="flex items-center gap-2">
+                                <Checkbox
+                                  id={`tf-${option.option_text}-${index}`}
+                                  checked={option.is_correct}
+                                  onCheckedChange={(checked) =>
+                                    setOptionCorrect(index, optionIndex, Boolean(checked))
+                                  }
+                                />
+                                <Label htmlFor={`tf-${option.option_text}-${index}`}>
+                                  {option.option_text.toLowerCase() === "true" ? t("questions.true") : t("questions.false")}
+                                </Label>
+                              </div>
+                            ))}
                           </div>
                         ) : (
                           <>
@@ -523,7 +486,7 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
                                   <Label className="text-xs">{t("questions.isCorrect")}</Label>
                                 </span>
                                 <Input
-                                  value={optionText(option)}
+                                  value={option.option_text}
                                   onChange={(event) => updateOptionText(index, optionIndex, event.target.value)}
                                   placeholder={t("questions.optionPlaceholder", { n: optionIndex + 1 })}
                                 />
@@ -542,15 +505,6 @@ export default function QuestionsManager({ questions, onChange, testId }: Questi
                               <Plus className="mr-2 h-3.5 w-3.5" /> {t("questions.addOption")}
                             </Button>
 
-                            {question.question_type === "objective" && options.length > 1 && (
-                              <div>
-                                <Label className="flex items-center gap-1">
-                                  <HelpCircle className="h-3 w-3" />
-                                  {t("questions.correctAnswer")}
-                                </Label>
-                                <p className="text-xs text-text-muted">{t("questions.selectCorrect")}</p>
-                              </div>
-                            )}
                           </>
                         )}
                       </div>

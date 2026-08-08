@@ -68,8 +68,8 @@ export default function EmployerApplicantsPage() {
         isLoading={jobs.isPending || applicants.isPending}
         isUpdating={applicants.statusMutation.isPending || applicants.scheduleInterviewMutation.isPending}
         onPageChange={applicants.setPage}
-        onStatusChange={(applicationId, status) =>
-          applicants.statusMutation.mutate({ applicationId, input: { status } })
+        onStatusChange={(applicationId, status, note) =>
+          applicants.statusMutation.mutate({ applicationId, input: { status: status as any, note } })
         }
         onReviewTests={setTestApplication}
         onScheduleInterview={setInterviewApplication}
@@ -81,7 +81,7 @@ export default function EmployerApplicantsPage() {
           if (!open) setTestApplication(null)
         }}
         onNextStep={(applicationId, status) =>
-          applicants.statusMutation.mutateAsync({ applicationId, input: { status } })
+          applicants.statusMutation.mutateAsync({ applicationId, input: { status: status as any } })
         }
       />
       <ScheduleInterviewDialog

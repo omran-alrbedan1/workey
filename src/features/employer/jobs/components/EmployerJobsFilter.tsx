@@ -46,7 +46,7 @@ export default function EmployerJobsFilter({
         { value: "full_time", label: t("employmentTypes.full_time") },
         { value: "part_time", label: t("employmentTypes.part_time") },
         { value: "contract", label: t("employmentTypes.contract") },
-        { value: "freelance", label: t("employmentTypes.freelance") },
+        { value: "internship", label: t("employmentTypes.internship") },
       ],
     },
     {

@@ -9,7 +9,11 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { employerTestsService } from "@/features/employer/tests/services/employerTests.service"
-import type { AttemptSeriesItem } from "@/features/employer/tests/types/employerTests.types"
+import { valueOf } from "@/lib/keyValue"
+import type {
+  AttemptSeriesItem,
+  TestAssignmentSeriesResponse,
+} from "@/features/employer/tests/types/employerTests.types"
 
 interface TestAssignmentRetakePanelProps {
   assignmentId: string | number
@@ -32,7 +36,7 @@ function formatDateTime(value?: string | null) {
 }
 
 function attemptScore(item: AttemptSeriesItem) {
-  return item.total_score ?? item.score ?? null
+  return item.percentage ?? null
 }
 
 export default function TestAssignmentRetakePanel({
@@ -50,7 +54,7 @@ export default function TestAssignmentRetakePanel({
   const [retakeReason, setRetakeReason] = useState("")
   const [instructions, setInstructions] = useState("")
   const [deadline, setDeadline] = useState("")
-  const [series, setSeries] = useState<AttemptSeriesItem[]>([])
+  const [series, setSeries] = useState<TestAssignmentSeriesResponse | null>(null)
   const [loadingSeries, setLoadingSeries] = useState(false)
   const [savingPolicy, setSavingPolicy] = useState(false)
   const [grantingRetake, setGrantingRetake] = useState(false)
@@ -61,7 +65,7 @@ export default function TestAssignmentRetakePanel({
       setSeries(await employerTestsService.getAttemptSeries(assignmentId))
     } catch (error) {
       showErrorToast(error, t("tests.retakeSeriesError"))
-      setSeries([])
+      setSeries(null)
     } finally {
       setLoadingSeries(false)
     }
@@ -78,7 +82,7 @@ export default function TestAssignmentRetakePanel({
 
   const updatePolicy = async () => {
     const parsedMaxAttempts = Number(maxAttempts)
-    if (!Number.isInteger(parsedMaxAttempts) || parsedMaxAttempts < 1 || !policyReason.trim()) {
+    if (!Number.isInteger(parsedMaxAttempts) || parsedMaxAttempts < 1 || parsedMaxAttempts > 5 || !policyReason.trim()) {
       showErrorToast(t("tests.retakePolicyValidation"))
       return
     }
@@ -150,6 +154,7 @@ export default function TestAssignmentRetakePanel({
               id={`max-attempts-${assignmentId}`}
               type="number"
               min={1}
+              max={5}
               value={maxAttempts}
               onChange={(event) => setMaxAttempts(event.target.value)}
               disabled={savingPolicy}
@@ -247,17 +252,24 @@ export default function TestAssignmentRetakePanel({
             <Skeleton className="h-20 w-full" />
             <Skeleton className="h-20 w-full" />
           </div>
-        ) : series.length === 0 ? (
+        ) : !series || series.assignments.length === 0 ? (
           <p className="rounded-md border border-border bg-background p-3 text-sm text-text-muted">
             {t("tests.attemptTimelineEmpty")}
           </p>
         ) : (
           <div className="space-y-2">
-            {series.map((item, index) => {
+            <div className="rounded-md border border-border bg-background p-3 text-sm">
+              <span className="font-medium">{t("tests.maxAttempts")}:</span> {series.max_attempts}
+              <span className="mx-2 text-text-muted">|</span>
+              <span className="font-medium">{t("tests.attemptsUsed")}:</span> {series.attempts_used}
+              <span className="mx-2 text-text-muted">|</span>
+              <span className="font-medium">{t("tests.attemptsRemaining")}:</span> {series.attempts_remaining}
+            </div>
+            {series.assignments.map((item, index) => {
               const score = attemptScore(item)
               return (
                 <div
-                  key={item.attempt_id ?? item.test_attempt_id ?? item.id ?? index}
+                  key={item.assignment_id ?? index}
                   className="rounded-md border border-border bg-background p-3"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
@@ -268,23 +280,21 @@ export default function TestAssignmentRetakePanel({
                         })}
                       </p>
                       <p className="mt-1 text-xs text-text-muted">
-                        {t("tests.attemptDates", {
-                          started: formatDateTime(item.started_at ?? item.created_at),
-                          submitted: formatDateTime(item.submitted_at),
-                        })}
+                        {t("tests.submittedAt", { submitted: formatDateTime(item.submitted_at) })}
                       </p>
                       <p className="mt-1 text-xs text-text-muted">
                         {t("tests.deadlineLabel", { deadline: formatDateTime(item.deadline_at) })}
                       </p>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <StatusBadge status={item.status ?? "pending"} variant="soft" size="sm" />
+                      <StatusBadge status={item.is_latest ? "active" : "inactive"} variant="soft" size="sm" />
+                      <StatusBadge status={valueOf(item.grading_status, "pending")} variant="soft" size="sm" />
                       <span className="text-sm font-medium">
                         {score == null
                           ? t("tests.noAttemptScore")
                           : t("tests.timelineScore", {
-                              score,
-                              max: item.max_score ?? "-",
+                              score: `${score}%`,
+                              max: "-",
                               percentage: item.percentage ?? "-",
                             })}
                       </span>

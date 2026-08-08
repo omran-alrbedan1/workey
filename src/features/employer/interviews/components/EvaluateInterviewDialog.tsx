@@ -1,10 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ClipboardCheck, Plus, Trash2 } from "lucide-react"
+import { ClipboardCheck } from "lucide-react"
 import { useEffect } from "react"
-import { useFieldArray, useForm, type Resolver } from "react-hook-form"
+import { useForm, type Resolver } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
-import { Button } from "@/components/ui/button"
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import {
@@ -22,23 +21,35 @@ import type { EmployerInterviewEvaluateInput } from "../types/employerInterviews
 
 const recommendationOptions: Option[] = [
   { value: "advance", label: "recommendations.advance" },
-  { value: "consider", label: "recommendations.consider" },
+  { value: "hold", label: "recommendations.hold" },
   { value: "reject", label: "recommendations.reject" },
 ]
 
+const defaultCriteria = [
+  "Communication",
+  "Technical Knowledge",
+  "Problem Solving",
+  "Job Fit",
+  "Professionalism",
+]
+
 const itemSchema = z.object({
-  criterion: z.string().min(1),
-  score: z.coerce.number().min(0).max(10),
-  comment: z.string().optional(),
+  criterion: z.string().min(1).max(255),
+  score: z.coerce.number().int().min(1).max(5),
+  comment: z.string().trim().max(2000).optional(),
 })
 
 const schema = z.object({
-  recommendation: z.string().min(1),
-  overall_comment: z.string().optional(),
-  items: z.array(itemSchema),
+  recommendation: z.enum(["advance", "hold", "reject"]),
+  overall_comment: z.string().trim().max(5000).optional(),
+  items: z.array(itemSchema).length(5),
 })
 
 type FormValues = z.infer<typeof schema>
+
+function defaultItems() {
+  return defaultCriteria.map((criterion) => ({ criterion, score: 3, comment: "" }))
+}
 
 export default function EvaluateInterviewDialog({
   open,
@@ -54,19 +65,20 @@ export default function EvaluateInterviewDialog({
   const { t } = useTranslation("employerInterviews")
   const form = useForm<FormValues>({
     resolver: zodResolver(schema) as Resolver<FormValues>,
-    defaultValues: { recommendation: "", overall_comment: "", items: [{ criterion: "", score: 5, comment: "" }] },
+    defaultValues: { recommendation: "hold", overall_comment: "", items: defaultItems() },
   })
-  const { fields, append, remove } = useFieldArray({ control: form.control, name: "items" })
 
   useEffect(() => {
-    if (!open) form.reset()
+    if (open) {
+      form.reset({ recommendation: "hold", overall_comment: "", items: defaultItems() })
+    }
   }, [form, open])
 
   const submit = async (values: FormValues) => {
     await onSubmit({
       recommendation: values.recommendation,
       overall_comment: values.overall_comment || undefined,
-      items: values.items.filter((i) => i.criterion.trim()),
+      items: values.items,
     })
     onOpenChange(false)
   }
@@ -99,38 +111,18 @@ export default function EvaluateInterviewDialog({
                 rows={3}
               />
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <FormLabel className="text-sm font-medium">{t("evaluate.evaluationItems")}</FormLabel>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    onClick={() => append({ criterion: "", score: 5, comment: "" })}
-                  >
-                    <Plus className="h-4 w-4" /> {t("evaluate.addItem")}
-                  </Button>
-                </div>
-                {fields.map((field, index) => (
-                  <div key={field.id} className="space-y-2 rounded-md border border-border p-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-text-muted">
-                        {t("evaluate.itemNumber", { n: index + 1 })}
-                      </span>
-                      {fields.length > 1 && (
-                        <Button type="button" variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => remove(index)}>
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
+                <FormLabel className="text-sm font-medium">{t("evaluate.evaluationItems")}</FormLabel>
+                {form.watch("items").map((item, index) => (
+                  <div key={item.criterion} className="space-y-2 rounded-md border border-border p-3">
+                    <div className="grid grid-cols-[1fr_96px] gap-2">
                       <FormField
                         control={form.control}
                         name={`items.${index}.criterion`}
-                        render={({ field: f }) => (
+                        render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-xs">{t("evaluate.criterion")}</FormLabel>
                             <FormControl>
-                              <Input {...f} placeholder={t("evaluate.criterionPlaceholder")} />
+                              <Input {...field} readOnly />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -139,11 +131,11 @@ export default function EvaluateInterviewDialog({
                       <FormField
                         control={form.control}
                         name={`items.${index}.score`}
-                        render={({ field: f }) => (
+                        render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-xs">{t("evaluate.score")}</FormLabel>
                             <FormControl>
-                              <Input type="number" min={0} max={10} {...f} />
+                              <Input type="number" min={1} max={5} disabled={isPending} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -153,11 +145,11 @@ export default function EvaluateInterviewDialog({
                     <FormField
                       control={form.control}
                       name={`items.${index}.comment`}
-                      render={({ field: f }) => (
+                      render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-xs">{t("evaluate.comment")}</FormLabel>
                           <FormControl>
-                            <Input {...f} placeholder={t("evaluate.commentPlaceholder")} />
+                            <Input {...field} disabled={isPending} placeholder={t("evaluate.commentPlaceholder")} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

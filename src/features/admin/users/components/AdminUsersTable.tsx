@@ -73,9 +73,9 @@ export default function AdminUsersTable({
 
   const getRoleDisplay = (role: string | any) => {
     if (typeof role === 'object' && role !== null) {
-      return role.value
+      return role.value || role.key || String(role)
     }
-    return role
+    return role || "—"
   }
 
   const columns: Column<AdminUserRecord>[] = [

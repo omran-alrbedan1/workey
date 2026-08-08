@@ -7,6 +7,7 @@ import {
   DollarSign,
   FileText,
   Gift,
+  GraduationCap,
   ListChecks,
   MapPin,
   Save,
@@ -18,31 +19,39 @@ import { useTranslation } from "react-i18next"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import { SubmitButton } from "@/components/shared/buttons"
 import { Form } from "@/components/ui/form"
-import type { EmployerJobInput } from "../types/employerJobs.types"
+import type { EmployerJobInput, EmploymentType, ExperienceLevel, EducationLevel, JobWorkMode } from "../types/employerJobs.types"
 import {
   employerJobSchema,
   type EmployerJobFormValues,
 } from "../validations/employerJobs.validation"
-import type { Option } from "@/types/customFormField.types"
 
-const employmentTypeOptions: Option[] = [
+const employmentTypeOptions: { value: EmploymentType; label: string }[] = [
   { value: "full_time", label: "employmentTypes.full_time" },
   { value: "part_time", label: "employmentTypes.part_time" },
   { value: "contract", label: "employmentTypes.contract" },
-  { value: "freelance", label: "employmentTypes.freelance" },
+  { value: "internship", label: "employmentTypes.internship" },
 ]
 
-const experienceLevelOptions: Option[] = [
+const experienceLevelOptions: { value: ExperienceLevel; label: string }[] = [
+  { value: "entry_level", label: "experienceLevels.entry_level" },
   { value: "junior", label: "experienceLevels.junior" },
-  { value: "mid", label: "experienceLevels.mid" },
+  { value: "mid_level", label: "experienceLevels.mid_level" },
   { value: "senior", label: "experienceLevels.senior" },
-  { value: "lead", label: "experienceLevels.lead" },
 ]
 
-const workModeOptions: Option[] = [
+const workModeOptions: { value: JobWorkMode; label: string }[] = [
   { value: "remote", label: "workModes.remote" },
   { value: "on_site", label: "workModes.on_site" },
   { value: "hybrid", label: "workModes.hybrid" },
+]
+
+const educationLevelOptions: { value: string; label: string }[] = [
+  { value: "", label: "educationLevels.none" },
+  { value: "high_school", label: "educationLevels.high_school" },
+  { value: "diploma", label: "educationLevels.diploma" },
+  { value: "bachelor", label: "educationLevels.bachelor" },
+  { value: "master", label: "educationLevels.master" },
+  { value: "doctorate", label: "educationLevels.doctorate" },
 ]
 
 export default function EmployerJobForm({
@@ -64,28 +73,64 @@ export default function EmployerJobForm({
     defaultValues: {
       title: "",
       description: "",
-      department: "",
-      responsibilities: "",
-      benefits: "",
+      department: null,
+      responsibilities: null,
+      benefits: null,
       requirements: "",
-      employment_type: "",
-      experience_level: "",
-      work_mode: "remote",
-      location: "",
-      application_deadline: "",
-      salary_min: undefined,
-      salary_max: undefined,
+      employment_type: "full_time" as EmploymentType,
+      experience_level: "entry_level" as ExperienceLevel,
+      education_level: null as EducationLevel,
+      work_mode: "remote" as JobWorkMode,
+      location: null,
+      application_deadline: null,
+      salary_min: null,
+      salary_max: null,
     },
   })
 
   useEffect(() => {
-    if (initialValues) form.reset(initialValues)
+    if (initialValues) {
+      form.reset({
+        title: initialValues.title,
+        description: initialValues.description,
+        department: initialValues.department ?? null,
+        responsibilities: initialValues.responsibilities ?? null,
+        benefits: initialValues.benefits ?? null,
+        requirements: initialValues.requirements,
+        employment_type: initialValues.employment_type,
+        experience_level: initialValues.experience_level,
+        education_level: initialValues.education_level ?? null,
+        work_mode: initialValues.work_mode,
+        location: initialValues.location ?? null,
+        application_deadline: initialValues.application_deadline ?? null,
+        salary_min: initialValues.salary_min ?? null,
+        salary_max: initialValues.salary_max ?? null,
+      })
+    }
   }, [form, initialValues])
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(async (values) => onSubmit(values))}
+        onSubmit={form.handleSubmit(async (values) => {
+          const normalized: EmployerJobInput = {
+            title: values.title,
+            description: values.description,
+            department: values.department?.trim() || null,
+            responsibilities: values.responsibilities?.trim() || null,
+            benefits: values.benefits?.trim() || null,
+            requirements: values.requirements,
+            employment_type: values.employment_type,
+            experience_level: values.experience_level,
+            education_level: values.education_level?.trim() || null,
+            work_mode: values.work_mode,
+            location: values.location?.trim() || null,
+            application_deadline: values.application_deadline || null,
+            salary_min: values.salary_min || null,
+            salary_max: values.salary_max || null,
+          }
+          await onSubmit(normalized)
+        })}
         className="grid gap-5 rounded-lg border border-border bg-background-card p-5 shadow-card md:grid-cols-2"
       >
         <CustomFormField
@@ -125,6 +170,18 @@ export default function EmployerJobForm({
             label: t(opt.label),
           }))}
           leftIcon={TrendingUp}
+        />
+        <CustomFormField
+          fieldType={FormFieldType.SELECT}
+          control={form.control}
+          name="education_level"
+          label={t("fields.educationLevel")}
+          placeholder={t("fields.educationLevel")}
+          options={educationLevelOptions.map((opt) => ({
+            value: opt.value,
+            label: opt.value === null ? t(opt.label) : t(opt.label),
+          }))}
+          leftIcon={GraduationCap}
         />
         <CustomFormField
           fieldType={FormFieldType.SELECT}

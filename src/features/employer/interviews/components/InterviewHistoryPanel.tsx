@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { valueOf } from "@/lib/keyValue"
 import { employerInterviewsService } from "../services/employerInterviews.service"
 import type {
   EmployerInterviewHistoryItem,
   EmployerInterviewScheduleHistoryItem,
 } from "../types/employerInterviews.types"
+import { interviewValue } from "../utils/interviewDisplay"
 
 function formatDateTime(value?: string | null) {
   if (!value) return "-"
@@ -21,6 +21,13 @@ function actorName(actor?: { name?: string }) {
   return actor?.name || "-"
 }
 
+function formatMetadata(metadata?: Record<string, unknown> | null) {
+  if (!metadata || Object.keys(metadata).length === 0) return null
+  return Object.entries(metadata)
+    .map(([key, value]) => `${key}: ${String(value)}`)
+    .join(" | ")
+}
+
 function StatusHistoryList({ items }: { items: EmployerInterviewHistoryItem[] }) {
   const { t } = useTranslation("employerInterviews")
   if (items.length === 0) {
@@ -29,20 +36,24 @@ function StatusHistoryList({ items }: { items: EmployerInterviewHistoryItem[] })
 
   return (
     <div className="space-y-2">
-      {items.map((item) => (
-        <div key={item.id} className="rounded-md border border-border p-3">
-          <div className="flex flex-wrap justify-between gap-2">
-            <p className="text-sm font-medium">
-              {valueOf(item.from_status, "-")} {"->"} {valueOf(item.to_status ?? item.status, "-")}
+      {items.map((item) => {
+        const metadata = formatMetadata(item.metadata)
+        return (
+          <div key={item.id} className="rounded-md border border-border p-3">
+            <div className="flex flex-wrap justify-between gap-2">
+              <p className="text-sm font-medium">
+                {interviewValue(item.from_status)} {"->"} {interviewValue(item.to_status)}
+              </p>
+              <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
+            </div>
+            {item.reason && <p className="mt-2 text-sm text-text-muted">{item.reason}</p>}
+            {metadata && <p className="mt-1 text-xs text-text-muted">{metadata}</p>}
+            <p className="mt-1 text-xs text-text-muted">
+              {t("history.actor", { actor: actorName(item.changed_by) })}
             </p>
-            <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
           </div>
-          {item.reason && <p className="mt-2 text-sm text-text-muted">{item.reason}</p>}
-          <p className="mt-1 text-xs text-text-muted">
-            {t("history.actor", { actor: actorName(item.actor) })}
-          </p>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
@@ -59,16 +70,22 @@ function ScheduleHistoryList({ items }: { items: EmployerInterviewScheduleHistor
         <div key={item.id} className="rounded-md border border-border p-3">
           <div className="flex flex-wrap justify-between gap-2">
             <p className="text-sm font-medium">
-              {formatDateTime(item.scheduled_start_at)} - {formatDateTime(item.scheduled_end_at)}
+              {formatDateTime(item.previous_start_at)} - {formatDateTime(item.previous_end_at)}
+              {" -> "}
+              {formatDateTime(item.new_start_at)} - {formatDateTime(item.new_end_at)}
             </p>
             <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
           </div>
           <p className="mt-1 text-xs text-text-muted">
-            {item.mode || "-"} · {item.meeting_link || item.location_text || "-"}
+            {interviewValue(item.previous_mode)} {"->"} {interviewValue(item.new_mode)}
+            {" | "}
+            {item.previous_meeting_link || item.previous_location_text || "-"}
+            {" -> "}
+            {item.new_meeting_link || item.new_location_text || "-"}
           </p>
           {item.reason && <p className="mt-2 text-sm text-text-muted">{item.reason}</p>}
           <p className="mt-1 text-xs text-text-muted">
-            {t("history.actor", { actor: actorName(item.actor) })}
+            {t("history.actor", { actor: actorName(item.changed_by) })}
           </p>
         </div>
       ))}

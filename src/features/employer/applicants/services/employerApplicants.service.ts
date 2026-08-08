@@ -6,8 +6,8 @@ import {
   type EmployerCollection,
 } from "@/features/employer/shared/services/employerResponse.utils"
 import type {
-  EmployerApplicant,
-  EmployerApplicantStatusInput,
+  EmployerApplicantDetail,
+  ApplicationStatusChangeInput,
   ApplicationInternalNote,
   ApplicationInternalNoteInput,
   ApplicationInternalNoteRevision,
@@ -23,8 +23,8 @@ import type {
 } from "../types/employerApplicants.types"
 
 export const employerApplicantsService = {
-  async list(jobId: string | number, page = 1): Promise<EmployerCollection<EmployerApplicant>> {
-    return unwrapEmployerCollection<EmployerApplicant>(
+  async list(jobId: string | number, page = 1): Promise<EmployerCollection<EmployerApplicantDetail>> {
+    return unwrapEmployerCollection<EmployerApplicantDetail>(
       await api.get(API_ENDPOINTS.employer.jobApplications(jobId), {
         params: { page, per_page: 15 },
       }),
@@ -33,9 +33,9 @@ export const employerApplicantsService = {
 
   async updateStatus(
     applicationId: string | number,
-    input: EmployerApplicantStatusInput,
-  ): Promise<EmployerApplicant> {
-    return unwrapEmployerEntity<EmployerApplicant>(
+    input: ApplicationStatusChangeInput,
+  ): Promise<EmployerApplicantDetail> {
+    return unwrapEmployerEntity<EmployerApplicantDetail>(
       await api.post(API_ENDPOINTS.applications.status(applicationId), input),
     )
   },
@@ -119,14 +119,21 @@ export const employerApplicantsService = {
     )
   },
 
-  async getById(applicationId: string | number): Promise<EmployerApplicant> {
-    return unwrapEmployerEntity<EmployerApplicant>(
+  async getById(applicationId: string | number): Promise<EmployerApplicantDetail> {
+    return unwrapEmployerEntity<EmployerApplicantDetail>(
       await api.get(API_ENDPOINTS.applications.byId(applicationId)),
     )
   },
 
   async downloadSelectedCv(applicationId: string | number): Promise<Blob> {
     const response = await rawApi.get(API_ENDPOINTS.applications.cvDownload(applicationId), {
+      responseType: "blob",
+    })
+    return response.data
+  },
+
+  async previewSelectedCv(applicationId: string | number): Promise<Blob> {
+    const response = await rawApi.get(API_ENDPOINTS.applications.cvPreview(applicationId), {
       responseType: "blob",
     })
     return response.data

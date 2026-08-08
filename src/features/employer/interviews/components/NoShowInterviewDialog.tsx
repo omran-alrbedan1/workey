@@ -21,11 +21,12 @@ import type { EmployerInterviewNoShowInput } from "../types/employerInterviews.t
 const partyOptions: Option[] = [
   { value: "candidate", label: "noShow.candidate" },
   { value: "interviewer", label: "noShow.interviewer" },
+  { value: "both", label: "noShow.both" },
 ]
 
 const schema = z.object({
-  party: z.enum(["candidate", "interviewer"]),
-  reason: z.string().trim().min(1),
+  party: z.enum(["candidate", "interviewer", "both"]),
+  reason: z.string().trim().min(1).max(2000),
 })
 
 type FormValues = z.infer<typeof schema>

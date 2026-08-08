@@ -10,7 +10,8 @@ import EmployerJobScreeningQuestions from "../components/EmployerJobScreeningQue
 import EmployerJobSkills from "../components/EmployerJobSkills"
 import { useEmployerJob } from "../hooks/useEmployerJob"
 import { useEmployerSkills } from "../hooks/useEmployerSkills"
-import type { EmployerJobInput } from "../types/employerJobs.types"
+import { keyOf } from "@/lib/keyValue"
+import type { EmployerJobInput, EmploymentType, ExperienceLevel, JobWorkMode } from "../types/employerJobs.types"
 
 export default function EmployerEditJobPage() {
   const { t } = useTranslation("employerJobs")
@@ -30,27 +31,26 @@ export default function EmployerEditJobPage() {
   }
 
   const toFormValue = (v: unknown): string => {
-    if (!v) return ""
-    if (typeof v === "string") return v
-    if (typeof v === "object") return (v as { key?: string }).key ?? (v as { value?: string }).value ?? ""
-    return ""
+    return keyOf(v)
   }
 
   const initialValues: EmployerJobInput | undefined = job.data
     ? {
         title: job.data.title,
         description: job.data.description ?? "",
-        department: job.data.department ?? "",
-        responsibilities: job.data.responsibilities ?? "",
-        benefits: job.data.benefits ?? "",
+        department: job.data.department ?? null,
+        responsibilities: job.data.responsibilities ?? null,
+        benefits: job.data.benefits ?? null,
         requirements: job.data.requirements ?? "",
-        employment_type: toFormValue(job.data.employment_type),
-        experience_level: toFormValue(job.data.experience_level),
-        work_mode: toFormValue(job.data.work_mode) || "remote",
-        location: job.data.location ?? "",
-        application_deadline: job.data.application_deadline ?? "",
-        salary_min: job.data.salary_min ?? undefined,
-        salary_max: job.data.salary_max ?? undefined,
+        employment_type: toFormValue(job.data.employment_type) as EmploymentType,
+        experience_level: toFormValue(job.data.experience_level) as ExperienceLevel,
+        education_level: toFormValue(job.data.education_level) || null,
+        work_mode: toFormValue(job.data.work_mode) as JobWorkMode || "remote",
+        location: job.data.location ?? null,
+        city_id: job.data.city?.id ?? null,
+        application_deadline: job.data.application_deadline ?? null,
+        salary_min: job.data.salary_min ?? null,
+        salary_max: job.data.salary_max ?? null,
       }
     : undefined
 
@@ -98,7 +98,7 @@ export default function EmployerEditJobPage() {
             job.deleteScreeningQuestionMutation.isPending
           }
           onCreate={job.createScreeningQuestionMutation.mutateAsync}
-          onUpdate={job.updateScreeningQuestionMutation.mutateAsync}
+          onUpdate={(questionId, input) => job.updateScreeningQuestionMutation.mutateAsync({ questionId, input })}
           onDelete={job.deleteScreeningQuestionMutation.mutateAsync}
         />
       )}

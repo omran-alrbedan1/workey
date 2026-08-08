@@ -17,10 +17,19 @@ import type {
   EmployerInterviewUpdateInput,
   EmployerInterviewCompleteInput,
   EmployerInterviewEvaluateInput,
+  EmployerInterviewListParams,
 } from "../types/employerInterviews.types"
 
 export const employerInterviewsService = {
-  async list(applicationId: string | number): Promise<EmployerCollection<EmployerInterview>> {
+  async list(params: EmployerInterviewListParams = {}): Promise<EmployerCollection<EmployerInterview>> {
+    return unwrapEmployerCollection<EmployerInterview>(
+      await api.get(API_ENDPOINTS.interviews.list, {
+        params: { page: params.page, per_page: params.per_page ?? 15 },
+      }),
+    )
+  },
+
+  async listForApplication(applicationId: string | number): Promise<EmployerCollection<EmployerInterview>> {
     return unwrapEmployerCollection<EmployerInterview>(
       await api.get(API_ENDPOINTS.interviews.forApplication(applicationId)),
     )

@@ -3,7 +3,6 @@ import {
   AlignLeft,
   Asterisk,
   CheckCircle2,
-  Circle,
   Edit,
   HelpCircle,
   ListChecks,
@@ -51,8 +50,8 @@ interface EmployerJobScreeningQuestionsProps {
 }
 
 interface FormOption {
-  text: string
-  is_correct: boolean
+  option_text: string
+  sort_order: number
 }
 
 interface FormState {
@@ -64,6 +63,7 @@ interface FormState {
 
 const TYPES: ScreeningQuestionType[] = [
   "short_text",
+  "long_text",
   "number",
   "boolean",
   "single_choice",
@@ -72,6 +72,7 @@ const TYPES: ScreeningQuestionType[] = [
 
 const TYPE_ICONS: Record<ScreeningQuestionType, typeof HelpCircle> = {
   short_text: AlignLeft,
+  long_text: AlignLeft,
   number: Asterisk,
   boolean: CheckCircle2,
   single_choice: ListChecks,
@@ -126,9 +127,9 @@ export default function EmployerJobScreeningQuestions({
       question_text: q.question_text,
       question_type: rawType,
       is_required: q.is_required,
-      options: (q.options ?? []).map((o) => ({
-        text: typeof o === "string" ? o : o.text,
-        is_correct: typeof o === "string" ? false : (o.is_correct ?? false),
+      options: (q.options ?? []).map((o, idx) => ({
+        option_text: typeof o === "string" ? o : o.option_text,
+        sort_order: typeof o === "string" ? idx : (o.sort_order ?? idx),
       })),
     })
     setShowDialog(true)
@@ -142,8 +143,11 @@ export default function EmployerJobScreeningQuestions({
       is_required: form.is_required,
       options: isChoiceType
         ? form.options
-            .filter((o) => o.text.trim())
-            .map((o) => o.text.trim())
+            .filter((o) => o.option_text.trim())
+            .map((o, idx) => ({
+              option_text: o.option_text.trim(),
+              sort_order: idx,
+            }))
         : undefined,
     }
     if (editingId !== null) {
@@ -170,10 +174,10 @@ export default function EmployerJobScreeningQuestions({
     return t(`screeningQuestions.types.${key}`)
   }
 
-  const optionLabel = (opts: Array<{ text: string; is_correct?: boolean } | string> | undefined) => {
+  const optionLabel = (opts: Array<{ option_text: string } | string> | undefined) => {
     if (!opts || opts.length === 0) return ""
     return opts
-      .map((o) => (typeof o === "string" ? o : o.is_correct ? `✓ ${o.text}` : o.text))
+      .map((o) => (typeof o === "string" ? o : o.option_text))
       .filter(Boolean)
       .join(", ")
   }
@@ -373,28 +377,11 @@ export default function EmployerJobScreeningQuestions({
                       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
                         {idx + 1}
                       </span>
-                      <span className="flex items-center gap-1.5 whitespace-nowrap text-xs text-text-muted">
-                        <Switch
-                          checked={opt.is_correct}
-                          onCheckedChange={(checked) => {
-                            const next = form.options.map((o, i) =>
-                              i === idx
-                                ? { ...o, is_correct: checked }
-                                : form.question_type === "single_choice"
-                                  ? { ...o, is_correct: false }
-                                  : o,
-                            )
-                            setForm({ ...form, options: next })
-                          }}
-                          className="h-4 w-7"
-                        />
-                        <Label className="text-xs">{t("screeningQuestions.fields.isCorrect")}</Label>
-                      </span>
                       <Input
-                        value={opt.text}
+                        value={opt.option_text}
                         onChange={(e) => {
                           const next = [...form.options]
-                          next[idx] = { ...next[idx], text: e.target.value }
+                          next[idx] = { ...next[idx], option_text: e.target.value }
                           setForm({ ...form, options: next })
                         }}
                         placeholder={`${t("screeningQuestions.fields.optionPlaceholder")} ${idx + 1}`}
@@ -422,7 +409,7 @@ export default function EmployerJobScreeningQuestions({
                   size="sm"
                   className="w-full gap-1"
                   onClick={() =>
-                    setForm({ ...form, options: [...form.options, { text: "", is_correct: false }] })
+                    setForm({ ...form, options: [...form.options, { option_text: "", sort_order: form.options.length }] })
                   }
                 >
                   <Plus className="h-4 w-4" /> {t("screeningQuestions.fields.addOption")}

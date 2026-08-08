@@ -3,8 +3,6 @@
   "description": "Schedule, conduct, and evaluate recruitment interviews.",
   "back": "Back to interviews",
   "unknownCandidate": "Unknown candidate",
-  "noJobs": "No jobs available",
-  "jobFilter": "Select a job to view its interviews",
   "columns": {
     "candidate": "Candidate",
     "type": "Type",
@@ -14,25 +12,26 @@
   },
   "statuses": {
     "scheduled": "Scheduled",
+    "confirmed": "Confirmed",
+    "rescheduled": "Rescheduled",
     "completed": "Completed",
     "cancelled": "Cancelled",
-    "no_show": "No-show"
+    "no_show": "No-show",
+    "evaluated": "Evaluated"
   },
   "interviewTypes": {
     "technical": "Technical",
-    "behavioral": "Behavioral",
-    "cultural": "Cultural",
     "hr": "HR",
     "final": "Final"
   },
   "interviewModes": {
     "video": "Video Call",
-    "in_person": "In Person",
-    "phone": "Phone"
+    "online": "Online",
+    "onSite": "On-site"
   },
   "recommendations": {
     "advance": "Advance",
-    "consider": "Consider",
+    "hold": "Hold",
     "reject": "Reject"
   },
   "empty": {
@@ -65,6 +64,7 @@
     "interviewerStatus": "Interviewer",
     "present": "Present",
     "absent": "Absent",
+    "excused": "Excused",
     "note": "Note",
     "notePlaceholder": "Both parties attended.",
     "cancel": "Cancel",
@@ -77,6 +77,7 @@
     "party": "Party",
     "candidate": "Candidate",
     "interviewer": "Interviewer",
+    "both": "Both",
     "reason": "Reason",
     "reasonPlaceholder": "Candidate did not attend.",
     "cancel": "Cancel",
@@ -111,6 +112,11 @@
     "title": "Reschedule interview",
     "description": "Change the date and time for this interview.",
     "newDateTime": "New date & time",
+    "start": "Start",
+    "end": "End",
+    "mode": "Mode",
+    "meetingLink": "Meeting link",
+    "location": "Location",
     "reason": "Reason for rescheduling",
     "reasonPlaceholder": "Optional notes about the reschedule...",
     "cancel": "Cancel",
@@ -137,7 +143,7 @@
     "itemNumber": "Criterion #{{n}}",
     "criterion": "Criterion",
     "criterionPlaceholder": "e.g. Communication",
-    "score": "Score (0-10)",
+    "score": "Score (1-5)",
     "comment": "Comment",
     "cancel": "Cancel",
     "submit": "Submit evaluation",
@@ -148,7 +154,11 @@
     "completionNote": "Completion note",
     "recommendation": "Recommendation",
     "overallComment": "Overall comment",
-    "evaluationItems": "Evaluation items"
+    "evaluationItems": "Evaluation items",
+    "confirmedAt": "Confirmed at",
+    "attendanceAt": "Attendance recorded at",
+    "cancelledAt": "Cancelled at",
+    "completedAt": "Completed at"
   },
   "toasts": {
     "created": "Interview scheduled successfully",

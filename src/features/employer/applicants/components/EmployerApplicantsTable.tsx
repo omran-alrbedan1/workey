@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
 import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
-import type { EmployerApplicant } from "../types/employerApplicants.types"
+import type { EmployerApplicant, ApplicationStatusKey } from "../types/employerApplicants.types"
 import { CalendarPlus, Download, Eye, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,8 +19,10 @@ import { ROUTES } from "@/config"
 import { keyOf, valueOf } from "@/lib/keyValue"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { employerApplicantsService } from "../services/employerApplicants.service"
+import ApplicationStatusChangeDialog from "./ApplicationStatusChangeDialog"
 
 const nextStatuses = [
+  "under_review",
   "shortlisted",
   "test_pending",
   "test_completed",
@@ -37,6 +39,11 @@ function getKey(v: unknown): string {
 
 function getValue(v: unknown): string {
   return valueOf(v)
+}
+
+function hasAllowedAction(application: EmployerApplicant, actions: string[]) {
+  if (!application.allowed_actions) return true
+  return actions.some((action) => application.allowed_actions?.includes(action))
 }
 
 function useHandleDownload() {
@@ -76,30 +83,47 @@ export default function EmployerApplicantsTable({
   isLoading: boolean
   isUpdating: boolean
   onPageChange: (page: number) => void
-  onStatusChange: (applicationId: string | number, status: string) => void
+  onStatusChange: (applicationId: string | number, status: string, note?: string) => void
   onReviewTests: (application: EmployerApplicant) => void
   onScheduleInterview: (application: EmployerApplicant) => void
 }) {
   const { t, i18n } = useTranslation("employerApplicants")
   const navigate = useNavigate()
   const { downloadingId, handleDownload } = useHandleDownload()
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false)
+  const [statusDialogApplication, setStatusDialogApplication] = useState<EmployerApplicant | null>(null)
+  const [targetStatus, setTargetStatus] = useState<ApplicationStatusKey | null>(null)
+
+  const handleStatusClick = (application: EmployerApplicant, status: ApplicationStatusKey) => {
+    setStatusDialogApplication(application)
+    setTargetStatus(status)
+    setStatusDialogOpen(true)
+  }
+
+  const handleStatusConfirm = (note?: string) => {
+    if (statusDialogApplication && targetStatus) {
+      onStatusChange(statusDialogApplication.id, targetStatus, note)
+    }
+    setStatusDialogOpen(false)
+    setStatusDialogApplication(null)
+    setTargetStatus(null)
+  }
   const columns: Column<EmployerApplicant>[] = [
     {
       key: "candidate",
       header: t("columns.candidate"),
       cell: (application) => {
-        const candidate = application.job_seeker_profile || application.candidate
+        const candidate = application.candidate_summary || (application as any).candidate || (application as any).job_seeker_profile
         const displayName =
-          candidate?.user?.name ||
-          candidate?.full_name ||
           candidate?.name ||
+          candidate?.full_name ||
+          candidate?.user?.name ||
           candidate?.first_name ||
           candidate?.last_name ||
           candidate?.user?.email ||
           candidate?.email ||
           t("unknownCandidate")
         const displayEmail =
-          candidate?.user?.email ||
           candidate?.email ||
           candidate?.headline ||
           candidate?.summary ||
@@ -128,7 +152,7 @@ export default function EmployerApplicantsTable({
         const statusValue = getValue(application.status)
         return (
           <StatusBadge
-            status={application.status ?? statusKey}
+            status={statusKey}
             label={statusValue || t(`statuses.${statusKey}`, { defaultValue: statusKey })}
             variant="soft"
           />
@@ -146,16 +170,28 @@ export default function EmployerApplicantsTable({
     {
       key: "assessments",
       header: t("columns.assessments"),
-      cell: (application) => (
-        <div className="flex flex-col items-start gap-1">
-          <button type="button" className="text-start text-sm text-primary hover:underline" onClick={() => onReviewTests(application)}>
-            {t("assessmentCounts", { tests: application.tests_count ?? 0, interviews: application.interviews_count ?? 0 })}
-          </button>
-          <button type="button" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline" onClick={() => onScheduleInterview(application)}>
-            <CalendarPlus className="h-3.5 w-3.5" /> {t("actions.scheduleInterview")}
-          </button>
-        </div>
-      ),
+      cell: (application) => {
+        const hasTests = application.tests_count != null && application.tests_count > 0
+        const hasInterviews = application.interviews_count != null && application.interviews_count > 0
+        const hasData = hasTests || hasInterviews
+
+        return (
+          <div className="flex flex-col items-start gap-1">
+            {hasData ? (
+              <button type="button" className="text-start text-sm text-primary hover:underline" onClick={() => onReviewTests(application)}>
+                {t("assessmentCounts", { tests: application.tests_count ?? 0, interviews: application.interviews_count ?? 0 })}
+              </button>
+            ) : (
+              <span className="text-sm text-text-muted">—</span>
+            )}
+            {hasAllowedAction(application, ["schedule_interview", "create_interview", "MANAGE_INTERVIEWS"]) && (
+              <button type="button" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline" onClick={() => onScheduleInterview(application)}>
+                <CalendarPlus className="h-3.5 w-3.5" /> {t("actions.scheduleInterview")}
+              </button>
+            )}
+          </div>
+        )
+      },
     },
     {
       key: "actions",
@@ -167,8 +203,9 @@ export default function EmployerApplicantsTable({
             <DropdownMenuTrigger asChild>
               <Button size="icon" variant="ghost" className="h-8 w-8" disabled={isUpdating} aria-label={t("actions.menuFor", {
                 name:
-                  application.candidate?.full_name ||
-                  application.candidate?.name ||
+                  application.candidate_summary?.name ||
+                  (application as any).candidate?.full_name ||
+                  (application as any).candidate?.name ||
                   t("unknownCandidate"),
               })}>
                 <MoreHorizontal />
@@ -187,10 +224,14 @@ export default function EmployerApplicantsTable({
                 <Download /> {t("actions.downloadCv")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {nextStatuses
+              {/* Use allowed_status_transitions if available, otherwise filter hardcoded list */}
+              {(application.allowed_status_transitions?.map(s => s.key) || nextStatuses)
                 .filter((status) => status !== getKey(application.status))
                 .map((status) => (
-                  <DropdownMenuItem key={status} onSelect={() => onStatusChange(application.id, status)}>
+                  <DropdownMenuItem 
+                    key={status} 
+                    onSelect={() => handleStatusClick(application, status as ApplicationStatusKey)}
+                  >
                     {t(`statuses.${status}`)}
                   </DropdownMenuItem>
                 ))}
@@ -202,21 +243,31 @@ export default function EmployerApplicantsTable({
   ]
 
   return (
-    <DataTable
-      data={collection?.items ?? []}
-      columns={columns}
-      getRowId={(application) => application.id}
-      loading={isLoading}
-      pagination={{
-        total: collection?.pagination.total ?? 0,
-        page: collection?.pagination.currentPage ?? 1,
-        lastPage: collection?.pagination.lastPage ?? 1,
-        perPage: collection?.pagination.perPage,
-      }}
-      onPageChange={onPageChange}
-      emptyMessage={t("empty.title")}
-      emptyDescription={t("empty.description")}
-      className="bg-background-card shadow-card"
-    />
+    <>
+      <DataTable
+        data={collection?.items ?? []}
+        columns={columns}
+        getRowId={(application) => application.id}
+        loading={isLoading}
+        pagination={{
+          total: collection?.pagination.total ?? 0,
+          page: collection?.pagination.currentPage ?? 1,
+          lastPage: collection?.pagination.lastPage ?? 1,
+          perPage: collection?.pagination.perPage,
+        }}
+        onPageChange={onPageChange}
+        emptyMessage={t("empty.title")}
+        emptyDescription={t("empty.description")}
+        className="bg-background-card shadow-card"
+      />
+      <ApplicationStatusChangeDialog
+        open={statusDialogOpen}
+        onOpenChange={setStatusDialogOpen}
+        currentStatus={statusDialogApplication?.status || null}
+        targetStatus={targetStatus}
+        onConfirm={handleStatusConfirm}
+        isSubmitting={isUpdating}
+      />
+    </>
   )
 }

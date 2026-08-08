@@ -7,9 +7,17 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { StatusBadge } from "@/components/shared/badges"
 import { useInformationRequests, useDownloadAttachment } from "../hooks/useInformationRequests"
 import InformationRequestDialog from "./InformationRequestDialog"
-import { DeleteModal } from "@/components/shared/modals"
 import { keyOf } from "@/lib/keyValue"
 import { showErrorToast } from "@/lib/toast"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
 import type { InformationRequest } from "../types/employerApplicants.types"
 
 export default function InformationRequests({ applicationId }: { applicationId: string | number }) {
@@ -29,6 +37,7 @@ export default function InformationRequests({ applicationId }: { applicationId: 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingRequest, setEditingRequest] = useState<InformationRequest | null>(null)
   const [cancelRequestId, setCancelRequestId] = useState<InformationRequest | null>(null)
+  const [cancelReason, setCancelReason] = useState("")
 
   const handleCreate = () => {
     setEditingRequest(null)
@@ -42,6 +51,7 @@ export default function InformationRequests({ applicationId }: { applicationId: 
 
   const handleCancel = (request: InformationRequest) => {
     setCancelRequestId(request)
+    setCancelReason("")
   }
 
   const handleSubmit = async (input: any) => {
@@ -55,10 +65,11 @@ export default function InformationRequests({ applicationId }: { applicationId: 
   }
 
   const handleConfirmCancel = async () => {
-    if (cancelRequestId) {
+    if (cancelRequestId && cancelReason.trim()) {
       try {
-        await cancelRequest({ requestId: cancelRequestId.id, input: { reason: "Cancelled by employer" } })
+        await cancelRequest({ requestId: cancelRequestId.id, input: { reason: cancelReason.trim() } })
         setCancelRequestId(null)
+        setCancelReason("")
       } catch (error: any) {
         if (error?.response?.data?.code === "APPLICATION_INFORMATION_REQUEST_NOT_PENDING") {
           showErrorToast("Cannot cancel - request is not pending")
@@ -127,25 +138,26 @@ export default function InformationRequests({ applicationId }: { applicationId: 
                           <MessageCircle className="h-4 w-4 text-primary" />
                           {t("informationRequests.responseTitle")}
                         </div>
-                        {request.response.response_text && (
-                          <p className="text-sm text-text-secondary">{request.response.response_text}</p>
+                        {request.response.message && (
+                          <p className="text-sm text-text-secondary">{request.response.message}</p>
                         )}
-                        {request.response.attachments && request.response.attachments.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
-                            {request.response.attachments.map((attachment) => (
-                              <Button
-                                key={attachment.id}
-                                size="sm"
-                                variant="outline"
-                                onClick={() => downloadAttachment(attachment.id, attachment.file_name)}
-                                className="gap-1"
-                              >
-                                <Download className="h-3.5 w-3.5" />
-                                {attachment.file_name}
-                              </Button>
-                            ))}
-                          </div>
-                        )}
+                            {request.response.attachments && request.response.attachments.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {request.response.attachments.map((attachment) => (
+                                  <Button
+                                    key={attachment.id}
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => downloadAttachment(attachment.id, attachment.original_name)}
+                                    disabled={attachment.download_available === false}
+                                    className="gap-1"
+                                  >
+                                    <Download className="h-3.5 w-3.5" />
+                                    {attachment.original_name}
+                                  </Button>
+                                ))}
+                              </div>
+                            )}
                       </div>
                     )}
                   </div>
@@ -204,13 +216,51 @@ export default function InformationRequests({ applicationId }: { applicationId: 
         onSubmit={handleSubmit}
         isSubmitting={isCreating || isUpdating}
       />
-      <DeleteModal
+      <Dialog
         open={cancelRequestId !== null}
-        name="information request"
-        loading={isCancelling}
-        onClose={() => setCancelRequestId(null)}
-        onConfirm={handleConfirmCancel}
-      />
+        onOpenChange={(open) => {
+          if (!open) {
+            setCancelRequestId(null)
+            setCancelReason("")
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("informationRequests.cancelTitle")}</DialogTitle>
+            <DialogDescription>
+              {t("informationRequests.cancelDescription")}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Textarea
+              placeholder={t("informationRequests.cancelReasonPlaceholder")}
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              rows={3}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCancelRequestId(null)
+                setCancelReason("")
+              }}
+              disabled={isCancelling}
+            >
+              {t("actions.cancel")}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmCancel}
+              disabled={isCancelling || !cancelReason.trim()}
+            >
+              {isCancelling ? t("actions.processing") : t("actions.confirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

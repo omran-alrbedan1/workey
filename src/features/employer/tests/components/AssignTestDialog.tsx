@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Send } from "lucide-react"
+import { Send, UserPlus } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
@@ -42,7 +42,7 @@ function createAssignTestSchema(t: TFunction) {
       .refine((value) => value !== noApplicantsValue, t("assign.validationApplicantRequired")),
     note: z.string().trim().max(1000).optional(),
     deadline_at: optionalDeadlineSchema,
-    max_attempts: z.number().int().min(1).optional(),
+    max_attempts: z.number().int().min(1).max(5).optional(),
   })
 }
 
@@ -96,16 +96,21 @@ export default function AssignTestDialog({
     employerApplicantsService
       .list(selectedJobId, 1)
       .then((data) => {
-        const shortlisted = data.items.filter(
-          (a) => keyOf(a.status) === "shortlisted" || keyOf(a.status) === "test_pending",
-        )
+        const eligible = data.items.filter((application) => {
+          if (application.allowed_actions?.length) {
+            return application.allowed_actions.includes("assign_test")
+              || application.allowed_actions.includes("manage_tests")
+              || application.allowed_actions.includes("update_status")
+          }
+
+          return keyOf(application.status) === "shortlisted"
+        })
         setApplicants(
-          shortlisted.map((a) => ({
+          eligible.map((a) => ({
             value: String(a.id),
             label:
-              a.candidate?.full_name ||
-              a.candidate?.name ||
-              a.candidate?.email ||
+              a.candidate_summary?.name ||
+              a.candidate_summary?.email ||
               `#${a.id}`,
           })),
         )
@@ -133,10 +138,17 @@ export default function AssignTestDialog({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)}>
             <DialogHeader>
-              <DialogTitle>{t("assign.title")}</DialogTitle>
-              <DialogDescription>
-                {test ? t("assign.description", { test: test.title }) : ""}
-              </DialogDescription>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-sm">
+                  <UserPlus className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <DialogTitle>{t("assign.title")}</DialogTitle>
+                  <DialogDescription>
+                    {test ? t("assign.description", { test: test.title }) : ""}
+                  </DialogDescription>
+                </div>
+              </div>
             </DialogHeader>
             <div className="space-y-4 py-5">
               <CustomFormField

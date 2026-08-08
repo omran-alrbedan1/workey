@@ -99,7 +99,7 @@ export default function InternalNotes({ applicationId }: { applicationId: string
                       variant="ghost"
                       className="h-7 w-7"
                       onClick={() => handleEdit({ id: note.id, body: note.body || "", version: note.version })}
-                      disabled={isUpdating}
+                      disabled={isUpdating || note.can_edit === false}
                     >
                       <Edit2 className="h-3.5 w-3.5" />
                     </Button>
@@ -108,7 +108,7 @@ export default function InternalNotes({ applicationId }: { applicationId: string
                       variant="ghost"
                       className="h-7 w-7 text-red-600 hover:text-red-700"
                       onClick={() => handleDelete(note.id, note.version)}
-                      disabled={isDeleting}
+                      disabled={isDeleting || note.can_delete === false}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>

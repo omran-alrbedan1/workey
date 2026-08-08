@@ -6,13 +6,24 @@ import { ROUTES } from "@/config"
 import { keyOf, valueOf } from "@/lib/keyValue"
 import type { EmployerInterview } from "../types/employerInterviews.types"
 import { DataTable } from "@/components/shared/custom/DataTable"
+import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
+
+function candidateName(item: EmployerInterview, fallback: string) {
+  const summary = item.job_application?.candidate_summary
+  const identity = item.job_application?.submitted_snapshot?.profile?.identity
+  return summary?.name || identity?.full_name || identity?.email || summary?.email || fallback
+}
 
 export default function EmployerInterviewsTable({
   interviews,
   isLoading,
+  collection,
+  onPageChange,
 }: {
   interviews: EmployerInterview[]
   isLoading: boolean
+  collection?: EmployerCollection<EmployerInterview>
+  onPageChange?: (page: number) => void
 }) {
   const { t } = useTranslation("employerInterviews")
   const navigate = useNavigate()
@@ -25,7 +36,7 @@ export default function EmployerInterviewsTable({
         <div className="flex items-center gap-2">
           <UserRound className="h-4 w-4 text-text-muted" />
           <span className="font-medium">
-            {item.candidate?.full_name || item.candidate?.name || item.candidate?.email || t("unknownCandidate")}
+            {candidateName(item, t("unknownCandidate"))}
           </span>
         </div>
       ),
@@ -34,19 +45,21 @@ export default function EmployerInterviewsTable({
       key: "interview_type",
       header: t("columns.type"),
       cell: (item: EmployerInterview) => (
-        <span className="capitalize">{item.interview_type ?? "-"}</span>
+        <span className="capitalize">{valueOf(item.type ?? item.interview_type, "-")}</span>
       ),
     },
     {
       key: "scheduled_at",
       header: t("columns.scheduled"),
-      cell: (item: EmployerInterview) =>
-        item.scheduled_at
-          ? new Date(item.scheduled_at).toLocaleString(undefined, {
+      cell: (item: EmployerInterview) => {
+        const scheduledAt = item.scheduled_start_at ?? item.scheduled_at
+        return scheduledAt
+          ? new Date(scheduledAt).toLocaleString(undefined, {
               dateStyle: "medium",
               timeStyle: "short",
             })
-          : "-",
+          : "-"
+      },
     },
     {
       key: "status",
@@ -91,8 +104,13 @@ export default function EmployerInterviewsTable({
       data={interviews}
       columns={columns}
       loading={isLoading}
-      pagination={{ total: interviews.length, page: 1, lastPage: 1 }}
-      onPageChange={() => {}}
+      pagination={{
+        total: collection?.pagination.total ?? interviews.length,
+        page: collection?.pagination.currentPage ?? 1,
+        lastPage: collection?.pagination.lastPage ?? 1,
+        perPage: collection?.pagination.perPage,
+      }}
+      onPageChange={onPageChange ?? (() => {})}
       getRowId={(item) => item.id}
       empty={{
         title: t("empty.title"),

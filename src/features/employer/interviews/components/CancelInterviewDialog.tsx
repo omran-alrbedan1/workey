@@ -18,8 +18,8 @@ import { Form } from "@/components/ui/form"
 import type { EmployerInterviewCancelInput } from "../types/employerInterviews.types"
 
 const schema = z.object({
-  reason: z.string().trim().min(1),
-  candidate_message: z.string().trim().optional(),
+  reason: z.string().trim().min(1).max(2000),
+  candidate_message: z.string().trim().max(2000).optional(),
 })
 
 type FormValues = z.infer<typeof schema>

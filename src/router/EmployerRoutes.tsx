@@ -6,8 +6,6 @@ import EmployerJobsPage from "@/features/employer/jobs/pages/EmployerJobsPage"
 import EmployerCreateJobPage from "@/features/employer/jobs/pages/EmployerCreateJobPage"
 import EmployerEditJobPage from "@/features/employer/jobs/pages/EmployerEditJobPage"
 import EmployerJobDetailsPage from "@/features/employer/jobs/pages/EmployerJobDetailsPage"
-import EmployerJobRankedCandidatesPage from "@/features/employer/jobs/pages/EmployerJobRankedCandidatesPage"
-import EmployerJobScreeningQuestionsPage from "@/features/employer/jobs/pages/EmployerJobScreeningQuestionsPage"
 import EmployerApplicantsPage from "@/features/employer/applicants/pages/EmployerApplicantsPage"
 import EmployerApplicantDetailsPage from "@/features/employer/applicants/pages/EmployerApplicantDetailsPage"
 import EmployerApplicantInternalNotesPage from "@/features/employer/applicants/pages/EmployerApplicantInternalNotesPage"
@@ -39,8 +37,6 @@ export const employerRoutes: RouteObject = {
     { path: ROUTES.employer.createJob, element: <EmployerCreateJobPage /> },
     { path: ROUTES.employer.jobDetails(":id"), element: <EmployerJobDetailsPage /> },
     { path: ROUTES.employer.editJob(":id"), element: <EmployerEditJobPage /> },
-    { path: ROUTES.employer.rankedCandidates(":id"), element: <EmployerJobRankedCandidatesPage /> },
-    { path: ROUTES.employer.screeningQuestions(":id"), element: <EmployerJobScreeningQuestionsPage /> },
     { path: ROUTES.employer.applicants, element: <EmployerApplicantsPage /> },
     { path: "jobs/:jobId/applicants", element: <EmployerApplicantsPage /> },
     { path: ROUTES.employer.applicantDetails(":id"), element: <EmployerApplicantDetailsPage /> },

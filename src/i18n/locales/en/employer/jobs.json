@@ -21,6 +21,7 @@
     "requirements": "Requirements",
     "employmentType": "Employment type",
     "experienceLevel": "Experience level",
+    "educationLevel": "Education level",
     "workMode": "Work mode",
     "location": "Location",
     "applicationDeadline": "Application deadline",
@@ -31,13 +32,21 @@
     "full_time": "Full Time",
     "part_time": "Part Time",
     "contract": "Contract",
-    "freelance": "Freelance"
+    "internship": "Internship"
   },
   "experienceLevels": {
+    "entry_level": "Entry Level",
     "junior": "Junior",
-    "mid": "Mid Level",
-    "senior": "Senior",
-    "lead": "Lead"
+    "mid_level": "Mid Level",
+    "senior": "Senior"
+  },
+  "educationLevels": {
+    "none": "No requirement",
+    "high_school": "High School",
+    "diploma": "Diploma",
+    "bachelor": "Bachelor's Degree",
+    "master": "Master's Degree",
+    "doctorate": "Doctorate"
   },
   "workModes": {
     "remote": "Remote",
@@ -65,6 +74,7 @@
     },
     "types": {
       "short_text": "Short text",
+      "long_text": "Long text",
       "number": "Number",
       "boolean": "Yes / No",
       "single_choice": "Single choice",
@@ -188,5 +198,11 @@
     "description": "Check your employer access and try again.",
     "editTitle": "Unable to load this job",
     "editDescription": "The job may not exist or may not belong to your company."
+  },
+  "validation": {
+    "locationOptionalForRemote": "Location is optional for remote work",
+    "locationRequiredForNonRemote": "Location is required for on-site and hybrid work",
+    "salaryMaxMustBeAtLeastMin": "Maximum salary must be at least the minimum salary",
+    "deadlineMustBeFuture": "Application deadline must be in the future"
   }
 }

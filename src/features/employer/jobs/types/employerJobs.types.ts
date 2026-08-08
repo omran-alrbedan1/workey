@@ -1,3 +1,5 @@
+import type { KeyValueField } from "@/lib/keyValue"
+
 export interface EmployerJob {
   id: string | number
   title: string
@@ -6,36 +8,47 @@ export interface EmployerJob {
   responsibilities?: string | null
   benefits?: string | null
   requirements?: string | null
-  employment_type?: string | null
-  experience_level?: string | null
-  work_mode?: JobWorkMode | null
+  employment_type?: KeyValueField | null
+  experience_level?: KeyValueField | null
+  education_level?: KeyValueField | null
+  work_mode?: KeyValueField | null
   location?: string | null
+  city?: {
+    id: string | number
+    name: string
+  } | null
   application_deadline?: string | null
   accepting_applications?: boolean
   salary_min?: number | null
   salary_max?: number | null
-  status?: string
+  status?: KeyValueField | null
   applications_count?: number
   created_at?: string
   published_at?: string | null
   skills?: EmployerJobSkill[]
+  has_application_deadline?: boolean
+  is_application_deadline_passed?: boolean
+  is_accepting_applications?: boolean
+  can_apply?: boolean
 }
 
 export interface EmployerJobSkill {
   id: string | number
   name?: string
-  requirement_type?: JobSkillRequirementType
-  pivot?: {
-    requirement_type?: JobSkillRequirementType
-    weight?: number | null
-  }
+  slug?: string
+  icon_url?: string
+  requirement_type?: KeyValueField | null
   weight?: number | null
 }
 
 export type JobWorkMode = "remote" | "on_site" | "hybrid"
+export type EmploymentType = "full_time" | "part_time" | "contract" | "internship"
+export type ExperienceLevel = "entry_level" | "junior" | "mid_level" | "senior"
+export type EducationLevel = "high_school" | "diploma" | "bachelor" | "master" | "doctorate" | null
 export type JobSkillRequirementType = "required" | "nice_to_have"
 export type ScreeningQuestionType =
   | "short_text"
+  | "long_text"
   | "number"
   | "boolean"
   | "single_choice"
@@ -60,35 +73,35 @@ export const EMPLOYER_JOB_FILTER_DEFAULTS: EmployerJobFilterForm = {
 export interface EmployerJobInput {
   title: string
   description: string
-  department?: string
-  responsibilities?: string
-  benefits?: string
+  department?: string | null
+  responsibilities?: string | null
+  benefits?: string | null
   requirements: string
-  employment_type: string
-  experience_level: string
+  employment_type: EmploymentType
+  experience_level: ExperienceLevel
+  education_level?: string | null
   work_mode: JobWorkMode
-  location?: string
+  location?: string | null
+  city_id?: string | number | null
   application_deadline?: string | null
-  salary_min?: number
-  salary_max?: number
+  salary_min?: number | null
+  salary_max?: number | null
 }
 
 export interface JobSkillAssignmentInput {
   skill_id: string | number
-  weight?: number
+  weight: number
 }
 
 export interface EmployerJobSkillsInput {
-  skill_ids?: Array<string | number>
   required_skills?: JobSkillAssignmentInput[]
   nice_to_have_skills?: JobSkillAssignmentInput[]
 }
 
 export interface JobScreeningQuestionOption {
   id?: string | number
-  text: string
+  option_text: string
   sort_order?: number
-  is_correct?: boolean
 }
 
 export interface JobScreeningQuestion {
@@ -109,7 +122,7 @@ export interface JobScreeningQuestionInput {
   question_type: ScreeningQuestionType
   is_required?: boolean
   sort_order?: number
-  options?: Array<string | JobScreeningQuestionOption>
+  options?: JobScreeningQuestionOption[]
 }
 
 export interface RankedCandidateScoreBreakdown {

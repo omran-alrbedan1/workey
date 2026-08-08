@@ -7,6 +7,8 @@
   import { Option } from "@/types/customFormField.types"
   import { LucideIcon } from "lucide-react"
 
+  const EMPTY_OPTION_VALUE = "__empty_select_option__"
+
   interface SelectFieldProps {
     field: any
     placeholder?: string
@@ -52,14 +54,16 @@
     options = [],
   }) => {
     const { i18n } = useTranslation()
-    const selectedOption = options.find(opt => opt.value === field.value)
+    const fieldValue = field.value ?? ""
+    const selectValue = field.value === "" ? EMPTY_OPTION_VALUE : fieldValue
+    const selectedOption = field.value == null ? undefined : options.find(opt => opt.value === field.value)
     const SelectedIcon = selectedOption?.icon
     const dir = i18n.dir()
     
     return (
       <Select
-        value={field.value ?? ""}
-        onValueChange={field.onChange}
+        value={selectValue}
+        onValueChange={(value) => field.onChange(value === EMPTY_OPTION_VALUE ? "" : value)}
         disabled={disabled}
         dir={dir}
       >
@@ -83,7 +87,7 @@
           {options.map((option) => (
             <SelectItem
               key={option.value}
-              value={option.value}
+              value={option.value === "" ? EMPTY_OPTION_VALUE : option.value}
               disabled={option.disabled}
             >
               <OptionWithIcon 

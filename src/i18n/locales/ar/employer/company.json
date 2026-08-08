@@ -8,8 +8,29 @@
     "location": "الموقع",
     "description": "الوصف"
   },
+  "media": {
+    "logo": "شعار الشركة",
+    "cover": "صورة الغلاف",
+    "upload": "رفع",
+    "replace": "استبدال",
+    "remove": "حذف",
+    "invalidType": "نوع الملف غير مدعوم. يرجى استخدام JPG أو PNG أو WebP.",
+    "fileTooLarge": "حجم الملف كبير جداً. الحد الأقصى 2 ميجابايت.",
+    "loadError": "فشل تحميل الصورة.",
+    "logoRequirements": "JPG, PNG, WebP - حد أقصى 2MB",
+    "coverRequirements": "JPG, PNG, WebP - حد أقصى 2MB"
+  },
   "actions": { "save": "حفظ الشركة", "saving": "جارٍ الحفظ..." },
-  "toasts": { "updated": "تم تحديث ملف الشركة" },
+  "toasts": {
+    "updated": "تم تحديث ملف الشركة",
+    "updateError": "فشل تحديث ملف الشركة",
+    "logoUpdated": "تم تحديث شعار الشركة",
+    "logoError": "فشل تحديث الشعار",
+    "coverUpdated": "تم تحديث صورة الغلاف",
+    "coverError": "فشل تحديث صورة الغلاف",
+    "coverRemoved": "تم حذف صورة الغلاف",
+    "coverRemoveError": "فشل حذف صورة الغلاف"
+  },
   "errors": {
     "title": "تعذر تحميل ملف الشركة",
     "description": "تحقق من صلاحية صاحب العمل وحاول مجدداً."

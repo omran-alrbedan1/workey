@@ -21,12 +21,13 @@ import type { EmployerInterviewAttendanceInput } from "../types/employerIntervie
 const attendanceOptions: Option[] = [
   { value: "present", label: "attendance.present" },
   { value: "absent", label: "attendance.absent" },
+  { value: "excused", label: "attendance.excused" },
 ]
 
 const schema = z.object({
-  candidate_status: z.enum(["present", "absent"]),
-  interviewer_status: z.enum(["present", "absent"]),
-  note: z.string().trim().optional(),
+  candidate_status: z.enum(["present", "absent", "excused"]),
+  interviewer_status: z.enum(["present", "absent", "excused"]),
+  note: z.string().trim().max(2000).optional(),
 })
 
 type FormValues = z.infer<typeof schema>

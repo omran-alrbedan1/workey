@@ -21,10 +21,8 @@ import type { Option } from "@/types/customFormField.types"
 import type { EmployerApplicant, EmployerInterviewInput } from "../types/employerApplicants.types"
 
 const interviewTypeOptions: Option[] = [
-  { value: "technical", label: "interview.types.technical" },
-  { value: "behavioral", label: "interview.types.behavioral" },
-  { value: "cultural", label: "interview.types.cultural" },
   { value: "hr", label: "interview.types.hr" },
+  { value: "technical", label: "interview.types.technical" },
   { value: "final", label: "interview.types.final" },
 ]
 
@@ -35,22 +33,32 @@ const interviewModeOptions: Option[] = [
 
 const schema = z
   .object({
-    type: z.string().min(1),
+    type: z.enum(["hr", "technical", "final"]),
     scheduled_at: z.string().min(1),
-    duration_minutes: z.coerce.number().int().min(1),
+    duration_minutes: z.coerce.number().int().min(1).max(480),
     mode: z.enum(["online", "on_site"]),
-    meeting_link: z.string().trim().optional(),
-    location: z.string().trim().optional(),
-    notes: z.string().trim().optional(),
-    internal_note: z.string().trim().optional(),
+    meeting_link: z.string().trim().max(2048).optional(),
+    location: z.string().trim().max(1000).optional(),
+    notes: z.string().trim().max(2000).optional(),
+    internal_note: z.string().trim().max(5000).optional(),
   })
   .superRefine((values, ctx) => {
-    if (values.mode === "online" && !values.meeting_link) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["meeting_link"],
-        message: "Meeting link is required for online interviews",
-      })
+    const start = new Date(values.scheduled_at)
+    if (Number.isNaN(start.getTime()) || start.getTime() <= Date.now()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["scheduled_at"], message: "Choose a future time" })
+    }
+
+    if (values.mode === "online") {
+      const link = values.meeting_link?.trim()
+      if (!link) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["meeting_link"],
+          message: "Meeting link is required for online interviews",
+        })
+      } else if (!z.string().url().safeParse(link).success) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["meeting_link"], message: "Enter a valid URL" })
+      }
     }
 
     if (values.mode === "on_site" && !values.location) {
@@ -107,6 +115,7 @@ export default function ScheduleInterviewDialog({
       mode: values.mode,
       scheduled_start_at: start.toISOString(),
       scheduled_end_at: end.toISOString(),
+      duration_minutes: values.duration_minutes,
       meeting_link: values.mode === "online" ? values.meeting_link : undefined,
       location_text: values.mode === "on_site" ? values.location : undefined,
       candidate_message: values.notes || undefined,
@@ -116,9 +125,10 @@ export default function ScheduleInterviewDialog({
   }
 
   const candidate =
-    application?.candidate?.full_name ||
-    application?.candidate?.name ||
-    application?.candidate?.email ||
+    application?.candidate_summary?.name ||
+    application?.submitted_snapshot?.profile?.identity?.full_name ||
+    application?.submitted_snapshot?.profile?.identity?.email ||
+    application?.candidate_summary?.email ||
     t("unknownCandidate")
 
   return (
@@ -192,6 +202,7 @@ export default function ScheduleInterviewDialog({
                   name="duration_minutes"
                   label={t("interview.duration")}
                   min={1}
+                  max={480}
                   disabled={isPending}
                   required
                 />

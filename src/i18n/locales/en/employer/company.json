@@ -8,8 +8,29 @@
     "location": "Location",
     "description": "Description"
   },
+  "media": {
+    "logo": "Company logo",
+    "cover": "Cover image",
+    "upload": "Upload",
+    "replace": "Replace",
+    "remove": "Remove",
+    "invalidType": "Unsupported file type. Please use JPG, PNG, or WebP.",
+    "fileTooLarge": "File size too large. Maximum 2MB.",
+    "loadError": "Failed to load image.",
+    "logoRequirements": "JPG, PNG, WebP - Max 2MB",
+    "coverRequirements": "JPG, PNG, WebP - Max 2MB"
+  },
   "actions": { "save": "Save company", "saving": "Saving..." },
-  "toasts": { "updated": "Company profile updated" },
+  "toasts": {
+    "updated": "Company profile updated",
+    "updateError": "Failed to update company profile",
+    "logoUpdated": "Company logo updated",
+    "logoError": "Failed to update logo",
+    "coverUpdated": "Cover image updated",
+    "coverError": "Failed to update cover image",
+    "coverRemoved": "Cover image removed",
+    "coverRemoveError": "Failed to remove cover image"
+  },
   "errors": {
     "title": "Unable to load company profile",
     "description": "Check your employer access and try again."

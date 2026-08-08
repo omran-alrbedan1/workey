@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "@/config"
-import { showSuccessToast } from "@/lib/toast"
+import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { employerJobsService } from "../services/employerJobs.service"
 
 export function useCreateEmployerJob() {
@@ -16,6 +16,9 @@ export function useCreateEmployerJob() {
       await client.invalidateQueries({ queryKey: ["employer", "jobs"] })
       showSuccessToast(t("toasts.created"))
       navigate(ROUTES.employer.jobs)
+    },
+    onError: (error) => {
+      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
     },
   })
 }

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { showSuccessToast } from "@/lib/toast"
+import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { employerJobsService } from "../services/employerJobs.service"
 import {
   EMPLOYER_JOB_FILTER_DEFAULTS,
@@ -54,6 +54,7 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
         sort_direction: normalizedFilters.sort_direction as "asc" | "desc" | undefined,
       })
     },
+    retry: 1,
   })
 
   const refresh = () =>
@@ -68,6 +69,9 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       await refresh()
       showSuccessToast(t("toasts.published"))
     },
+    onError: (error) => {
+      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
+    },
   })
   const closeMutation = useMutation({
     mutationFn: employerJobsService.close,
@@ -75,12 +79,18 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       await refresh()
       showSuccessToast(t("toasts.closed"))
     },
+    onError: (error) => {
+      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
+    },
   })
   const deleteMutation = useMutation({
     mutationFn: employerJobsService.remove,
     onSuccess: async () => {
       await refresh()
       showSuccessToast(t("toasts.deleted"))
+    },
+    onError: (error) => {
+      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
     },
   })
 

@@ -21,6 +21,7 @@
     "requirements": "المتطلبات",
     "employmentType": "نوع التوظيف",
     "experienceLevel": "مستوى الخبرة",
+    "educationLevel": "المستوى التعليمي",
     "workMode": "نمط العمل",
     "location": "الموقع",
     "applicationDeadline": "الموعد النهائي للتقديم",
@@ -31,13 +32,21 @@
     "full_time": "دوام كامل",
     "part_time": "دوام جزئي",
     "contract": "عقد",
-    "freelance": "عمل حر"
+    "internship": "تدريب"
   },
   "experienceLevels": {
+    "entry_level": "مبتدئ",
     "junior": "مبتدئ",
-    "mid": "متوسط",
-    "senior": "كبير",
-    "lead": "قائد فريق"
+    "mid_level": "متوسط",
+    "senior": "كبير"
+  },
+  "educationLevels": {
+    "none": "بدون متطلبات",
+    "high_school": "شهادة ثانوية",
+    "diploma": "دبلوم",
+    "bachelor": "بكالوريوس",
+    "master": "ماجستير",
+    "doctorate": "دكتوراه"
   },
   "workModes": {
     "remote": "Remote",
@@ -63,6 +72,7 @@
     },
     "types": {
       "short_text": "نص قصير",
+      "long_text": "نص طويل",
       "number": "رقم",
       "boolean": "نعم / لا",
       "single_choice": "اختيار واحد",
@@ -181,5 +191,11 @@
     "description": "تحقق من صلاحية صاحب العمل وحاول مجدداً.",
     "editTitle": "تعذر تحميل الوظيفة",
     "editDescription": "قد تكون الوظيفة غير موجودة أو لا تنتمي إلى شركتك."
+  },
+  "validation": {
+    "locationOptionalForRemote": "الموقع اختياري للعمل عن بعد",
+    "locationRequiredForNonRemote": "الموقع مطلوب للعمل في الموقع والمختلط",
+    "salaryMaxMustBeAtLeastMin": "يجب أن يكون الحد الأعلى للراتب مساوياً على الأقل للحد الأدنى",
+    "deadlineMustBeFuture": "يجب أن يكون الموعد النهائي للتقديم في المستقبل"
   }
 }

@@ -83,7 +83,7 @@ export const DatePickerField: React.FC<DatePickerFieldProps> = ({
             mode="single"
             selected={field.value ? new Date(field.value) : undefined}
             onSelect={(date) => {
-              field.onChange(date)
+              field.onChange(date ? format(date, "yyyy-MM-dd") : null)
               setOpen(false)
             }}
             disabled={getDisabled()}

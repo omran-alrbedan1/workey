@@ -39,10 +39,8 @@ import TestAssignmentDeadlinePanel from "./TestAssignmentDeadlinePanel"
 import TestAssignmentRetakePanel from "./TestAssignmentRetakePanel"
 import type { EmployerApplicant, EmployerTestAttempt } from "../types/employerApplicants.types"
 import type {
-  TestAttemptAnswer,
   TestAttemptResult,
-  TestQuestion,
-  TestQuestionOption,
+  TestAttemptResultBreakdownItem,
 } from "@/features/employer/tests/types/employerTests.types"
 
 type GradeDraft = {
@@ -54,7 +52,6 @@ const manualQuestionTypes = new Set([
   "short_text",
   "long_text",
   "file_upload",
-  "essay",
 ])
 
 const nextSteps = [
@@ -65,15 +62,15 @@ const nextSteps = [
 ] as const
 
 function attemptId(attempt: EmployerTestAttempt) {
-  return attempt.attempt_id ?? attempt.test_attempt_id ?? attempt.id
+  return attempt.attempt?.id ?? null
 }
 
 function assignmentId(attempt: EmployerTestAttempt) {
-  return attempt.assignment_id ?? attempt.test_assignment_id
+  return attempt.id
 }
 
-function assignmentDeadline(attempt: EmployerTestAttempt) {
-  return attempt.deadline_at ?? attempt.due_at ?? null
+function assignmentDeadline(attempt: EmployerTestAttempt): string | null {
+  return attempt.effective_deadline_at ?? attempt.deadline_at ?? null
 }
 
 function formatDeadline(value?: string | null) {
@@ -84,44 +81,35 @@ function formatDeadline(value?: string | null) {
 
 function attemptScore(attempt: EmployerTestAttempt | null): number | null {
   if (!attempt) return null
-  return attempt.score ?? null
+  return attempt.attempt?.total_score ?? attempt.attempt?.score ?? null
 }
 
 function attemptMaxScore(attempt: EmployerTestAttempt | null): number {
-  if (!attempt) return 100
-  return attempt.max_score ?? attempt.test?.max_score ?? 100
+  if (!attempt) return 0
+  return attempt.attempt?.max_score ?? Number(attempt.test?.max_score ?? 0)
 }
 
-function getQuestionId(answer: TestAttemptAnswer) {
+function getQuestionId(answer: TestAttemptResultBreakdownItem) {
   return answer.question_id
 }
 
-function getQuestionPoints(answer: TestAttemptAnswer) {
-  return Number(answer.question?.points ?? 0)
+function getQuestionPoints(answer: TestAttemptResultBreakdownItem) {
+  return Number(answer.max_points ?? 0)
 }
 
-function getOptionText(option: string | TestQuestionOption) {
-  return typeof option === "string" ? option : option.option_text ?? option.text ?? `#${option.id}`
-}
-
-function getSelectedAnswer(answer: TestAttemptAnswer) {
+function getSelectedAnswer(answer: TestAttemptResultBreakdownItem) {
   if (answer.answer_text) return answer.answer_text
 
-  const ids = answer.selected_option_ids ?? []
-  const options = answer.question?.options ?? []
-  if (ids.length === 0) return "-"
-
-  const labels = ids.map((id) => {
-    const option = options.find((item) => typeof item !== "string" && String(item.id) === String(id))
-    return option ? getOptionText(option) : `#${id}`
-  })
-
-  return labels.join(", ")
+  if (answer.selected_options.length > 0) {
+    return answer.selected_options.map((option) => option.option_text).join(", ")
+  }
+  if (answer.file?.original_name) return answer.file.original_name
+  return "-"
 }
 
 function getResultScore(result: TestAttemptResult | null) {
   if (!result) return null
-  return result.total_score ?? result.awarded_points ?? result.total_points ?? null
+  return result.total_score ?? null
 }
 
 function getResultMax(result: TestAttemptResult | null, fallback: number) {
@@ -129,8 +117,8 @@ function getResultMax(result: TestAttemptResult | null, fallback: number) {
   return result.max_score ?? fallback
 }
 
-function canManuallyGrade(question?: TestQuestion) {
-  return Boolean(question?.question_type && manualQuestionTypes.has(question.question_type))
+function canManuallyGrade(answer: TestAttemptResultBreakdownItem) {
+  return manualQuestionTypes.has(answer.question_type.key)
 }
 
 export default function ApplicationTestsDialog({
@@ -150,7 +138,7 @@ export default function ApplicationTestsDialog({
   const [gradingAttempt, setGradingAttempt] = useState<EmployerTestAttempt | null>(null)
   const [deadlineAttempt, setDeadlineAttempt] = useState<EmployerTestAttempt | null>(null)
   const [retakeAttempt, setRetakeAttempt] = useState<EmployerTestAttempt | null>(null)
-  const [answers, setAnswers] = useState<TestAttemptAnswer[]>([])
+  const [answers, setAnswers] = useState<TestAttemptResultBreakdownItem[]>([])
   const [result, setResult] = useState<TestAttemptResult | null>(null)
   const [drafts, setDrafts] = useState<Record<string, GradeDraft>>({})
   const [loadingDetails, setLoadingDetails] = useState(false)
@@ -162,11 +150,11 @@ export default function ApplicationTestsDialog({
   const gradingAttemptId = gradingAttempt ? attemptId(gradingAttempt) : null
 
   const manualAnswers = useMemo(
-    () => answers.filter((answer) => canManuallyGrade(answer.question)),
+    () => answers.filter(canManuallyGrade),
     [answers],
   )
 
-  const hasAnyResult = tests.data?.items.some((attempt) => attempt.score != null) || Boolean(result)
+  const hasAnyResult = tests.data?.items.some((assignment) => assignment.attempt?.total_score != null) || Boolean(result)
   const activeMaxScore = attemptMaxScore(gradingAttempt)
   const resultScore = getResultScore(result)
   const resultMax = getResultMax(result, activeMaxScore)
@@ -185,10 +173,8 @@ export default function ApplicationTestsDialog({
 
     setLoadingDetails(true)
     try {
-      const [nextAnswers, nextResult] = await Promise.all([
-        employerTestsService.getAttemptAnswers(id),
-        employerTestsService.getAttemptResult(id),
-      ])
+      const nextResult = await employerTestsService.getAttemptResult(id)
+      const nextAnswers = nextResult.breakdown ?? []
       setAnswers(nextAnswers)
       setResult(nextResult)
       setDrafts(
@@ -253,7 +239,7 @@ export default function ApplicationTestsDialog({
     await tests.gradeMutation.mutateAsync({
       attemptId: gradingAttemptId,
       questionId,
-      mode: answer.awarded_points == null ? "create" : "update",
+      mode: answer.graded_at == null ? "create" : "update",
       input: {
         awarded_points: awardedPoints,
         reviewer_note: draft?.reviewer_note?.trim() || null,
@@ -315,7 +301,7 @@ export default function ApplicationTestsDialog({
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")
       link.href = url
-      link.download = answer.uploaded_file?.file_name ?? `answer-${questionId}`
+      link.download = answer.file?.original_name ?? `answer-${questionId}`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -349,9 +335,8 @@ export default function ApplicationTestsDialog({
         <DialogHeader>
           <DialogTitle>{t("tests.title")}</DialogTitle>
           <DialogDescription>
-            {application?.candidate?.full_name ||
-              application?.candidate?.name ||
-              application?.candidate?.email}
+            {application?.candidate_summary?.name ||
+              application?.candidate_summary?.email}
           </DialogDescription>
         </DialogHeader>
 
@@ -375,9 +360,9 @@ export default function ApplicationTestsDialog({
               const id = attemptId(attempt)
               const score = attemptScore(attempt)
               const max = attemptMaxScore(attempt)
-              const passed = score != null && score >= max * 0.7
-              const attemptStatusKey = keyOf(attempt.status)
-              const submitted = Boolean(attempt.submitted_at) || attemptStatusKey === "submitted" || attemptStatusKey === "completed"
+              const passed = attempt.attempt?.is_passing_score_met
+              const attemptStatusKey = keyOf(attempt.state)
+              const submitted = Boolean(attempt.attempt?.submitted_at) || attemptStatusKey === "submitted" || attemptStatusKey === "evaluated"
               const isOpen = showAnswers[String(id)]
               const deadline = assignmentDeadline(attempt)
               const assignment = assignmentId(attempt)
@@ -403,7 +388,7 @@ export default function ApplicationTestsDialog({
                             ? passed
                               ? "completed"
                               : "reviewed"
-                            : attempt.status || "pending"
+                            : attemptStatusKey || "pending"
                         }
                         variant="soft"
                       />
@@ -538,8 +523,8 @@ export default function ApplicationTestsDialog({
                   <div className="rounded-md border border-border bg-background p-3">
                     <p className="text-xs text-text-muted">{t("tests.manualProgress")}</p>
                     <p className="mt-1 font-medium">
-                      {result?.manual_grading
-                        ? `${result.manual_grading.graded}/${result.manual_grading.total}`
+                      {result?.manual_grading_progress
+                        ? `${result.manual_grading_progress.graded}/${result.manual_grading_progress.total}`
                         : `${manualAnswers.filter((answer) => answer.awarded_points != null).length}/${manualAnswers.length}`}
                     </p>
                   </div>
@@ -555,18 +540,18 @@ export default function ApplicationTestsDialog({
                       const questionId = getQuestionId(answer)
                       const draft = drafts[String(questionId)] ?? { awarded_points: "", reviewer_note: "" }
                       const maxPoints = getQuestionPoints(answer)
-                      const manual = canManuallyGrade(answer.question)
-                      const questionType = answer.question?.question_type ?? "-"
+                      const manual = canManuallyGrade(answer)
+                      const questionType = answer.question_type
 
                       return (
                         <div key={questionId} className="rounded-md border border-border bg-background p-3">
                           <div className="flex flex-wrap items-start justify-between gap-3">
                             <div>
                               <p className="text-sm font-medium">
-                                {index + 1}. {answer.question?.question_text ?? t("tests.unknownQuestion")}
+                                {index + 1}. {answer.question_text ?? t("tests.unknownQuestion")}
                               </p>
                               <p className="mt-1 text-xs text-text-muted">
-                                {questionType} - {maxPoints} {t("tests.points")}
+                                {valueOf(questionType, "-")} - {maxPoints} {t("tests.points")}
                               </p>
                             </div>
                             {answer.awarded_points != null && (
@@ -577,7 +562,7 @@ export default function ApplicationTestsDialog({
                           <div className="mt-3 rounded-md bg-muted/40 p-3">
                             <p className="mb-1 text-xs font-medium text-text-muted">{t("tests.candidateAnswer")}</p>
                             <p className="whitespace-pre-wrap text-sm">{getSelectedAnswer(answer)}</p>
-                            {answer.uploaded_file && (
+                            {answer.file?.download_available && (
                               <Button
                                 type="button"
                                 variant="outline"
@@ -591,7 +576,7 @@ export default function ApplicationTestsDialog({
                                 ) : (
                                   <Download className="h-4 w-4" />
                                 )}
-                                {answer.uploaded_file.file_name ?? t("tests.downloadFile")}
+                                {answer.file.original_name ?? t("tests.downloadFile")}
                               </Button>
                             )}
                           </div>

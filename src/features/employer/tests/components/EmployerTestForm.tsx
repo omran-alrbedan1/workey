@@ -13,7 +13,9 @@ import type {
   EmployerTest,
   EmployerTestInput,
   TestQuestion,
+  TestQuestionInput,
   TestQuestionOption,
+  TestQuestionResponse,
 } from "../types/employerTests.types"
 import {
   createEmployerTestSchema,
@@ -25,8 +27,7 @@ const getDefaults = (): EmployerTestFormValues => ({
   description: "",
   instructions: "",
   duration_minutes: 60,
-  max_score: 0,
-  passing_score: 70,
+  passing_score: 0,
   is_active: true,
   questions: [],
 })
@@ -56,13 +57,13 @@ export default function EmployerTestForm({
   const questions = form.watch("questions") ?? []
 
   // Calculate max_score from questions
-  const calculatedMaxScore = questions.reduce((sum: number, q: any) => sum + (Number(q.points) || 0), 0)
+  const calculatedMaxScore = questions.reduce((sum: number, q: { points?: number }) => sum + (Number(q.points) || 0), 0)
 
   // Auto-adjust passing score if it exceeds calculated max_score
   useEffect(() => {
     if (calculatedMaxScore > 0) {
       const currentPassingScore = form.getValues("passing_score")
-      if (currentPassingScore > calculatedMaxScore) {
+      if (currentPassingScore !== undefined && currentPassingScore > calculatedMaxScore) {
         form.setValue("passing_score", calculatedMaxScore)
       }
     }
@@ -76,45 +77,53 @@ export default function EmployerTestForm({
             description: test.description ?? "",
             instructions: test.instructions ?? "",
             duration_minutes: test.duration_minutes,
-            max_score: test.max_score,
-            passing_score: test.passing_score,
+            passing_score: test.passing_score ?? 0,
             is_active: test.is_active,
-            questions: (test.questions ?? []) as any,
+            questions: (test.questions ?? []).map((q) => toQuestionFormValue(q)) as EmployerTestFormValues["questions"],
           }
         : getDefaults(),
     )
   }, [form, test])
 
-  const toQuestionPayload = (question: TestQuestion, index: number, includeOptions: boolean) => {
-    const payload: Partial<TestQuestion> = {
+  const toQuestionFormValue = (question: TestQuestionResponse): TestQuestion => ({
+    id: question.id,
+    test_id: question.test_id,
+    question_text: question.question_text,
+    question_type: question.question_type.key,
+    order_index: question.order_index,
+    points: Number(question.points),
+    is_required: question.is_required ?? true,
+    image_url: question.image_url,
+    options: (question.options ?? []).map((option) => ({
+      id: option.id,
+      test_question_id: option.test_question_id,
+      option_text: option.option_text,
+      order_index: option.order_index,
+      is_correct: Boolean(option.is_correct),
+    })),
+  })
+
+  const toQuestionPayload = (question: TestQuestion, index: number): TestQuestionInput => {
+    const payload: TestQuestionInput = {
       question_text: question.question_text,
       question_type: question.question_type,
-      order_index: question.order_index ?? question.sort_order ?? index + 1,
+      order_index: question.order_index ?? index,
       points: Number(question.points),
       is_required: question.is_required ?? true,
     }
 
-    if (includeOptions) {
+    if (["single_choice", "multiple_choice", "true_false"].includes(question.question_type)) {
       payload.options =
-        question.options?.map((option: string | TestQuestionOption, optionIndex: number) => {
-          if (typeof option === "string") {
-            return {
-              option_text: option,
-              order_index: optionIndex + 1,
-              is_correct: false,
-            }
-          }
-
+        question.options?.map((option: TestQuestionOption, optionIndex: number) => {
           return {
-            id: option.id,
-            option_text: option.option_text ?? option.text ?? "",
-            order_index: option.order_index ?? option.sort_order ?? optionIndex + 1,
-            is_correct: option.is_correct ?? false,
+            option_text: option.option_text,
+            order_index: option.order_index ?? optionIndex,
+            is_correct: Boolean(option.is_correct),
           }
         }) ?? []
     }
 
-    return payload as TestQuestion
+    return payload
   }
 
   const saveQuestions = async (testId: string | number, nextQuestions: TestQuestion[]) => {
@@ -127,15 +136,15 @@ export default function EmployerTestForm({
         const savedQuestion = await employerTestsService.updateQuestion(
           testId,
           question.id,
-          toQuestionPayload(question, i, false),
+          toQuestionPayload(question, i),
         )
-        savedQuestions.push({ ...question, ...savedQuestion })
+        savedQuestions.push({ ...question, ...toQuestionFormValue(savedQuestion as TestQuestionResponse) })
       } else {
         const savedQuestion = await employerTestsService.createQuestion(
           testId,
-          toQuestionPayload(question, i, true),
+          toQuestionPayload(question, i),
         )
-        savedQuestions.push(savedQuestion)
+        savedQuestions.push(toQuestionFormValue(savedQuestion as TestQuestionResponse))
       }
     }
 
@@ -143,14 +152,14 @@ export default function EmployerTestForm({
       const reordered = await employerTestsService.reorderQuestions(testId, {
         questions: savedQuestions.map((question, index) => ({
           question_id: question.id!,
-          order_index: index + 1,
+          order_index: index,
         })),
       })
-      form.setValue("questions", reordered, { shouldValidate: false })
+      form.setValue("questions", reordered.map((q) => toQuestionFormValue(q as TestQuestionResponse)) as EmployerTestFormValues["questions"], { shouldValidate: false })
       return
     }
 
-    form.setValue("questions", savedQuestions, { shouldValidate: false })
+    form.setValue("questions", savedQuestions.map((q) => ({ ...q, is_required: q.is_required ?? true })) as EmployerTestFormValues["questions"], { shouldValidate: false })
   }
 
   const handleNext = async () => {
@@ -205,7 +214,6 @@ export default function EmployerTestForm({
           duration_minutes: values.duration_minutes,
           passing_score: values.passing_score,
           is_active: values.is_active,
-          questions: values.questions,
         }
         await onSubmit(payload)
       } else if (createdTestId) {
@@ -321,7 +329,7 @@ export default function EmployerTestForm({
                 <div className="sm:col-span-2">
                   <QuestionsManager
                     questions={questions}
-                    onChange={(updated) => form.setValue("questions", updated, { shouldValidate: false })}
+                    onChange={(updated) => form.setValue("questions", updated.map((q) => ({ ...q, is_required: q.is_required ?? true })) as EmployerTestFormValues["questions"], { shouldValidate: false })}
                     testId={createdTestId}
                   />
                 </div>

@@ -6,6 +6,14 @@
     "label": "Job",
     "noJobs": "Create a job to start receiving applicants"
   },
+  "tabs": {
+    "candidate": "Candidate",
+    "screening": "Screening",
+    "coverLetter": "Cover letter",
+    "tests": "Tests",
+    "interviews": "Interviews",
+    "finalReview": "Final review"
+  },
   "columns": {
     "candidate": "Candidate",
     "applied": "Applied",
@@ -29,27 +37,38 @@
     "informationRequests": "Information requests",
     "backToApplicant": "Back to applicant",
     "label": "Actions",
-    "menuFor": "Actions for {{name}}"
+    "menuFor": "Actions for {{name}}",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "processing": "Processing..."
   },
   "answers": {
     "yes": "Yes",
     "no": "No"
   },
   "screeningAnswers": {
-    "title": "Screening Answers"
+    "title": "Screening Answers",
+    "empty": "No screening answers provided."
   },
   "coverLetter": {
     "title": "Cover Letter"
   },
   "statuses": {
+    "submitted": "Submitted",
+    "under_review": "Under Review",
     "shortlisted": "Shortlisted",
     "test_pending": "Test pending",
     "test_completed": "Test completed",
     "interview_pending": "Interview pending",
+    "interview_scheduled": "Interview scheduled",
+    "interview_completed": "Interview completed",
     "final_review": "Final review",
     "on_hold": "On hold",
     "accepted": "Accepted",
-    "rejected": "Rejected"
+    "rejected": "Rejected",
+    "withdrawn": "Withdrawn",
+    "need_more_information": "Need more information",
+    "unknown": "Unknown"
   },
   "empty": {
     "title": "No applicants yet",
@@ -57,7 +76,9 @@
   },
   "errors": {
     "title": "Applicants could not be loaded",
-    "description": "Check your connection and try again."
+    "description": "Check your connection and try again.",
+    "invalidTransition": "This status transition is not allowed.",
+    "terminalState": "Cannot change status from this terminal state."
   },
   "toasts": {
     "statusUpdated": "Application status updated.",
@@ -70,8 +91,6 @@
     "typePlaceholder": "Select interview type",
     "types": {
       "technical": "Technical",
-      "behavioral": "Behavioral",
-      "cultural": "Cultural fit",
       "hr": "HR",
       "final": "Final"
     },
@@ -114,8 +133,6 @@
     "feedback": "Feedback",
     "cancel": "Cancel",
     "submit": "Submit evaluation",
-    "objective": "Multiple choice",
-    "essay": "Essay",
     "points": "pts",
     "showDetails": "Show details",
     "hideDetails": "Hide details",
@@ -177,6 +194,9 @@
     "attemptTimelineEmpty": "No attempts are available yet.",
     "attemptNumber": "Attempt #{{n}}",
     "attemptDates": "Started: {{started}} · Submitted: {{submitted}}",
+    "submittedAt": "Submitted: {{submitted}}",
+    "attemptsUsed": "Attempts used",
+    "attemptsRemaining": "Attempts remaining",
     "noAttemptScore": "No score yet",
     "timelineScore": "{{score}} / {{max}} ({{percentage}}%)",
     "retakePolicyValidation": "Enter max attempts and a reason.",
@@ -230,6 +250,112 @@
     "responseTitle": "Candidate Response",
     "cancel": "Cancel",
     "submit": "Send Request",
-    "submitting": "Sending..."
+    "submitting": "Sending...",
+    "cancelTitle": "Cancel Information Request",
+    "cancelDescription": "Please provide a reason for canceling this information request.",
+    "cancelReasonPlaceholder": "Enter the reason for cancellation..."
+  },
+  "statusChange": {
+    "title": "Change Application Status",
+    "description": "Change the status of this application.",
+    "noteLabel": "Note",
+    "notePlaceholder": "Add a note about this status change (optional)...",
+    "noteRequired": "A note is required for this status change."
+  },
+  "statusHistory": {
+    "title": "Status History",
+    "empty": "No status history available."
+  },
+  "finalReview": {
+    "title": "Final Review",
+    "terminal": "Terminal decision recorded",
+    "summary": {
+      "candidate": "Candidate",
+      "job": "Job",
+      "status": "Current status",
+      "applied": "Applied"
+    },
+    "cv": {
+      "preview": "Preview CV",
+      "download": "Download CV"
+    },
+    "snapshot": {
+      "title": "Submitted candidate snapshot",
+      "empty": "No submitted snapshot is available.",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location",
+      "availability": "Availability",
+      "headline": "Headline",
+      "experience": "Experience",
+      "education": "Education"
+    },
+    "application": {
+      "title": "Application summary"
+    },
+    "tests": {
+      "title": "Test evidence",
+      "attempt": "Attempt {{attempt}} of {{max}} · {{remaining}} remaining",
+      "grading": "Grading",
+      "score": "Score",
+      "percentage": "Percentage",
+      "submittedAt": "Submitted"
+    },
+    "interviews": {
+      "title": "Interview evidence",
+      "confirmation": "Candidate confirmation",
+      "candidateAttendance": "Candidate attendance",
+      "interviewerAttendance": "Interviewer attendance"
+    },
+    "matching": {
+      "title": "Matching context",
+      "supportOnly": "Matching is decision support only. It does not make or automate the final decision.",
+      "unavailable": "Matching context is unavailable for this application.",
+      "score": "Score",
+      "version": "Version",
+      "reasons": "Reasons",
+      "matchedSkills": "Matched skills",
+      "missingSkills": "Missing skills"
+    },
+    "notes": {
+      "title": "Internal notes"
+    },
+    "timeline": {
+      "title": "Status timeline"
+    },
+    "actions": {
+      "accept": "Accept candidate",
+      "reject": "Reject candidate",
+      "hold": "Put on hold",
+      "requestInfo": "Request more information"
+    },
+    "decisions": {
+      "title": "Decision panel",
+      "viewOnly": "You can review evidence, but you do not have permission to make a final decision.",
+      "terminal": "This application is in a terminal state. Decision actions are disabled.",
+      "noTransitions": "No final decision transitions are currently available.",
+      "manualOnlyTitle": "Manual decision only",
+      "manualOnly": "Scores, matching, tests, and interview recommendations are evidence only. A person must explicitly confirm the final decision.",
+      "metadataTitle": "Offer metadata",
+      "metadataUnsupported": "expected_start_date, offer_note, and candidate_message are not part of the current status endpoint payload, so they are not sent from this screen.",
+      "internalNote": "Internal decision note",
+      "internalNotePlaceholder": "Record the reason for this decision. This is sent as the status history note.",
+      "noteRequired": "An internal note is required.",
+      "finalWarning": "This is a final decision. The application will be closed if accepted or rejected.",
+      "candidateMessageUnsupported": "Candidate-facing decision messages are not supported by the current application status contract.",
+      "accepted": {
+        "title": "Accept candidate",
+        "description": "Confirm that this application should become Accepted."
+      },
+      "rejected": {
+        "title": "Reject candidate",
+        "description": "Confirm that this application should become Rejected."
+      },
+      "on_hold": {
+        "title": "Put application on hold",
+        "description": "Confirm that this application should move to On hold."
+      }
+    }
   }
 }

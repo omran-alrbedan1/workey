@@ -8,7 +8,6 @@ import {
 import type {
   AssignmentDeadlineHistoryItem,
   AssignmentDeadlineInput,
-  AttemptSeriesItem,
   BulkManualGradingInput,
   EmployerTest,
   EmployerTestInput,
@@ -17,10 +16,14 @@ import type {
   ReorderOptionsInput,
   ReorderQuestionsInput,
   RetakePolicyInput,
+  TestAssignmentSeriesResponse,
   TestAttemptAnswer,
   TestAttemptResult,
   TestQuestion,
+  TestQuestionInput,
   TestQuestionOption,
+  TestQuestionOptionInput,
+  TestQuestionResponse,
 } from "../types/employerTests.types"
 
 export const employerTestsService = {
@@ -32,13 +35,9 @@ export const employerTestsService = {
   async get(id: string | number): Promise<EmployerTest> {
     return unwrapEmployerEntity<EmployerTest>(await api.get(API_ENDPOINTS.tests.byId(id)))
   },
-  async getQuestions(testId: string | number): Promise<TestQuestion[]> {
-    try {
-      const data = await api.get(API_ENDPOINTS.tests.questions.list(testId))
-      return unwrapEmployerEntity<TestQuestion[]>(data)
-    } catch {
-      return []
-    }
+  async getQuestions(testId: string | number): Promise<TestQuestionResponse[]> {
+    const data = await api.get(API_ENDPOINTS.tests.questions.list(testId))
+    return unwrapEmployerEntity<TestQuestionResponse[]>(data)
   },
   async create(input: EmployerTestInput): Promise<EmployerTest> {
     return unwrapEmployerEntity<EmployerTest>(await api.post(API_ENDPOINTS.tests.create, input))
@@ -56,7 +55,7 @@ export const employerTestsService = {
     applicationId: string | number,
     testId: string | number,
     note?: string,
-    options: { deadline_at?: string | null; max_attempts?: number; instructions?: string } = {},
+    options: { deadline_at?: string | null; max_attempts?: number } = {},
   ): Promise<void> {
     await api.post(API_ENDPOINTS.applications.assignTest(applicationId), {
       test_id: testId,
@@ -65,8 +64,8 @@ export const employerTestsService = {
     })
   },
 
-  async createQuestion(testId: string | number, input: TestQuestion): Promise<TestQuestion> {
-    return unwrapEmployerEntity<TestQuestion>(
+  async createQuestion(testId: string | number, input: TestQuestionInput): Promise<TestQuestionResponse> {
+    return unwrapEmployerEntity<TestQuestionResponse>(
       await api.post(API_ENDPOINTS.tests.questions.create(testId), input),
     )
   },
@@ -74,9 +73,9 @@ export const employerTestsService = {
   async updateQuestion(
     testId: string | number,
     questionId: string | number,
-    input: Partial<TestQuestion>,
-  ): Promise<TestQuestion> {
-    return unwrapEmployerEntity<TestQuestion>(
+    input: Partial<TestQuestionInput>,
+  ): Promise<TestQuestionResponse> {
+    return unwrapEmployerEntity<TestQuestionResponse>(
       await api.patch(API_ENDPOINTS.tests.questions.byId(testId, questionId), input),
     )
   },
@@ -88,8 +87,8 @@ export const employerTestsService = {
   async reorderQuestions(
     testId: string | number,
     input: ReorderQuestionsInput,
-  ): Promise<TestQuestion[]> {
-    return unwrapEmployerEntity<TestQuestion[]>(
+  ): Promise<TestQuestionResponse[]> {
+    return unwrapEmployerEntity<TestQuestionResponse[]>(
       await api.post(API_ENDPOINTS.tests.questions.reorder(testId), input),
     )
   },
@@ -97,7 +96,7 @@ export const employerTestsService = {
   async addQuestionOption(
     testId: string | number,
     questionId: string | number,
-    input: TestQuestionOption,
+    input: TestQuestionOptionInput,
   ): Promise<TestQuestionOption> {
     return unwrapEmployerEntity<TestQuestionOption>(
       await api.post(API_ENDPOINTS.tests.questions.options(testId, questionId), input),
@@ -108,7 +107,7 @@ export const employerTestsService = {
     testId: string | number,
     questionId: string | number,
     optionId: string | number,
-    input: Partial<TestQuestionOption>,
+    input: Partial<TestQuestionOptionInput>,
   ): Promise<TestQuestionOption> {
     return unwrapEmployerEntity<TestQuestionOption>(
       await api.patch(API_ENDPOINTS.tests.questions.optionById(testId, questionId, optionId), input),
@@ -211,8 +210,8 @@ export const employerTestsService = {
     await api.post(API_ENDPOINTS.testAssignments.retake(assignmentId), input)
   },
 
-  async getAttemptSeries(assignmentId: string | number): Promise<AttemptSeriesItem[]> {
-    return unwrapEmployerEntity<AttemptSeriesItem[]>(
+  async getAttemptSeries(assignmentId: string | number): Promise<TestAssignmentSeriesResponse> {
+    return unwrapEmployerEntity<TestAssignmentSeriesResponse>(
       await api.get(API_ENDPOINTS.testAssignments.attemptSeries(assignmentId)),
     )
   },

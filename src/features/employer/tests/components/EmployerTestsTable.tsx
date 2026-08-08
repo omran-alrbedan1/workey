@@ -1,5 +1,16 @@
 import { useState } from "react"
-import { MoreHorizontal, Pencil, Power, Trash2, UserPlus } from "lucide-react"
+import {
+  Activity,
+  Clock,
+  FileText,
+  HelpCircle,
+  MoreHorizontal,
+  Pencil,
+  Power,
+  Target,
+  Trash2,
+  UserPlus,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
@@ -41,6 +52,7 @@ export default function EmployerTestsTable({
     {
       key: "title",
       header: t("columns.test"),
+      headerIcon: FileText,
       cell: (test) => (
         <div>
           <p className="font-semibold text-text-primary">{test.title}</p>
@@ -53,21 +65,25 @@ export default function EmployerTestsTable({
     {
       key: "questions",
       header: t("columns.questions"),
+      headerIcon: HelpCircle,
       cell: (test) => `${test.questions?.length ?? 0}`,
     },
     {
       key: "duration",
       header: t("columns.duration"),
+      headerIcon: Clock,
       cell: (test) => t("minutes", { count: test.duration_minutes }),
     },
     {
       key: "score",
       header: t("columns.passing"),
+      headerIcon: Target,
       cell: (test) => `${test.passing_score} / ${test.max_score}`,
     },
     {
       key: "status",
       header: t("columns.status"),
+      headerIcon: Activity,
       cell: (test) => <StatusBadge status={test.is_active ? "active" : "inactive"} variant="soft" />,
     },
     {

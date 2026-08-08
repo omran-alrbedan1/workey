@@ -13,4 +13,26 @@ export const employerCompanyService = {
       await api.put(API_ENDPOINTS.employer.company, input),
     )
   },
+
+  async updateLogo(formData: FormData): Promise<EmployerCompany> {
+    return unwrapEmployerEntity<EmployerCompany>(
+      await api.put(API_ENDPOINTS.employer.company, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }),
+    )
+  },
+
+  async updateCoverImage(formData: FormData): Promise<EmployerCompany> {
+    return unwrapEmployerEntity<EmployerCompany>(
+      await api.post("/company/cover-image", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }),
+    )
+  },
+
+  async removeCoverImage(): Promise<EmployerCompany> {
+    return unwrapEmployerEntity<EmployerCompany>(
+      await api.delete("/company/cover-image"),
+    )
+  },
 }

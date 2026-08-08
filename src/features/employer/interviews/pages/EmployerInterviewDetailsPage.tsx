@@ -19,7 +19,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
-import { keyOf, valueOf } from "@/lib/keyValue"
 import CompleteInterviewDialog from "../components/CompleteInterviewDialog"
 import AttendanceInterviewDialog from "../components/AttendanceInterviewDialog"
 import CancelInterviewDialog from "../components/CancelInterviewDialog"
@@ -28,6 +27,18 @@ import InterviewHistoryPanel from "../components/InterviewHistoryPanel"
 import NoShowInterviewDialog from "../components/NoShowInterviewDialog"
 import RescheduleInterviewDialog from "../components/RescheduleInterviewDialog"
 import { useEmployerInterview } from "../hooks/useEmployerInterview"
+import {
+  actionAllowed,
+  bothPartiesPresent,
+  hasStarted,
+  interviewCandidateName,
+  interviewJobTitle,
+  interviewKey,
+  interviewValue,
+  isActiveInterview,
+  scheduledEnd,
+  scheduledStart,
+} from "../utils/interviewDisplay"
 
 export default function EmployerInterviewDetailsPage() {
   const { t } = useTranslation("employerInterviews")
@@ -57,18 +68,27 @@ export default function EmployerInterviewDetailsPage() {
   }
 
   const data = interview.data
-  const statusKey = keyOf(data.status)
-  const isScheduled = statusKey === "scheduled"
+  const statusKey = interviewKey(data.status)
   const isCompleted = statusKey === "completed"
-  const scheduledStart = data.scheduled_start_at ?? data.scheduled_at
-  const scheduledEnd = data.scheduled_end_at
+  const startAt = scheduledStart(data)
+  const endAt = scheduledEnd(data)
   const interviewType = data.type ?? data.interview_type
   const interviewMode = data.mode ?? data.interview_mode
-  const isOnline = interviewMode === "online" || interviewMode === "video"
+  const modeKey = interviewKey(interviewMode)
+  const isOnline = modeKey === "online"
+  const active = isActiveInterview(data)
+  const started = hasStarted(data)
+  const canReschedule = actionAllowed(data, "reschedule", active)
+  const canCancel = actionAllowed(data, "cancel", active)
+  const canRecordAttendance = actionAllowed(data, "attendance", active && started)
+  const canMarkNoShow = actionAllowed(data, "no_show", active && started)
+  const canComplete = actionAllowed(data, "complete", statusKey === "confirmed" && started && bothPartiesPresent(data))
+  const canEvaluate = actionAllowed(data, "evaluate", isCompleted && !data.evaluation)
   const durationMinutes =
-    scheduledStart && scheduledEnd
-      ? Math.round((new Date(scheduledEnd).getTime() - new Date(scheduledStart).getTime()) / 60_000)
+    startAt && endAt
+      ? Math.round((new Date(endAt).getTime() - new Date(startAt).getTime()) / 60_000)
       : data.duration_minutes
+  const evaluation = data.evaluation
 
   return (
     <div className="space-y-6">
@@ -77,26 +97,26 @@ export default function EmployerInterviewDetailsPage() {
           <ArrowLeft className="mr-2 h-4 w-4" /> {t("back")}
         </Button>
         <div className="flex items-center gap-2">
-          {isScheduled && (
+          {(canReschedule || canCancel || canRecordAttendance || canMarkNoShow || canComplete) && (
             <>
-              <Button variant="outline" size="sm" onClick={() => setRescheduleOpen(true)}>
+              {canReschedule && <Button variant="outline" size="sm" onClick={() => setRescheduleOpen(true)}>
                 <CalendarSync className="mr-2 h-4 w-4" /> {t("actions.reschedule")}
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => setCompleteOpen(true)}>
-                <CheckCircle className="mr-2 h-4 w-4" /> {t("actions.complete")}
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => setAttendanceOpen(true)}>
+              </Button>}
+              {canRecordAttendance && <Button variant="outline" size="sm" onClick={() => setAttendanceOpen(true)}>
                 <ListChecks className="mr-2 h-4 w-4" /> {t("actions.attendance")}
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => setNoShowOpen(true)}>
+              </Button>}
+              {canComplete && <Button variant="outline" size="sm" onClick={() => setCompleteOpen(true)}>
+                <CheckCircle className="mr-2 h-4 w-4" /> {t("actions.complete")}
+              </Button>}
+              {canMarkNoShow && <Button variant="outline" size="sm" onClick={() => setNoShowOpen(true)}>
                 <UserX className="mr-2 h-4 w-4" /> {t("actions.noShow")}
-              </Button>
-              <Button variant="destructive" size="sm" onClick={() => setCancelOpen(true)}>
+              </Button>}
+              {canCancel && <Button variant="destructive" size="sm" onClick={() => setCancelOpen(true)}>
                 <Ban className="mr-2 h-4 w-4" /> {t("actions.cancel")}
-              </Button>
+              </Button>}
             </>
           )}
-          {isCompleted && (
+          {canEvaluate && (
             <Button variant="outline" size="sm" onClick={() => setEvaluateOpen(true)}>
               <ClipboardCheck className="mr-2 h-4 w-4" /> {t("actions.evaluate")}
             </Button>
@@ -108,21 +128,21 @@ export default function EmployerInterviewDetailsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <UserRound className="h-5 w-5 text-primary" />
-            {data.candidate?.full_name || data.candidate?.name || data.candidate?.email || t("unknownCandidate")}
+            {interviewCandidateName(data, t("unknownCandidate"))}
           </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-text-muted" />
             <span className="text-sm">
-              {scheduledStart
-                ? new Date(scheduledStart).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })
+              {startAt
+                ? new Date(startAt).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })
                 : "-"}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-text-muted" />
-            <span className="text-sm capitalize">{interviewType ?? "-"} - {durationMinutes ?? "-"}m</span>
+            <span className="text-sm capitalize">{interviewValue(interviewType)} - {durationMinutes ?? "-"}m</span>
           </div>
           <div className="flex items-center gap-2">
             {isOnline ? (
@@ -133,9 +153,14 @@ export default function EmployerInterviewDetailsPage() {
             <span className="text-sm capitalize">
               {isOnline
                 ? data.meeting_link || t("interviewModes.video")
-                : data.location_text || data.location || t(`interviewModes.${interviewMode}`)}
+                : data.location_text || data.location || interviewValue(interviewMode)}
             </span>
           </div>
+          {interviewJobTitle(data) && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm">{interviewJobTitle(data)}</span>
+            </div>
+          )}
           <div>
             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
               statusKey === "completed"
@@ -146,7 +171,7 @@ export default function EmployerInterviewDetailsPage() {
                     ? "bg-blue-100 text-blue-700"
                     : "bg-gray-100 text-gray-700"
             }`}>
-              {valueOf(data.status) || "-"}
+              {interviewValue(data.status)}
             </span>
           </div>
           {(data.internal_note || data.candidate_message || data.notes) && (
@@ -161,26 +186,34 @@ export default function EmployerInterviewDetailsPage() {
               <p className="text-sm">{data.completion_note}</p>
             </div>
           )}
-          {data.recommendation && (
+          {(data.confirmed_at || data.attendance_recorded_at || data.cancelled_at || data.completed_at) && (
+            <div className="sm:col-span-2 grid gap-2 rounded-md border border-border p-3 text-xs text-text-muted sm:grid-cols-2">
+              {data.confirmed_at && <span>{t("details.confirmedAt")}: {new Date(data.confirmed_at).toLocaleString()}</span>}
+              {data.attendance_recorded_at && <span>{t("details.attendanceAt")}: {new Date(data.attendance_recorded_at).toLocaleString()}</span>}
+              {data.cancelled_at && <span>{t("details.cancelledAt")}: {new Date(data.cancelled_at).toLocaleString()}</span>}
+              {data.completed_at && <span>{t("details.completedAt")}: {new Date(data.completed_at).toLocaleString()}</span>}
+            </div>
+          )}
+          {evaluation?.recommendation && (
             <div className="sm:col-span-2">
               <p className="text-xs font-medium text-text-muted">{t("details.recommendation")}</p>
-              <p className="text-sm capitalize">{data.recommendation}</p>
+              <p className="text-sm capitalize">{interviewValue(evaluation.recommendation)}</p>
             </div>
           )}
-          {data.overall_comment && (
+          {evaluation?.overall_comment && (
             <div className="sm:col-span-2">
               <p className="text-xs font-medium text-text-muted">{t("details.overallComment")}</p>
-              <p className="text-sm">{data.overall_comment}</p>
+              <p className="text-sm">{evaluation.overall_comment}</p>
             </div>
           )}
-          {data.evaluation_items && data.evaluation_items.length > 0 && (
+          {evaluation?.items && evaluation.items.length > 0 && (
             <div className="sm:col-span-2 space-y-2">
               <p className="text-xs font-medium text-text-muted">{t("details.evaluationItems")}</p>
-              {data.evaluation_items.map((item, i) => (
+              {evaluation.items.map((item, i) => (
                 <div key={i} className="rounded-md border border-border p-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">{item.criterion}</span>
-                    <span className="text-sm font-medium text-primary">{item.score}/10</span>
+                    <span className="text-sm font-medium text-primary">{item.score}/5</span>
                   </div>
                   {item.comment && <p className="mt-1 text-xs text-text-muted">{item.comment}</p>}
                 </div>
@@ -194,9 +227,9 @@ export default function EmployerInterviewDetailsPage() {
 
       <RescheduleInterviewDialog
         interviewId={data.id}
-        currentScheduledAt={scheduledStart}
-        currentScheduledEndAt={scheduledEnd}
-        currentMode={interviewMode}
+        currentScheduledAt={startAt}
+        currentScheduledEndAt={endAt}
+        currentMode={modeKey}
         currentMeetingLink={data.meeting_link}
         currentLocationText={data.location_text ?? data.location}
         open={rescheduleOpen}

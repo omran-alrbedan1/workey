@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { showSuccessToast } from "@/lib/toast"
+import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { employerApplicantsService } from "../services/employerApplicants.service"
 import type {
-  EmployerApplicantStatusInput,
+  ApplicationStatusChangeInput,
   EmployerInterviewInput,
 } from "../types/employerApplicants.types"
 
@@ -24,11 +24,21 @@ export function useEmployerApplicants(jobId?: string | number) {
       input,
     }: {
       applicationId: string | number
-      input: EmployerApplicantStatusInput
+      input: ApplicationStatusChangeInput
     }) => employerApplicantsService.updateStatus(applicationId, input),
     onSuccess: async () => {
       await client.invalidateQueries({ queryKey: rootKey })
       showSuccessToast(t("toasts.statusUpdated"))
+    },
+    onError: (error: any) => {
+      const message = error?.response?.data?.message || error?.message || "Failed to update status"
+      if (error?.response?.data?.code === "INVALID_STATUS_TRANSITION") {
+        showErrorToast(t("errors.invalidTransition"))
+      } else if (error?.response?.data?.code === "TERMINAL_STATE") {
+        showErrorToast(t("errors.terminalState"))
+      } else {
+        showErrorToast(message)
+      }
     },
   })
   const scheduleInterviewMutation = useMutation({

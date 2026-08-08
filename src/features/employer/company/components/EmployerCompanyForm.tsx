@@ -11,15 +11,35 @@ import {
   employerCompanySchema,
   type EmployerCompanyFormValues,
 } from "../validations/employerCompany.validation"
+import CompanyLogoSection from "./CompanyLogoSection"
+import CompanyCoverSection from "./CompanyCoverSection"
+
+const normalizeOptional = (value: string | null | undefined): string | null => {
+  if (value === null || value === undefined) return null
+  const normalized = value.trim()
+  return normalized === "" ? null : normalized
+}
 
 export default function EmployerCompanyForm({
   company,
   isPending,
   onSubmit,
+  onLogoUpload,
+  onLogoRemove,
+  onCoverUpload,
+  onCoverRemove,
+  isLogoUploading,
+  isCoverUploading,
 }: {
   company: EmployerCompany
   isPending: boolean
   onSubmit: (input: EmployerCompanyInput) => Promise<unknown>
+  onLogoUpload: (file: File) => void
+  onLogoRemove: () => void
+  onCoverUpload: (file: File) => void
+  onCoverRemove: () => void
+  isLogoUploading: boolean
+  isCoverUploading: boolean
 }) {
   const { t } = useTranslation("employerCompany")
   const form = useForm<EmployerCompanyFormValues>({
@@ -37,62 +57,90 @@ export default function EmployerCompanyForm({
     })
   }, [company, form])
 
+  const handleSubmit = async (values: EmployerCompanyFormValues) => {
+    const input: EmployerCompanyInput = {
+      name: values.name.trim(),
+      industry: normalizeOptional(values.industry),
+      website: normalizeOptional(values.website),
+      location: normalizeOptional(values.location),
+      description: normalizeOptional(values.description),
+    }
+    await onSubmit(input)
+  }
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(async (values) => {
-          await onSubmit(values)
-        })}
-        className="grid gap-5 rounded-lg border border-border bg-background-card p-5 shadow-card md:grid-cols-2"
-      >
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name="name"
-          label={t("fields.name")}
-          leftIcon={Building2}
-          iconPosition="left"
+    <div className="space-y-6">
+      {/* Media Section */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <CompanyLogoSection
+          logoUrl={company.logo_url}
+          isUploading={isLogoUploading}
+          onUpload={onLogoUpload}
+          onRemove={onLogoRemove}
         />
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name="industry"
-          label={t("fields.industry")}
+        <CompanyCoverSection
+          coverUrl={company.cover_url}
+          isUploading={isCoverUploading}
+          onUpload={onCoverUpload}
+          onRemove={onCoverRemove}
         />
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name="website"
-          label={t("fields.website")}
-          placeholder="https://example.com"
-          leftIcon={Globe2}
-          iconPosition="left"
-        />
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name="location"
-          label={t("fields.location")}
-          leftIcon={MapPin}
-          iconPosition="left"
-        />
-        <div className="md:col-span-2">
+      </div>
+
+      {/* Basic Information Form */}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="grid gap-5 rounded-lg border border-border bg-background-card p-5 shadow-card md:grid-cols-2"
+        >
           <CustomFormField
-            fieldType={FormFieldType.TEXTAREA}
+            fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="description"
-            label={t("fields.description")}
+            name="name"
+            label={t("fields.name")}
+            leftIcon={Building2}
+            iconPosition="left"
           />
-        </div>
-        <div className="md:col-span-2 md:justify-self-end">
-          <SubmitButton
-            isLoading={isPending}
-            text={t("actions.save")}
-            loadingText={t("actions.saving")}
-            icon={<Save className="h-4 w-4" />}
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="industry"
+            label={t("fields.industry")}
           />
-        </div>
-      </form>
-    </Form>
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="website"
+            label={t("fields.website")}
+            placeholder="https://example.com"
+            leftIcon={Globe2}
+            iconPosition="left"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="location"
+            label={t("fields.location")}
+            leftIcon={MapPin}
+            iconPosition="left"
+          />
+          <div className="md:col-span-2">
+            <CustomFormField
+              fieldType={FormFieldType.TEXTAREA}
+              control={form.control}
+              name="description"
+              label={t("fields.description")}
+            />
+          </div>
+          <div className="md:col-span-2 md:justify-self-end">
+            <SubmitButton
+              isLoading={isPending}
+              text={t("actions.save")}
+              loadingText={t("actions.saving")}
+              icon={<Save className="h-4 w-4" />}
+            />
+          </div>
+        </form>
+      </Form>
+    </div>
   )
 }

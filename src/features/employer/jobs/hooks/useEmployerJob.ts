@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "@/config"
-import { showSuccessToast } from "@/lib/toast"
+import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { employerJobsService } from "../services/employerJobs.service"
 import type {
   EmployerJobInput,
@@ -18,6 +18,7 @@ export function useEmployerJob(id?: string | number) {
     queryKey: ["employer", "jobs", "detail", String(id ?? "")],
     queryFn: () => employerJobsService.get(id!),
     enabled: Boolean(id),
+    retry: 1,
   })
   const updateMutation = useMutation({
     mutationFn: (input: EmployerJobInput) => employerJobsService.update(id!, input),
@@ -26,6 +27,13 @@ export function useEmployerJob(id?: string | number) {
       await client.invalidateQueries({ queryKey: ["employer", "jobs", "list"] })
       showSuccessToast(t("toasts.updated"))
       navigate(ROUTES.employer.jobs)
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        showErrorToast(t("errors.editTitle"), error.message)
+      } else {
+        showErrorToast(t("errors.editTitle"), t("errors.editDescription"))
+      }
     },
   })
   const refreshJob = () =>
@@ -39,12 +47,18 @@ export function useEmployerJob(id?: string | number) {
       await refreshJob()
       showSuccessToast(t("toasts.skillsAttached"))
     },
+    onError: (error) => {
+      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
+    },
   })
   const detachSkillMutation = useMutation({
     mutationFn: (skillId: string | number) => employerJobsService.detachSkill(id!, skillId),
     onSuccess: async () => {
       await refreshJob()
       showSuccessToast(t("toasts.skillDetached"))
+    },
+    onError: (error) => {
+      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
     },
   })
 
@@ -66,6 +80,9 @@ export function useEmployerJob(id?: string | number) {
       await refreshScreeningQuestions()
       showSuccessToast(t("screeningQuestions.toasts.created"))
     },
+    onError: (error) => {
+      showErrorToast(t("errors.editTitle"), error instanceof Error ? error.message : t("errors.editDescription"))
+    },
   })
 
   const updateScreeningQuestionMutation = useMutation({
@@ -80,6 +97,9 @@ export function useEmployerJob(id?: string | number) {
       await refreshScreeningQuestions()
       showSuccessToast(t("screeningQuestions.toasts.updated"))
     },
+    onError: (error) => {
+      showErrorToast(t("errors.editTitle"), error instanceof Error ? error.message : t("errors.editDescription"))
+    },
   })
 
   const deleteScreeningQuestionMutation = useMutation({
@@ -88,6 +108,9 @@ export function useEmployerJob(id?: string | number) {
     onSuccess: async () => {
       await refreshScreeningQuestions()
       showSuccessToast(t("screeningQuestions.toasts.deleted"))
+    },
+    onError: (error) => {
+      showErrorToast(t("errors.editTitle"), error instanceof Error ? error.message : t("errors.editDescription"))
     },
   })
 

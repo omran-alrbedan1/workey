@@ -17,7 +17,7 @@ import {
 import { Form } from "@/components/ui/form"
 
 const schema = z.object({
-  completion_note: z.string().optional(),
+  completion_note: z.string().trim().max(5000).optional(),
 })
 
 type FormValues = z.infer<typeof schema>

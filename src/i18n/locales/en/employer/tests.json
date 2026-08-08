@@ -59,8 +59,6 @@
     "shortText": "Short Text",
     "longText": "Long Text",
     "fileUpload": "File Upload",
-    "essay": "Essay",
-    "objective": "Multiple Choice (Legacy)",
     "points": "Points",
     "options": "Answer options",
     "noOptions": "No options. Click \"Add option\" to create one.",
@@ -119,6 +117,17 @@
     "passingScoreMin": "Passing score cannot be negative",
     "passingScoreMax": "Passing score cannot exceed maximum score",
     "questionTextRequired": "Question text is required",
-    "pointsMin": "Points must be at least 0.5"
+    "questionTextMax": "Question text must not exceed 2000 characters",
+    "optionTextRequired": "Option text is required",
+    "optionTextMax": "Option text must not exceed 500 characters",
+    "pointsMin": "Points cannot be negative",
+    "pointsMax": "Points cannot exceed 1000",
+    "minTwoOptions": "Choice questions require at least two options",
+    "singleChoiceOneCorrect": "Single choice questions require exactly one correct option",
+    "multipleChoiceAtLeastOneCorrect": "Multiple choice questions require at least one correct option",
+    "trueFalseOptions": "True/false questions require exactly True and False options with one correct answer",
+    "uniqueOptions": "Option text must be unique within a question",
+    "uniqueOptionOrder": "Option order must be unique within a question",
+    "activeRequiresScore": "Add scored questions before activating the test"
   }
 }

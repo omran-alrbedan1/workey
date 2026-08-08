@@ -15,15 +15,19 @@ import { Textarea } from "@/components/ui/textarea"
 import { ROUTES } from "@/config"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { employerTestsService } from "../services/employerTests.service"
-import type { TestAttemptAnswer } from "../types/employerTests.types"
+import type { TestAttemptResultBreakdownItem } from "../types/employerTests.types"
 
 type GradeDraft = Record<string, { awarded_points: string; reviewer_note: string }>
 
-function answerText(answer: TestAttemptAnswer): string {
+function answerText(answer: TestAttemptResultBreakdownItem): string {
   if (answer.answer_text) return answer.answer_text
-  if (answer.selected_option_ids?.length) return answer.selected_option_ids.join(", ")
-  if (answer.uploaded_file?.file_name) return answer.uploaded_file.file_name
+  if (answer.selected_options.length) return answer.selected_options.map((option) => option.option_text).join(", ")
+  if (answer.file?.original_name) return answer.file.original_name
   return "-"
+}
+
+function isManualBreakdownItem(item: TestAttemptResultBreakdownItem): boolean {
+  return ["short_text", "long_text", "file_upload"].includes(item.question_type.key)
 }
 
 export default function EmployerTestAttemptGradingPage() {
@@ -34,12 +38,6 @@ export default function EmployerTestAttemptGradingPage() {
   const [drafts, setDrafts] = useState<GradeDraft>({})
   const queryKey = ["employer", "tests", String(id ?? ""), "attempts", String(attemptId ?? ""), "grading"]
 
-  const answers = useQuery({
-    queryKey: [...queryKey, "answers"],
-    queryFn: () => employerTestsService.getAttemptAnswers(attemptId!),
-    enabled: Boolean(attemptId),
-  })
-
   const result = useQuery({
     queryKey: [...queryKey, "result"],
     queryFn: () => employerTestsService.getAttemptResult(attemptId!),
@@ -48,12 +46,8 @@ export default function EmployerTestAttemptGradingPage() {
 
   const manualAnswers = useMemo(
     () =>
-      (answers.data ?? []).filter((answer) =>
-        ["short_text", "long_text", "essay", "file_upload"].includes(
-          answer.question?.question_type ?? "",
-        ),
-      ),
-    [answers.data],
+      (result.data?.breakdown ?? []).filter(isManualBreakdownItem),
+    [result.data?.breakdown],
   )
 
   useEffect(() => {
@@ -72,7 +66,6 @@ export default function EmployerTestAttemptGradingPage() {
 
   const invalidate = async () => {
     await Promise.all([
-      client.invalidateQueries({ queryKey: [...queryKey, "answers"] }),
       client.invalidateQueries({ queryKey: [...queryKey, "result"] }),
     ])
   }
@@ -83,7 +76,7 @@ export default function EmployerTestAttemptGradingPage() {
       answer,
     }: {
       questionId: string | number
-      answer: TestAttemptAnswer
+      answer: TestAttemptResultBreakdownItem
     }) => {
       const draft = drafts[String(questionId)]
       return employerTestsService[answer.graded_at ? "updateAnswerGrade" : "gradeAnswer"](
@@ -150,13 +143,12 @@ export default function EmployerTestAttemptGradingPage() {
     }
   }
 
-  if (answers.isError || result.isError) {
+  if (result.isError) {
     return (
       <ErrorState
         title={t("tests.gradingTitle")}
         description={t("tests.gradingLoadError")}
         retry={() => {
-          void answers.refetch()
           void result.refetch()
         }}
       />
@@ -192,15 +184,15 @@ export default function EmployerTestAttemptGradingPage() {
           <div>
             <p className="text-xs text-text-muted">{t("tests.manualProgress")}</p>
             <p className="font-medium">
-              {result.data?.manual_grading
-                ? `${result.data.manual_grading.graded}/${result.data.manual_grading.total}`
+              {result.data?.manual_grading_progress
+                ? `${result.data.manual_grading_progress.graded}/${result.data.manual_grading_progress.total}`
                 : "-"}
             </p>
           </div>
         </CardContent>
       </Card>
 
-      {answers.isPending ? (
+      {result.isPending ? (
         <div className="space-y-3">
           <Skeleton className="h-32 rounded-lg" />
           <Skeleton className="h-32 rounded-lg" />
@@ -215,7 +207,7 @@ export default function EmployerTestAttemptGradingPage() {
         <div className="space-y-4">
           {manualAnswers.map((answer, index) => {
             const questionId = answer.question_id
-            const maxPoints = answer.question?.points ?? 0
+            const maxPoints = answer.max_points
             const draft = drafts[String(questionId)] ?? { awarded_points: "", reviewer_note: "" }
 
             return (
@@ -223,26 +215,26 @@ export default function EmployerTestAttemptGradingPage() {
                 <CardContent className="space-y-4 p-5">
                   <div>
                     <p className="font-medium text-text-primary">
-                      {index + 1}. {answer.question?.question_text ?? t("tests.unknownQuestion")}
+                      {index + 1}. {answer.question_text ?? t("tests.unknownQuestion")}
                     </p>
                     <p className="text-xs text-text-muted">
-                      {answer.question?.question_type ?? "-"} - {maxPoints} {t("tests.points")}
+                      {valueOf(answer.question_type, "-")} - {maxPoints} {t("tests.points")}
                     </p>
                   </div>
 
                   <div className="rounded-lg border border-border bg-background p-3 text-sm">
                     <p className="mb-1 text-xs font-medium text-text-muted">{t("tests.candidateAnswer")}</p>
                     <p className="whitespace-pre-wrap text-text-secondary">{answerText(answer)}</p>
-                    {answer.uploaded_file && (
+                    {answer.file?.download_available && (
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
                         className="mt-3"
-                        onClick={() => void downloadFile(questionId, answer.uploaded_file?.file_name)}
+                        onClick={() => void downloadFile(questionId, answer.file?.original_name ?? undefined)}
                       >
                         <Download className="h-4 w-4" />
-                        {answer.uploaded_file.file_name ?? t("tests.downloadFile")}
+                        {answer.file.original_name ?? t("tests.downloadFile")}
                       </Button>
                     )}
                   </div>
