@@ -1,0 +1,184 @@
+import {
+  ClipboardCheck,
+  FileText,
+  ListChecks,
+  MailQuestion,
+  MessageCircle,
+  User,
+} from "lucide-react"
+import { useTranslation } from "react-i18next"
+import PageHeader from "@/components/shared/headers/PageHeader"
+import ErrorState from "@/components/shared/states/ErrorState"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import CandidateInfoTab from "../tabs/CandidateInfoTab"
+import CoverLetterTab from "../tabs/CoverLetterTab"
+import InterviewsTab from "../tabs/InterviewsTab"
+import ScreeningAnswersTab from "../tabs/ScreeningAnswersTab"
+import TestsTab from "../tabs/TestsTab"
+import FinalReviewPanel from "../FinalReviewPanel"
+import InformationRequests from "../InformationRequests"
+import InternalNotes from "../InternalNotes"
+import ScheduleInterviewDialog from "../ScheduleInterviewDialog"
+import type { EmployerApplicantDetailsModel } from "../../hooks/useEmployerApplicantDetailsPage"
+
+interface EmployerApplicantDetailsViewProps {
+  model: EmployerApplicantDetailsModel
+}
+
+export default function EmployerApplicantDetailsView({ model }: EmployerApplicantDetailsViewProps) {
+  const { t } = useTranslation("employerApplicants")
+
+  if (model.isError) {
+    return (
+      <ErrorState
+        title={t("errors.title")}
+        description={t("errors.description")}
+        retry={() => void model.refetch()}
+      />
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title={t("detailTitle")}
+        description={model.candidateName}
+        icon={User}
+        showBackButton
+        backButtonLabel={t("actions.back")}
+        onBackClick={model.goBack}
+      />
+
+      {model.isPending ? (
+        <ApplicantDetailsSkeleton />
+      ) : model.application ? (
+        <>
+          <Tabs value={model.activeTab} onValueChange={model.setActiveTab} className="space-y-6">
+            <ApplicantDetailsTabs model={model} />
+            <ApplicantDetailsTabContent model={model} />
+          </Tabs>
+
+          <ScheduleInterviewDialog
+            application={model.application}
+            open={model.showScheduleDialog}
+            isPending={model.isCreateInterviewPending}
+            onOpenChange={model.setShowScheduleDialog}
+            onSubmit={model.handleScheduleInterview}
+          />
+        </>
+      ) : null}
+    </div>
+  )
+}
+
+function ApplicantDetailsSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-48 w-full rounded-xl" />
+      <Skeleton className="h-64 w-full rounded-xl" />
+    </div>
+  )
+}
+
+function ApplicantDetailsTabs({ model }: { model: EmployerApplicantDetailsModel }) {
+  const { t } = useTranslation("employerApplicants")
+  const application = model.application
+
+  if (!application) return null
+
+  return (
+    <TabsList>
+      <TabsTrigger value="candidate" className="gap-2">
+        <User className="h-4 w-4" />
+        {t("tabs.candidate")}
+      </TabsTrigger>
+      {application.screening_answers && application.screening_answers.length > 0 && (
+        <TabsTrigger value="screening" className="gap-2">
+          <ClipboardCheck className="h-4 w-4" />
+          {t("tabs.screening")}
+        </TabsTrigger>
+      )}
+      {application.cover_letter && (
+        <TabsTrigger value="coverLetter" className="gap-2">
+          <FileText className="h-4 w-4" />
+          {t("tabs.coverLetter")}
+        </TabsTrigger>
+      )}
+      <TabsTrigger value="tests" className="gap-2">
+        <ListChecks className="h-4 w-4" />
+        {t("tabs.tests")}
+      </TabsTrigger>
+      <TabsTrigger value="interviews" className="gap-2">
+        <MessageCircle className="h-4 w-4" />
+        {t("tabs.interviews")}
+      </TabsTrigger>
+      {model.showFinalReview && (
+        <TabsTrigger value="finalReview" className="gap-2">
+          <MailQuestion className="h-4 w-4" />
+          {t("tabs.finalReview")}
+        </TabsTrigger>
+      )}
+    </TabsList>
+  )
+}
+
+function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetailsModel }) {
+  const application = model.application
+
+  if (!application) return null
+
+  return (
+    <>
+      <TabsContent value="candidate">
+        <div className="space-y-6">
+          <CandidateInfoTab
+            application={application}
+            candidateName={model.candidateName}
+            onStatusChange={model.handleStatusChange}
+            isStatusPending={model.isStatusPending}
+          />
+          {model.id && <InternalNotes applicationId={model.id} />}
+          {model.id && <InformationRequests applicationId={model.id} />}
+        </div>
+      </TabsContent>
+
+      {application.screening_answers && application.screening_answers.length > 0 && (
+        <TabsContent value="screening">
+          <ScreeningAnswersTab answers={application.screening_answers} />
+        </TabsContent>
+      )}
+
+      {application.cover_letter && (
+        <TabsContent value="coverLetter">
+          <CoverLetterTab coverLetter={application.cover_letter} />
+        </TabsContent>
+      )}
+
+      <TabsContent value="tests">
+        <TestsTab tests={model.tests} onViewAll={model.openFirstTest} onOpenTest={model.openTest} />
+      </TabsContent>
+
+      <TabsContent value="interviews">
+        <InterviewsTab interviews={model.interviews} onSchedule={() => model.setShowScheduleDialog(true)} />
+      </TabsContent>
+
+      {model.showFinalReview && (
+        <TabsContent value="finalReview">
+          <FinalReviewPanel
+            application={application}
+            tests={model.tests}
+            interviews={model.interviews}
+            isDecisionPending={model.isStatusPending}
+            isCvBusy={model.isCvBusy}
+            hasCv={model.hasCv}
+            onPreviewCv={model.handlePreviewCv}
+            onDownloadCv={model.handleDownloadCv}
+            onDecision={model.handleStatusDecision}
+            onRequestInformation={model.showCandidateTab}
+          />
+        </TabsContent>
+      )}
+    </>
+  )
+}
