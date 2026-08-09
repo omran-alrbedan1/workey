@@ -9,8 +9,6 @@ import EmployerJobDetailsPage from "@/features/employer/jobs/pages/EmployerJobDe
 import EmployerApplicantsPage from "@/features/employer/applicants/pages/EmployerApplicantsPage"
 import EmployerApplicantDetailsPage from "@/features/employer/applicants/pages/EmployerApplicantDetailsPage"
 import EmployerApplicantTestDetailsPage from "@/features/employer/applicants/pages/EmployerApplicantTestDetailsPage"
-import EmployerApplicantInternalNotesPage from "@/features/employer/applicants/pages/EmployerApplicantInternalNotesPage"
-import EmployerApplicantInformationRequestsPage from "@/features/employer/applicants/pages/EmployerApplicantInformationRequestsPage"
 import EmployerInterviewsPage from "@/features/employer/interviews/pages/EmployerInterviewsPage"
 import EmployerInterviewDetailsPage from "@/features/employer/interviews/pages/EmployerInterviewDetailsPage"
 import EmployerTestsPage from "@/features/employer/tests/pages/EmployerTestsPage"
@@ -42,11 +40,6 @@ export const employerRoutes: RouteObject = {
     { path: "jobs/:jobId/applicants", element: <EmployerApplicantsPage /> },
     { path: ROUTES.employer.applicantDetails(":id"), element: <EmployerApplicantDetailsPage /> },
     { path: ROUTES.employer.applicantTestDetails(":id", ":assignmentId"), element: <EmployerApplicantTestDetailsPage /> },
-    { path: ROUTES.employer.applicantInternalNotes(":id"), element: <EmployerApplicantInternalNotesPage /> },
-    {
-      path: ROUTES.employer.applicantInformationRequests(":id"),
-      element: <EmployerApplicantInformationRequestsPage />,
-    },
     { path: ROUTES.employer.interviews, element: <EmployerInterviewsPage /> },
     { path: ROUTES.employer.interviewDetails(":id"), element: <EmployerInterviewDetailsPage /> },
     { path: ROUTES.employer.tests, element: <EmployerTestsPage /> },

@@ -131,6 +131,36 @@ export interface ApplicationScreeningAnswer {
 export interface JobPostingReference {
   id: string | number
   title: string
+  department?: string | null
+  description?: string | null
+  employment_type?: KeyValueField | null
+  experience_level?: KeyValueField | null
+  education_level?: KeyValueField | null
+  work_mode?: KeyValueField | null
+  location?: string | null
+  city?: string | null
+  salary_min?: string | number | null
+  salary_max?: string | number | null
+  company?: {
+    id?: string | number
+    name?: string
+    industry?: string | null
+    website?: string | null
+    location?: string | null
+    logo_url?: string | null
+  } | null
+  skills?: ApplicationSkillReference[]
+  required_skills?: ApplicationSkillReference[]
+  nice_to_have_skills?: ApplicationSkillReference[]
+}
+
+export interface ApplicationSkillReference {
+  id?: string | number
+  name?: string
+  slug?: string
+  icon_url?: string | null
+  requirement_type?: KeyValueField | null
+  weight?: number | null
 }
 
 // Main Application Types
@@ -175,6 +205,8 @@ export interface EmployerApplicantListItem {
 export interface EmployerApplicantDetail extends EmployerApplicantListItem {
   cover_letter?: string | null
   consent_flags?: Record<string, boolean>
+  consent_to_share_profile?: boolean
+  snapshot_captured_at?: string | null
   screening_answers?: ApplicationScreeningAnswer[]
   submitted_snapshot?: ApplicationSnapshot
   status_history?: ApplicationStatusHistoryEntry[]

@@ -1,4 +1,9 @@
 import {
+  ClipboardCheck,
+  FileText,
+  ListChecks,
+  MailQuestion,
+  MessageCircle,
   User,
 } from "lucide-react"
 import { useState } from "react"
@@ -144,17 +149,35 @@ export default function EmployerApplicantDetailsPage() {
         <>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList>
-              <TabsTrigger value="candidate">{t("tabs.candidate")}</TabsTrigger>
+              <TabsTrigger value="candidate" className="gap-2">
+                <User className="h-4 w-4" />
+                {t("tabs.candidate")}
+              </TabsTrigger>
               {application.screening_answers && application.screening_answers.length > 0 && (
-                <TabsTrigger value="screening">{t("tabs.screening")}</TabsTrigger>
+                <TabsTrigger value="screening" className="gap-2">
+                  <ClipboardCheck className="h-4 w-4" />
+                  {t("tabs.screening")}
+                </TabsTrigger>
               )}
               {application.cover_letter && (
-                <TabsTrigger value="coverLetter">{t("tabs.coverLetter")}</TabsTrigger>
+                <TabsTrigger value="coverLetter" className="gap-2">
+                  <FileText className="h-4 w-4" />
+                  {t("tabs.coverLetter")}
+                </TabsTrigger>
               )}
-              <TabsTrigger value="tests">{t("tabs.tests")}</TabsTrigger>
-              <TabsTrigger value="interviews">{t("tabs.interviews")}</TabsTrigger>
+              <TabsTrigger value="tests" className="gap-2">
+                <ListChecks className="h-4 w-4" />
+                {t("tabs.tests")}
+              </TabsTrigger>
+              <TabsTrigger value="interviews" className="gap-2">
+                <MessageCircle className="h-4 w-4" />
+                {t("tabs.interviews")}
+              </TabsTrigger>
               {shouldShowFinalReview(application) && (
-                <TabsTrigger value="finalReview">{t("tabs.finalReview")}</TabsTrigger>
+                <TabsTrigger value="finalReview" className="gap-2">
+                  <MailQuestion className="h-4 w-4" />
+                  {t("tabs.finalReview")}
+                </TabsTrigger>
               )}
             </TabsList>
 
@@ -163,11 +186,6 @@ export default function EmployerApplicantDetailsPage() {
                 <CandidateInfoTab
                   application={application}
                   candidateName={candidateName}
-                  onDownloadCv={handleDownloadCv}
-                  isDownloading={isCvBusy}
-                  hasCv={hasSelectedCv(application)}
-                  onNavigateToInternalNotes={() => id && navigate(ROUTES.employer.applicantInternalNotes(id))}
-                  onNavigateToInformationRequests={() => id && navigate(ROUTES.employer.applicantInformationRequests(id))}
                   onStatusChange={handleStatusChange}
                   isStatusPending={statusMutation.isPending}
                 />
@@ -217,7 +235,7 @@ export default function EmployerApplicantDetailsPage() {
                   onPreviewCv={handlePreviewCv}
                   onDownloadCv={handleDownloadCv}
                   onDecision={handleStatusDecision}
-                  onRequestInformation={() => id && navigate(ROUTES.employer.applicantInformationRequests(id))}
+                  onRequestInformation={() => setActiveTab("candidate")}
                 />
               </TabsContent>
             )}
