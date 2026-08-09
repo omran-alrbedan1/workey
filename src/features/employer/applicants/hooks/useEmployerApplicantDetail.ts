@@ -2,7 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { employerApplicantsService } from "../services/employerApplicants.service"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
-import type { ApplicationStatusChangeInput } from "../types/employerApplicants.types"
+import type { ApplicationStatusChangeInput, EmployerApplicant } from "../types/employerApplicants.types"
+import { hasSelectedCv, selectedCvDownloadName } from "../utils/cv"
 
 export function useEmployerApplicantDetail(applicationId?: string | number) {
   return useQuery({
@@ -13,12 +14,17 @@ export function useEmployerApplicantDetail(applicationId?: string | number) {
 }
 
 export function useDownloadCv() {
-  return async (applicationId: string | number) => {
+  return async (application: EmployerApplicant | string | number) => {
+    if (typeof application === "object" && !hasSelectedCv(application)) {
+      throw new Error("No CV attached to this application")
+    }
+
+    const applicationId = typeof application === "object" ? application.id : application
     const blob = await employerApplicantsService.downloadSelectedCv(applicationId)
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `cv-${applicationId}.pdf`
+    a.download = typeof application === "object" ? selectedCvDownloadName(application) : `cv-${applicationId}.pdf`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -27,7 +33,12 @@ export function useDownloadCv() {
 }
 
 export function usePreviewCv() {
-  return async (applicationId: string | number) => {
+  return async (application: EmployerApplicant | string | number) => {
+    if (typeof application === "object" && !hasSelectedCv(application)) {
+      throw new Error("No CV attached to this application")
+    }
+
+    const applicationId = typeof application === "object" ? application.id : application
     const blob = await employerApplicantsService.previewSelectedCv(applicationId)
     const url = URL.createObjectURL(blob)
     window.open(url, "_blank", "noopener,noreferrer")

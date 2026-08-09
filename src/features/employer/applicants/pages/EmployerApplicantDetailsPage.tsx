@@ -21,7 +21,6 @@ import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import InternalNotes from "../components/InternalNotes"
 import InformationRequests from "../components/InformationRequests"
-import ApplicationTestsDialog from "../components/ApplicationTestsDialog"
 import ScheduleInterviewDialog from "../components/ScheduleInterviewDialog"
 import CandidateInfoTab from "../components/tabs/CandidateInfoTab"
 import ScreeningAnswersTab from "../components/tabs/ScreeningAnswersTab"
@@ -32,6 +31,7 @@ import FinalReviewPanel from "../components/FinalReviewPanel"
 import { keyOf } from "@/lib/keyValue"
 import type { ApplicationStatusKey, EmployerApplicantDetail, EmployerInterviewInput } from "../types/employerApplicants.types"
 import { candidateDisplayName } from "../utils/candidateDisplay"
+import { hasSelectedCv } from "../utils/cv"
 
 function shouldShowFinalReview(application: EmployerApplicantDetail) {
   const status = keyOf(application.status)
@@ -55,15 +55,18 @@ export default function EmployerApplicantDetailsPage() {
   const createInterview = useCreateEmployerInterview()
 
   const [isCvBusy, setIsCvBusy] = useState(false)
-  const [showTestsDialog, setShowTestsDialog] = useState(false)
   const [showScheduleDialog, setShowScheduleDialog] = useState(false)
   const [activeTab, setActiveTab] = useState("candidate")
 
   const handleDownloadCv = async () => {
-    if (!id) return
+    if (!application || !hasSelectedCv(application)) {
+      showErrorToast("No CV attached to this application")
+      return
+    }
+
     setIsCvBusy(true)
     try {
-      await downloadCv(id)
+      await downloadCv(application)
       showSuccessToast("CV downloaded")
     } catch {
       showErrorToast("Failed to download CV")
@@ -73,10 +76,14 @@ export default function EmployerApplicantDetailsPage() {
   }
 
   const handlePreviewCv = async () => {
-    if (!id) return
+    if (!application || !hasSelectedCv(application)) {
+      showErrorToast("CV preview is unavailable")
+      return
+    }
+
     setIsCvBusy(true)
     try {
-      await previewCv(id)
+      await previewCv(application)
     } catch {
       showErrorToast("CV preview is unavailable")
     } finally {
@@ -152,16 +159,21 @@ export default function EmployerApplicantDetailsPage() {
             </TabsList>
 
             <TabsContent value="candidate">
-              <CandidateInfoTab
-                application={application}
-                candidateName={candidateName}
-                onDownloadCv={handleDownloadCv}
-                isDownloading={isCvBusy}
-                onNavigateToInternalNotes={() => id && navigate(ROUTES.employer.applicantInternalNotes(id))}
-                onNavigateToInformationRequests={() => id && navigate(ROUTES.employer.applicantInformationRequests(id))}
-                onStatusChange={handleStatusChange}
-                isStatusPending={statusMutation.isPending}
-              />
+              <div className="space-y-6">
+                <CandidateInfoTab
+                  application={application}
+                  candidateName={candidateName}
+                  onDownloadCv={handleDownloadCv}
+                  isDownloading={isCvBusy}
+                  hasCv={hasSelectedCv(application)}
+                  onNavigateToInternalNotes={() => id && navigate(ROUTES.employer.applicantInternalNotes(id))}
+                  onNavigateToInformationRequests={() => id && navigate(ROUTES.employer.applicantInformationRequests(id))}
+                  onStatusChange={handleStatusChange}
+                  isStatusPending={statusMutation.isPending}
+                />
+                <InternalNotes applicationId={id!} />
+                <InformationRequests applicationId={id!} />
+              </div>
             </TabsContent>
 
             {application.screening_answers && application.screening_answers.length > 0 && (
@@ -177,7 +189,16 @@ export default function EmployerApplicantDetailsPage() {
             )}
 
             <TabsContent value="tests">
-              <TestsTab tests={tests} onViewAll={() => setShowTestsDialog(true)} />
+              <TestsTab
+                tests={tests}
+                onViewAll={() => {
+                  const firstTest = tests.data?.items[0]
+                  if (firstTest) navigate(ROUTES.employer.applicantTestDetails(application.id, firstTest.id))
+                }}
+                onOpenTest={(assignment) =>
+                  navigate(ROUTES.employer.applicantTestDetails(application.id, assignment.id))
+                }
+              />
             </TabsContent>
 
             <TabsContent value="interviews">
@@ -192,6 +213,7 @@ export default function EmployerApplicantDetailsPage() {
                   interviews={interviews}
                   isDecisionPending={statusMutation.isPending}
                   isCvBusy={isCvBusy}
+                  hasCv={hasSelectedCv(application)}
                   onPreviewCv={handlePreviewCv}
                   onDownloadCv={handleDownloadCv}
                   onDecision={handleStatusDecision}
@@ -200,20 +222,6 @@ export default function EmployerApplicantDetailsPage() {
               </TabsContent>
             )}
           </Tabs>
-
-          {/* Internal Notes */}
-          <InternalNotes applicationId={id!} />
-
-          {/* Information Requests */}
-          <InformationRequests applicationId={id!} />
-
-          {/* Tests Dialog */}
-          <ApplicationTestsDialog
-            application={application || null}
-            open={showTestsDialog}
-            onOpenChange={setShowTestsDialog}
-            onNextStep={(_applicationId, status) => statusMutation.mutateAsync({ status })}
-          />
 
           {/* Schedule Interview Dialog */}
           <ScheduleInterviewDialog

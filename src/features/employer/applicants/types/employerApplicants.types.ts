@@ -27,12 +27,35 @@ export type ApplicationStatusKey =
 // Application Snapshot - Candidate data at time of application
 export interface ApplicationSnapshot {
   profile?: ApplicationSnapshotProfile
+  cv?: ApplicationSnapshotCv
+  generated_document?: ApplicationSnapshotDocument
   cv_snapshot_id?: string | number
   cv_snapshot_path?: string
   snapshot_status?: "available" | "not_available" | "partial"
   captured_at?: string
   origin?: "initial_application" | "profile_update"
   accuracy?: "high" | "medium" | "low"
+}
+
+export interface ApplicationSnapshotCv {
+  source_cv_file_id?: string | number | null
+  original_name?: string | null
+  mime_type?: string | null
+  extension?: string | null
+  size_bytes?: number | null
+  checksum_sha256?: string | null
+  preview_supported?: boolean
+  allowed_actions?: string[]
+  preview_url?: string | null
+  download_url?: string | null
+}
+
+export interface ApplicationSnapshotDocument {
+  source?: string | null
+  mime_type?: string | null
+  allowed_actions?: string[]
+  preview_url?: string | null
+  download_url?: string | null
 }
 
 export interface ApplicationSnapshotProfile {
@@ -114,6 +137,12 @@ export interface JobPostingReference {
 export interface EmployerApplicantListItem {
   id: string | number
   job_posting: JobPostingReference
+  job_posting_id?: string | number
+  job_seeker_profile_id?: string | number
+  selected_cv_file_id?: string | number | null
+  selected_cv?: ApplicationSelectedCv | null
+  submitted_cv?: ApplicationSubmittedCv | null
+  snapshot_status?: KeyValueField | null
   status: ApplicationStatus
   applied_at?: string
   created_at?: string
@@ -140,6 +169,7 @@ export interface EmployerApplicantListItem {
   matching_score?: number | null
   tests_count?: number | null
   interviews_count?: number | null
+  submitted_cv_name?: string | null
 }
 
 export interface EmployerApplicantDetail extends EmployerApplicantListItem {
@@ -166,6 +196,26 @@ export interface EmployerApplicantDetail extends EmployerApplicantListItem {
 
 // Backward compatibility alias
 export type EmployerApplicant = EmployerApplicantDetail
+
+export interface ApplicationSelectedCv {
+  id: string | number
+  original_name?: string | null
+  version_label?: string | null
+  mime_type?: string | null
+  extension?: string | null
+  size_bytes?: number | null
+  download_url?: string | null
+  uploaded_at?: string | null
+}
+
+export interface ApplicationSubmittedCv {
+  source?: string | null
+  mime_type?: string | null
+  preview_url?: string | null
+  download_url?: string | null
+  allowed_actions?: string[]
+  captured_at?: string | null
+}
 
 // Status History
 export interface ApplicationStatusHistoryEntry {

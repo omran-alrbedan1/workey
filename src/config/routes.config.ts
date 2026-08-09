@@ -44,6 +44,8 @@ export const ROUTES = Object.freeze({
     jobApplicants: (id: string | number) => `/employer/jobs/${id}/applicants`,
     applicants: "/employer/applicants",
     applicantDetails: (id: string | number) => `/employer/applicants/${id}`,
+    applicantTestDetails: (applicationId: string | number, assignmentId: string | number) =>
+      `/employer/applicants/${applicationId}/tests/${assignmentId}`,
     applicantInternalNotes: (id: string | number) => `/employer/applicants/${id}/internal-notes`,
     applicantInformationRequests: (id: string | number) =>
       `/employer/applicants/${id}/information-requests`,

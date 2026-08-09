@@ -29,6 +29,7 @@ interface CandidateInfoTabProps {
   candidateName: string
   onDownloadCv: () => void
   isDownloading: boolean
+  hasCv: boolean
   onNavigateToInternalNotes: () => void
   onNavigateToInformationRequests: () => void
   onStatusChange: (status: ApplicationStatusKey) => void
@@ -40,6 +41,7 @@ export default function CandidateInfoTab({
   candidateName,
   onDownloadCv,
   isDownloading,
+  hasCv,
   onNavigateToInternalNotes,
   onNavigateToInformationRequests,
   onStatusChange,
@@ -165,11 +167,15 @@ export default function CandidateInfoTab({
           <Button
             type="button"
             onClick={onDownloadCv}
-            disabled={isDownloading}
+            disabled={isDownloading || !hasCv}
             className="gap-2"
           >
             <Download className="h-4 w-4" />
-            {isDownloading ? t("actions.downloading") : t("actions.downloadCv")}
+            {isDownloading
+              ? t("actions.downloading")
+              : hasCv
+                ? t("actions.downloadCv")
+                : t("actions.noCv", { defaultValue: "No CV attached" })}
           </Button>
 
           <Button

@@ -19,7 +19,7 @@ interface TestAssignmentRetakePanelProps {
   assignmentId: string | number
   currentMaxAttempts?: number | null
   testTitle?: string
-  onClose: () => void
+  onClose?: () => void
   onUpdated?: () => void | Promise<void>
 }
 
@@ -140,9 +140,11 @@ export default function TestAssignmentRetakePanel({
           </h3>
           <p className="text-sm text-text-muted">{testTitle || t("tests.untitled")}</p>
         </div>
-        <Button type="button" variant="outline" size="sm" onClick={onClose}>
-          {t("tests.closeRetake")}
-        </Button>
+        {onClose && (
+          <Button type="button" variant="outline" size="sm" onClick={onClose}>
+            {t("tests.closeRetake")}
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

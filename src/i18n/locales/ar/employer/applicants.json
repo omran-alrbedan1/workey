@@ -1,17 +1,18 @@
 {
   "title": "المتقدمون",
-  "description": "راجع المرشحين وانقلهم بين مراحل التوظيف.",
+  "description": "راجع المرشحين الذين تقدموا إلى وظائفك وانقلهم بين مراحل التوظيف.",
   "unknownCandidate": "مرشح غير معروف",
-  "tabs": {
-    "candidate": "معلومات المرشح",
-    "screening": "الأسئلة التمهيدية",
-    "coverLetter": "رسالة التقديم",
-    "tests": "الاختبارات",
-    "interviews": "المقابلات"
-  },
   "jobFilter": {
     "label": "الوظيفة",
     "noJobs": "أنشئ وظيفة لبدء استقبال المتقدمين"
+  },
+  "tabs": {
+    "candidate": "المرشح",
+    "screening": "الأسئلة التمهيدية",
+    "coverLetter": "رسالة التقديم",
+    "tests": "الاختبارات",
+    "interviews": "المقابلات",
+    "finalReview": "المراجعة النهائية"
   },
   "columns": {
     "candidate": "المرشح",
@@ -31,11 +32,16 @@
     "scheduleInterview": "جدولة مقابلة",
     "viewDetails": "عرض التفاصيل",
     "downloadCv": "تحميل السيرة الذاتية",
-    "downloading": "جارٍ التحميل...",
+    "downloading": "جار التحميل...",
+    "noCv": "لا توجد سيرة ذاتية",
+    "internalNotes": "الملاحظات الداخلية",
+    "informationRequests": "طلبات المعلومات",
+    "backToApplicant": "العودة إلى المتقدم",
     "label": "الإجراءات",
     "menuFor": "إجراءات {{name}}",
-    "internalNotes": "الملاحظات الداخلية",
-    "informationRequests": "طلبات المعلومات"
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "processing": "جار المعالجة..."
   },
   "answers": {
     "yes": "نعم",
@@ -43,21 +49,28 @@
   },
   "screeningAnswers": {
     "title": "إجابات الأسئلة التمهيدية",
-    "empty": "لا توجد إجابات أسئلة تمهيدية."
+    "empty": "لا توجد إجابات على الأسئلة التمهيدية."
   },
   "coverLetter": {
     "title": "رسالة التقديم",
     "empty": "لم يقدم المرشح رسالة تقديم."
   },
   "statuses": {
-    "shortlisted": "القائمة المختصرة",
+    "submitted": "مقدم",
+    "under_review": "قيد المراجعة",
+    "shortlisted": "في القائمة المختصرة",
     "test_pending": "بانتظار الاختبار",
     "test_completed": "اكتمل الاختبار",
     "interview_pending": "بانتظار المقابلة",
+    "interview_scheduled": "تمت جدولة المقابلة",
+    "interview_completed": "اكتملت المقابلة",
     "final_review": "المراجعة النهائية",
     "on_hold": "معلق",
     "accepted": "مقبول",
-    "rejected": "مرفوض"
+    "rejected": "مرفوض",
+    "withdrawn": "منسحب",
+    "need_more_information": "بحاجة إلى معلومات إضافية",
+    "unknown": "غير معروف"
   },
   "empty": {
     "title": "لا يوجد متقدمون بعد",
@@ -65,18 +78,16 @@
   },
   "errors": {
     "title": "تعذر تحميل المتقدمين",
-    "description": "تحقق من اتصالك وحاول مرة أخرى."
+    "description": "تحقق من اتصالك وحاول مرة أخرى.",
+    "invalidTransition": "لا يمكن الانتقال إلى هذه الحالة.",
+    "terminalState": "لا يمكن تغيير الحالة من حالة نهائية."
   },
   "toasts": {
     "statusUpdated": "تم تحديث حالة طلب التقديم.",
     "interviewScheduled": "تمت جدولة المقابلة بنجاح."
   },
   "interview": {
-    "title": "مقابلات المرشح",
-    "defaultType": "مقابلة",
-    "noDate": "لم يتم تحديد الموعد",
-    "moreCount": "+{{count}} مقابلات أخرى",
-    "empty": "لا توجد مقابلات مجدولة لطلب التقديم هذا.",
+    "title": "جدولة مقابلة",
     "description": "حدد موعد مقابلة مع {{name}}.",
     "type": "نوع المقابلة",
     "typePlaceholder": "اختر نوع المقابلة",
@@ -105,20 +116,25 @@
     "internalNotePlaceholder": "ملاحظة خاصة بفريقك للتحضير",
     "cancel": "إلغاء",
     "schedule": "جدولة المقابلة",
-    "scheduling": "جارٍ الجدولة..."
+    "scheduling": "جار الجدولة...",
+    "defaultType": "مقابلة",
+    "noDate": "لم يتم تحديد الموعد",
+    "moreCount": "+{{count}} مقابلات أخرى",
+    "empty": "لا توجد مقابلات مجدولة لهذا الطلب."
   },
   "tests": {
     "title": "اختبارات المرشح",
     "viewAll": "عرض جميع الاختبارات",
-    "loadError": "تعذر تحميل الاختبارات المكلّفة.",
+    "loadError": "تعذر تحميل الاختبارات المعينة.",
     "retry": "حاول مرة أخرى",
-    "empty": "لا توجد اختبارات مكلّفة لطلب التقديم هذا.",
+    "empty": "لا توجد اختبارات معينة لهذا الطلب.",
     "untitled": "اختبار تقييم",
     "maxScore": "الدرجة القصوى: {{score}}",
     "deadlineLabel": "الموعد النهائي: {{deadline}}",
     "evaluate": "تقييم",
     "gradeAnswers": "تقييم الإجابات",
-    "manageDeadline": "إدارة الموعد",
+    "openGradingPage": "فتح الصفحة",
+    "manageDeadline": "إدارة الموعد النهائي",
     "manageRetakes": "إدارة إعادة الاختبار",
     "result": "الدرجة: {{score}} / {{max}}",
     "status": "الحالة: {{status}}",
@@ -126,18 +142,21 @@
     "failed": "راسب",
     "moreCount": "+{{count}} اختبارات أخرى",
     "evaluationTitle": "تقييم المحاولة المرسلة",
-    "score": "الدرجة (0–{{max}})",
+    "score": "الدرجة (0-{{max}})",
     "feedback": "الملاحظات",
     "cancel": "إلغاء",
     "submit": "إرسال التقييم",
     "objective": "اختيار من متعدد",
     "essay": "مقالي",
-    "points": "درجة",
+    "points": "نقطة",
     "showDetails": "عرض التفاصيل",
     "hideDetails": "إخفاء التفاصيل",
-    "openForGradingHint": "افتح التقييم لمراجعة إجابات المرشح والملفات والدرجات اليدوية.",
+    "openForGradingHint": "افتح صفحة التقييم لمراجعة إجابات المرشح والملفات والدرجات اليدوية.",
     "notSubmittedHint": "لم يتم إرسال هذه المحاولة بعد.",
     "gradingTitle": "تقييم الإجابات",
+    "gradingPageTitle": "تقييم محاولة الاختبار",
+    "gradingPageDescription": "راجع وقيم المحاولة رقم {{attempt}}.",
+    "backToTests": "العودة إلى الاختبارات",
     "closeGrading": "إغلاق التقييم",
     "gradingStatus": "حالة التقييم",
     "currentScore": "الدرجة الحالية",
@@ -146,8 +165,8 @@
     "unknownQuestion": "السؤال",
     "candidateAnswer": "إجابة المرشح",
     "downloadFile": "تحميل الملف",
-    "awardedPoints": "الدرجات (الحد {{max}})",
-    "reviewerNote": "ملاحظة المراجع",
+    "awardedPoints": "النقاط (الحد {{max}})",
+    "reviewerNote": "ملاحظة المقيم",
     "saveGrade": "حفظ الدرجة",
     "deleteGrade": "حذف الدرجة",
     "bulkSave": "حفظ كل الدرجات",
@@ -169,7 +188,7 @@
     "refreshHistory": "تحديث السجل",
     "deadlineHistoryEmpty": "لا توجد تغييرات على الموعد بعد.",
     "deadlineActor": "تم التغيير بواسطة {{actor}}",
-    "deadlineValidation": "اختر موعداً جديداً وأدخل السبب.",
+    "deadlineValidation": "اختر موعدا جديدا وأدخل السبب.",
     "deadlineUpdateError": "تعذر تحديث الموعد.",
     "deadlineHistoryError": "تعذر تحميل سجل المواعيد.",
     "retakeTitle": "إعادة الاختبار",
@@ -188,8 +207,11 @@
     "attemptTimeline": "الجدول الزمني للمحاولات",
     "refreshTimeline": "تحديث الجدول",
     "attemptTimelineEmpty": "لا توجد محاولات متاحة بعد.",
-    "attemptNumber": "المحاولة #{{n}}",
+    "attemptNumber": "المحاولة رقم {{n}}",
     "attemptDates": "بدأت: {{started}} · أرسلت: {{submitted}}",
+    "submittedAt": "أرسلت: {{submitted}}",
+    "attemptsUsed": "المحاولات المستخدمة",
+    "attemptsRemaining": "المحاولات المتبقية",
     "noAttemptScore": "لا توجد درجة بعد",
     "timelineScore": "{{score}} / {{max}} ({{percentage}}%)",
     "retakePolicyValidation": "أدخل الحد الأقصى للمحاولات والسبب.",
@@ -213,6 +235,7 @@
   },
   "internalNotes": {
     "title": "الملاحظات الداخلية",
+    "pageTitle": "الملاحظات الداخلية",
     "addNote": "إضافة ملاحظة",
     "empty": "لا توجد ملاحظات داخلية بعد.",
     "dialogTitle": "ملاحظة داخلية",
@@ -220,14 +243,15 @@
     "placeholder": "اكتب ملاحظتك الداخلية هنا...",
     "cancel": "إلغاء",
     "submit": "حفظ الملاحظة",
-    "submitting": "جارٍ الحفظ..."
+    "submitting": "جار الحفظ..."
   },
   "informationRequests": {
     "title": "طلبات المعلومات",
+    "pageTitle": "طلبات المعلومات",
     "addRequest": "طلب معلومات",
     "empty": "لا توجد طلبات معلومات بعد.",
     "dialogTitle": "طلب معلومات",
-    "dialogDescription": "اطب معلومات إضافية من المرشح.",
+    "dialogDescription": "اطلب معلومات إضافية من المرشح.",
     "messageLabel": "الرسالة",
     "messagePlaceholder": "اكتب رسالتك للمرشح...",
     "dueAtLabel": "تاريخ الاستحقاق (اختياري)",
@@ -241,6 +265,112 @@
     "responseTitle": "رد المرشح",
     "cancel": "إلغاء",
     "submit": "إرسال الطلب",
-    "submitting": "جارٍ الإرسال..."
+    "submitting": "جار الإرسال...",
+    "cancelTitle": "إلغاء طلب المعلومات",
+    "cancelDescription": "يرجى إدخال سبب إلغاء طلب المعلومات هذا.",
+    "cancelReasonPlaceholder": "أدخل سبب الإلغاء..."
+  },
+  "statusChange": {
+    "title": "تغيير حالة الطلب",
+    "description": "غير حالة طلب التقديم هذا.",
+    "noteLabel": "ملاحظة",
+    "notePlaceholder": "أضف ملاحظة حول تغيير الحالة (اختياري)...",
+    "noteRequired": "الملاحظة مطلوبة لهذا التغيير."
+  },
+  "statusHistory": {
+    "title": "سجل الحالة",
+    "empty": "لا يوجد سجل حالة متاح."
+  },
+  "finalReview": {
+    "title": "المراجعة النهائية",
+    "terminal": "تم تسجيل القرار النهائي",
+    "summary": {
+      "candidate": "المرشح",
+      "job": "الوظيفة",
+      "status": "الحالة الحالية",
+      "applied": "تاريخ التقديم"
+    },
+    "cv": {
+      "preview": "معاينة السيرة الذاتية",
+      "download": "تحميل السيرة الذاتية"
+    },
+    "snapshot": {
+      "title": "لقطة بيانات المرشح عند التقديم",
+      "empty": "لا توجد لقطة بيانات مقدمة.",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "location": "الموقع",
+      "availability": "التوفر",
+      "headline": "العنوان المهني",
+      "experience": "الخبرة",
+      "education": "التعليم"
+    },
+    "application": {
+      "title": "ملخص الطلب"
+    },
+    "tests": {
+      "title": "أدلة الاختبارات",
+      "attempt": "المحاولة {{attempt}} من {{max}} · المتبقي {{remaining}}",
+      "grading": "التقييم",
+      "score": "الدرجة",
+      "percentage": "النسبة",
+      "submittedAt": "تاريخ الإرسال"
+    },
+    "interviews": {
+      "title": "أدلة المقابلات",
+      "confirmation": "تأكيد المرشح",
+      "candidateAttendance": "حضور المرشح",
+      "interviewerAttendance": "حضور المقابل"
+    },
+    "matching": {
+      "title": "سياق المطابقة",
+      "supportOnly": "المطابقة للمساعدة في القرار فقط، ولا تتخذ القرار النهائي تلقائيا.",
+      "unavailable": "سياق المطابقة غير متاح لهذا الطلب.",
+      "score": "الدرجة",
+      "version": "الإصدار",
+      "reasons": "الأسباب",
+      "matchedSkills": "المهارات المطابقة",
+      "missingSkills": "المهارات الناقصة"
+    },
+    "notes": {
+      "title": "الملاحظات الداخلية"
+    },
+    "timeline": {
+      "title": "الخط الزمني للحالة"
+    },
+    "actions": {
+      "accept": "قبول المرشح",
+      "reject": "رفض المرشح",
+      "hold": "وضع الطلب قيد الانتظار",
+      "requestInfo": "طلب معلومات إضافية"
+    },
+    "decisions": {
+      "title": "لوحة القرار",
+      "viewOnly": "يمكنك مراجعة الأدلة، لكن لا تملك صلاحية اتخاذ قرار نهائي.",
+      "terminal": "هذا الطلب في حالة نهائية. إجراءات القرار معطلة.",
+      "noTransitions": "لا توجد انتقالات قرار نهائي متاحة حاليا.",
+      "manualOnlyTitle": "قرار يدوي فقط",
+      "manualOnly": "الدرجات والمطابقة والاختبارات وتوصيات المقابلات أدلة فقط. يجب أن يؤكد شخص القرار النهائي صراحة.",
+      "metadataTitle": "بيانات العرض",
+      "metadataUnsupported": "حقول expected_start_date و offer_note و candidate_message ليست ضمن حمولة واجهة تغيير الحالة الحالية، لذلك لا يتم إرسالها من هذه الشاشة.",
+      "internalNote": "ملاحظة القرار الداخلية",
+      "internalNotePlaceholder": "سجل سبب هذا القرار. سيتم إرسالها كملاحظة في سجل الحالة.",
+      "noteRequired": "الملاحظة الداخلية مطلوبة.",
+      "finalWarning": "هذا قرار نهائي. سيتم إغلاق الطلب إذا تم قبوله أو رفضه.",
+      "candidateMessageUnsupported": "رسائل القرار الموجهة للمرشح غير مدعومة في عقد واجهة حالة الطلب الحالي.",
+      "accepted": {
+        "title": "قبول المرشح",
+        "description": "أكد أن هذا الطلب يجب أن يصبح مقبولا."
+      },
+      "rejected": {
+        "title": "رفض المرشح",
+        "description": "أكد أن هذا الطلب يجب أن يصبح مرفوضا."
+      },
+      "on_hold": {
+        "title": "وضع الطلب قيد الانتظار",
+        "description": "أكد نقل هذا الطلب إلى حالة قيد الانتظار."
+      }
+    }
   }
 }

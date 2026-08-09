@@ -33,6 +33,7 @@
     "viewDetails": "View details",
     "downloadCv": "Download CV",
     "downloading": "Downloading...",
+    "noCv": "No CV attached",
     "internalNotes": "Internal notes",
     "informationRequests": "Information requests",
     "backToApplicant": "Back to applicant",
@@ -51,7 +52,8 @@
     "empty": "No screening answers provided."
   },
   "coverLetter": {
-    "title": "Cover Letter"
+    "title": "Cover Letter",
+    "empty": "The candidate did not provide a cover letter."
   },
   "statuses": {
     "submitted": "Submitted",
@@ -91,6 +93,8 @@
     "typePlaceholder": "Select interview type",
     "types": {
       "technical": "Technical",
+      "behavioral": "Behavioral",
+      "cultural": "Cultural fit",
       "hr": "HR",
       "final": "Final"
     },
@@ -112,10 +116,15 @@
     "internalNotePlaceholder": "Private preparation note for your team",
     "cancel": "Cancel",
     "schedule": "Schedule interview",
-    "scheduling": "Scheduling..."
+    "scheduling": "Scheduling...",
+    "defaultType": "Interview",
+    "noDate": "No date set",
+    "moreCount": "+{{count}} more interviews",
+    "empty": "No interviews are scheduled for this application."
   },
   "tests": {
     "title": "Candidate tests",
+    "viewAll": "View all tests",
     "loadError": "Assigned tests could not be loaded.",
     "retry": "Try again",
     "empty": "No tests are assigned to this application.",
@@ -128,11 +137,17 @@
     "manageDeadline": "Manage deadline",
     "manageRetakes": "Manage retakes",
     "result": "Score: {{score}} / {{max}}",
+    "status": "Status: {{status}}",
+    "passed": "Passed",
+    "failed": "Failed",
+    "moreCount": "+{{count}} more tests",
     "evaluationTitle": "Evaluate submitted attempt",
     "score": "Score (0–{{max}})",
     "feedback": "Feedback",
     "cancel": "Cancel",
     "submit": "Submit evaluation",
+    "objective": "Multiple choice",
+    "essay": "Essay",
     "points": "pts",
     "showDetails": "Show details",
     "hideDetails": "Hide details",

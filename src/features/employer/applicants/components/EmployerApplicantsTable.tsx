@@ -20,6 +20,7 @@ import type { EmployerCollection } from "@/features/employer/shared/services/emp
 import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerApplicants.types"
 import { employerApplicantsService } from "../services/employerApplicants.service"
 import { candidateDisplayName, candidateSecondaryText } from "../utils/candidateDisplay"
+import { hasSelectedCv, selectedCvDownloadName } from "../utils/cv"
 import ApplicationStatusChangeDialog from "./ApplicationStatusChangeDialog"
 
 const nextStatuses = [
@@ -50,14 +51,19 @@ function hasAllowedAction(application: EmployerApplicant, actions: string[]) {
 function useHandleDownload() {
   const [downloadingId, setDownloadingId] = useState<string | number | null>(null)
 
-  const handleDownload = async (applicationId: string | number) => {
-    setDownloadingId(applicationId)
+  const handleDownload = async (application: EmployerApplicant) => {
+    if (!hasSelectedCv(application)) {
+      showErrorToast("No CV attached to this application")
+      return
+    }
+
+    setDownloadingId(application.id)
     try {
-      const blob = await employerApplicantsService.downloadSelectedCv(applicationId)
+      const blob = await employerApplicantsService.downloadSelectedCv(application.id)
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `cv-${applicationId}.pdf`
+      a.download = selectedCvDownloadName(application)
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -220,10 +226,13 @@ export default function EmployerApplicantsTable({
                 <Eye /> {t("actions.viewDetails")}
               </DropdownMenuItem>
               <DropdownMenuItem
-                onSelect={() => void handleDownload(application.id)}
-                disabled={downloadingId === application.id}
+                onSelect={() => void handleDownload(application)}
+                disabled={!hasSelectedCv(application) || downloadingId === application.id}
               >
-                <Download /> {t("actions.downloadCv")}
+                <Download />{" "}
+                {hasSelectedCv(application)
+                  ? t("actions.downloadCv")
+                  : t("actions.noCv", { defaultValue: "No CV attached" })}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {(application.allowed_status_transitions?.map((s) => s.key) || nextStatuses)

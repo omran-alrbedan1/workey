@@ -14,7 +14,7 @@ interface TestAssignmentDeadlinePanelProps {
   assignmentId: string | number
   currentDeadline?: string | null
   testTitle?: string
-  onClose: () => void
+  onClose?: () => void
   onUpdated?: () => void | Promise<void>
 }
 
@@ -104,9 +104,11 @@ export default function TestAssignmentDeadlinePanel({
           </h3>
           <p className="text-sm text-text-muted">{testTitle || t("tests.untitled")}</p>
         </div>
-        <Button type="button" variant="outline" size="sm" onClick={onClose}>
-          {t("tests.closeDeadline")}
-        </Button>
+        {onClose && (
+          <Button type="button" variant="outline" size="sm" onClick={onClose}>
+            {t("tests.closeDeadline")}
+          </Button>
+        )}
       </div>
 
       <div className="rounded-md border border-border bg-background p-3">

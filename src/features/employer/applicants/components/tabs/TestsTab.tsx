@@ -12,9 +12,10 @@ interface TestsTabProps {
     data?: { items: EmployerTestAttempt[] }
   }
   onViewAll: () => void
+  onOpenTest: (assignment: EmployerTestAttempt) => void
 }
 
-export default function TestsTab({ tests, onViewAll }: TestsTabProps) {
+export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps) {
   const { t } = useTranslation("employerApplicants")
 
   if (tests.isPending) {
@@ -48,10 +49,14 @@ export default function TestsTab({ tests, onViewAll }: TestsTabProps) {
           const passed = attempt.attempt?.is_passing_score_met
           const attemptStatusKey = keyOf(attempt.state)
           const submitted = Boolean(attempt.attempt?.submitted_at) || attemptStatusKey === "submitted" || attemptStatusKey === "evaluated"
-
           return (
-            <div key={attempt.id} className="flex items-center justify-between rounded-lg border border-border bg-background/50 p-4">
-              <div className="flex-1">
+            <button
+              key={attempt.id}
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg border border-border bg-background/50 p-4 text-start transition-colors hover:border-primary/40 hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              onClick={() => onOpenTest(attempt)}
+            >
+              <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-text-primary">
                   {attempt.test?.title || t("tests.untitled")}
                 </p>
@@ -77,7 +82,7 @@ export default function TestsTab({ tests, onViewAll }: TestsTabProps) {
                     : t("tests.failed")
                   : valueOf(attempt.state, "pending")}
               </Badge>
-            </div>
+            </button>
           )
         })}
         {tests.data.items.length > 5 && (

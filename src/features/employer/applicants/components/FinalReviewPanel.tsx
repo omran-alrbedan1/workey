@@ -59,6 +59,7 @@ interface FinalReviewPanelProps {
   interviews: EvidenceQuery<EmployerInterview>
   isDecisionPending: boolean
   isCvBusy: boolean
+  hasCv: boolean
   onPreviewCv: () => Promise<void>
   onDownloadCv: () => Promise<void>
   onDecision: (status: DecisionStatus, note: string) => Promise<unknown>
@@ -445,6 +446,7 @@ export default function FinalReviewPanel({
   interviews,
   isDecisionPending,
   isCvBusy,
+  hasCv,
   onPreviewCv,
   onDownloadCv,
   onDecision,
@@ -486,13 +488,13 @@ export default function FinalReviewPanel({
             <EvidenceItem label={t("finalReview.summary.applied")} value={formatDate(application.applied_at ?? application.created_at)} />
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" onClick={() => void onPreviewCv()} disabled={isCvBusy}>
+            <Button type="button" variant="outline" onClick={() => void onPreviewCv()} disabled={isCvBusy || !hasCv}>
               <FileSearch className="h-4 w-4" />
               {t("finalReview.cv.preview")}
             </Button>
-            <Button type="button" variant="outline" onClick={() => void onDownloadCv()} disabled={isCvBusy}>
+            <Button type="button" variant="outline" onClick={() => void onDownloadCv()} disabled={isCvBusy || !hasCv}>
               <Download className="h-4 w-4" />
-              {t("finalReview.cv.download")}
+              {hasCv ? t("finalReview.cv.download") : t("actions.noCv", { defaultValue: "No CV attached" })}
             </Button>
             {terminal && (
               <Badge variant="secondary" className="gap-1">
