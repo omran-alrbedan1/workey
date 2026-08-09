@@ -204,8 +204,3 @@ export interface EmployerInterviewScheduleHistoryItem {
   changed_by?: InterviewActor
   created_at?: string
 }
-
-export interface EmployerInterviewListParams {
-  page?: number
-  per_page?: number
-}

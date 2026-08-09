@@ -101,7 +101,6 @@ export const API_ENDPOINTS = Object.freeze({
     attemptSeries: (id: string | number) => `/test-assignments/${id}/attempt-series`,
   },
   interviews: {
-    list: "/interviews",
     forApplication: (id: string | number) => `/applications/${id}/interviews`,
     byId: (id: string | number) => `/interviews/${id}`,
     reschedule: (id: string | number) => `/interviews/${id}/reschedule`,

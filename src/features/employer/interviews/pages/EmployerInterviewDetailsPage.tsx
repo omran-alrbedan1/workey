@@ -1,32 +1,50 @@
 import { useState } from "react"
+import type { ElementType } from "react"
 import {
-  ArrowLeft,
   Calendar,
   CalendarSync,
   CheckCircle,
   ClipboardCheck,
   Clock,
+  FileText,
+  History,
   ListChecks,
   MapPin,
   Ban,
+  MoreHorizontal,
   UserX,
   UserRound,
   Video,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
+import PageHeader from "@/components/shared/headers/PageHeader"
+import ErrorState from "@/components/shared/states/ErrorState"
+import { StatusBadge } from "@/components/shared/badges"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
+import { cn } from "@/lib/utils"
 import CompleteInterviewDialog from "../components/CompleteInterviewDialog"
 import AttendanceInterviewDialog from "../components/AttendanceInterviewDialog"
 import CancelInterviewDialog from "../components/CancelInterviewDialog"
 import EvaluateInterviewDialog from "../components/EvaluateInterviewDialog"
-import InterviewHistoryPanel from "../components/InterviewHistoryPanel"
 import NoShowInterviewDialog from "../components/NoShowInterviewDialog"
 import RescheduleInterviewDialog from "../components/RescheduleInterviewDialog"
 import { useEmployerInterview } from "../hooks/useEmployerInterview"
+import type {
+  EmployerInterviewHistoryItem,
+  EmployerInterviewScheduleHistoryItem,
+} from "../types/employerInterviews.types"
 import {
   actionAllowed,
   bothPartiesPresent,
@@ -41,7 +59,8 @@ import {
 } from "../utils/interviewDisplay"
 
 export default function EmployerInterviewDetailsPage() {
-  const { t } = useTranslation("employerInterviews")
+  const { t, i18n } = useTranslation("employerInterviews")
+  const isRtl = i18n.dir() === "rtl"
   const { id } = useParams()
   const navigate = useNavigate()
   const interview = useEmployerInterview(id)
@@ -53,17 +72,16 @@ export default function EmployerInterviewDetailsPage() {
   const [noShowOpen, setNoShowOpen] = useState(false)
 
   if (interview.isPending) {
-    return <Skeleton className="h-96 w-full rounded-lg" />
+    return <InterviewDetailsSkeleton />
   }
 
   if (interview.isError || !interview.data) {
     return (
-      <div className="space-y-6">
-        <Button variant="ghost" onClick={() => navigate(ROUTES.employer.interviews)}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> {t("back")}
-        </Button>
-        <div className="text-center text-text-muted">{t("errors.notFound")}</div>
-      </div>
+      <ErrorState
+        title={t("errors.title")}
+        description={t("errors.notFound")}
+        retry={() => void interview.refetch()}
+      />
     )
   }
 
@@ -89,141 +107,212 @@ export default function EmployerInterviewDetailsPage() {
       ? Math.round((new Date(endAt).getTime() - new Date(startAt).getTime()) / 60_000)
       : data.duration_minutes
   const evaluation = data.evaluation
+  const note = data.internal_note || data.note || data.notes
+  const hasNotes = Boolean(note || data.candidate_message || data.attendance_note || data.completion_note || data.cancellation_reason)
+  const hasEvaluation = Boolean(evaluation)
+  const hasHistory = Boolean(data.status_history?.length || data.schedule_history?.length)
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate(ROUTES.employer.interviews)}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> {t("back")}
-        </Button>
-        <div className="flex items-center gap-2">
-          {(canReschedule || canCancel || canRecordAttendance || canMarkNoShow || canComplete) && (
-            <>
-              {canReschedule && <Button variant="outline" size="sm" onClick={() => setRescheduleOpen(true)}>
-                <CalendarSync className="mr-2 h-4 w-4" /> {t("actions.reschedule")}
-              </Button>}
-              {canRecordAttendance && <Button variant="outline" size="sm" onClick={() => setAttendanceOpen(true)}>
-                <ListChecks className="mr-2 h-4 w-4" /> {t("actions.attendance")}
-              </Button>}
-              {canComplete && <Button variant="outline" size="sm" onClick={() => setCompleteOpen(true)}>
-                <CheckCircle className="mr-2 h-4 w-4" /> {t("actions.complete")}
-              </Button>}
-              {canMarkNoShow && <Button variant="outline" size="sm" onClick={() => setNoShowOpen(true)}>
-                <UserX className="mr-2 h-4 w-4" /> {t("actions.noShow")}
-              </Button>}
-              {canCancel && <Button variant="destructive" size="sm" onClick={() => setCancelOpen(true)}>
-                <Ban className="mr-2 h-4 w-4" /> {t("actions.cancel")}
-              </Button>}
-            </>
-          )}
-          {canEvaluate && (
-            <Button variant="outline" size="sm" onClick={() => setEvaluateOpen(true)}>
-              <ClipboardCheck className="mr-2 h-4 w-4" /> {t("actions.evaluate")}
-            </Button>
-          )}
+      <PageHeader
+        title={t("details.title")}
+        description={interviewCandidateName(data, t("unknownCandidate"))}
+        icon={Calendar}
+        showBackButton
+        backButtonLabel={t("back")}
+        onBackClick={() => navigate(ROUTES.employer.interviews)}
+        rightContent={
+          <InterviewActionsMenu
+            isRtl={isRtl}
+            canReschedule={canReschedule}
+            canRecordAttendance={canRecordAttendance}
+            canComplete={canComplete}
+            canEvaluate={canEvaluate}
+            canMarkNoShow={canMarkNoShow}
+            canCancel={canCancel}
+            onReschedule={() => setRescheduleOpen(true)}
+            onRecordAttendance={() => setAttendanceOpen(true)}
+            onComplete={() => setCompleteOpen(true)}
+            onEvaluate={() => setEvaluateOpen(true)}
+            onMarkNoShow={() => setNoShowOpen(true)}
+            onCancel={() => setCancelOpen(true)}
+          />
+        }
+      />
+
+      <section className="rounded-lg border border-border bg-background-card p-4 shadow-card">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className={cn("flex min-w-0 items-start gap-3", isRtl && "flex-row-reverse text-right")}>
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <UserRound className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="truncate text-lg font-semibold text-text-primary">
+                  {interviewCandidateName(data, t("unknownCandidate"))}
+                </h2>
+                <StatusBadge
+                  status={statusKey}
+                  label={interviewValue(data.status)}
+                  variant="soft"
+                />
+              </div>
+              <p className="mt-1 text-sm text-text-muted">
+                {interviewJobTitle(data) || interviewValue(interviewType)}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <UserRound className="h-5 w-5 text-primary" />
-            {interviewCandidateName(data, t("unknownCandidate"))}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-text-muted" />
-            <span className="text-sm">
-              {startAt
-                ? new Date(startAt).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })
-                : "-"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-text-muted" />
-            <span className="text-sm capitalize">{interviewValue(interviewType)} - {durationMinutes ?? "-"}m</span>
-          </div>
-          <div className="flex items-center gap-2">
-            {isOnline ? (
-              <Video className="h-4 w-4 text-text-muted" />
-            ) : (
-              <MapPin className="h-4 w-4 text-text-muted" />
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList
+          className={cn("flex h-auto flex-wrap", isRtl ? "justify-end" : "justify-start")}
+        >
+          <TabsTrigger value="overview" className="gap-2">
+            <Calendar className="h-4 w-4" />
+            {t("tabs.overview")}
+          </TabsTrigger>
+          {hasNotes && (
+            <TabsTrigger value="notes" className="gap-2">
+              <FileText className="h-4 w-4" />
+              {t("tabs.notes")}
+            </TabsTrigger>
+          )}
+          {hasEvaluation && (
+            <TabsTrigger value="evaluation" className="gap-2">
+              <ClipboardCheck className="h-4 w-4" />
+              {t("tabs.evaluation")}
+            </TabsTrigger>
+          )}
+          {hasHistory && (
+            <TabsTrigger value="history" className="gap-2">
+              <History className="h-4 w-4" />
+              {t("tabs.history")}
+            </TabsTrigger>
+          )}
+        </TabsList>
+
+        <TabsContent value="overview">
+          <section className="grid gap-4 rounded-lg border border-border bg-background-card p-5 shadow-card sm:grid-cols-2">
+            <DetailItem
+              isRtl={isRtl}
+              icon={Calendar}
+              label={t("columns.scheduled")}
+              value={
+                startAt
+                  ? new Date(startAt).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })
+                  : "-"
+              }
+            />
+            <DetailItem
+              isRtl={isRtl}
+              icon={Clock}
+              label={t("columns.type")}
+              value={`${interviewValue(interviewType)} - ${durationMinutes ?? "-"}m`}
+            />
+            <DetailItem
+              isRtl={isRtl}
+              icon={isOnline ? Video : MapPin}
+              label={t("schedule.mode")}
+              value={
+                isOnline
+                  ? data.meeting_link || t("interviewModes.video")
+                  : data.location_text || data.location || interviewValue(interviewMode)
+              }
+              className="sm:col-span-2"
+            />
+            {data.candidate_confirmation_status && (
+              <DetailItem
+                isRtl={isRtl}
+                icon={CheckCircle}
+                label={t("details.candidateConfirmation")}
+                value={interviewValue(data.candidate_confirmation_status)}
+              />
             )}
-            <span className="text-sm capitalize">
-              {isOnline
-                ? data.meeting_link || t("interviewModes.video")
-                : data.location_text || data.location || interviewValue(interviewMode)}
-            </span>
-          </div>
-          {interviewJobTitle(data) && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm">{interviewJobTitle(data)}</span>
-            </div>
-          )}
-          <div>
-            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              statusKey === "completed"
-                ? "bg-green-100 text-green-700"
-                : statusKey === "cancelled"
-                  ? "bg-red-100 text-red-700"
-                  : statusKey === "scheduled"
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-gray-100 text-gray-700"
-            }`}>
-              {interviewValue(data.status)}
-            </span>
-          </div>
-          {(data.internal_note || data.candidate_message || data.notes) && (
-            <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-text-muted">{t("details.notes")}</p>
-              <p className="text-sm">{data.internal_note || data.candidate_message || data.notes}</p>
-            </div>
-          )}
-          {data.completion_note && (
-            <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-text-muted">{t("details.completionNote")}</p>
-              <p className="text-sm">{data.completion_note}</p>
-            </div>
-          )}
-          {(data.confirmed_at || data.attendance_recorded_at || data.cancelled_at || data.completed_at) && (
-            <div className="sm:col-span-2 grid gap-2 rounded-md border border-border p-3 text-xs text-text-muted sm:grid-cols-2">
-              {data.confirmed_at && <span>{t("details.confirmedAt")}: {new Date(data.confirmed_at).toLocaleString()}</span>}
-              {data.attendance_recorded_at && <span>{t("details.attendanceAt")}: {new Date(data.attendance_recorded_at).toLocaleString()}</span>}
-              {data.cancelled_at && <span>{t("details.cancelledAt")}: {new Date(data.cancelled_at).toLocaleString()}</span>}
-              {data.completed_at && <span>{t("details.completedAt")}: {new Date(data.completed_at).toLocaleString()}</span>}
-            </div>
-          )}
-          {evaluation?.recommendation && (
-            <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-text-muted">{t("details.recommendation")}</p>
-              <p className="text-sm capitalize">{interviewValue(evaluation.recommendation)}</p>
-            </div>
-          )}
-          {evaluation?.overall_comment && (
-            <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-text-muted">{t("details.overallComment")}</p>
-              <p className="text-sm">{evaluation.overall_comment}</p>
-            </div>
-          )}
-          {evaluation?.items && evaluation.items.length > 0 && (
-            <div className="sm:col-span-2 space-y-2">
-              <p className="text-xs font-medium text-text-muted">{t("details.evaluationItems")}</p>
-              {evaluation.items.map((item, i) => (
-                <div key={i} className="rounded-md border border-border p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{item.criterion}</span>
-                    <span className="text-sm font-medium text-primary">{item.score}/5</span>
-                  </div>
-                  {item.comment && <p className="mt-1 text-xs text-text-muted">{item.comment}</p>}
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            {data.candidate_attendance_status && (
+              <DetailItem
+                isRtl={isRtl}
+                icon={UserRound}
+                label={t("details.candidateAttendance")}
+                value={interviewValue(data.candidate_attendance_status)}
+              />
+            )}
+            {data.interviewer_attendance_status && (
+              <DetailItem
+                isRtl={isRtl}
+                icon={ListChecks}
+                label={t("details.interviewerAttendance")}
+                value={interviewValue(data.interviewer_attendance_status)}
+              />
+            )}
+            {(data.confirmed_at || data.attendance_recorded_at || data.cancelled_at || data.completed_at) && (
+              <div className={cn(
+                "grid gap-2 rounded-lg border border-border bg-muted/20 p-3 text-xs text-text-muted sm:col-span-2 sm:grid-cols-2",
+                isRtl && "text-right",
+              )}>
+                {data.confirmed_at && <span>{t("details.confirmedAt")}: {new Date(data.confirmed_at).toLocaleString()}</span>}
+                {data.attendance_recorded_at && <span>{t("details.attendanceAt")}: {new Date(data.attendance_recorded_at).toLocaleString()}</span>}
+                {data.cancelled_at && <span>{t("details.cancelledAt")}: {new Date(data.cancelled_at).toLocaleString()}</span>}
+                {data.completed_at && <span>{t("details.completedAt")}: {new Date(data.completed_at).toLocaleString()}</span>}
+              </div>
+            )}
+          </section>
+        </TabsContent>
 
-      <InterviewHistoryPanel interviewId={data.id} />
+        {hasNotes && (
+          <TabsContent value="notes">
+            <section className="space-y-4 rounded-lg border border-border bg-background-card p-5 shadow-card">
+              {note && <TextBlock isRtl={isRtl} label={t("details.notes")} value={note} />}
+              {data.candidate_message && <TextBlock isRtl={isRtl} label={t("details.candidateMessage")} value={data.candidate_message} />}
+              {data.attendance_note && <TextBlock isRtl={isRtl} label={t("details.attendanceNote")} value={data.attendance_note} />}
+              {data.completion_note && <TextBlock isRtl={isRtl} label={t("details.completionNote")} value={data.completion_note} />}
+              {data.cancellation_reason && <TextBlock isRtl={isRtl} label={t("details.cancellationReason")} value={data.cancellation_reason} />}
+            </section>
+          </TabsContent>
+        )}
+
+        {hasEvaluation && (
+          <TabsContent value="evaluation">
+            <section className="space-y-4 rounded-lg border border-border bg-background-card p-5 shadow-card">
+              {evaluation?.recommendation && (
+                <TextBlock
+                  isRtl={isRtl}
+                  label={t("details.recommendation")}
+                  value={interviewValue(evaluation.recommendation)}
+                />
+              )}
+              {evaluation?.overall_comment && (
+                <TextBlock isRtl={isRtl} label={t("details.overallComment")} value={evaluation.overall_comment} />
+              )}
+              {evaluation?.items && evaluation.items.length > 0 ? (
+                <div className="space-y-2">
+                  <p className={cn("text-xs font-medium text-text-muted", isRtl && "text-right")}>{t("details.evaluationItems")}</p>
+                  {evaluation.items.map((item, i) => (
+                    <div key={i} className="rounded-lg border border-border p-3">
+                      <div className={cn("flex items-center justify-between", isRtl && "flex-row-reverse text-right")}>
+                        <span className="text-sm font-medium text-text-primary">{item.criterion}</span>
+                        <span className="text-sm font-semibold text-primary">{item.score}/5</span>
+                      </div>
+                      {item.comment && <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>{item.comment}</p>}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </section>
+          </TabsContent>
+        )}
+
+        {hasHistory && (
+          <TabsContent value="history">
+            <InterviewHistoryFromResponse
+              isRtl={isRtl}
+              statusHistory={data.status_history ?? []}
+              scheduleHistory={data.schedule_history ?? []}
+            />
+          </TabsContent>
+        )}
+      </Tabs>
 
       <RescheduleInterviewDialog
         interviewId={data.id}
@@ -269,4 +358,224 @@ export default function EmployerInterviewDetailsPage() {
       />
     </div>
   )
+}
+
+function InterviewActionsMenu({
+  isRtl,
+  canReschedule,
+  canRecordAttendance,
+  canComplete,
+  canEvaluate,
+  canMarkNoShow,
+  canCancel,
+  onReschedule,
+  onRecordAttendance,
+  onComplete,
+  onEvaluate,
+  onMarkNoShow,
+  onCancel,
+}: {
+  isRtl: boolean
+  canReschedule: boolean
+  canRecordAttendance: boolean
+  canComplete: boolean
+  canEvaluate: boolean
+  canMarkNoShow: boolean
+  canCancel: boolean
+  onReschedule: () => void
+  onRecordAttendance: () => void
+  onComplete: () => void
+  onEvaluate: () => void
+  onMarkNoShow: () => void
+  onCancel: () => void
+}) {
+  const { t } = useTranslation("employerInterviews")
+  const hasActions =
+    canReschedule ||
+    canRecordAttendance ||
+    canComplete ||
+    canEvaluate ||
+    canMarkNoShow ||
+    canCancel
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 bg-background/80 shadow-sm hover:bg-background"
+          disabled={!hasActions}
+          aria-label={t("actions.label")}
+        >
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align={isRtl ? "start" : "end"} className="w-52">
+        <DropdownMenuLabel>{t("actions.label")}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {canReschedule && (
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onReschedule}>
+            <CalendarSync /> {t("actions.reschedule")}
+          </DropdownMenuItem>
+        )}
+        {canRecordAttendance && (
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onRecordAttendance}>
+            <ListChecks /> {t("actions.attendance")}
+          </DropdownMenuItem>
+        )}
+        {canComplete && (
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onComplete}>
+            <CheckCircle /> {t("actions.complete")}
+          </DropdownMenuItem>
+        )}
+        {canEvaluate && (
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onEvaluate}>
+            <ClipboardCheck /> {t("actions.evaluate")}
+          </DropdownMenuItem>
+        )}
+        {canMarkNoShow && (
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onMarkNoShow}>
+            <UserX /> {t("actions.noShow")}
+          </DropdownMenuItem>
+        )}
+        {canCancel && (
+          <DropdownMenuItem
+            className={cn("text-red-600 focus:text-red-700", isRtl && "flex-row-reverse text-right")}
+            onSelect={onCancel}
+          >
+            <Ban /> {t("actions.cancel")}
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+function InterviewDetailsSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-24 w-full rounded-xl" />
+      <Skeleton className="h-32 w-full rounded-xl" />
+      <Skeleton className="h-64 w-full rounded-xl" />
+    </div>
+  )
+}
+
+function InterviewHistoryFromResponse({
+  isRtl,
+  statusHistory,
+  scheduleHistory,
+}: {
+  isRtl: boolean
+  statusHistory: EmployerInterviewHistoryItem[]
+  scheduleHistory: EmployerInterviewScheduleHistoryItem[]
+}) {
+  const { t } = useTranslation("employerInterviews")
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      {statusHistory.length > 0 && (
+        <section className="space-y-3 rounded-lg border border-border bg-background-card p-5 shadow-card">
+          <h3 className={cn("flex items-center gap-2 text-sm font-semibold text-text-primary", isRtl && "flex-row-reverse text-right")}>
+            <History className="h-4 w-4 text-primary" />
+            {t("history.statusTitle")}
+          </h3>
+          {statusHistory.map((item) => (
+            <div key={item.id} className="rounded-lg border border-border p-3">
+              <div className={cn("flex flex-wrap items-center justify-between gap-2", isRtl && "flex-row-reverse text-right")}>
+                <p className="text-sm font-medium text-text-primary">
+                  {interviewValue(item.from_status)} {"->"} {interviewValue(item.to_status)}
+                </p>
+                {item.created_at && (
+                  <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
+                )}
+              </div>
+              {item.reason && <p className={cn("mt-2 text-sm text-text-muted", isRtl && "text-right")}>{item.reason}</p>}
+              {item.changed_by?.name && (
+                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+                  {t("history.actor", { actor: item.changed_by.name })}
+                </p>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {scheduleHistory.length > 0 && (
+        <section className="space-y-3 rounded-lg border border-border bg-background-card p-5 shadow-card">
+          <h3 className={cn("flex items-center gap-2 text-sm font-semibold text-text-primary", isRtl && "flex-row-reverse text-right")}>
+            <CalendarSync className="h-4 w-4 text-primary" />
+            {t("history.scheduleTitle")}
+          </h3>
+          {scheduleHistory.map((item) => (
+            <div key={item.id} className="rounded-lg border border-border p-3">
+              <div className={cn("flex flex-wrap items-center justify-between gap-2", isRtl && "flex-row-reverse text-right")}>
+                <p className="text-sm font-medium text-text-primary">
+                  {formatDateTime(item.previous_start_at)} {"->"} {formatDateTime(item.new_start_at)}
+                </p>
+                {item.created_at && (
+                  <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
+                )}
+              </div>
+              <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+                {interviewValue(item.previous_mode)} {"->"} {interviewValue(item.new_mode)}
+              </p>
+              {(item.previous_meeting_link || item.previous_location_text || item.new_meeting_link || item.new_location_text) && (
+                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+                  {item.previous_meeting_link || item.previous_location_text || "-"} {"->"}{" "}
+                  {item.new_meeting_link || item.new_location_text || "-"}
+                </p>
+              )}
+              {item.reason && <p className={cn("mt-2 text-sm text-text-muted", isRtl && "text-right")}>{item.reason}</p>}
+              {item.changed_by?.name && (
+                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+                  {t("history.actor", { actor: item.changed_by.name })}
+                </p>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+    </div>
+  )
+}
+
+function DetailItem({
+  icon: Icon,
+  isRtl,
+  label,
+  value,
+  className,
+}: {
+  icon: ElementType
+  isRtl: boolean
+  label: string
+  value: string
+  className?: string
+}) {
+  return (
+    <div className={className}>
+      <p className={cn("mb-1 flex items-center gap-1.5 text-xs font-medium text-text-muted", isRtl && "flex-row-reverse text-right")}>
+        <Icon className="h-3.5 w-3.5 text-primary" />
+        {label}
+      </p>
+      <p className={cn("text-sm font-medium text-text-primary", isRtl && "text-right")}>{value || "-"}</p>
+    </div>
+  )
+}
+
+function TextBlock({ isRtl, label, value }: { isRtl: boolean; label: string; value?: string | null }) {
+  return (
+    <div className={cn(isRtl && "text-right")}>
+      <p className="text-xs font-medium text-text-muted">{label}</p>
+      <p className="mt-1 text-sm text-text-primary">{value || "-"}</p>
+    </div>
+  )
+}
+
+function formatDateTime(value?: string | null) {
+  if (!value) return "-"
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString()
 }

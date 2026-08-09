@@ -3,6 +3,15 @@
   "description": "جدول مقابلات التوظيف، أجرها، وقيّمها.",
   "back": "العودة إلى المقابلات",
   "unknownCandidate": "مرشح غير معروف",
+  "scope": {
+    "label": "مصدر المقابلات",
+    "job": "الوظيفة",
+    "application": "طلب التقديم",
+    "noJobs": "لا توجد وظائف متاحة",
+    "noApplications": "لا توجد طلبات لهذه الوظيفة",
+    "selectedApplication": "عرض مقابلات {{name}}",
+    "interviewCount": "{{count}} مقابلات"
+  },
   "noJobs": "لا توجد وظائف متاحة",
   "jobFilter": "اختر وظيفة لعرض مقابلاتها",
   "columns": {
@@ -39,7 +48,15 @@
     "title": "لا توجد مقابلات",
     "description": "جدول مقابلة لأحد المتقدمين للبدء."
   },
+  "tabs": {
+    "overview": "نظرة عامة",
+    "notes": "الملاحظات",
+    "evaluation": "التقييم",
+    "history": "السجل"
+  },
   "actions": {
+    "label": "الإجراءات",
+    "viewDetails": "عرض التفاصيل",
     "reschedule": "إعادة جدولة",
     "complete": "تحديد كمكتملة",
     "evaluate": "تقييم",
@@ -111,11 +128,41 @@
     "title": "إعادة جدولة المقابلة",
     "description": "تغيير تاريخ ووقت هذه المقابلة.",
     "newDateTime": "التاريخ والوقت الجديد",
+    "start": "البداية",
+    "end": "النهاية",
+    "startDate": "تاريخ البداية",
+    "startTime": "وقت البداية",
+    "endDate": "تاريخ النهاية",
+    "endTime": "وقت النهاية",
+    "startDatePlaceholder": "اختر تاريخ البداية",
+    "startTimePlaceholder": "اختر وقت البداية",
+    "endDatePlaceholder": "اختر تاريخ النهاية",
+    "endTimePlaceholder": "اختر وقت النهاية",
+    "mode": "النمط",
+    "meetingLink": "رابط الاجتماع",
+    "location": "الموقع",
     "reason": "سبب إعادة الجدولة",
     "reasonPlaceholder": "ملاحظات اختيارية حول إعادة الجدولة...",
     "cancel": "إلغاء",
     "submit": "حفظ التغييرات",
-    "submitting": "جارٍ الحفظ..."
+    "submitting": "جارٍ الحفظ...",
+    "validation": {
+      "startRequired": "وقت البداية مطلوب.",
+      "endRequired": "وقت النهاية مطلوب.",
+      "startDateRequired": "تاريخ البداية مطلوب.",
+      "startTimeRequired": "وقت البداية مطلوب.",
+      "endDateRequired": "تاريخ النهاية مطلوب.",
+      "endTimeRequired": "وقت النهاية مطلوب.",
+      "futureStart": "اختر وقت بداية في المستقبل.",
+      "endAfterStart": "يجب أن يكون وقت النهاية بعد البداية وضمن 480 دقيقة.",
+      "meetingLinkRequired": "رابط الاجتماع مطلوب.",
+      "meetingLinkTooLong": "رابط الاجتماع طويل جداً.",
+      "validUrl": "أدخل رابطاً صحيحاً.",
+      "locationRequired": "الموقع مطلوب.",
+      "locationTooLong": "الموقع طويل جداً.",
+      "reasonRequired": "السبب مطلوب.",
+      "reasonTooLong": "السبب طويل جداً."
+    }
   },
   "complete": {
     "title": "تحديد المقابلة كمكتملة",
@@ -144,7 +191,14 @@
     "submitting": "جارٍ الإرسال..."
   },
   "details": {
+    "title": "تفاصيل المقابلة",
     "notes": "ملاحظات",
+    "candidateMessage": "رسالة المرشح",
+    "attendanceNote": "ملاحظة الحضور",
+    "cancellationReason": "سبب الإلغاء",
+    "candidateConfirmation": "تأكيد المرشح",
+    "candidateAttendance": "حضور المرشح",
+    "interviewerAttendance": "حضور المحاور",
     "completionNote": "ملاحظة الإكمال",
     "recommendation": "التوصية",
     "overallComment": "التعليق العام",

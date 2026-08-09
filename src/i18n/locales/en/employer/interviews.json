@@ -3,6 +3,15 @@
   "description": "Schedule, conduct, and evaluate recruitment interviews.",
   "back": "Back to interviews",
   "unknownCandidate": "Unknown candidate",
+  "scope": {
+    "label": "Interview source",
+    "job": "Job",
+    "application": "Application",
+    "noJobs": "No jobs available",
+    "noApplications": "No applications for this job",
+    "selectedApplication": "Showing interviews for {{name}}",
+    "interviewCount": "{{count}} interviews"
+  },
   "columns": {
     "candidate": "Candidate",
     "type": "Type",
@@ -38,7 +47,15 @@
     "title": "No interviews found",
     "description": "Schedule an interview for an applicant to get started."
   },
+  "tabs": {
+    "overview": "Overview",
+    "notes": "Notes",
+    "evaluation": "Evaluation",
+    "history": "History"
+  },
   "actions": {
+    "label": "Actions",
+    "viewDetails": "View details",
     "reschedule": "Reschedule",
     "complete": "Mark completed",
     "evaluate": "Evaluate",
@@ -114,6 +131,14 @@
     "newDateTime": "New date & time",
     "start": "Start",
     "end": "End",
+    "startDate": "Start date",
+    "startTime": "Start time",
+    "endDate": "End date",
+    "endTime": "End time",
+    "startDatePlaceholder": "Pick start date",
+    "startTimePlaceholder": "Pick start time",
+    "endDatePlaceholder": "Pick end date",
+    "endTimePlaceholder": "Pick end time",
     "mode": "Mode",
     "meetingLink": "Meeting link",
     "location": "Location",
@@ -121,7 +146,24 @@
     "reasonPlaceholder": "Optional notes about the reschedule...",
     "cancel": "Cancel",
     "submit": "Save changes",
-    "submitting": "Saving..."
+    "submitting": "Saving...",
+    "validation": {
+      "startRequired": "Start time is required.",
+      "endRequired": "End time is required.",
+      "startDateRequired": "Start date is required.",
+      "startTimeRequired": "Start time is required.",
+      "endDateRequired": "End date is required.",
+      "endTimeRequired": "End time is required.",
+      "futureStart": "Choose a future start time.",
+      "endAfterStart": "End must be after start and within 480 minutes.",
+      "meetingLinkRequired": "Meeting link is required.",
+      "meetingLinkTooLong": "Meeting link is too long.",
+      "validUrl": "Enter a valid URL.",
+      "locationRequired": "Location is required.",
+      "locationTooLong": "Location is too long.",
+      "reasonRequired": "Reason is required.",
+      "reasonTooLong": "Reason is too long."
+    }
   },
   "complete": {
     "title": "Mark interview as completed",
@@ -150,7 +192,14 @@
     "submitting": "Submitting..."
   },
   "details": {
+    "title": "Interview details",
     "notes": "Notes",
+    "candidateMessage": "Candidate message",
+    "attendanceNote": "Attendance note",
+    "cancellationReason": "Cancellation reason",
+    "candidateConfirmation": "Candidate confirmation",
+    "candidateAttendance": "Candidate attendance",
+    "interviewerAttendance": "Interviewer attendance",
     "completionNote": "Completion note",
     "recommendation": "Recommendation",
     "overallComment": "Overall comment",

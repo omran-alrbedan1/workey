@@ -10,9 +10,35 @@ export function interviewValue(value: unknown, fallback = "-") {
 }
 
 export function interviewCandidateName(interview: EmployerInterview, fallback: string) {
-  const summary = interview.job_application?.candidate_summary
-  const identity = interview.job_application?.submitted_snapshot?.profile?.identity
-  return summary?.name || identity?.full_name || identity?.email || summary?.email || fallback
+  const application = interview.job_application
+  const summary = application?.candidate_summary
+  const identity = application?.submitted_snapshot?.profile?.identity
+  const candidate = (interview as any).candidate ?? (application as any)?.candidate
+  const profile = (application as any)?.job_seeker_profile ?? (interview as any).job_seeker_profile
+  const candidateActor = (application as any)?.status_history?.find((entry: any) => {
+    const role = entry?.changed_by?.role
+    const roleKey = typeof role === "string" ? role : role?.key
+    return roleKey === "job_seeker" && entry.changed_by?.name
+  })?.changed_by?.name
+
+  return (
+    summary?.name ||
+    identity?.name ||
+    identity?.full_name ||
+    [identity?.first_name, identity?.last_name].filter(Boolean).join(" ") ||
+    profile?.user?.name ||
+    profile?.name ||
+    candidate?.full_name ||
+    candidate?.name ||
+    candidate?.user?.name ||
+    candidateActor ||
+    identity?.email ||
+    summary?.email ||
+    profile?.user?.email ||
+    candidate?.email ||
+    candidate?.user?.email ||
+    fallback
+  )
 }
 
 export function interviewJobTitle(interview: EmployerInterview) {
