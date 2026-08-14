@@ -3,8 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Send, UserPlus } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
-import type { TFunction } from "i18next"
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import {
@@ -20,30 +18,16 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { employerApplicantsService } from "@/features/employer/applicants/services/employerApplicants.service"
 import { keyOf } from "@/lib/keyValue"
 import type { AssignTestPayload, EmployerTest } from "../types/employerTests.types"
-
-const noApplicantsValue = "__no_applicants__"
-const optionalDeadlineSchema = z
-  .union([z.string(), z.date()])
-  .optional()
-  .nullable()
+import {
+  assignNoApplicantsValue,
+  createAssignTestSchema,
+  type AssignTestFormValues,
+} from "../validations/employerTests.validation"
 
 function serializeDeadline(value: string | Date | null | undefined) {
   if (!value) return undefined
   if (value instanceof Date) return value.toISOString()
   return value
-}
-
-function createAssignTestSchema(t: TFunction) {
-  return z.object({
-    job_id: z.string().min(1, t("assign.validationJobRequired")),
-    application_id: z
-      .string()
-      .min(1, t("assign.validationApplicantRequired"))
-      .refine((value) => value !== noApplicantsValue, t("assign.validationApplicantRequired")),
-    note: z.string().trim().max(1000).optional(),
-    deadline_at: optionalDeadlineSchema,
-    max_attempts: z.number().int().min(1).max(5).optional(),
-  })
 }
 
 interface JobOption {
@@ -57,7 +41,11 @@ interface AssignTestDialogProps {
   open: boolean
   isPending: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (applicationId: string | number, testId: string | number, data: AssignTestPayload) => Promise<unknown>
+  onSubmit: (
+    applicationId: string | number,
+    testId: string | number,
+    data: AssignTestPayload,
+  ) => Promise<unknown>
 }
 
 export default function AssignTestDialog({
@@ -69,9 +57,8 @@ export default function AssignTestDialog({
   onSubmit,
 }: AssignTestDialogProps) {
   const { t } = useTranslation("employerTests")
-  const assignTestSchema = createAssignTestSchema(t)
-  const form = useForm<z.infer<typeof assignTestSchema>>({
-    resolver: zodResolver(assignTestSchema),
+  const form = useForm<AssignTestFormValues>({
+    resolver: zodResolver(createAssignTestSchema(t)),
     defaultValues: { job_id: "", application_id: "", note: "", deadline_at: null },
   })
   const selectedJobId = form.watch("job_id")
@@ -98,9 +85,11 @@ export default function AssignTestDialog({
       .then((data) => {
         const eligible = data.items.filter((application) => {
           if (application.allowed_actions?.length) {
-            return application.allowed_actions.includes("assign_test")
-              || application.allowed_actions.includes("manage_tests")
-              || application.allowed_actions.includes("update_status")
+            return (
+              application.allowed_actions.includes("assign_test") ||
+              application.allowed_actions.includes("manage_tests") ||
+              application.allowed_actions.includes("update_status")
+            )
           }
 
           return keyOf(application.status) === "shortlisted"
@@ -108,10 +97,7 @@ export default function AssignTestDialog({
         setApplicants(
           eligible.map((a) => ({
             value: String(a.id),
-            label:
-              a.candidate_summary?.name ||
-              a.candidate_summary?.email ||
-              `#${a.id}`,
+            label: a.candidate_summary?.name || a.candidate_summary?.email || `#${a.id}`,
           })),
         )
       })
@@ -121,7 +107,7 @@ export default function AssignTestDialog({
       .finally(() => setLoadingApplicants(false))
   }, [selectedJobId])
 
-  const submit = async (values: z.infer<typeof assignTestSchema>) => {
+  const submit = async (values: AssignTestFormValues) => {
     if (!test) return
     await onSubmit(values.application_id, test.id, {
       test_id: test.id,
@@ -163,7 +149,9 @@ export default function AssignTestDialog({
 
               {loadingApplicants ? (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-text-muted">{t("assign.loadingApplicants")}</p>
+                  <p className="text-sm font-medium text-text-muted">
+                    {t("assign.loadingApplicants")}
+                  </p>
                   <Skeleton className="h-10 w-full" />
                 </div>
               ) : (
@@ -176,7 +164,13 @@ export default function AssignTestDialog({
                   disabled={isPending || !selectedJobId}
                   options={
                     applicants.length === 0 && selectedJobId
-                      ? [{ value: noApplicantsValue, label: t("assign.noApplicants"), disabled: true }]
+                      ? [
+                          {
+                            value: assignNoApplicantsValue,
+                            label: t("assign.noApplicants"),
+                            disabled: true,
+                          },
+                        ]
                       : applicants
                   }
                 />

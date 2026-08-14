@@ -3,7 +3,6 @@ import { UserX } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import {
@@ -17,19 +16,16 @@ import {
 import { Form } from "@/components/ui/form"
 import type { Option } from "@/types/customFormField.types"
 import type { EmployerInterviewNoShowInput } from "../types/employerInterviews.types"
+import {
+  noShowInterviewSchema,
+  type NoShowInterviewFormValues,
+} from "../validations/employerInterviews.validation"
 
 const partyOptions: Option[] = [
   { value: "candidate", label: "noShow.candidate" },
   { value: "interviewer", label: "noShow.interviewer" },
   { value: "both", label: "noShow.both" },
 ]
-
-const schema = z.object({
-  party: z.enum(["candidate", "interviewer", "both"]),
-  reason: z.string().trim().min(1).max(2000),
-})
-
-type FormValues = z.infer<typeof schema>
 
 export default function NoShowInterviewDialog({
   open,
@@ -43,8 +39,8 @@ export default function NoShowInterviewDialog({
   onSubmit: (input: EmployerInterviewNoShowInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerInterviews")
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<NoShowInterviewFormValues>({
+    resolver: zodResolver(noShowInterviewSchema),
     defaultValues: { party: "candidate", reason: "" },
   })
 
@@ -52,7 +48,7 @@ export default function NoShowInterviewDialog({
     if (!open) form.reset()
   }, [form, open])
 
-  const submit = async (values: FormValues) => {
+  const submit = async (values: NoShowInterviewFormValues) => {
     await onSubmit(values)
     onOpenChange(false)
   }
@@ -88,8 +84,19 @@ export default function NoShowInterviewDialog({
               />
             </div>
             <DialogFooter>
-              <CancelButton type="button" disabled={isPending} onClick={() => onOpenChange(false)} text={t("noShow.cancel")} />
-              <SubmitButton isLoading={isPending} text={t("noShow.submit")} loadingText={t("noShow.submitting")} icon={<UserX />} className="w-auto" />
+              <CancelButton
+                type="button"
+                disabled={isPending}
+                onClick={() => onOpenChange(false)}
+                text={t("noShow.cancel")}
+              />
+              <SubmitButton
+                isLoading={isPending}
+                text={t("noShow.submit")}
+                loadingText={t("noShow.submitting")}
+                icon={<UserX />}
+                className="w-auto"
+              />
             </DialogFooter>
           </form>
         </Form>

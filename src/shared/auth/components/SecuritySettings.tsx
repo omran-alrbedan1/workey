@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { KeyRound, LogOut, Lock } from "lucide-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
@@ -10,6 +11,7 @@ import { SubmitButton } from "@/components/shared/buttons"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
+import { LogoutModal } from "@/components/shared/modals"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { passwordService } from "../services/password.service"
 import {
@@ -27,6 +29,7 @@ export default function SecuritySettings({
   const client = useQueryClient()
   const navigate = useNavigate()
   const { t } = useTranslation("authPassword")
+  const [logoutAllOpen, setLogoutAllOpen] = useState(false)
   const form = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: { current_password: "", password: "", password_confirmation: "" },
@@ -42,12 +45,16 @@ export default function SecuritySettings({
   const logoutAll = useMutation({
     mutationFn: passwordService.logoutAll,
     onSuccess: (response) => {
+      setLogoutAllOpen(false)
       clearSession()
       client.clear()
       showSuccessToast(response.message ?? t("security.logoutSuccess"))
       navigate(loginPath, { replace: true })
     },
-    onError: (error) => showErrorToast(error, t("security.logoutError")),
+    onError: (error) => {
+      setLogoutAllOpen(false)
+      showErrorToast(error, t("security.logoutError"))
+    },
   })
 
   return (
@@ -65,10 +72,16 @@ export default function SecuritySettings({
       <div className="mt-8 border-t border-border/60 pt-6">
         <h3 className="font-semibold text-text-primary">{t("security.sessions")}</h3>
         <p className="mt-1 text-sm text-text-secondary">{t("security.sessionsDescription")}</p>
-        <Button className="mt-4" type="button" variant="destructive" disabled={logoutAll.isPending} onClick={() => logoutAll.mutate()}>
+        <Button className="mt-4" type="button" variant="destructive" disabled={logoutAll.isPending} onClick={() => setLogoutAllOpen(true)}>
           <LogOut /> {logoutAll.isPending ? t("security.loggingOut") : t("security.logoutAll")}
         </Button>
       </div>
+      <LogoutModal
+        open={logoutAllOpen}
+        loading={logoutAll.isPending}
+        onClose={() => setLogoutAllOpen(false)}
+        onConfirm={() => logoutAll.mutate()}
+      />
     </SectionCard>
   )
 }

@@ -15,13 +15,20 @@
     "save": "Save changes",
     "cancel": "Cancel"
   },
-  "columns": { "skill": "Skill", "slug": "Slug", "created": "Created", "actions": "Actions" },
+  "columns": { "icon": "Icon", "skill": "Skill", "slug": "Slug", "created": "Created", "actions": "Actions" },
   "actions": "Skill actions",
   "actionsFor": "Actions for {{name}}",
+  "uploadIcon": "Upload Icon",
   "delete": "Delete",
   "empty": "No skills were returned.",
   "emptyDescription": "The shared skills catalog is currently empty.",
   "created": "Skill created",
   "updated": "Skill updated",
-  "deleted": "Skill deleted"
+  "deleted": "Skill deleted",
+  "uploadIconTitle": "Upload icon for {{name}}",
+  "selectImage": "Select Image",
+  "selectedFile": "Selected: {{name}}",
+  "cancel": "Cancel",
+  "upload": "Upload",
+  "deleteIcon": "Delete Icon"
 }

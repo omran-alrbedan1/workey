@@ -18,6 +18,10 @@ import type {
   EmployerInterviewCompleteInput,
   EmployerInterviewEvaluateInput,
 } from "../types/employerInterviews.types"
+import type {
+  VideoSessionInput,
+  VideoSessionResponse,
+} from "../types/videoInterview.types"
 
 export const employerInterviewsService = {
   async listForApplication(applicationId: string | number): Promise<EmployerCollection<EmployerInterview>> {
@@ -115,6 +119,15 @@ export const employerInterviewsService = {
   async evaluate(interviewId: string | number, input: EmployerInterviewEvaluateInput): Promise<EmployerInterview> {
     return unwrapEmployerEntity<EmployerInterview>(
       await api.post(API_ENDPOINTS.interviews.evaluate(interviewId), input),
+    )
+  },
+
+  async createVideoSession(
+    interviewId: string | number,
+    input: VideoSessionInput = {},
+  ): Promise<VideoSessionResponse> {
+    return unwrapEmployerEntity<VideoSessionResponse>(
+      await api.post(API_ENDPOINTS.interviews.videoSession(interviewId), input),
     )
   },
 }

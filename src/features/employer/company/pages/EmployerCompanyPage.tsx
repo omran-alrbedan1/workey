@@ -1,10 +1,11 @@
-import { Building2 } from "lucide-react"
+import { Building2, Users } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { StatusBadge } from "@/components/shared/badges"
 import { keyOf } from "@/lib/keyValue"
 import EmployerCompanyForm from "../components/EmployerCompanyForm"
+import TeamManagementSection from "../components/TeamManagementSection"
 import { useEmployerCompany } from "../hooks/useEmployerCompany"
 
 export default function EmployerCompanyPage() {
@@ -63,17 +64,20 @@ export default function EmployerCompanyPage() {
       {company.isPending || !company.data ? (
         <div className="h-96 animate-pulse rounded-lg bg-background-secondary" />
       ) : (
-        <EmployerCompanyForm
-          company={company.data}
-          isPending={company.updateMutation.isPending}
-          onSubmit={company.updateMutation.mutateAsync}
-          onLogoUpload={handleLogoUpload}
-          onLogoRemove={handleLogoRemove}
-          onCoverUpload={handleCoverUpload}
-          onCoverRemove={handleCoverRemove}
-          isLogoUploading={company.updateLogoMutation.isPending}
-          isCoverUploading={company.updateCoverMutation.isPending}
-        />
+        <>
+          <EmployerCompanyForm
+            company={company.data}
+            isPending={company.updateMutation.isPending}
+            onSubmit={company.updateMutation.mutateAsync}
+            onLogoUpload={handleLogoUpload}
+            onLogoRemove={handleLogoRemove}
+            onCoverUpload={handleCoverUpload}
+            onCoverRemove={handleCoverRemove}
+            isLogoUploading={company.updateLogoMutation.isPending}
+            isCoverUploading={company.updateCoverMutation.isPending}
+          />
+          <TeamManagementSection />
+        </>
       )}
     </div>
   )

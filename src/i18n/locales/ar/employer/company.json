@@ -21,6 +21,71 @@
     "coverRequirements": "JPG, PNG, WebP - حد أقصى 2MB"
   },
   "actions": { "save": "حفظ الشركة", "saving": "جارٍ الحفظ..." },
+  "team": {
+    "title": "إدارة الفريق",
+    "description": "قم بدعوة زملاء العمل وإدارة الأدوار والصلاحيات ونقل الملكية.",
+    "inviteButton": "دعوة عضو",
+    "member": "عضو",
+    "currentUser": "(أنت)",
+    "membersEmpty": "لا يوجد أعضاء في الفريق بعد.",
+    "invitationsEmpty": "لا توجد دعوات معلقة.",
+    "roleLabel": "الدور: {role}",
+    "cancel": "إلغاء",
+    "submitting": "جارٍ الحفظ...",
+    "tabs": { "members": "الأعضاء", "invitations": "الدعوات" },
+    "roles": {
+      "admin": "مدير",
+      "recruiter": "مسؤول توظيف",
+      "interviewer": "مقابِل",
+      "member": "عضو"
+    },
+    "statusOptions": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "suspended": "موقوف"
+    },
+    "actions": {
+      "changeRole": "تغيير الدور",
+      "changeStatus": "تغيير الحالة",
+      "transferOwnership": "نقل الملكية",
+      "remove": "إزالة العضو"
+    },
+    "roleDialog": {
+      "title": "تغيير دور العضو",
+      "description": "قم بتحديث دور {name}.",
+      "label": "الدور",
+      "submit": "تحديث الدور"
+    },
+    "statusDialog": {
+      "title": "تغيير حالة العضو",
+      "description": "قم بتحديث حالة {name}.",
+      "label": "الحالة",
+      "submit": "تحديث الحالة"
+    },
+    "invitationDialog": {
+      "title": "دعوة عضو فريق",
+      "description": "أرسل دعوة بالبريد الإلكتروني للانضمام إلى فريق شركتك.",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "submit": "إرسال الدعوة"
+    },
+    "transferDialog": {
+      "title": "نقل الملكية",
+      "description": "اختر عضواً ليصبح المالك الجديد للشركة.",
+      "member": "المالك الجديد",
+      "submit": "نقل الملكية"
+    },
+    "toasts": {
+      "roleUpdated": "تم تحديث دور العضو",
+      "statusUpdated": "تم تحديث حالة العضو",
+      "memberRemoved": "تم إزالة العضو",
+      "invitationSent": "تم إرسال الدعوة",
+      "invitationResent": "تم إعادة إرسال الدعوة",
+      "invitationRevoked": "تم إلغاء الدعوة",
+      "ownershipTransferred": "تم نقل الملكية",
+      "error": "حدث خطأ. يرجى المحاولة مرة أخرى."
+    }
+  },
   "toasts": {
     "updated": "تم تحديث ملف الشركة",
     "updateError": "فشل تحديث ملف الشركة",

@@ -3,7 +3,6 @@ import { Ban } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import {
@@ -16,13 +15,10 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 import type { EmployerInterviewCancelInput } from "../types/employerInterviews.types"
-
-const schema = z.object({
-  reason: z.string().trim().min(1).max(2000),
-  candidate_message: z.string().trim().max(2000).optional(),
-})
-
-type FormValues = z.infer<typeof schema>
+import {
+  cancelInterviewSchema,
+  type CancelInterviewFormValues,
+} from "../validations/employerInterviews.validation"
 
 export default function CancelInterviewDialog({
   open,
@@ -36,8 +32,8 @@ export default function CancelInterviewDialog({
   onSubmit: (input: EmployerInterviewCancelInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerInterviews")
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<CancelInterviewFormValues>({
+    resolver: zodResolver(cancelInterviewSchema),
     defaultValues: { reason: "", candidate_message: "" },
   })
 
@@ -45,7 +41,7 @@ export default function CancelInterviewDialog({
     if (!open) form.reset()
   }, [form, open])
 
-  const submit = async (values: FormValues) => {
+  const submit = async (values: CancelInterviewFormValues) => {
     await onSubmit({
       reason: values.reason,
       candidate_message: values.candidate_message || undefined,
@@ -84,8 +80,19 @@ export default function CancelInterviewDialog({
               />
             </div>
             <DialogFooter>
-              <CancelButton type="button" disabled={isPending} onClick={() => onOpenChange(false)} text={t("cancel.close")} />
-              <SubmitButton isLoading={isPending} text={t("cancel.submit")} loadingText={t("cancel.submitting")} icon={<Ban />} className="w-auto" />
+              <CancelButton
+                type="button"
+                disabled={isPending}
+                onClick={() => onOpenChange(false)}
+                text={t("cancel.close")}
+              />
+              <SubmitButton
+                isLoading={isPending}
+                text={t("cancel.submit")}
+                loadingText={t("cancel.submitting")}
+                icon={<Ban />}
+                className="w-auto"
+              />
             </DialogFooter>
           </form>
         </Form>

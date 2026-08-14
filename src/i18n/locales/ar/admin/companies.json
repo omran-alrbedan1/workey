@@ -69,7 +69,42 @@
     "tabs": {
       "overview": "نظرة عامة",
       "recruitment": "التوظيف",
-      "verification": "التحقق"
+      "verification": "التحقق",
+      "members": "الأعضاء"
+    }
+  },
+  "members": {
+    "description": "إدارة أعضاء الفريق التابعين لهذه الشركة.",
+    "inviteButton": "دعوة عضو",
+    "empty": "لا يوجد أعضاء لهذه الشركة.",
+    "owner": "(المالك)",
+    "cancel": "إلغاء",
+    "submitting": "جارٍ الحفظ...",
+    "roles": {
+      "admin": "مدير",
+      "recruiter": "مسؤول توظيف",
+      "interviewer": "مقابِل",
+      "member": "عضو"
+    },
+    "actions": {
+      "changeRole": "تغيير الدور"
+    },
+    "invitationDialog": {
+      "title": "دعوة عضو فريق",
+      "description": "أرسل دعوة بالبريد الإلكتروني نيابةً عن هذه الشركة.",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "submit": "إرسال الدعوة"
+    },
+    "roleDialog": {
+      "title": "تغيير دور العضو",
+      "description": "قم بتحديث دور {name}.",
+      "label": "الدور",
+      "submit": "تحديث الدور"
+    },
+    "toasts": {
+      "invitationSent": "تم إرسال الدعوة",
+      "roleUpdated": "تم تحديث دور العضو"
     }
   },
   "overview": {

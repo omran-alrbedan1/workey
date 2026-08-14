@@ -18,6 +18,8 @@ export const API_ENDPOINTS = Object.freeze({
     changePassword: "/auth/change-password",
     registerEmployer: "/auth/register/employer",
     registerJobSeeker: "/auth/register/job-seeker",
+    emailVerifyOtp: "/auth/email/verify-otp",
+    emailResendOtp: "/auth/email/resend-otp",
   },
   company: "/company",
   employerProfile: "/employer/profile",
@@ -111,6 +113,7 @@ export const API_ENDPOINTS = Object.freeze({
     scheduleHistory: (id: string | number) => `/interviews/${id}/schedule-history`,
     complete: (id: string | number) => `/interviews/${id}/complete`,
     evaluate: (id: string | number) => `/interviews/${id}/evaluate`,
+    videoSession: (id: string | number) => `/interviews/${id}/video-session`,
   },
   employer: {
     company: "/company",
@@ -118,6 +121,24 @@ export const API_ENDPOINTS = Object.freeze({
     jobs: "/jobs/my",
     jobApplications: (id: string | number) => `/jobs/${id}/applications`,
     rankedCandidates: (id: string | number) => `/jobs/${id}/candidates/ranked`,
+  },
+  companyTeam: {
+    members: "/company/members",
+    memberRole: (userId: string | number) => `/company/members/${userId}/role`,
+    memberStatus: (userId: string | number) => `/company/members/${userId}/status`,
+    member: (userId: string | number) => `/company/members/${userId}`,
+    invitations: "/company/invitations",
+    invitationResend: (invitationId: string | number) =>
+      `/company/invitations/${invitationId}/resend`,
+    invitationRevoke: (invitationId: string | number) =>
+      `/company/invitations/${invitationId}/revoke`,
+    transferOwnership: "/company/transfer-ownership",
+  },
+  adminCompanyMembers: {
+    list: (companyId: string | number) => `/admin/companies/${companyId}/members`,
+    invitation: (companyId: string | number) => `/admin/companies/${companyId}/invitations`,
+    memberRole: (companyId: string | number, userId: string | number) =>
+      `/admin/companies/${companyId}/members/${userId}/role`,
   },
   admin: {
     auditLogs: "/admin/audit-logs",
@@ -131,6 +152,7 @@ export const API_ENDPOINTS = Object.freeze({
     companyById: (id: string | number) => `/admin/companies/${id}`,
     jobs: "/jobs",
     jobById: (id: string | number) => `/jobs/${id}`,
+    recommendedJobs: "/jobs/recommended",
     applications: "/admin/applications",
     applicationById: (id: string | number) => `/admin/applications/${id}`,
     interviews: "/admin/interviews",
@@ -140,6 +162,7 @@ export const API_ENDPOINTS = Object.freeze({
     suspendCompany: (id: string | number) => `/admin/companies/${id}/suspend`,
     skills: "/admin/skills",
     skillById: (id: string | number) => `/admin/skills/${id}`,
+    skillIcon: (id: string | number) => `/admin/skills/${id}/icon`,
     tests: "/admin/tests",
     testById: (id: string | number) => `/admin/tests/${id}`,
     reports: {
@@ -154,5 +177,10 @@ export const API_ENDPOINTS = Object.freeze({
     unreadCount: "/notifications/unread-count",
     markRead: (id: string | number) => `/notifications/${id}/read`,
     markAllRead: "/notifications/read-all",
+  },
+  activity: "/api/v1/activity",
+  reference: {
+    cities: "/api/v1/reference/cities",
+    jobFilters: "/api/v1/reference/job-filters",
   },
 } as const)

@@ -69,7 +69,42 @@
     "tabs": {
       "overview": "Overview",
       "recruitment": "Recruitment",
-      "verification": "Verification"
+      "verification": "Verification",
+      "members": "Members"
+    }
+  },
+  "members": {
+    "description": "Manage the team members belonging to this company.",
+    "inviteButton": "Invite member",
+    "empty": "No company members were returned.",
+    "owner": "(owner)",
+    "cancel": "Cancel",
+    "submitting": "Saving...",
+    "roles": {
+      "admin": "Admin",
+      "recruiter": "Recruiter",
+      "interviewer": "Interviewer",
+      "member": "Member"
+    },
+    "actions": {
+      "changeRole": "Change role"
+    },
+    "invitationDialog": {
+      "title": "Invite team member",
+      "description": "Send an email invitation on behalf of this company.",
+      "email": "Email address",
+      "role": "Role",
+      "submit": "Send invitation"
+    },
+    "roleDialog": {
+      "title": "Change member role",
+      "description": "Update the role of {name}.",
+      "label": "Role",
+      "submit": "Update role"
+    },
+    "toasts": {
+      "invitationSent": "Invitation sent",
+      "roleUpdated": "Member role updated"
     }
   },
   "overview": {

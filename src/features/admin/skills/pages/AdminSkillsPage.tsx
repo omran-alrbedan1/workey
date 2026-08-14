@@ -38,6 +38,7 @@ export default function AdminSkillsPage() {
         isUpdating={skills.updateMutation.isPending}
         onDelete={(id) => skills.deleteMutation.mutateAsync(id)}
         onUpdate={(input) => skills.updateMutation.mutateAsync(input)}
+        onRefetch={() => skills.refetch()}
       />
     </div>
   )

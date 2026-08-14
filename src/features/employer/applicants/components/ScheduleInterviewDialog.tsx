@@ -3,7 +3,6 @@ import { CalendarClock, CalendarPlus, Link2, MapPin, UserRound, Video } from "lu
 import { useEffect } from "react"
 import { useForm, type Resolver } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
@@ -15,11 +14,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import type { Option } from "@/types/customFormField.types"
 import type { EmployerApplicant, EmployerInterviewInput } from "../types/employerApplicants.types"
 import { candidateDisplayName } from "../utils/candidateDisplay"
+import {
+  scheduleInterviewSchema,
+  type ScheduleInterviewFormValues,
+} from "../validations/employerApplicants.validation"
 
 const interviewTypeOptions: Option[] = [
   { value: "hr", label: "interview.types.hr" },
@@ -31,47 +41,6 @@ const interviewModeOptions: Option[] = [
   { value: "online", label: "interview.modes.online", icon: Video },
   { value: "on_site", label: "interview.modes.onSite", icon: MapPin },
 ]
-
-const schema = z
-  .object({
-    type: z.enum(["hr", "technical", "final"]),
-    scheduled_at: z.string().min(1),
-    duration_minutes: z.coerce.number().int().min(1).max(480),
-    mode: z.enum(["online", "on_site"]),
-    meeting_link: z.string().trim().max(2048).optional(),
-    location: z.string().trim().max(1000).optional(),
-    notes: z.string().trim().max(2000).optional(),
-    internal_note: z.string().trim().max(5000).optional(),
-  })
-  .superRefine((values, ctx) => {
-    const start = new Date(values.scheduled_at)
-    if (Number.isNaN(start.getTime()) || start.getTime() <= Date.now()) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["scheduled_at"], message: "Choose a future time" })
-    }
-
-    if (values.mode === "online") {
-      const link = values.meeting_link?.trim()
-      if (!link) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["meeting_link"],
-          message: "Meeting link is required for online interviews",
-        })
-      } else if (!z.string().url().safeParse(link).success) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["meeting_link"], message: "Enter a valid URL" })
-      }
-    }
-
-    if (values.mode === "on_site" && !values.location) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["location"],
-        message: "Location is required for on-site interviews",
-      })
-    }
-  })
-
-type FormValues = z.infer<typeof schema>
 
 export default function ScheduleInterviewDialog({
   application,
@@ -87,8 +56,8 @@ export default function ScheduleInterviewDialog({
   onSubmit: (applicationId: string | number, input: EmployerInterviewInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerApplicants")
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema) as Resolver<FormValues>,
+  const form = useForm<ScheduleInterviewFormValues>({
+    resolver: zodResolver(scheduleInterviewSchema) as Resolver<ScheduleInterviewFormValues>,
     defaultValues: {
       type: "hr",
       scheduled_at: "",
@@ -107,7 +76,7 @@ export default function ScheduleInterviewDialog({
 
   const mode = form.watch("mode")
 
-  const submit = async (values: FormValues) => {
+  const submit = async (values: ScheduleInterviewFormValues) => {
     if (!application) return
     const start = new Date(values.scheduled_at)
     const end = new Date(start.getTime() + values.duration_minutes * 60_000)
@@ -141,7 +110,9 @@ export default function ScheduleInterviewDialog({
                   <DialogTitle className="flex items-center gap-2">
                     {t("interview.title")}
                   </DialogTitle>
-                  <DialogDescription>{t("interview.description", { name: candidate })}</DialogDescription>
+                  <DialogDescription>
+                    {t("interview.description", { name: candidate })}
+                  </DialogDescription>
                   <div className="inline-flex max-w-full items-center gap-2 rounded-md border border-border bg-background px-2.5 py-1 text-xs text-text-muted">
                     <UserRound className="h-3.5 w-3.5 shrink-0" />
                     <span className="truncate">{candidate}</span>
@@ -250,8 +221,19 @@ export default function ScheduleInterviewDialog({
               />
             </div>
             <DialogFooter>
-              <CancelButton type="button" disabled={isPending} onClick={() => onOpenChange(false)} text={t("interview.cancel")} />
-              <SubmitButton isLoading={isPending} text={t("interview.schedule")} loadingText={t("interview.scheduling")} icon={<CalendarPlus />} className="w-auto" />
+              <CancelButton
+                type="button"
+                disabled={isPending}
+                onClick={() => onOpenChange(false)}
+                text={t("interview.cancel")}
+              />
+              <SubmitButton
+                isLoading={isPending}
+                text={t("interview.schedule")}
+                loadingText={t("interview.scheduling")}
+                icon={<CalendarPlus />}
+                className="w-auto"
+              />
             </DialogFooter>
           </form>
         </Form>

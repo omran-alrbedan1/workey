@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Edit, MoreHorizontal, Trash2, Badge, Hash, Calendar } from "lucide-react"
+import { Edit, MoreHorizontal, Trash2, Badge, Hash, Calendar, Image as ImageIcon, Upload } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -36,6 +36,7 @@ import { images } from "@/constants/images"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 import type { AdminSkillInput, AdminSkillRecord } from "../types/adminSkills.types"
 import { adminSkillSchema, type AdminSkillFormValues } from "../validations/adminSkills.validation"
+import SkillIconUpload from "./SkillIconUpload"
 
 function EditSkillDialog({
   skill,
@@ -127,6 +128,7 @@ export default function AdminSkillsTable({
   pagination,
   onDelete,
   onUpdate,
+  onRefetch,
 }: {
   skills: AdminSkillRecord[]
   isLoading: boolean
@@ -135,10 +137,12 @@ export default function AdminSkillsTable({
   pagination?: AdminPagination
   onDelete: (id: string | number) => Promise<unknown>
   onUpdate: (input: AdminSkillInput & { id: string | number }) => Promise<unknown>
+  onRefetch: () => void
 }) {
   const { t, i18n } = useTranslation("adminSkills")
   const [skillToDelete, setSkillToDelete] = useState<AdminSkillRecord | null>(null)
   const [skillToEdit, setSkillToEdit] = useState<AdminSkillRecord | null>(null)
+  const [skillToUploadIcon, setSkillToUploadIcon] = useState<AdminSkillRecord | null>(null)
 
   const confirmDelete = async () => {
     if (!skillToDelete) return
@@ -147,6 +151,20 @@ export default function AdminSkillsTable({
   }
 
   const columns: Column<AdminSkillRecord>[] = [
+    {
+      key: "icon",
+      header: t("columns.icon"),
+      headerIcon: ImageIcon,
+      cell: (skill) => (
+        skill.icon ? (
+          <img src={skill.icon} alt={`${skill.name} icon`} className="h-8 w-8 rounded object-cover" />
+        ) : (
+          <div className="flex h-8 w-8 items-center justify-center rounded bg-muted">
+            <ImageIcon className="h-4 w-4 text-text-muted" />
+          </div>
+        )
+      ),
+    },
     {
       key: "name",
       header: t("columns.skill"),
@@ -194,6 +212,10 @@ export default function AdminSkillsTable({
                 <Edit className="h-4 w-4" />
                 {t("edit.action")}
               </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2" onSelect={() => setSkillToUploadIcon(skill)}>
+                <Upload className="h-4 w-4" />
+                {t("uploadIcon")}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
                 onSelect={() => setSkillToDelete(skill)}
@@ -235,6 +257,14 @@ export default function AdminSkillsTable({
           if (!isUpdating) setSkillToEdit(null)
         }}
         onUpdate={onUpdate}
+      />
+      <SkillIconUpload
+        skillId={skillToUploadIcon?.id ?? ""}
+        skillName={skillToUploadIcon?.name ?? ""}
+        currentIcon={skillToUploadIcon?.icon}
+        open={skillToUploadIcon !== null}
+        onOpenChange={(open) => !open && setSkillToUploadIcon(null)}
+        onSuccess={onRefetch}
       />
       <DeleteModal
         open={skillToDelete !== null}

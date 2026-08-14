@@ -3,7 +3,6 @@ import { AlertTriangle, Ban, X } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 import { images } from "@/constants/images"
+import { createSuspendSchema, type SuspendFormValues } from "./validations/sharedModals.validation"
 
 interface SuspendModalProps {
   open: boolean
@@ -34,12 +34,8 @@ export default function SuspendModal({
   name,
 }: SuspendModalProps) {
   const { t } = useTranslation("common")
-  const suspendSchema = z.object({
-    reason: z.string().max(255, t("modals.reasonTooLong")).optional(),
-  })
-  type SuspendFormValues = z.infer<typeof suspendSchema>
   const form = useForm<SuspendFormValues>({
-    resolver: zodResolver(suspendSchema),
+    resolver: zodResolver(createSuspendSchema(t)),
     defaultValues: { reason: "" },
   })
 

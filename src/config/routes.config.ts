@@ -4,6 +4,7 @@ export const ROUTES = Object.freeze({
     login: "/login",
     forgotPassword: "/forgot-password",
     resetPassword: "/reset-password",
+    emailVerification: "/email-verification",
   },
   admin: {
     root: "/admin",

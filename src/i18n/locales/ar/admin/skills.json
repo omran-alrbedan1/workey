@@ -16,6 +16,7 @@
     "cancel": "إلغاء"
   },
   "columns": {
+    "icon": "الأيقونة",
     "skill": "المهارة",
     "slug": "المعرّف",
     "created": "تاريخ الإنشاء",
@@ -23,10 +24,17 @@
   },
   "actions": "إجراءات المهارة",
   "actionsFor": "إجراءات {{name}}",
+  "uploadIcon": "رفع الأيقونة",
   "delete": "حذف",
   "empty": "لم يتم إرجاع مهارات.",
   "emptyDescription": "دليل المهارات المشترك فارغ حالياً.",
   "created": "تم إنشاء المهارة",
   "updated": "تم تحديث المهارة",
-  "deleted": "تم حذف المهارة"
+  "deleted": "تم حذف المهارة",
+  "uploadIconTitle": "رفع أيقونة لـ {{name}}",
+  "selectImage": "اختر صورة",
+  "selectedFile": "المحدد: {{name}}",
+  "cancel": "إلغاء",
+  "upload": "رفع",
+  "deleteIcon": "حذف الأيقونة"
 }

@@ -30,6 +30,12 @@ API.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Add Accept-Language header for localization
+    if (typeof window !== 'undefined') {
+      const language = localStorage.getItem('i18nextLng') || 'en';
+      config.headers['Accept-Language'] = language;
+    }
     
     return config;
   },

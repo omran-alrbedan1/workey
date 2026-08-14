@@ -1,8 +1,7 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { useTranslation } from 'react-i18next'
-import { MessageSquare, Send, User, Phone, X } from 'lucide-react'
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslation } from "react-i18next"
+import { MessageSquare, Send, User, Phone, X } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -10,10 +9,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Form } from '@/components/ui/form'
-import CustomFormField, { FormFieldType } from '@/components/shared/inputs/CustomFormField'
-import { CancelButton, SubmitButton } from '@/components/shared/buttons'
+} from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
+import { CancelButton, SubmitButton } from "@/components/shared/buttons"
+import {
+  createSendMessageSchema,
+  type SendMessageFormValues,
+} from "./validations/sharedModals.validation"
 
 interface SendMessageModalProps {
   open: boolean
@@ -32,22 +35,14 @@ const SendMessageModal: React.FC<SendMessageModalProps> = ({
   name,
   phone,
 }) => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation("common")
 
-  const schema = z.object({
-    message: z.string()
-      .min(1, t('modals.sendMessage.messageRequired'))
-      .max(500, t('modals.sendMessage.messageTooLong')),
+  const form = useForm<SendMessageFormValues>({
+    resolver: zodResolver(createSendMessageSchema(t)),
+    defaultValues: { message: "" },
   })
 
-  type FormValues = z.infer<typeof schema>
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    defaultValues: { message: '' },
-  })
-
-  const handleSubmit = (data: FormValues) => {
+  const handleSubmit = (data: SendMessageFormValues) => {
     onConfirm(data.message)
   }
 
@@ -62,10 +57,8 @@ const SendMessageModal: React.FC<SendMessageModalProps> = ({
                   <MessageSquare className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl">{t('modals.sendMessage.title')}</DialogTitle>
-                  <DialogDescription>
-                    {t('modals.sendMessage.description')}
-                  </DialogDescription>
+                  <DialogTitle className="text-xl">{t("modals.sendMessage.title")}</DialogTitle>
+                  <DialogDescription>{t("modals.sendMessage.description")}</DialogDescription>
                 </div>
               </div>
             </DialogHeader>
@@ -76,7 +69,7 @@ const SendMessageModal: React.FC<SendMessageModalProps> = ({
                   <User className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">{t('modals.sendMessage.to')}</p>
+                  <p className="text-sm text-muted-foreground">{t("modals.sendMessage.to")}</p>
                   <p className="font-semibold text-foreground">{name}</p>
                 </div>
                 {phone && (
@@ -85,7 +78,9 @@ const SendMessageModal: React.FC<SendMessageModalProps> = ({
                       <Phone className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">{t('modals.sendMessage.phone')}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {t("modals.sendMessage.phone")}
+                      </p>
                       <p className="font-semibold text-xs text-foreground">{phone}</p>
                     </div>
                   </>
@@ -96,13 +91,13 @@ const SendMessageModal: React.FC<SendMessageModalProps> = ({
                 fieldType={FormFieldType.TEXTAREA}
                 control={form.control}
                 name="message"
-                label={t('modals.sendMessage.message')}
-                placeholder={t('modals.sendMessage.messagePlaceholder')}
+                label={t("modals.sendMessage.message")}
+                placeholder={t("modals.sendMessage.messagePlaceholder")}
                 disabled={loading}
                 required
                 rows={5}
                 maxLength={500}
-                description={t('modals.sendMessage.messageHint')}
+                description={t("modals.sendMessage.messageHint")}
                 containerClassName="space-y-2"
               />
             </div>
@@ -111,13 +106,13 @@ const SendMessageModal: React.FC<SendMessageModalProps> = ({
               <CancelButton
                 onClick={onClose}
                 disabled={loading}
-                text={t('modals.cancel')}
+                text={t("modals.cancel")}
                 icon={<X className="h-4 w-4" />}
               />
               <SubmitButton
                 isLoading={loading}
-                text={t('modals.sendMessage.confirm')}
-                loadingText={t('modals.sendMessage.confirmLoading')}
+                text={t("modals.sendMessage.confirm")}
+                loadingText={t("modals.sendMessage.confirmLoading")}
                 icon={<Send className="h-4 w-4" />}
               />
             </DialogFooter>

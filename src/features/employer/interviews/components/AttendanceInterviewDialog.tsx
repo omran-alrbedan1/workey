@@ -3,7 +3,6 @@ import { ClipboardCheck } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import {
@@ -17,20 +16,16 @@ import {
 import { Form } from "@/components/ui/form"
 import type { Option } from "@/types/customFormField.types"
 import type { EmployerInterviewAttendanceInput } from "../types/employerInterviews.types"
+import {
+  attendanceInterviewSchema,
+  type AttendanceInterviewFormValues,
+} from "../validations/employerInterviews.validation"
 
 const attendanceOptions: Option[] = [
   { value: "present", label: "attendance.present" },
   { value: "absent", label: "attendance.absent" },
   { value: "excused", label: "attendance.excused" },
 ]
-
-const schema = z.object({
-  candidate_status: z.enum(["present", "absent", "excused"]),
-  interviewer_status: z.enum(["present", "absent", "excused"]),
-  note: z.string().trim().max(2000).optional(),
-})
-
-type FormValues = z.infer<typeof schema>
 
 export default function AttendanceInterviewDialog({
   open,
@@ -44,8 +39,8 @@ export default function AttendanceInterviewDialog({
   onSubmit: (input: EmployerInterviewAttendanceInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerInterviews")
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<AttendanceInterviewFormValues>({
+    resolver: zodResolver(attendanceInterviewSchema),
     defaultValues: {
       candidate_status: "present",
       interviewer_status: "present",
@@ -57,7 +52,7 @@ export default function AttendanceInterviewDialog({
     if (!open) form.reset()
   }, [form, open])
 
-  const submit = async (values: FormValues) => {
+  const submit = async (values: AttendanceInterviewFormValues) => {
     await onSubmit({
       candidate_status: values.candidate_status,
       interviewer_status: values.interviewer_status,
@@ -82,7 +77,10 @@ export default function AttendanceInterviewDialog({
                   control={form.control}
                   name="candidate_status"
                   label={t("attendance.candidateStatus")}
-                  options={attendanceOptions.map((option) => ({ ...option, label: t(option.label) }))}
+                  options={attendanceOptions.map((option) => ({
+                    ...option,
+                    label: t(option.label),
+                  }))}
                   disabled={isPending}
                   required
                 />
@@ -91,7 +89,10 @@ export default function AttendanceInterviewDialog({
                   control={form.control}
                   name="interviewer_status"
                   label={t("attendance.interviewerStatus")}
-                  options={attendanceOptions.map((option) => ({ ...option, label: t(option.label) }))}
+                  options={attendanceOptions.map((option) => ({
+                    ...option,
+                    label: t(option.label),
+                  }))}
                   disabled={isPending}
                   required
                 />
@@ -107,8 +108,19 @@ export default function AttendanceInterviewDialog({
               />
             </div>
             <DialogFooter>
-              <CancelButton type="button" disabled={isPending} onClick={() => onOpenChange(false)} text={t("attendance.cancel")} />
-              <SubmitButton isLoading={isPending} text={t("attendance.submit")} loadingText={t("attendance.submitting")} icon={<ClipboardCheck />} className="w-auto" />
+              <CancelButton
+                type="button"
+                disabled={isPending}
+                onClick={() => onOpenChange(false)}
+                text={t("attendance.cancel")}
+              />
+              <SubmitButton
+                isLoading={isPending}
+                text={t("attendance.submit")}
+                loadingText={t("attendance.submitting")}
+                icon={<ClipboardCheck />}
+                className="w-auto"
+              />
             </DialogFooter>
           </form>
         </Form>

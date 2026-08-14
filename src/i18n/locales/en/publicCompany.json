@@ -1,0 +1,11 @@
+{
+  "about": "About",
+  "openPositions": "Open Positions",
+  "founded": "Founded",
+  "remote": "Remote",
+  "active": "Active",
+  "viewJob": "View Job",
+  "noJobs": "No open positions available",
+  "errorTitle": "Error",
+  "errorDescription": "Failed to load company information. Please try again later."
+}

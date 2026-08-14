@@ -2,8 +2,16 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useForm, useFieldArray } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { Plus, Trash2, MessageSquare, Calendar, FileText, Tag, AlignLeft, CheckCircle } from "lucide-react"
-import { z } from "zod"
+import {
+  Plus,
+  Trash2,
+  MessageSquare,
+  Calendar,
+  FileText,
+  Tag,
+  AlignLeft,
+  CheckCircle,
+} from "lucide-react"
 
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
@@ -15,24 +23,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { InformationRequest, InformationRequestInput } from "../types/employerApplicants.types"
-
-const itemSchema = z.object({
-  label: z.string().trim().min(1),
-  description: z.string().trim().optional(),
-  is_required: z.boolean(),
-})
-
-const schema = z.object({
-  message: z.string().trim().min(1),
-  due_at: z.string().optional(),
-  requested_items: z.array(itemSchema).min(1),
-})
-
-type FormValues = z.infer<typeof schema>
+import {
+  informationRequestSchema,
+  type InformationRequestFormValues,
+} from "../validations/employerApplicants.validation"
 
 interface InformationRequestDialogProps {
   open: boolean
@@ -50,8 +55,8 @@ export default function InformationRequestDialog({
   isSubmitting,
 }: InformationRequestDialogProps) {
   const { t } = useTranslation("employerApplicants")
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<InformationRequestFormValues>({
+    resolver: zodResolver(informationRequestSchema),
     defaultValues: {
       message: "",
       due_at: "",
@@ -76,12 +81,12 @@ export default function InformationRequestDialog({
           label: item.label,
           description: item.description || "",
           is_required: item.is_required || false,
-        }))
+        })),
       )
     }
   }, [form, open, request])
 
-  const submit = async (values: FormValues) => {
+  const submit = async (values: InformationRequestFormValues) => {
     await onSubmit({
       message: values.message.trim(),
       due_at: values.due_at || null,
@@ -140,14 +145,23 @@ export default function InformationRequestDialog({
                     <FileText className="h-4 w-4 text-primary" />
                     {t("informationRequests.requestedItemsLabel")}
                   </label>
-                  <Button type="button" size="sm" variant="outline" onClick={addItem} disabled={isSubmitting}>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={addItem}
+                    disabled={isSubmitting}
+                  >
                     <Plus className="h-4 w-4 mr-1" />
                     {t("informationRequests.addItem")}
                   </Button>
                 </div>
                 <div className="space-y-3">
                   {fields.map((field, index) => (
-                    <div key={field.id} className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div
+                      key={field.id}
+                      className="rounded-lg border border-border bg-background p-4 space-y-3"
+                    >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 space-y-3">
                           <CustomFormField
@@ -201,8 +215,18 @@ export default function InformationRequestDialog({
               </div>
             </div>
             <DialogFooter>
-              <CancelButton type="button" disabled={isSubmitting} onClick={() => onOpenChange(false)} text={t("informationRequests.cancel")} />
-              <SubmitButton isLoading={isSubmitting} text={t("informationRequests.submit")} loadingText={t("informationRequests.submitting")} className="w-auto" />
+              <CancelButton
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => onOpenChange(false)}
+                text={t("informationRequests.cancel")}
+              />
+              <SubmitButton
+                isLoading={isSubmitting}
+                text={t("informationRequests.submit")}
+                loadingText={t("informationRequests.submitting")}
+                className="w-auto"
+              />
             </DialogFooter>
           </form>
         </Form>

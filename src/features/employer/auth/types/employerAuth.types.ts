@@ -14,6 +14,7 @@ export interface EmployerAuthUser {
   email: string
   role: RoleObject
   status?: StatusObject
+  email_verified_at?: string | null
 }
 
 export interface EmployerAuthSession {

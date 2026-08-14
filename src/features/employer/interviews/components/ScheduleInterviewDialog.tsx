@@ -3,7 +3,6 @@ import { CalendarPlus, Link2, MapPin, Video } from "lucide-react"
 import { useEffect } from "react"
 import { useForm, type Resolver } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import {
@@ -17,6 +16,10 @@ import {
 import { Form } from "@/components/ui/form"
 import type { Option } from "@/types/customFormField.types"
 import type { EmployerInterviewInput } from "../types/employerInterviews.types"
+import {
+  scheduleInterviewSchema,
+  type ScheduleInterviewFormValues,
+} from "../validations/employerInterviews.validation"
 
 const interviewTypeOptions: Option[] = [
   { value: "hr", label: "interviewTypes.hr" },
@@ -28,36 +31,6 @@ const interviewModeOptions: Option[] = [
   { value: "online", label: "interviewModes.online", icon: Video },
   { value: "on_site", label: "interviewModes.onSite", icon: MapPin },
 ]
-
-const schema = z
-  .object({
-    interview_type: z.enum(["hr", "technical", "final"]),
-    scheduled_at: z.string().min(1),
-    duration_minutes: z.coerce.number().int().min(1).max(480),
-    interview_mode: z.enum(["online", "on_site"]),
-    meeting_link: z.string().trim().max(2048).optional(),
-    location: z.string().trim().max(1000).optional(),
-    notes: z.string().trim().max(2000).optional(),
-  })
-  .superRefine((values, ctx) => {
-    const start = new Date(values.scheduled_at)
-    if (Number.isNaN(start.getTime()) || start.getTime() <= Date.now()) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["scheduled_at"], message: "Choose a future time" })
-    }
-    if (values.interview_mode === "online") {
-      const link = values.meeting_link?.trim()
-      if (!link) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["meeting_link"], message: "Meeting link is required" })
-      } else if (!z.string().url().safeParse(link).success) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["meeting_link"], message: "Enter a valid URL" })
-      }
-    }
-    if (values.interview_mode === "on_site" && !values.location?.trim()) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["location"], message: "Location is required" })
-    }
-  })
-
-type FormValues = z.infer<typeof schema>
 
 export default function ScheduleInterviewDialog({
   applicationId,
@@ -75,8 +48,8 @@ export default function ScheduleInterviewDialog({
   onSubmit: (applicationId: string | number, input: EmployerInterviewInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerInterviews")
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema) as Resolver<FormValues>,
+  const form = useForm<ScheduleInterviewFormValues>({
+    resolver: zodResolver(scheduleInterviewSchema) as Resolver<ScheduleInterviewFormValues>,
     defaultValues: {
       interview_type: "hr",
       scheduled_at: "",
@@ -94,7 +67,7 @@ export default function ScheduleInterviewDialog({
 
   const watchMode = form.watch("interview_mode")
 
-  const submit = async (values: FormValues) => {
+  const submit = async (values: ScheduleInterviewFormValues) => {
     if (!applicationId) return
     const start = new Date(values.scheduled_at)
     const end = new Date(start.getTime() + values.duration_minutes * 60_000)
@@ -103,7 +76,8 @@ export default function ScheduleInterviewDialog({
       scheduled_start_at: start.toISOString(),
       scheduled_end_at: end.toISOString(),
       mode: values.interview_mode === "on_site" ? "on_site" : "online",
-      meeting_link: values.interview_mode === "online" ? values.meeting_link || undefined : undefined,
+      meeting_link:
+        values.interview_mode === "online" ? values.meeting_link || undefined : undefined,
       location_text: values.interview_mode === "on_site" ? values.location || undefined : undefined,
       candidate_message: values.notes || undefined,
     })
@@ -191,8 +165,18 @@ export default function ScheduleInterviewDialog({
               />
             </div>
             <DialogFooter>
-              <CancelButton disabled={isPending} onClick={() => onOpenChange(false)} text={t("schedule.cancel")} />
-              <SubmitButton isLoading={isPending} text={t("schedule.submit")} loadingText={t("schedule.submitting")} icon={<CalendarPlus />} className="w-auto" />
+              <CancelButton
+                disabled={isPending}
+                onClick={() => onOpenChange(false)}
+                text={t("schedule.cancel")}
+              />
+              <SubmitButton
+                isLoading={isPending}
+                text={t("schedule.submit")}
+                loadingText={t("schedule.submitting")}
+                icon={<CalendarPlus />}
+                className="w-auto"
+              />
             </DialogFooter>
           </form>
         </Form>

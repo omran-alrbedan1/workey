@@ -42,6 +42,12 @@ export interface TimeOption {
   interval?: number
 }
 
+export interface DateTimeOption {
+  minDate?: Date
+  maxDate?: Date
+  step?: number
+}
+
 export interface CustomFormFieldProps<T extends FieldValues = FieldValues> {
   fieldType: FormFieldType
   control: Control<T>
@@ -80,6 +86,9 @@ export interface CustomFormFieldProps<T extends FieldValues = FieldValues> {
   
   // Time picker props
   timeOptions?: TimeOption
+  
+  // Date & time picker props
+  dateTimeOptions?: DateTimeOption
   
   // Slider props
   sliderMarks?: Array<{ value: number; label: string }>

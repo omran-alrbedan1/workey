@@ -3,7 +3,6 @@ import { AlertTriangle, Ban, X } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
@@ -17,8 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 import { images } from "@/constants/images"
-
-type RejectFormValues = { reason?: string }
+import { createRejectSchema, type RejectFormValues } from "./validations/sharedModals.validation"
 
 interface RejectModalProps {
   open: boolean
@@ -44,17 +42,8 @@ export default function RejectModal({
   reasonRequired = false,
 }: RejectModalProps) {
   const { t } = useTranslation("common")
-  const rejectSchema = z.object({
-    reason: reasonRequired
-      ? z
-          .string()
-          .trim()
-          .min(1, t("modals.reject.reasonRequired"))
-          .max(255, t("modals.reasonTooLong"))
-      : z.string().max(255, t("modals.reasonTooLong")).optional(),
-  })
   const form = useForm<RejectFormValues>({
-    resolver: zodResolver(rejectSchema),
+    resolver: zodResolver(createRejectSchema(t, reasonRequired)),
     defaultValues: { reason: "" },
   })
 

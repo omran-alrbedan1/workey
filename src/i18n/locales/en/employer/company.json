@@ -21,6 +21,71 @@
     "coverRequirements": "JPG, PNG, WebP - Max 2MB"
   },
   "actions": { "save": "Save company", "saving": "Saving..." },
+  "team": {
+    "title": "Team Management",
+    "description": "Invite teammates, manage roles and permissions, and transfer ownership.",
+    "inviteButton": "Invite member",
+    "member": "member",
+    "currentUser": "(you)",
+    "membersEmpty": "No team members yet.",
+    "invitationsEmpty": "No pending invitations.",
+    "roleLabel": "Role: {role}",
+    "cancel": "Cancel",
+    "submitting": "Saving...",
+    "tabs": { "members": "Members", "invitations": "Invitations" },
+    "roles": {
+      "admin": "Admin",
+      "recruiter": "Recruiter",
+      "interviewer": "Interviewer",
+      "member": "Member"
+    },
+    "statusOptions": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended"
+    },
+    "actions": {
+      "changeRole": "Change role",
+      "changeStatus": "Change status",
+      "transferOwnership": "Transfer ownership",
+      "remove": "Remove member"
+    },
+    "roleDialog": {
+      "title": "Change member role",
+      "description": "Update the role of {name}.",
+      "label": "Role",
+      "submit": "Update role"
+    },
+    "statusDialog": {
+      "title": "Change member status",
+      "description": "Update the status of {name}.",
+      "label": "Status",
+      "submit": "Update status"
+    },
+    "invitationDialog": {
+      "title": "Invite team member",
+      "description": "Send an email invitation to join your company team.",
+      "email": "Email address",
+      "role": "Role",
+      "submit": "Send invitation"
+    },
+    "transferDialog": {
+      "title": "Transfer ownership",
+      "description": "Choose a member to become the new company owner.",
+      "member": "New owner",
+      "submit": "Transfer ownership"
+    },
+    "toasts": {
+      "roleUpdated": "Member role updated",
+      "statusUpdated": "Member status updated",
+      "memberRemoved": "Member removed",
+      "invitationSent": "Invitation sent",
+      "invitationResent": "Invitation resent",
+      "invitationRevoked": "Invitation revoked",
+      "ownershipTransferred": "Ownership transferred",
+      "error": "An error occurred. Please try again."
+    }
+  },
   "toasts": {
     "updated": "Company profile updated",
     "updateError": "Failed to update company profile",

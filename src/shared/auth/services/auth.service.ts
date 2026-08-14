@@ -21,6 +21,13 @@ export interface AuthUser {
   email: string
   role: RoleObject
   status?: StatusObject
+  email_verified_at?: string | null
+}
+
+export function isEmailVerified(user?: AuthUser | null): boolean {
+  if (!user) return false
+  if (typeof user.email_verified_at === "boolean") return user.email_verified_at
+  return Boolean(user.email_verified_at)
 }
 
 export interface AuthSession {

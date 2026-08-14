@@ -1,4 +1,4 @@
-import { Building2, BriefcaseBusiness, ExternalLink, ShieldCheck } from "lucide-react"
+import { Building2, BriefcaseBusiness, ExternalLink, ShieldCheck, Users } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
@@ -14,6 +14,7 @@ import AdminCompanyOverview from "../components/AdminCompanyOverview"
 import AdminCompanyOwnershipCard from "../components/AdminCompanyOwnershipCard"
 import AdminCompanyRecruitmentPanel from "../components/AdminCompanyRecruitmentPanel"
 import AdminCompanyVerificationCard from "../components/AdminCompanyVerificationCard"
+import CompanyMemberList from "../components/CompanyMemberList"
 import { useAdminCompanyDetails } from "../hooks/useAdminCompanyDetails"
 
 export default function AdminCompanyDetailsPage() {
@@ -130,6 +131,10 @@ export default function AdminCompanyDetailsPage() {
             <ShieldCheck className="h-4 w-4" />
             {t("details.tabs.verification")}
           </TabsTrigger>
+          <TabsTrigger value="members" className="gap-2  px-4 py-2.5">
+            <Users className="h-4 w-4" />
+            {t("details.tabs.members")}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -145,6 +150,10 @@ export default function AdminCompanyDetailsPage() {
 
         <TabsContent value="verification">
           <AdminCompanyVerificationCard company={company} />
+        </TabsContent>
+
+        <TabsContent value="members">
+          <CompanyMemberList companyId={company.id} />
         </TabsContent>
       </Tabs>
     </div>

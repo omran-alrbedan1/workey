@@ -38,7 +38,7 @@ export const employerRoutes: RouteObject = {
     { path: ROUTES.employer.editJob(":id"), element: <EmployerEditJobPage /> },
     { path: ROUTES.employer.applicants, element: <EmployerApplicantsPage /> },
     { path: "jobs/:jobId/applicants", element: <EmployerApplicantsPage /> },
-    { path: ROUTES.employer.applicantDetails(":id"), element: <EmployerApplicantDetailsPage /> },
+    { path: "/employer/applicants/:id", element: <EmployerApplicantDetailsPage /> },
     { path: ROUTES.employer.applicantTestDetails(":id", ":assignmentId"), element: <EmployerApplicantTestDetailsPage /> },
     { path: ROUTES.employer.interviews, element: <EmployerInterviewsPage /> },
     { path: ROUTES.employer.interviewDetails(":id"), element: <EmployerInterviewDetailsPage /> },

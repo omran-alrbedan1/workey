@@ -21,6 +21,7 @@
     DatePickerField,
     DateRangeField,
     TimePickerField,
+    DateTimePickerField,
     CheckboxField,
     CheckboxGroupField,
     RadioField,
@@ -45,6 +46,7 @@
     DATE_PICKER = "DATE_PICKER",
     DATE_RANGE = "DATE_RANGE",
     TIME_PICKER = "TIME_PICKER",
+    DATETIME_PICKER = "DATETIME_PICKER",
     SELECT = "SELECT",
     MULTI_SELECT = "MULTI_SELECT",
     COMBOBOX = "COMBOBOX",
@@ -93,6 +95,7 @@
       maxLength,
       dateOptions,
       timeOptions,
+      dateTimeOptions,
       sliderMarks,
       fileUploadOptions,
       maxRating,
@@ -160,6 +163,9 @@
         case FormFieldType.TIME_PICKER:
           return <TimePickerField {...commonProps} timeOptions={timeOptions} />
         
+        case FormFieldType.DATETIME_PICKER:
+          return <DateTimePickerField {...commonProps} dateTimeOptions={dateTimeOptions} />
+        
         case FormFieldType.CHECKBOX:
           return <CheckboxField {...commonProps} name={name} label={label} />
         
@@ -197,7 +203,7 @@
         default:
           return null
       }
-    }, [fieldType, props, disabled, inputClassName, ariaLabel, ariaDescribedBy, leftIcon, rightIcon, iconPosition, iconClassName, maxLength, min, max, step, options, dateOptions, timeOptions, sliderMarks, fileUploadOptions, maxRating, autocompleteOptions, colorPickerOptions, otpLength, tagInputOptions, currency, locale, name, label])
+    }, [fieldType, props, disabled, inputClassName, ariaLabel, ariaDescribedBy, leftIcon, rightIcon, iconPosition, iconClassName, maxLength, min, max, step, options, dateOptions, timeOptions, dateTimeOptions, sliderMarks, fileUploadOptions, maxRating, autocompleteOptions, colorPickerOptions, otpLength, tagInputOptions, currency, locale, name, label])
 
     const renderLabel = () => {
       if (!label && fieldType !== FormFieldType.CHECKBOX && fieldType !== FormFieldType.SWITCH) {

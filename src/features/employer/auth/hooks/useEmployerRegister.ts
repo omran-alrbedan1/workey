@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { ROUTES } from "@/config"
 import { showSuccessToast } from "@/lib/toast"
 import { employerAuthService } from "../services/employerAuth.service"
+import type { EmployerRegisterInput } from "../types/employerAuth.types"
 
 export function useEmployerRegister() {
   const { t } = useTranslation("employerAuth")
@@ -11,9 +12,12 @@ export function useEmployerRegister() {
 
   return useMutation({
     mutationFn: employerAuthService.register,
-    onSuccess: () => {
-      showSuccessToast(t("toasts.accountCreated"), t("toasts.signInNext"))
-      navigate(ROUTES.employer.login, { replace: true })
+    onSuccess: (_data, variables: EmployerRegisterInput) => {
+      showSuccessToast(t("toasts.accountCreated"), t("toasts.verifyEmailNext"))
+      navigate(
+        `${ROUTES.auth.emailVerification}?email=${encodeURIComponent(variables.email)}`,
+        { replace: true },
+      )
     },
   })
 }

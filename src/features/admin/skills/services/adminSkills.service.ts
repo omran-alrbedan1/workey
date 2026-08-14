@@ -24,4 +24,18 @@ export const adminSkillsService = {
   async remove(id: string | number): Promise<void> {
     await api.delete(API_ENDPOINTS.admin.skillById(id))
   },
+  async uploadIcon(id: string | number, file: File): Promise<AdminSkillRecord> {
+    const formData = new FormData()
+    formData.append("icon", file)
+    return unwrapEntity<AdminSkillRecord>(
+      await api.post(API_ENDPOINTS.admin.skillIcon(id), formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    )
+  },
+  async deleteIcon(id: string | number): Promise<void> {
+    await api.delete(API_ENDPOINTS.admin.skillIcon(id))
+  },
 }

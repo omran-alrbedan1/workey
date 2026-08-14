@@ -40,6 +40,7 @@ import CancelInterviewDialog from "../components/CancelInterviewDialog"
 import EvaluateInterviewDialog from "../components/EvaluateInterviewDialog"
 import NoShowInterviewDialog from "../components/NoShowInterviewDialog"
 import RescheduleInterviewDialog from "../components/RescheduleInterviewDialog"
+import VideoSessionSetup from "../components/VideoSessionSetup"
 import { useEmployerInterview } from "../hooks/useEmployerInterview"
 import type {
   EmployerInterviewHistoryItem,
@@ -70,6 +71,7 @@ export default function EmployerInterviewDetailsPage() {
   const [cancelOpen, setCancelOpen] = useState(false)
   const [attendanceOpen, setAttendanceOpen] = useState(false)
   const [noShowOpen, setNoShowOpen] = useState(false)
+  const [videoOpen, setVideoOpen] = useState(false)
 
   if (interview.isPending) {
     return <InterviewDetailsSkeleton />
@@ -102,6 +104,7 @@ export default function EmployerInterviewDetailsPage() {
   const canMarkNoShow = actionAllowed(data, "no_show", active && started)
   const canComplete = actionAllowed(data, "complete", statusKey === "confirmed" && started && bothPartiesPresent(data))
   const canEvaluate = actionAllowed(data, "evaluate", isCompleted && !data.evaluation)
+  const canJoinVideo = isOnline && active && actionAllowed(data, "join_video", true)
   const durationMinutes =
     startAt && endAt
       ? Math.round((new Date(endAt).getTime() - new Date(startAt).getTime()) / 60_000)
@@ -162,6 +165,12 @@ export default function EmployerInterviewDetailsPage() {
               </p>
             </div>
           </div>
+          {canJoinVideo && (
+            <Button onClick={() => setVideoOpen(true)} className="shrink-0">
+              <Video className="h-4 w-4" />
+              {t("video.join")}
+            </Button>
+          )}
         </div>
       </section>
 
@@ -355,6 +364,11 @@ export default function EmployerInterviewDetailsPage() {
         isPending={interview.evaluateMutation.isPending}
         onOpenChange={setEvaluateOpen}
         onSubmit={(input) => interview.evaluateMutation.mutateAsync(input)}
+      />
+      <VideoSessionSetup
+        interviewId={data.id}
+        open={videoOpen}
+        onOpenChange={setVideoOpen}
       />
     </div>
   )

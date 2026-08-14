@@ -6,6 +6,12 @@ import {
 } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminCollection, AdminListParams } from "@/features/admin/shared/types/adminApi.types"
 import type { AdminCompanyDetails, AdminCompanyRecord } from "../types/adminCompanies.types"
+import type {
+  AdminCompanyInvitation,
+  AdminCompanyInvitationInput,
+  AdminCompanyMember,
+  AdminCompanyMemberRoleInput,
+} from "../types/adminCompanyMembers.types"
 
 function normalizeCompany<T extends AdminCompanyRecord>(company: T): T {
   return {
@@ -46,6 +52,28 @@ export const adminCompaniesService = {
   async suspend(id: string | number): Promise<AdminCompanyRecord> {
     return normalizeCompany(
       unwrapEntity<AdminCompanyRecord>(await api.patch(API_ENDPOINTS.admin.suspendCompany(id))),
+    )
+  },
+  async listMembers(companyId: string | number): Promise<AdminCollection<AdminCompanyMember>> {
+    return unwrapCollection<AdminCompanyMember>(
+      await api.get(API_ENDPOINTS.adminCompanyMembers.list(companyId)),
+    )
+  },
+  async createInvitation(
+    companyId: string | number,
+    input: AdminCompanyInvitationInput,
+  ): Promise<AdminCompanyInvitation> {
+    return unwrapEntity<AdminCompanyInvitation>(
+      await api.post(API_ENDPOINTS.adminCompanyMembers.invitation(companyId), input),
+    )
+  },
+  async updateMemberRole(
+    companyId: string | number,
+    userId: string | number,
+    input: AdminCompanyMemberRoleInput,
+  ): Promise<AdminCompanyMember> {
+    return unwrapEntity<AdminCompanyMember>(
+      await api.patch(API_ENDPOINTS.adminCompanyMembers.memberRole(companyId, userId), input),
     )
   },
 }
