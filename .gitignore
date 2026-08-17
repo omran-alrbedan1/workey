@@ -41,3 +41,4 @@ docs/*
 # Allow admin/employer gap analysis and tasks
 !ADMIN_EMPLOYER_GAP_ANALYSIS.md
 !ADMIN_EMPLOYER_TASKS.md
+!PRODUCTION_POLISH.md

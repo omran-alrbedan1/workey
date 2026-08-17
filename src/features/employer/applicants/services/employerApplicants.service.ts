@@ -7,6 +7,7 @@ import {
 } from "@/features/employer/shared/services/employerResponse.utils"
 import type {
   EmployerApplicantDetail,
+  ApplicationCvSummary,
   ApplicationStatusChangeInput,
   ApplicationInternalNote,
   ApplicationInternalNoteInput,
@@ -20,6 +21,7 @@ import type {
   EmployerTestEvaluationInput,
   EmployerInterviewInput,
   EmployerInterviewEvaluationInput,
+  GenerateCvSummaryInput,
 } from "../types/employerApplicants.types"
 import { hasCandidateDisplayData } from "../utils/candidateDisplay"
 
@@ -162,6 +164,21 @@ export const employerApplicantsService = {
       responseType: "blob",
     })
     return response.data
+  },
+
+  async getCvSummary(applicationId: string | number): Promise<ApplicationCvSummary | null> {
+    return unwrapEmployerEntity<ApplicationCvSummary | null>(
+      await api.get(API_ENDPOINTS.applications.cvSummary(applicationId)),
+    )
+  },
+
+  async generateCvSummary(
+    applicationId: string | number,
+    input: GenerateCvSummaryInput = {},
+  ): Promise<ApplicationCvSummary> {
+    return unwrapEmployerEntity<ApplicationCvSummary>(
+      await api.post(API_ENDPOINTS.applications.cvSummary(applicationId), input),
+    )
   },
 
   async createInformationRequest(

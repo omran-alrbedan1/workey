@@ -84,6 +84,31 @@ export const employerTestsService = {
     await api.delete(API_ENDPOINTS.tests.questions.byId(testId, questionId))
   },
 
+  async uploadQuestionImage(
+    testId: string | number,
+    questionId: string | number,
+    image: File,
+  ): Promise<TestQuestionResponse> {
+    const formData = new FormData()
+    formData.append("image", image)
+    return unwrapEmployerEntity<TestQuestionResponse>(
+      await api.post(API_ENDPOINTS.tests.questions.image(testId, questionId), formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }),
+    )
+  },
+
+  async downloadQuestionImage(testId: string | number, questionId: string | number): Promise<Blob> {
+    const response = await rawApi.get(API_ENDPOINTS.tests.questions.image(testId, questionId), {
+      responseType: "blob",
+    })
+    return response.data
+  },
+
+  async deleteQuestionImage(testId: string | number, questionId: string | number): Promise<void> {
+    await api.delete(API_ENDPOINTS.tests.questions.image(testId, questionId))
+  },
+
   async reorderQuestions(
     testId: string | number,
     input: ReorderQuestionsInput,

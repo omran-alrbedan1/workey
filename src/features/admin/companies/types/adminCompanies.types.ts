@@ -82,6 +82,21 @@ export interface AdminCompanyDetails extends AdminCompanyRecord {
   last_active_at?: string | null
 }
 
+export interface AdminCompanyOwnerInput {
+  name?: string
+  email: string
+}
+
+export interface AdminCompanyInput {
+  name: string
+  industry?: string | null
+  website?: string | null
+  location?: string | null
+  description?: string | null
+  approval_status?: string
+  owner?: AdminCompanyOwnerInput
+}
+
 export interface AdminCompanyFilterForm {
   search: string
   status: string

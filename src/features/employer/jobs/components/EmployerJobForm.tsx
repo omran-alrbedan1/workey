@@ -73,18 +73,18 @@ export default function EmployerJobForm({
     defaultValues: {
       title: "",
       description: "",
-      department: null,
-      responsibilities: null,
-      benefits: null,
+      department: "",
+      responsibilities: "",
+      benefits: "",
       requirements: "",
       employment_type: "full_time" as EmploymentType,
       experience_level: "entry_level" as ExperienceLevel,
-      education_level: null as EducationLevel,
+      education_level: "" as EducationLevel,
       work_mode: "remote" as JobWorkMode,
-      location: null,
+      location: "",
       application_deadline: null,
-      salary_min: null,
-      salary_max: null,
+      salary_min: undefined,
+      salary_max: undefined,
     },
   })
 
@@ -93,18 +93,18 @@ export default function EmployerJobForm({
       form.reset({
         title: initialValues.title,
         description: initialValues.description,
-        department: initialValues.department ?? null,
-        responsibilities: initialValues.responsibilities ?? null,
-        benefits: initialValues.benefits ?? null,
+        department: initialValues.department ?? "",
+        responsibilities: initialValues.responsibilities ?? "",
+        benefits: initialValues.benefits ?? "",
         requirements: initialValues.requirements,
         employment_type: initialValues.employment_type,
         experience_level: initialValues.experience_level,
-        education_level: initialValues.education_level ?? null,
+        education_level: initialValues.education_level ?? "",
         work_mode: initialValues.work_mode,
-        location: initialValues.location ?? null,
+        location: initialValues.location ?? "",
         application_deadline: initialValues.application_deadline ?? null,
-        salary_min: initialValues.salary_min ?? null,
-        salary_max: initialValues.salary_max ?? null,
+        salary_min: initialValues.salary_min ?? undefined,
+        salary_max: initialValues.salary_max ?? undefined,
       })
     }
   }, [form, initialValues])
@@ -126,8 +126,8 @@ export default function EmployerJobForm({
             work_mode: values.work_mode,
             location: values.location?.trim() || null,
             application_deadline: values.application_deadline || null,
-            salary_min: values.salary_min || null,
-            salary_max: values.salary_max || null,
+            salary_min: values.salary_min ?? null,
+            salary_max: values.salary_max ?? null,
           }
           await onSubmit(normalized)
         })}

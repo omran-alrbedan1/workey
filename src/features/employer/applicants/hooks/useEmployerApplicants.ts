@@ -8,6 +8,10 @@ import type {
   EmployerInterviewInput,
 } from "../types/employerApplicants.types"
 
+function apiErrorCode(error: any) {
+  return error?.code ?? error?.response?.data?.code
+}
+
 export function useEmployerApplicants(jobId?: string | number) {
   const { t } = useTranslation("employerApplicants")
   const [page, setPage] = useState(1)
@@ -32,9 +36,10 @@ export function useEmployerApplicants(jobId?: string | number) {
     },
     onError: (error: any) => {
       const message = error?.response?.data?.message || error?.message || "Failed to update status"
-      if (error?.response?.data?.code === "INVALID_STATUS_TRANSITION") {
+      const code = apiErrorCode(error)
+      if (code === "INVALID_STATUS_TRANSITION") {
         showErrorToast(t("errors.invalidTransition"))
-      } else if (error?.response?.data?.code === "TERMINAL_STATE") {
+      } else if (code === "TERMINAL_STATE") {
         showErrorToast(t("errors.terminalState"))
       } else {
         showErrorToast(message)

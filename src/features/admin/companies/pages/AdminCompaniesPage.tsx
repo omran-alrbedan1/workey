@@ -1,16 +1,20 @@
-import { Building2 } from "lucide-react"
+import { Building2, Plus } from "lucide-react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { AdminFeatureError } from "@/features/admin/shared/components"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import AdminCompaniesTable from "../components/AdminCompaniesTable"
 import AdminCompaniesFilter from "../components/AdminCompaniesFilter"
+import AdminCompanyFormDialog from "../components/AdminCompanyFormDialog"
 import { useAdminCompanies } from "../hooks/useAdminCompanies"
 import { images } from "@/constants/images"
+import { Button } from "@/components/ui/button"
 
 export default function AdminCompaniesPage() {
   const { t } = useTranslation("adminCompanies")
   const companies = useAdminCompanies()
+  const [createOpen, setCreateOpen] = useState(false)
   if (companies.isError)
     return (
       <>
@@ -49,6 +53,23 @@ export default function AdminCompaniesPage() {
           src: images.companies,
           alt: t("page.imageAlt"),
         }}
+        rightContent={
+          <Button size="sm" onClick={() => setCreateOpen(true)}>
+            <Plus className="h-4 w-4" />
+            Create company
+          </Button>
+        }
+      />
+      <AdminCompanyFormDialog
+        open={createOpen}
+        mode="create"
+        isSubmitting={companies.createMutation.isPending}
+        onOpenChange={setCreateOpen}
+        onSubmit={(input) =>
+          companies.createMutation.mutate(input, {
+            onSuccess: () => setCreateOpen(false),
+          })
+        }
       />
       <AdminCompaniesFilter
         onApplyFilters={companies.applyFilters}

@@ -49,7 +49,7 @@ export default function InvitationList({
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-text-primary">{invitation.email}</p>
                 <p className="truncate text-xs text-text-muted">
-                  {t("team.roleLabel", { role: keyOf(invitation.role, "") })}
+                  {t("team.roleLabel", { role: keyOf(invitation.company_role ?? invitation.role, "") })}
                 </p>
               </div>
               <StatusBadge status={invitation.status} variant="soft" size="sm" />

@@ -19,6 +19,7 @@ import TestsTab from "../tabs/TestsTab"
 import FinalReviewPanel from "../FinalReviewPanel"
 import InformationRequests from "../InformationRequests"
 import InternalNotes from "../InternalNotes"
+import CvSummaryPanel from "../CvSummaryPanel"
 import ScheduleInterviewDialog from "../ScheduleInterviewDialog"
 import type { EmployerApplicantDetailsModel } from "../../hooks/useEmployerApplicantDetailsPage"
 
@@ -138,6 +139,7 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
             onStatusChange={model.handleStatusChange}
             isStatusPending={model.isStatusPending}
           />
+          {model.id && <CvSummaryPanel applicationId={model.id} />}
           {model.id && <InternalNotes applicationId={model.id} />}
           {model.id && <InformationRequests applicationId={model.id} />}
         </div>

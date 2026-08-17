@@ -1,0 +1,26 @@
+:root {
+  --workey-green-start: #29B148;
+  --workey-green-mid: #18A949;
+  --workey-green-end: #0FA348;
+  --workey-ink: #1B2831;
+  --workey-paper: #FDFDFD;
+  --workey-surface-soft: #F7F9F8;
+  --workey-border: #E1E6E3;
+  --workey-brand-gradient: linear-gradient(135deg, var(--workey-green-start) 0%, var(--workey-green-mid) 52%, var(--workey-green-end) 100%);
+
+  --workey-radius-sm: 8px;
+  --workey-radius-md: 12px;
+  --workey-radius-lg: 16px;
+  --workey-radius-xl: 24px;
+
+  --workey-space-1: 4px;
+  --workey-space-2: 8px;
+  --workey-space-3: 12px;
+  --workey-space-4: 16px;
+  --workey-space-6: 24px;
+  --workey-space-8: 32px;
+  --workey-space-12: 48px;
+  --workey-space-16: 64px;
+}
+
+/* Important: never recreate the logo with CSS. Use the packaged logo image files. */

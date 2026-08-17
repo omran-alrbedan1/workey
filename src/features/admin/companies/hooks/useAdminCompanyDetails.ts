@@ -1,10 +1,15 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useMemo } from "react"
 
 import type { AdminCollection } from "@/features/admin/shared/types/adminApi.types"
 
 import { adminCompaniesService } from "../services/adminCompanies.service"
-import type { AdminCompanyDetails, AdminCompanyRecord } from "../types/adminCompanies.types"
+import { showErrorToast, showSuccessToast } from "@/lib/toast"
+import type {
+  AdminCompanyDetails,
+  AdminCompanyInput,
+  AdminCompanyRecord,
+} from "../types/adminCompanies.types"
 
 const companyKeys = {
   all: ["admin", "companies"] as const,
@@ -53,10 +58,26 @@ export function useAdminCompanyDetails(id?: string) {
     retry: false,
   })
 
+  const updateMutation = useMutation({
+    mutationFn: (input: AdminCompanyInput) => adminCompaniesService.update(id as string, input),
+    onSuccess: async () => {
+      await Promise.all([
+        client.invalidateQueries({ queryKey: companyKeys.all, refetchType: "active" }),
+        client.invalidateQueries({
+          queryKey: companyKeys.details(id as string),
+          refetchType: "active",
+        }),
+      ])
+      showSuccessToast("Company updated")
+    },
+    onError: (error) => showErrorToast(error, "Unable to update company."),
+  })
+
   return {
     ...query,
     company: query.data ?? fallbackCompany,
     hasFallbackData: Boolean(fallbackCompany),
     isBackendCoverageMissing: query.isError && Boolean(fallbackCompany),
+    updateMutation,
   }
 }

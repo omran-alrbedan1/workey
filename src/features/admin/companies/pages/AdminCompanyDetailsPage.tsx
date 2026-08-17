@@ -1,4 +1,5 @@
-import { Building2, BriefcaseBusiness, ExternalLink, ShieldCheck, Users } from "lucide-react"
+import { Building2, BriefcaseBusiness, Edit, ExternalLink, ShieldCheck, Users } from "lucide-react"
+import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
@@ -14,6 +15,7 @@ import AdminCompanyOverview from "../components/AdminCompanyOverview"
 import AdminCompanyOwnershipCard from "../components/AdminCompanyOwnershipCard"
 import AdminCompanyRecruitmentPanel from "../components/AdminCompanyRecruitmentPanel"
 import AdminCompanyVerificationCard from "../components/AdminCompanyVerificationCard"
+import AdminCompanyFormDialog from "../components/AdminCompanyFormDialog"
 import CompanyMemberList from "../components/CompanyMemberList"
 import { useAdminCompanyDetails } from "../hooks/useAdminCompanyDetails"
 
@@ -22,6 +24,7 @@ export default function AdminCompanyDetailsPage() {
   const navigate = useNavigate()
   const { t } = useTranslation("adminCompanies")
   const companyQuery = useAdminCompanyDetails(id)
+  const [editOpen, setEditOpen] = useState(false)
 
   if (!id) {
     return (
@@ -75,7 +78,23 @@ export default function AdminCompanyDetailsPage() {
                 </a>
               </Button>
             ) : null}
+            <Button size="sm" onClick={() => setEditOpen(true)} className="gap-2">
+              <Edit className="h-4 w-4" />
+              Edit
+            </Button>
           </div>
+        }
+      />
+      <AdminCompanyFormDialog
+        open={editOpen}
+        mode="edit"
+        company={company}
+        isSubmitting={companyQuery.updateMutation.isPending}
+        onOpenChange={setEditOpen}
+        onSubmit={(input) =>
+          companyQuery.updateMutation.mutate(input, {
+            onSuccess: () => setEditOpen(false),
+          })
         }
       />
 

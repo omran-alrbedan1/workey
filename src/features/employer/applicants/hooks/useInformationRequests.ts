@@ -7,6 +7,14 @@ import type {
 } from "../types/employerApplicants.types"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 
+function apiErrorCode(error: any) {
+  return error?.code ?? error?.response?.data?.code
+}
+
+function apiErrorMessage(error: any, fallback: string) {
+  return error?.message ?? error?.response?.data?.message ?? fallback
+}
+
 export function useInformationRequests(applicationId: string | number | undefined) {
   const queryClient = useQueryClient()
 
@@ -25,8 +33,8 @@ export function useInformationRequests(applicationId: string | number | undefine
       showSuccessToast("Information request created")
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to create information request"
-      if (error?.response?.data?.code === "APPLICATION_INFORMATION_REQUEST_ALREADY_OPEN") {
+      const message = apiErrorMessage(error, "Failed to create information request")
+      if (apiErrorCode(error) === "APPLICATION_INFORMATION_REQUEST_ALREADY_OPEN") {
         showErrorToast("A pending information request already exists")
       } else {
         showErrorToast(message)
@@ -43,8 +51,7 @@ export function useInformationRequests(applicationId: string | number | undefine
       showSuccessToast("Information request updated")
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to update information request"
-      showErrorToast(message)
+      showErrorToast(apiErrorMessage(error, "Failed to update information request"))
     },
   })
 
@@ -57,8 +64,7 @@ export function useInformationRequests(applicationId: string | number | undefine
       showSuccessToast("Information request cancelled")
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to cancel information request"
-      showErrorToast(message)
+      showErrorToast(apiErrorMessage(error, "Failed to cancel information request"))
     },
   })
 
@@ -99,8 +105,7 @@ export function useDownloadAttachment() {
         document.body.removeChild(a)
         showSuccessToast("Attachment downloaded")
       } catch (error: any) {
-        const message = error?.response?.data?.message || "Failed to download attachment"
-        showErrorToast(message)
+        showErrorToast(apiErrorMessage(error, "Failed to download attachment"))
       }
     },
   }

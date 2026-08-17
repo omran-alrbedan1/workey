@@ -21,6 +21,11 @@ export const API_ENDPOINTS = Object.freeze({
     emailVerifyOtp: "/auth/email/verify-otp",
     emailResendOtp: "/auth/email/resend-otp",
   },
+  companyInvitations: {
+    byToken: (token: string) => `/company-invitations/${token}`,
+    accept: (token: string) => `/company-invitations/${token}/accept`,
+    reject: (token: string) => `/company-invitations/${token}/reject`,
+  },
   company: "/company",
   employerProfile: "/employer/profile",
   skills: "/skills",
@@ -49,6 +54,7 @@ export const API_ENDPOINTS = Object.freeze({
     interviews: (id: string | number) => `/applications/${id}/interviews`,
     internalNotes: (id: string | number) => `/applications/${id}/internal-notes`,
     informationRequests: (id: string | number) => `/applications/${id}/information-requests`,
+    cvSummary: (id: string | number) => `/applications/${id}/cv-summary`,
     cvPreview: (id: string | number) => `/applications/${id}/cv/preview`,
     cvDownload: (id: string | number) => `/applications/${id}/cv/download`,
   },
@@ -82,6 +88,8 @@ export const API_ENDPOINTS = Object.freeze({
       ) => `/tests/${testId}/questions/${questionId}/options/${optionId}`,
       reorderOptions: (testId: string | number, questionId: string | number) =>
         `/tests/${testId}/questions/${questionId}/options/reorder`,
+      image: (testId: string | number, questionId: string | number) =>
+        `/tests/${testId}/questions/${questionId}/image`,
     },
     start: (assignmentId: string | number) => `/tests/${assignmentId}/start`,
     submit: (assignmentId: string | number) => `/tests/${assignmentId}/submit`,
@@ -139,6 +147,12 @@ export const API_ENDPOINTS = Object.freeze({
     invitation: (companyId: string | number) => `/admin/companies/${companyId}/invitations`,
     memberRole: (companyId: string | number, userId: string | number) =>
       `/admin/companies/${companyId}/members/${userId}/role`,
+    memberStatus: (companyId: string | number, userId: string | number) =>
+      `/admin/companies/${companyId}/members/${userId}/status`,
+    member: (companyId: string | number, userId: string | number) =>
+      `/admin/companies/${companyId}/members/${userId}`,
+    transferOwnership: (companyId: string | number) =>
+      `/admin/companies/${companyId}/transfer-ownership`,
   },
   admin: {
     auditLogs: "/admin/audit-logs",
@@ -178,9 +192,9 @@ export const API_ENDPOINTS = Object.freeze({
     markRead: (id: string | number) => `/notifications/${id}/read`,
     markAllRead: "/notifications/read-all",
   },
-  activity: "/api/v1/activity",
+  activity: "/activity",
   reference: {
-    cities: "/api/v1/reference/cities",
-    jobFilters: "/api/v1/reference/job-filters",
+    cities: "/reference/cities",
+    jobFilters: "/reference/job-filters",
   },
 } as const)

@@ -19,7 +19,7 @@ import { Form } from "@/components/ui/form"
 import type { Option } from "@/types/customFormField.types"
 import type { CompanyMember } from "../types/employerTeam.types"
 
-const transferSchema = z.object({ user_id: z.string().min(1) })
+const transferSchema = z.object({ new_owner_user_id: z.string().min(1) })
 type TransferFormValues = z.infer<typeof transferSchema>
 
 export default function TransferOwnershipDialog({
@@ -38,7 +38,7 @@ export default function TransferOwnershipDialog({
   const { t } = useTranslation("employerCompany")
   const form = useForm<TransferFormValues>({
     resolver: zodResolver(transferSchema),
-    defaultValues: { user_id: "" },
+    defaultValues: { new_owner_user_id: "" },
   })
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function TransferOwnershipDialog({
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
-                name="user_id"
+                name="new_owner_user_id"
                 label={t("team.transferDialog.member")}
                 options={options}
                 disabled={isPending || options.length === 0}

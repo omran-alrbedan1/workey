@@ -1,0 +1,560 @@
+{
+  "brand": "WORKEY",
+  "source_file": "00_Source/WORKEY_approved_reference_UNCHANGED.png",
+  "source_sha256": "7165197958e008663b2f39b186440a34bb8e1471802c1c1c10f981923c7604b3",
+  "logo_policy": "No redesign. Primary logo raster is preserved from the supplied source.",
+  "files": [
+    {
+      "path": "00_Source/README_AR.md",
+      "bytes": 582,
+      "sha256": "f155c5758d7224608373b3ca479f226af31ae66c6a9a7bdc73303e1bf90d1b59",
+      "dimensions": null
+    },
+    {
+      "path": "00_Source/WORKEY_approved_reference_UNCHANGED.png",
+      "bytes": 2097772,
+      "sha256": "7165197958e008663b2f39b186440a34bb8e1471802c1c1c10f981923c7604b3",
+      "dimensions": "1254x1254"
+    },
+    {
+      "path": "01_Logos/App_Icons/dark-on-white-1024.png",
+      "bytes": 47218,
+      "sha256": "9ec2084c3d136db4ebca44e89059e458673ca894db383b270ec0a2017f1b8803",
+      "dimensions": "1024x1024"
+    },
+    {
+      "path": "01_Logos/App_Icons/dark-on-white-192.png",
+      "bytes": 5321,
+      "sha256": "bc24d35db073e14b942cfa7f0887129f90d6a27f1680f84b2a6840d0fd1cd455",
+      "dimensions": "192x192"
+    },
+    {
+      "path": "01_Logos/App_Icons/dark-on-white-512.png",
+      "bytes": 16426,
+      "sha256": "46699df9f75dbb7eb99ad6f61845a72d7d94632f5f811b8b1c91ce258d318c19",
+      "dimensions": "512x512"
+    },
+    {
+      "path": "01_Logos/App_Icons/gradient-on-dark-1024.png",
+      "bytes": 139758,
+      "sha256": "d7a4642dbc732cac3bb838efed3ad4ffcda519b11ac2b8169fa9c152b140ae07",
+      "dimensions": "1024x1024"
+    },
+    {
+      "path": "01_Logos/App_Icons/gradient-on-dark-192.png",
+      "bytes": 9855,
+      "sha256": "35f05655faf191c528c9e3e21454d171c12eb9c022325f9daf1c1868036c767f",
+      "dimensions": "192x192"
+    },
+    {
+      "path": "01_Logos/App_Icons/gradient-on-dark-512.png",
+      "bytes": 47717,
+      "sha256": "33ba548ab732a576ef4a34fec7f8d97db3d1caf3f3cad6ef7f4540caf3fe9726",
+      "dimensions": "512x512"
+    },
+    {
+      "path": "01_Logos/App_Icons/gradient-on-white-1024.png",
+      "bytes": 108014,
+      "sha256": "cfac34ec5021f628ea60e19696c677d5489666e080e4ca5ca3e67bffb4be7174",
+      "dimensions": "1024x1024"
+    },
+    {
+      "path": "01_Logos/App_Icons/gradient-on-white-192.png",
+      "bytes": 8420,
+      "sha256": "9fb6b342018a30bbeef9bee4e360178eeee2446b0f647398b4b701f9a963a3fc",
+      "dimensions": "192x192"
+    },
+    {
+      "path": "01_Logos/App_Icons/gradient-on-white-512.png",
+      "bytes": 39171,
+      "sha256": "cba84d7e8780eaeadb9463d8333c097adfb8668b043484dfd7f5050312d3cea8",
+      "dimensions": "512x512"
+    },
+    {
+      "path": "01_Logos/App_Icons/white-on-green-1024.png",
+      "bytes": 66141,
+      "sha256": "71c87c901be61bfccf6b4fdc49544dc0404dc22af6f0060bc9f093b2ca7d4c8f",
+      "dimensions": "1024x1024"
+    },
+    {
+      "path": "01_Logos/App_Icons/white-on-green-192.png",
+      "bytes": 6384,
+      "sha256": "3ba4fcc3b5ad33d9976da2f22f9308df7e03cb618c432a4298ada376dcaf760f",
+      "dimensions": "192x192"
+    },
+    {
+      "path": "01_Logos/App_Icons/white-on-green-512.png",
+      "bytes": 22755,
+      "sha256": "273d68e1363c15a350e74b10add181906a7c0c280f02a6bba229a7e470019125",
+      "dimensions": "512x512"
+    },
+    {
+      "path": "01_Logos/Primary/icon-gradient-preserved.svg",
+      "bytes": 122036,
+      "sha256": "e146d1c354fc6ad50108db881874aec15740cf147492cbdae73a069da182911a",
+      "dimensions": null
+    },
+    {
+      "path": "01_Logos/Primary/icon-gradient-transparent.png",
+      "bytes": 91318,
+      "sha256": "23e0bb446c6d4d6b4f01db3e1ec7f1fa341acfc310a9a45611afa2094e32702c",
+      "dimensions": "388x240"
+    },
+    {
+      "path": "01_Logos/Primary/lockup-horizontal-preserved.svg",
+      "bytes": 351459,
+      "sha256": "2b5cb4663f73ed939714c2392e32f6033c434992bd48bbf664697795bc7a6d77",
+      "dimensions": null
+    },
+    {
+      "path": "01_Logos/Primary/lockup-horizontal-transparent.png",
+      "bytes": 263385,
+      "sha256": "a38c9df01d2b310140d951c4042aa4cccb1fef142c1300c8e986978d813b30bd",
+      "dimensions": "1117x246"
+    },
+    {
+      "path": "01_Logos/Primary/wordmark-dark-preserved.svg",
+      "bytes": 141052,
+      "sha256": "eafc56ce0cc1d46563757e0d6e767d3ec7b09093bfd1dbe7e1d456b0e9dfb208",
+      "dimensions": null
+    },
+    {
+      "path": "01_Logos/Primary/wordmark-dark-transparent.png",
+      "bytes": 105580,
+      "sha256": "616ecff47833603d3480fdb6c75164a499ccd994c4a1d518b92836245553f302",
+      "dimensions": "700x128"
+    },
+    {
+      "path": "01_Logos/Reference_Raster/icon-gradient-on-reference-background.png",
+      "bytes": 89761,
+      "sha256": "2b2757ee0c0b796402373d728e6b044d51ec0ab10071ed4b53c1fb63208a8e78",
+      "dimensions": "390x240"
+    },
+    {
+      "path": "01_Logos/Reference_Raster/lockup-horizontal-on-reference-background.png",
+      "bytes": 269495,
+      "sha256": "c967fd77651855bfee1fbbe90d0d77cbec113b34c50f1d2de68402e77a15acbf",
+      "dimensions": "1130x260"
+    },
+    {
+      "path": "01_Logos/Reference_Raster/wordmark-dark-on-reference-background.png",
+      "bytes": 101384,
+      "sha256": "cda499b4a5056ca18b73ca738087122a7c6b40d419b3f0666bfe8fa6639b5ee0",
+      "dimensions": "700x130"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-1024px.png",
+      "bytes": 177431,
+      "sha256": "d532aa5503b7ba23f81627d8d8f9715f05a8665f7cd3c568e68b159247f3235c",
+      "dimensions": "1024x1024"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-128px.png",
+      "bytes": 8196,
+      "sha256": "ad050cd4b4b7e028c697cf994ef529d0072620a4b8bcd61f5b19078d1cfa4cd5",
+      "dimensions": "128x128"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-16px.png",
+      "bytes": 444,
+      "sha256": "6e9ed788e6e4e8c9827f3a4e6e7ad1368bc48dfdc25e41620e73c967eac34b39",
+      "dimensions": "16x16"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-180px.png",
+      "bytes": 13194,
+      "sha256": "a9e203b36d188688a436b49d981ca63a3024202a1f4ba96217458157bd7878fb",
+      "dimensions": "180x180"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-192px.png",
+      "bytes": 14431,
+      "sha256": "9d34cd148f71565fd1d795e0946c71b8b1f0aa204bc1efa6d7494937d76bf62a",
+      "dimensions": "192x192"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-24px.png",
+      "bytes": 774,
+      "sha256": "2cec98776ec34a0f67058825aec84c42ec2a73e102a96f38d0796a0319d11b65",
+      "dimensions": "24x24"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-256px.png",
+      "bytes": 22517,
+      "sha256": "456cb47e4edcb555e93e0ca9de321c228fae3093a7943f1da09a5d5e3ef1b3cf",
+      "dimensions": "256x256"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-32px.png",
+      "bytes": 1197,
+      "sha256": "dd1ac40892e4ed4cfe1c7c4e4505c7fe05e84c21cfa28641b35da3c350c4b1a5",
+      "dimensions": "32x32"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-384px.png",
+      "bytes": 43227,
+      "sha256": "15a32d7b2ff260011a580d0492a3ec4acf5adfb97be1466cb22b34fc8806a678",
+      "dimensions": "384x384"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-48px.png",
+      "bytes": 2072,
+      "sha256": "389b2fb63d4dce3d2b46331dceceedd32a5a9471cb69a4834a7e1351a5652902",
+      "dimensions": "48x48"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-512px.png",
+      "bytes": 67816,
+      "sha256": "4899d47de2d0895885543343847413e5b792213e0589d68c333c95d4330a7ca5",
+      "dimensions": "512x512"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-64px.png",
+      "bytes": 3088,
+      "sha256": "975c312bf26bb0423bceee24c91d08dfc79870dcef30aac35eed6dae8c820469",
+      "dimensions": "64x64"
+    },
+    {
+      "path": "01_Logos/Sizes/icon-gradient-96px.png",
+      "bytes": 5409,
+      "sha256": "5e0acdd1e9a852d85d511d103b301ef6b7ba95ee364f32aafa3cf6b36fce91fc",
+      "dimensions": "96x96"
+    },
+    {
+      "path": "01_Logos/Sizes/lockup-horizontal-1280w.png",
+      "bytes": 184925,
+      "sha256": "b7d69a74e679165a3d2ab64c974860a549f76bfdfd76d3828c3e1e462ebc14ca",
+      "dimensions": "1280x282"
+    },
+    {
+      "path": "01_Logos/Sizes/lockup-horizontal-1920w.png",
+      "bytes": 335393,
+      "sha256": "75812c1d477933c4119863a03bb3039cfdf35c86ac5ab5a3f3fcb34c3c6eceb6",
+      "dimensions": "1920x423"
+    },
+    {
+      "path": "01_Logos/Sizes/lockup-horizontal-320w.png",
+      "bytes": 23185,
+      "sha256": "28e70029096fe2515fa1e0ef2367f02d825951bf86e8a5af06c521a570ade6d1",
+      "dimensions": "320x70"
+    },
+    {
+      "path": "01_Logos/Sizes/lockup-horizontal-640w.png",
+      "bytes": 64548,
+      "sha256": "961fedd35902c971d0c4f25a55e7d6d4a59e11b7a0501cd647b9e0429adf2740",
+      "dimensions": "640x141"
+    },
+    {
+      "path": "01_Logos/Sizes/lockup-horizontal-960w.png",
+      "bytes": 118772,
+      "sha256": "0cab64e1e6a99b4bc50156bd0a2121a5645d2f6667e47fd3fd238fa889c2a361",
+      "dimensions": "960x211"
+    },
+    {
+      "path": "02_Brand_Guidelines/WORKEY-brand-board.png",
+      "bytes": 151111,
+      "sha256": "23d18685074a09feabadac43fc562e277828cc15d8eb107a25679a1202f7f891",
+      "dimensions": "1920x1080"
+    },
+    {
+      "path": "02_Brand_Guidelines/brand-guidelines-ar.html",
+      "bytes": 3512,
+      "sha256": "3ca9e7c79c7a0ecaa50072caad1318590a7bc77c17fe8d01c6063b7ba1ed798e",
+      "dimensions": null
+    },
+    {
+      "path": "02_Brand_Guidelines/colors.json",
+      "bytes": 540,
+      "sha256": "bf610cae88acbb71a5a53165a1f772333d474d44e07ac28140ca17761c6e8167",
+      "dimensions": null
+    },
+    {
+      "path": "02_Brand_Guidelines/design-tokens.json",
+      "bytes": 2010,
+      "sha256": "9a3ea04bdcee11e6aff2518229ba4262c43d9ef3cbd2bec927d075ac78553acb",
+      "dimensions": null
+    },
+    {
+      "path": "02_Brand_Guidelines/logo-usage-ar.md",
+      "bytes": 2190,
+      "sha256": "543122e3aa65078f557cfe272df31d4caf6b2577d64c5479515ec7b65c4b4db1",
+      "dimensions": null
+    },
+    {
+      "path": "02_Brand_Guidelines/typography-ar.md",
+      "bytes": 1368,
+      "sha256": "8ffbc1c4e86ed2a9982fc8457d06ac8b11d8ca0b9636f63db0bed95f1b1eed4a",
+      "dimensions": null
+    },
+    {
+      "path": "02_Brand_Guidelines/ui-ux-guidelines-ar.md",
+      "bytes": 1484,
+      "sha256": "405bb6e7b2c0b1b656ee128c75d5b890f852a9f91d6c4783619d005ec0fb4c98",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/landscape-1200x630-dark.png",
+      "bytes": 41819,
+      "sha256": "dce3c4925371e715f6a4f6ada0bd4e3298d6af75c3d590e7de5e9711cdfeb150",
+      "dimensions": "1200x630"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/landscape-1200x630-green.png",
+      "bytes": 33932,
+      "sha256": "eb639820d7bc55e7a4e97b2f79a70de26a12c5a321b3baaa44cd005fc6e90793",
+      "dimensions": "1200x630"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/landscape-1200x630-light.png",
+      "bytes": 29676,
+      "sha256": "52d5984f2b89a5cf0bda3292619d8d4064fd00c653a109b33e13ff9144df5aaf",
+      "dimensions": "1200x630"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/portrait-4x5-1080x1350-dark.png",
+      "bytes": 51626,
+      "sha256": "4055f498a93b5b605323219b556a24975decedbf01abba19f236a038511306dd",
+      "dimensions": "1080x1350"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/portrait-4x5-1080x1350-green.png",
+      "bytes": 45224,
+      "sha256": "286650966f9d2d3fc5639d62ad27647985369568ed6a5eaa0347e7d93a6b3181",
+      "dimensions": "1080x1350"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/portrait-4x5-1080x1350-light.png",
+      "bytes": 31395,
+      "sha256": "9adf0494ebad926aa1ee2d92cea9da56c82266af01680f4af846c92ded362fac",
+      "dimensions": "1080x1350"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/presentation-16x9-1920x1080-dark.png",
+      "bytes": 83248,
+      "sha256": "da1489722de31666e058acb7a9f361a9f6684909a8b13bcf01048d66ca736c14",
+      "dimensions": "1920x1080"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/presentation-16x9-1920x1080-green.png",
+      "bytes": 60392,
+      "sha256": "7859fcea5f75160d235a8c0bf0de42474fae778a84b5045e611d8ff8b645fa1f",
+      "dimensions": "1920x1080"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/presentation-16x9-1920x1080-light.png",
+      "bytes": 58765,
+      "sha256": "f11904fd46a483e4776b93c7ce5c0cc16df1d85c550ad10c5983a3a8db80d2b3",
+      "dimensions": "1920x1080"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/square-1x1-1080-dark.png",
+      "bytes": 46867,
+      "sha256": "9cd22ee35a6c27a3a7efef4964e954351afc1c4f9f0d517a2693fcf8225a012c",
+      "dimensions": "1080x1080"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/square-1x1-1080-green.png",
+      "bytes": 40641,
+      "sha256": "df4259e0c442d9a0a636ec0e5fbd64236f3c80afef088f89b06c967705831b8e",
+      "dimensions": "1080x1080"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/square-1x1-1080-light.png",
+      "bytes": 29614,
+      "sha256": "73e9471021c5abfe8cbbecdbea27b51a4309303316951b7f7e89a118ef247c90",
+      "dimensions": "1080x1080"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/story-9x16-1080x1920-dark.png",
+      "bytes": 59017,
+      "sha256": "33a4440f75bc2b2fd7f14d406c2e23af8c8227029b6c2b7bb8f2bf7dd1f54ee0",
+      "dimensions": "1080x1920"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/story-9x16-1080x1920-green.png",
+      "bytes": 52108,
+      "sha256": "f4d0c46fc5a597e9d77e10fc3085b00675a248991564bb4a505b64d3699440a5",
+      "dimensions": "1080x1920"
+    },
+    {
+      "path": "03_Social_Media/Templates_PNG/story-9x16-1080x1920-light.png",
+      "bytes": 35102,
+      "sha256": "acdc50b7ea93b62932c3bd6ecb3053615ef96b693318502b7fb5a9364d2202f6",
+      "dimensions": "1080x1920"
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/landscape-1200x630-dark.svg",
+      "bytes": 352164,
+      "sha256": "53ffa5bc6eb938f20503a9a8ba5e1e7de94e108d01f5d5b523637c1b04019e0d",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/landscape-1200x630-green.svg",
+      "bytes": 352176,
+      "sha256": "c22e1cf20262d8c658258886d0da5a188d1d532dc41f5e29f855d05984ff44f1",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/landscape-1200x630-light.svg",
+      "bytes": 352164,
+      "sha256": "0e145016c6a470e51a44d8f7cd96b326d1c02a70dbf7fd2ff1b2cbddb6523f29",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/portrait-4x5-1080x1350-dark.svg",
+      "bytes": 352165,
+      "sha256": "eb7bc7896607f26a867ca5c881ea476754ee329dc6da253f002524e1ded2544a",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/portrait-4x5-1080x1350-green.svg",
+      "bytes": 352177,
+      "sha256": "f287cff27f48a9c99bb22d4b3dd778e62d926a40f3af0c3520f1de86fa1d87ee",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/portrait-4x5-1080x1350-light.svg",
+      "bytes": 352165,
+      "sha256": "5e303a78cbdbb0394500d58b7814c80852d1ec2bf60b3aa4a17af30ef3fa2523",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/presentation-16x9-1920x1080-dark.svg",
+      "bytes": 352168,
+      "sha256": "1e2deb6d59c441e86a04e8c04723127d034d2bbf5b27f6cdc3e04e7752e616f3",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/presentation-16x9-1920x1080-green.svg",
+      "bytes": 352180,
+      "sha256": "c6b1feb94c5936b0ded6f68036095a8942aa4bf654dc6b036261df476ebdb56a",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/presentation-16x9-1920x1080-light.svg",
+      "bytes": 352168,
+      "sha256": "da877b5a26cc72a2a5ff507f297a32ea69d11799e854403f798bccca5d4166b7",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/square-1x1-1080-dark.svg",
+      "bytes": 352165,
+      "sha256": "c64a29ffee7947c200b6b0c3be40b8df14156b52404cef8cd5cc31b83d2ca567",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/square-1x1-1080-green.svg",
+      "bytes": 352177,
+      "sha256": "5f9694b3bc063318563cf1a1b398d0d91181fff4d47bee338c3528e362d6f324",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/square-1x1-1080-light.svg",
+      "bytes": 352165,
+      "sha256": "6e2e9a8f17a51ba0b6d98ace2c0dec515b66fcce7cd889c0b50ae1a70382f8ab",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/story-9x16-1080x1920-dark.svg",
+      "bytes": 352167,
+      "sha256": "af8f4775fd2b5b536f7673fcb744ae9b9e6e1a43323f03e857d4965cbd3ca5b3",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/story-9x16-1080x1920-green.svg",
+      "bytes": 352179,
+      "sha256": "2465e7645b21ddf870a54cd81bdc4f93b52a92cad19c6c8f376078544399210c",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/Templates_SVG/story-9x16-1080x1920-light.svg",
+      "bytes": 352167,
+      "sha256": "7f979e924ff7bd502fdeeb53ab8c401fc9649ee36d571d3edacd6c01fd6821c2",
+      "dimensions": null
+    },
+    {
+      "path": "03_Social_Media/social-guidelines-ar.md",
+      "bytes": 1396,
+      "sha256": "0b1e265b464297b5addc3db13e630aee806b9bd2bcb4fecc1e6ea9a6e951ff1a",
+      "dimensions": null
+    },
+    {
+      "path": "04_Developer/Mobile/app-icon-1024.png",
+      "bytes": 135106,
+      "sha256": "f22a659a1d09bdbfc556d827710d46a0b025cd844e6c2c7e024e182cd7eb116c",
+      "dimensions": "1024x1024"
+    },
+    {
+      "path": "04_Developer/Mobile/app-icon-512.png",
+      "bytes": 46849,
+      "sha256": "0010fa34ae15f7383815a8166912bad7b4f6147d82796109c801885aba5382a2",
+      "dimensions": "512x512"
+    },
+    {
+      "path": "04_Developer/Mobile/app-icon-dark-1024.png",
+      "bytes": 139758,
+      "sha256": "d7a4642dbc732cac3bb838efed3ad4ffcda519b11ac2b8169fa9c152b140ae07",
+      "dimensions": "1024x1024"
+    },
+    {
+      "path": "04_Developer/Shared/workey-theme.ts",
+      "bytes": 594,
+      "sha256": "544da0fd14aec8152baaf615a32a1c6179376790eefbcb97f9712a79ed34f905",
+      "dimensions": null
+    },
+    {
+      "path": "04_Developer/Shared/workey-tokens.css",
+      "bytes": 768,
+      "sha256": "3faaa8ad2d813a33b885fb272fcafea0cb7f36ba54f2e0e03b04cff09fa192fc",
+      "dimensions": null
+    },
+    {
+      "path": "04_Developer/Web/apple-touch-icon.png",
+      "bytes": 7509,
+      "sha256": "d1fa2ba17ff668bd2e53e9709cf96f83dd63d7e6c882033468c941bc3bd47ba7",
+      "dimensions": "180x180"
+    },
+    {
+      "path": "04_Developer/Web/favicon.ico",
+      "bytes": 4695,
+      "sha256": "d9ed27f6befb9ccb8ee8d2719d7b72a0bc8bce37095896d642f1526831afc67a",
+      "dimensions": "64x64"
+    },
+    {
+      "path": "04_Developer/Web/icon-192.png",
+      "bytes": 8420,
+      "sha256": "9fb6b342018a30bbeef9bee4e360178eeee2446b0f647398b4b701f9a963a3fc",
+      "dimensions": "192x192"
+    },
+    {
+      "path": "04_Developer/Web/icon-512.png",
+      "bytes": 39171,
+      "sha256": "cba84d7e8780eaeadb9463d8333c097adfb8668b043484dfd7f5050312d3cea8",
+      "dimensions": "512x512"
+    },
+    {
+      "path": "04_Developer/Web/manifest.webmanifest",
+      "bytes": 343,
+      "sha256": "bc20829d6fec1f8550b3f24893fbf833536af6e4ee5b0a89ae31b9591d98ed21",
+      "dimensions": null
+    },
+    {
+      "path": "04_Developer/Web/tailwind-theme.css",
+      "bytes": 404,
+      "sha256": "1723c09cd2503c1bfc946df787df13178a28e20aea77b87a069d519e4c3b2f9a",
+      "dimensions": null
+    },
+    {
+      "path": "04_Developer/developer-guidelines-ar.md",
+      "bytes": 1866,
+      "sha256": "ce1594d4ddc6542aae571a3010275192ce62ca8b0cf8019b1ada2e9bc4b616d3",
+      "dimensions": null
+    },
+    {
+      "path": "README_AR.md",
+      "bytes": 721,
+      "sha256": "7f9fe76c10295f696dd60cd927a98a8a960e4e8b45736d080137c16db25004b0",
+      "dimensions": null
+    }
+  ]
+}

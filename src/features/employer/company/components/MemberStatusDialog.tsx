@@ -19,12 +19,11 @@ import { Form } from "@/components/ui/form"
 import type { Option } from "@/types/customFormField.types"
 import type { MemberStatusInput } from "../types/employerTeam.types"
 
-const statusSchema = z.object({ status: z.string().min(1) })
+const statusSchema = z.object({ membership_status: z.enum(["active", "suspended"]) })
 type StatusFormValues = z.infer<typeof statusSchema>
 
 const statusOptions: Option[] = [
   { value: "active", label: "team.statusOptions.active" },
-  { value: "inactive", label: "team.statusOptions.inactive" },
   { value: "suspended", label: "team.statusOptions.suspended" },
 ]
 
@@ -46,11 +45,11 @@ export default function MemberStatusDialog({
   const { t } = useTranslation("employerCompany")
   const form = useForm<StatusFormValues>({
     resolver: zodResolver(statusSchema),
-    defaultValues: { status: currentStatus },
+    defaultValues: { membership_status: currentStatus === "suspended" ? "suspended" : "active" },
   })
 
   useEffect(() => {
-    if (open) form.setValue("status", currentStatus)
+    if (open) form.setValue("membership_status", currentStatus === "suspended" ? "suspended" : "active")
   }, [form, open, currentStatus])
 
   return (
@@ -68,7 +67,7 @@ export default function MemberStatusDialog({
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
-                name="status"
+                name="membership_status"
                 label={t("team.statusDialog.label")}
                 options={statusOptions.map((option) => ({
                   ...option,

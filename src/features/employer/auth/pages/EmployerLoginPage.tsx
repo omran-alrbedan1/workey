@@ -1,7 +1,5 @@
 import { BriefcaseBusiness } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
-import { ROUTES } from "@/config"
 import { images } from "@/constants/images"
 import EmployerLoginForm from "../components/EmployerLoginForm"
 
@@ -23,13 +21,7 @@ export default function EmployerLoginPage() {
           </div>
           <EmployerLoginForm />
           <p className="mt-6 text-center text-sm text-text-secondary">
-            {t("register.noAccount")}{" "}
-            <Link
-              className="font-semibold text-primary hover:underline"
-              to={ROUTES.employer.register}
-            >
-              {t("actions.createAccount")}
-            </Link>
+            Employer accounts are created through company invitations.
           </p>
         </div>
       </section>

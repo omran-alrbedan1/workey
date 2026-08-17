@@ -1,139 +1,165 @@
 @import "tailwindcss";
 
 @theme {
+  /* WORKEY brand colors */
+  --color-workey-green-start: #29B148;
+  --color-workey-green-mid: #18A949;
+  --color-workey-green-end: #0FA348;
+  --color-workey-ink: #1B2831;
+  --color-workey-paper: #FDFDFD;
+  --color-workey-border: #E1E6E3;
+
   /* Primary Colors */
-  --color-primary: #0645A5;
-  --color-primary-dark: #052A7D;
-  --color-primary-light: #3357A8;
+  --color-primary: #18A949;
+  --color-primary-dark: #0FA348;
+  --color-primary-light: #29B148;
   
   /* Background Colors */
-  --color-background: #F5F7FB;
-  --color-background-secondary: #FFFFFF;
-  --color-background-sidebar: #052A7D;
-  --color-background-card: #FFFFFF;
+  --color-background: #F7F9F8;
+  --color-background-secondary: #FDFDFD;
+  --color-background-sidebar: #1B2831;
+  --color-background-card: #FDFDFD;
   
-  --color-popover: #FFFFFF;
-  --color-popover-foreground: #1A1A1A;
+  --color-popover: #FDFDFD;
+  --color-popover-foreground: #1B2831;
   
-  /* Secondary Colors - Now matching primary blue */
-  --color-secondary: #0645A5;
-  --color-secondary-dark: #052A7D;
-  --color-secondary-light: #3357A8;
+  /* Secondary Colors */
+  --color-secondary: #1B2831;
+  --color-secondary-dark: #111A20;
+  --color-secondary-light: #33434C;
 
   /* Text Colors */
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #6B7280;
-  --color-text-muted: #737373;
-  --color-text-header: #1A1A1A;
+  --color-text-primary: #1B2831;
+  --color-text-secondary: #58676D;
+  --color-text-muted: #748188;
+  --color-text-header: #1B2831;
   --color-text-on-primary: #FFFFFF;
-  --color-text-subtitle: rgba(0, 0, 0, 0.4);
+  --color-text-subtitle: rgba(27, 40, 49, 0.56);
   
   /* Border Colors */
-  --color-border: #E5E7EB;
-  --color-border-light: #F3F4F6;
+  --color-border: #E1E6E3;
+  --color-border-light: #EEF2EF;
   
   /* Focus Ring Colors */
   --color-ring: var(--color-primary);
   --color-ring-offset: var(--color-background-card);
   
   /* Shadows */
-  --shadow-soft: 0 20px 45px rgba(15, 23, 42, 0.15);
-  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-soft: 0 20px 45px rgba(27, 40, 49, 0.14);
+  --shadow-card: 0 4px 16px rgba(27, 40, 49, 0.06);
   --shadow-dark-card: 0 4px 16px rgba(0, 0, 0, 0.3);
   
   /* Border Radius */
-  --radius-xl: 1rem;
-  --radius-lg: 0.75rem;
-  --radius-default: 0.5rem;
+  --radius-xl: 1.5rem;
+  --radius-lg: 1rem;
+  --radius-default: 0.75rem;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #052A7D, #3357A8);
-  --gradient-sidebar: linear-gradient(180deg, #0645A5, #052A7D);
-  --gradient-forest: linear-gradient(135deg, #3357A8, #052A7D);
-  --gradient-mist: linear-gradient(135deg, #F2F5FC, #E3E9F6);
+  --gradient-primary: linear-gradient(135deg, #29B148 0%, #18A949 52%, #0FA348 100%);
+  --gradient-sidebar: linear-gradient(180deg, #1B2831 0%, #142027 100%);
+  --gradient-forest: linear-gradient(135deg, #18A949, #1B2831);
+  --gradient-mist: linear-gradient(135deg, #FDFDFD, #F7F9F8);
 }
 
 /* Default light theme */
 :root {
+  --workey-green-start: #29B148;
+  --workey-green-mid: #18A949;
+  --workey-green-end: #0FA348;
+  --workey-ink: #1B2831;
+  --workey-paper: #FDFDFD;
+  --workey-surface-soft: #F7F9F8;
+  --workey-border: #E1E6E3;
+  --workey-brand-gradient: linear-gradient(135deg, var(--workey-green-start) 0%, var(--workey-green-mid) 52%, var(--workey-green-end) 100%);
+
   /* Background Colors - Light */
-  --color-background: #F5F7FB;
-  --color-background-secondary: #FFFFFF;
-  --color-background-sidebar: #052A7D;
-  --color-background-card: #FFFFFF;
+  --color-background: #F7F9F8;
+  --color-background-secondary: #FDFDFD;
+  --color-background-sidebar: #1B2831;
+  --color-background-card: #FDFDFD;
   
-  --color-popover: #FFFFFF;
-  --color-popover-foreground: #1A1A1A;
+  --color-popover: #FDFDFD;
+  --color-popover-foreground: #1B2831;
   
   /* Primary Colors - Light */
-  --color-primary: #0645A5;
-  --color-primary-dark: #052A7D;
-  --color-primary-light: #3357A8;
+  --color-primary: #18A949;
+  --color-primary-dark: #0FA348;
+  --color-primary-light: #29B148;
   
-  /* Secondary Colors - Light (matching primary) */
-  --color-secondary: #0645A5;
-  --color-secondary-dark: #052A7D;
-  --color-secondary-light: #3357A8;
+  /* Secondary Colors - Light */
+  --color-secondary: #1B2831;
+  --color-secondary-dark: #111A20;
+  --color-secondary-light: #33434C;
   
   /* Text Colors - Light */
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #6B7280;
-  --color-text-muted: #737373;
-  --color-text-header: #1A1A1A;
+  --color-text-primary: #1B2831;
+  --color-text-secondary: #58676D;
+  --color-text-muted: #748188;
+  --color-text-header: #1B2831;
   --color-text-on-primary: #FFFFFF;
-  --color-text-subtitle: rgba(0, 0, 0, 0.4);
+  --color-text-subtitle: rgba(27, 40, 49, 0.56);
   
   /* Border Colors - Light */
-  --color-border: #E5E7EB;
-  --color-border-light: #F3F4F6;
+  --color-border: #E1E6E3;
+  --color-border-light: #EEF2EF;
   
   /* Focus Ring Colors - Light */
-  --color-ring: #0645A5;
-  --color-ring-offset: #FFFFFF;
+  --color-ring: #18A949;
+  --color-ring-offset: #FDFDFD;
   
   /* Gradients - Light */
-  --gradient-primary: linear-gradient(135deg, #052A7D, #3357A8);
-  --gradient-sidebar: linear-gradient(180deg, #0645A5, #052A7D);
-  --gradient-forest: linear-gradient(135deg, #3357A8, #052A7D);
-  --gradient-mist: linear-gradient(135deg, #F2F5FC, #E3E9F6);
+  --gradient-primary: linear-gradient(135deg, #29B148 0%, #18A949 52%, #0FA348 100%);
+  --gradient-sidebar: linear-gradient(180deg, #1B2831 0%, #142027 100%);
+  --gradient-forest: linear-gradient(135deg, #18A949, #1B2831);
+  --gradient-mist: linear-gradient(135deg, #FDFDFD, #F7F9F8);
 }
 
 .dark {
-  --color-background: #071226;
-  --color-background-secondary: #0B1B36;
-  --color-background-sidebar: #052A7D;
-  --color-background-card: #0D2040; 
+  --workey-green-start: #29B148;
+  --workey-green-mid: #18A949;
+  --workey-green-end: #0FA348;
+  --workey-ink: #FDFDFD;
+  --workey-paper: #10191D;
+  --workey-surface-soft: #18262C;
+  --workey-border: #2A3A40;
+  --workey-brand-gradient: linear-gradient(135deg, var(--workey-green-start) 0%, var(--workey-green-mid) 52%, var(--workey-green-end) 100%);
+
+  --color-background: #10191D;
+  --color-background-secondary: #142126;
+  --color-background-sidebar: #0D1519;
+  --color-background-card: #18262C; 
   
-  --color-popover: #0D2040;
-  --color-popover-foreground: #FAFAFA;
+  --color-popover: #18262C;
+  --color-popover-foreground: #FDFDFD;
   
-  --color-primary: #4F7BD4;
-  --color-primary-dark: #3357A8;
-  --color-primary-light: #7B9CE0;
+  --color-primary: #29B148;
+  --color-primary-dark: #18A949;
+  --color-primary-light: #4DD26B;
   
-  /* Secondary Colors - Dark (matching primary dark) */
-  --color-secondary: #4F7BD4;
-  --color-secondary-dark: #3357A8;
-  --color-secondary-light: #7B9CE0;
+  /* Secondary Colors - Dark */
+  --color-secondary: #FDFDFD;
+  --color-secondary-dark: #E1E6E3;
+  --color-secondary-light: #FFFFFF;
 
   /* Text Colors - Dark */
-  --color-text-primary: #FAFAFA;
-  --color-text-secondary: #A0AEC0;
-  --color-text-muted: #8B9EB0;
-  --color-text-header: #FAFAFA;
+  --color-text-primary: #FDFDFD;
+  --color-text-secondary: #C6D0CC;
+  --color-text-muted: #94A39F;
+  --color-text-header: #FDFDFD;
   --color-text-on-primary: #FFFFFF;
-  --color-text-subtitle: #D1D5DB;
+  --color-text-subtitle: #C6D0CC;
   
-  --color-border: #203A61;
-  --color-border-light: #172F52;
+  --color-border: #2A3A40;
+  --color-border-light: #223137;
   
-  --color-ring: #6C8FD8;
-  --color-ring-offset: #0D2040;
+  --color-ring: #29B148;
+  --color-ring-offset: #18262C;
   
   /* Gradients - Dark */
-  --gradient-primary: linear-gradient(135deg, #3357A8, #4F7BD4);
-  --gradient-sidebar: linear-gradient(180deg, #052A7D, #031A4E);
-  --gradient-forest: linear-gradient(135deg, #3357A8, #052A7D);
-  --gradient-mist: linear-gradient(135deg, #203A61, #172F52);
+  --gradient-primary: linear-gradient(135deg, #29B148 0%, #18A949 52%, #0FA348 100%);
+  --gradient-sidebar: linear-gradient(180deg, #0D1519 0%, #10191D 100%);
+  --gradient-forest: linear-gradient(135deg, #29B148, #0D1519);
+  --gradient-mist: linear-gradient(135deg, #18262C, #223137);
 }
 
 @layer base {
@@ -149,6 +175,10 @@
   h1, h2, h3, h4, h5, h6,
   .text-header {
     color: var(--color-text-header);
+  }
+
+  .dark img[alt*="logo" i] {
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8)) drop-shadow(0 8px 20px rgba(255, 255, 255, 0.1));
   }
 
   input:focus,

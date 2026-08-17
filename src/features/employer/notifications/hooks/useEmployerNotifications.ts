@@ -9,6 +9,7 @@ export function useEmployerNotifications() {
   const client = useQueryClient()
   const [page, setPage] = useState(1)
   const rootKey = ["employer", "notifications"] as const
+  const adminRootKey = ["admin", "notifications"] as const
 
   const listQuery = useQuery({
     queryKey: [...rootKey, page],
@@ -24,14 +25,20 @@ export function useEmployerNotifications() {
   const markReadMutation = useMutation({
     mutationFn: (id: string | number) => employerNotificationsService.markRead(id),
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: rootKey })
+      await Promise.all([
+        client.invalidateQueries({ queryKey: rootKey }),
+        client.invalidateQueries({ queryKey: adminRootKey }),
+      ])
     },
   })
 
   const markAllReadMutation = useMutation({
     mutationFn: () => employerNotificationsService.markAllRead(),
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: rootKey })
+      await Promise.all([
+        client.invalidateQueries({ queryKey: rootKey }),
+        client.invalidateQueries({ queryKey: adminRootKey }),
+      ])
       showSuccessToast(t("toasts.allRead"))
     },
   })

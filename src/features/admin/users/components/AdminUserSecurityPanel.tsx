@@ -60,7 +60,9 @@ export default function AdminUserSecurityPanel({ user }: { user: AdminUserDetail
 
       <div className="grid gap-6 xl:grid-cols-2">
         <SectionCard icon={KeyRound} title={t("security.loginHistory")}>
-          {user.login_history?.length ? (
+          {user.login_history === undefined ? (
+            <UnavailableNotice />
+          ) : user.login_history.length ? (
             <div className="space-y-3">
               {user.login_history.map((login) => (
                 <article
@@ -89,7 +91,9 @@ export default function AdminUserSecurityPanel({ user }: { user: AdminUserDetail
         </SectionCard>
 
         <SectionCard icon={MonitorSmartphone} title={t("security.sessions")}>
-          {user.active_sessions?.length ? (
+          {user.active_sessions === undefined ? (
+            <UnavailableNotice />
+          ) : user.active_sessions.length ? (
             <div className="space-y-3">
               {user.active_sessions.map((session) => (
                 <article
@@ -127,5 +131,14 @@ export default function AdminUserSecurityPanel({ user }: { user: AdminUserDetail
         </SectionCard>
       </div>
     </div>
+  )
+}
+
+function UnavailableNotice() {
+  const { t } = useTranslation("adminUsers")
+  return (
+    <p className="rounded-lg border border-dashed border-amber-500/30 bg-amber-500/5 p-4 text-sm text-text-secondary">
+      {t("details.backendCoverageWarning")}
+    </p>
   )
 }

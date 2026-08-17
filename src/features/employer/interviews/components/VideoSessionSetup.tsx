@@ -15,6 +15,23 @@ import { employerInterviewsService } from "../services/employerInterviews.servic
 import type { VideoSessionResponse } from "../types/videoInterview.types"
 import VideoInterviewRoom from "./VideoInterviewRoom"
 
+function videoSessionErrorMessage(error: any, fallback: string) {
+  const status = error?.status ?? error?.response?.status
+  const code = String(error?.code ?? error?.response?.data?.code ?? "").toLowerCase()
+  const message = error?.message ?? error?.response?.data?.message
+
+  if (status === 401 || code.includes("token")) {
+    return "Your session expired. Sign in again, then rejoin the interview."
+  }
+  if (status === 403 || code.includes("denied") || code.includes("forbidden")) {
+    return "You do not have access to this video interview."
+  }
+  if (code.includes("livekit") || code.includes("video")) {
+    return message || "The video provider could not create a room. Please try again shortly."
+  }
+  return message || fallback
+}
+
 export default function VideoSessionSetup({
   interviewId,
   open,
@@ -37,8 +54,8 @@ export default function VideoSessionSetup({
         role: "interviewer",
       })
       setSession(created)
-    } catch {
-      showErrorToast(t("video.sessionError"))
+    } catch (error) {
+      showErrorToast(videoSessionErrorMessage(error, t("video.sessionError")))
     } finally {
       setIsLoading(false)
     }

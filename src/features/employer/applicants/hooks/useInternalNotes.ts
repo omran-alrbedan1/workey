@@ -3,8 +3,21 @@ import { employerApplicantsService } from "../services/employerApplicants.servic
 import type { ApplicationInternalNoteInput, ApplicationInternalNoteUpdateInput } from "../types/employerApplicants.types"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 
+function apiErrorCode(error: any) {
+  return error?.code ?? error?.response?.data?.code
+}
+
+function apiErrorMessage(error: any, fallback: string) {
+  return error?.message ?? error?.response?.data?.message ?? fallback
+}
+
 export function useInternalNotes(applicationId: string | number | undefined) {
   const queryClient = useQueryClient()
+
+  const refreshNotes = () => {
+    queryClient.invalidateQueries({ queryKey: ["internalNotes", applicationId] })
+    queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
+  }
 
   const listQuery = useQuery({
     queryKey: ["internalNotes", applicationId],
@@ -21,8 +34,8 @@ export function useInternalNotes(applicationId: string | number | undefined) {
       showSuccessToast("Internal note created")
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to create note"
-      if (error?.response?.data?.code === "APPLICATION_INTERNAL_NOTES_READ_ONLY") {
+      const message = apiErrorMessage(error, "Failed to create note")
+      if (apiErrorCode(error) === "APPLICATION_INTERNAL_NOTES_READ_ONLY") {
         showErrorToast("Cannot add notes to final-state applications")
       } else {
         showErrorToast(message)
@@ -34,16 +47,17 @@ export function useInternalNotes(applicationId: string | number | undefined) {
     mutationFn: ({ noteId, input }: { noteId: string | number; input: ApplicationInternalNoteUpdateInput }) =>
       employerApplicantsService.updateInternalNote(noteId, input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["internalNotes", applicationId] })
-      queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
+      refreshNotes()
       showSuccessToast("Internal note updated")
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to update note"
-      if (error?.response?.data?.code === "APPLICATION_INTERNAL_NOTE_EDIT_WINDOW_EXPIRED") {
+      const message = apiErrorMessage(error, "Failed to update note")
+      const code = apiErrorCode(error)
+      if (code === "APPLICATION_INTERNAL_NOTE_EDIT_WINDOW_EXPIRED") {
         showErrorToast("Edit window has expired (15 minutes)")
-      } else if (error?.response?.data?.code === "APPLICATION_INTERNAL_NOTE_VERSION_CONFLICT") {
-        showErrorToast("Version conflict - note was modified by someone else")
+      } else if (code === "APPLICATION_INTERNAL_NOTE_VERSION_CONFLICT") {
+        refreshNotes()
+        showErrorToast("This note changed elsewhere. I refreshed the notes; reopen it and try again.")
       } else {
         showErrorToast(message)
       }
@@ -54,13 +68,16 @@ export function useInternalNotes(applicationId: string | number | undefined) {
     mutationFn: ({ noteId, version }: { noteId: string | number; version: number }) =>
       employerApplicantsService.deleteInternalNote(noteId, version),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["internalNotes", applicationId] })
-      queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
+      refreshNotes()
       showSuccessToast("Internal note deleted")
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to delete note"
-      showErrorToast(message)
+      if (apiErrorCode(error) === "APPLICATION_INTERNAL_NOTE_VERSION_CONFLICT") {
+        refreshNotes()
+        showErrorToast("This note changed elsewhere. I refreshed the notes; check the latest version before deleting.")
+        return
+      }
+      showErrorToast(apiErrorMessage(error, "Failed to delete note"))
     },
   })
 

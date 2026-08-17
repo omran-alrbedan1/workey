@@ -15,9 +15,12 @@ function paramsFor(filters: AdminAuditLogFilters, page: number, perPage: number)
     page,
     per_page: perPage,
   }
-  if (filters.action) params.action = filters.action
-  if (filters.entity_type) params.entity_type = filters.entity_type
-  if (filters.actor_user_id) params.actor_user_id = filters.actor_user_id
+  const action = filters.action?.trim()
+  const entityType = filters.entity_type?.trim()
+  const actorUserId = filters.actor_user_id?.trim()
+  if (action) params.action = action
+  if (entityType) params.entity_type = entityType
+  if (actorUserId) params.actor_user_id = actorUserId
   return params
 }
 

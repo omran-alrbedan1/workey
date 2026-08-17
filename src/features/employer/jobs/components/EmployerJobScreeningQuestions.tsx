@@ -34,6 +34,7 @@ import { Switch } from "@/components/ui/switch"
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import { DeleteModal } from "@/components/shared/modals"
 import { Skeleton } from "@/components/ui/skeleton"
+import { keyOf } from "@/lib/keyValue"
 import type {
   JobScreeningQuestion,
   JobScreeningQuestionInput,
@@ -87,10 +88,7 @@ const INITIAL_FORM: FormState = {
 }
 
 const getKey = (v: unknown): string => {
-  if (!v) return ""
-  if (typeof v === "string") return v
-  if (typeof v === "object") return (v as { key?: string }).key ?? (v as { value?: string }).value ?? ""
-  return String(v)
+  return keyOf(v)
 }
 
 export default function EmployerJobScreeningQuestions({

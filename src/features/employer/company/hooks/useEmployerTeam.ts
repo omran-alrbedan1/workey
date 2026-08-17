@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 import { employerTeamService } from "../services/employerTeam.service"
@@ -14,6 +15,7 @@ export const employerTeamKey = ["employer", "team"] as const
 export function useEmployerTeam() {
   const { t } = useTranslation("employerCompany")
   const client = useQueryClient()
+  const [lastInvitationToken, setLastInvitationToken] = useState<string | null>(null)
 
   const membersQuery = useQuery({
     queryKey: [...employerTeamKey, "members"],
@@ -60,7 +62,8 @@ export function useEmployerTeam() {
 
   const createInvitationMutation = useMutation({
     mutationFn: (input: CompanyInvitationInput) => employerTeamService.createInvitation(input),
-    onSuccess: () => {
+    onSuccess: (result) => {
+      if (result.token) setLastInvitationToken(result.token)
       invalidate()
       showSuccessToast(t("team.toasts.invitationSent", { defaultValue: "Invitation sent" }))
     },
@@ -70,7 +73,8 @@ export function useEmployerTeam() {
   const resendInvitationMutation = useMutation({
     mutationFn: (invitationId: string | number) =>
       employerTeamService.resendInvitation(invitationId),
-    onSuccess: () => {
+    onSuccess: (result) => {
+      if (result.token) setLastInvitationToken(result.token)
       invalidate()
       showSuccessToast(t("team.toasts.invitationResent", { defaultValue: "Invitation resent" }))
     },
@@ -114,5 +118,7 @@ export function useEmployerTeam() {
     resendInvitationMutation,
     revokeInvitationMutation,
     transferOwnershipMutation,
+    lastInvitationToken,
+    clearLastInvitationToken: () => setLastInvitationToken(null),
   }
 }

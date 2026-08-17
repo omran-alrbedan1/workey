@@ -1,9 +1,10 @@
+import { APP_CONFIG } from "@/config"
+
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
 export function unwrapEmployerEntity<T>(response: unknown): T {
-  console.log(response);
   let payload = response
 
   if (isRecord(payload) && "data" in payload) payload = payload.data
@@ -49,7 +50,10 @@ export function unwrapEmployerCollection<T>(response: unknown): EmployerCollecti
   }
 
   const total = asNumber(meta.total, items.length)
-  const perPage = asNumber(meta.per_page ?? meta.perPage, Math.max(items.length, 15))
+  const perPage = asNumber(
+    meta.per_page ?? meta.perPage,
+    Math.max(items.length, APP_CONFIG.pagination.defaultPageSize),
+  )
 
   return {
     items,

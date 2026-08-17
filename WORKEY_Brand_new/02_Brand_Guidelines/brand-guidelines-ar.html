@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WORKEY — Brand Guidelines</title>
+<style>
+:root{--g1:#29B148;--g2:#18A949;--g3:#0FA348;--ink:#1B2831;--paper:#FDFDFD;--border:#E1E6E3;}
+*{box-sizing:border-box} body{margin:0;background:#f6f8f7;color:var(--ink);font-family:Arial,sans-serif;line-height:1.8}
+.wrap{max-width:1120px;margin:auto;padding:40px 22px 80px} .hero,.card{background:white;border:1px solid var(--border);border-radius:24px;padding:32px;margin-bottom:22px}
+.hero img{max-width:760px;width:100%;height:auto;display:block;margin:0 auto 25px} h1{font-size:36px;margin:0 0 8px} h2{font-size:24px;margin:0 0 15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px} .swatch{height:150px;border-radius:18px;border:1px solid #e7ebe8}
+.code{direction:ltr;text-align:left;background:#13212a;color:#fff;border-radius:12px;padding:14px;overflow:auto}
+.note{border-right:4px solid var(--g2);padding:10px 16px;background:#f1fbf4;border-radius:10px} ul{margin:0;padding-right:22px}
+</style>
+</head>
+<body><main class="wrap">
+<section class="hero">
+<img src="../01_Logos/Primary/lockup-horizontal-transparent.png" alt="WORKEY">
+<h1>الهوية البصرية — WORKEY</h1>
+<p>هذه الحزمة مبنية على الشعار المرفق فقط، مع الحفاظ على الأيقونة والـ wordmark دون إعادة تصميم.</p>
+<div class="note">المرجع الأعلى للشعار هو الملف الأصلي داخل <b>00_Source</b>. ألوان الواجهة المرفقة عينات مشتقة من الصورة وليست وصفة لإعادة رسم الشعار.</div>
+</section>
+<section class="card"><h2>لوحة الألوان</h2><div class="grid">
+<div><div class="swatch" style="background:#29B148"></div><b>#29B148</b><br>Gradient Start</div>
+<div><div class="swatch" style="background:#18A949"></div><b>#18A949</b><br>Gradient Mid</div>
+<div><div class="swatch" style="background:#0FA348"></div><b>#0FA348</b><br>Gradient End</div>
+<div><div class="swatch" style="background:#1B2831"></div><b>#1B2831</b><br>Ink</div>
+</div></section>
+<section class="card"><h2>الخطوط</h2><p><b>English UI:</b> Manrope — 400/500/600/700</p><p><b>Arabic UI:</b> Alexandria — 400/500/600/700</p><p>هذه الخطوط للمنتج والتسويق فقط. كلمة WORKEY داخل الشعار تبقى من الأصل الجاهز ولا تعاد كتابتها.</p></section>
+<section class="card"><h2>الاستخدام الصحيح</h2><ul>
+<li>استخدم PNG/SVG-wrapper المرفقين.</li><li>لا تغيّر نسب الشعار أو انحناءاته.</li><li>لا تضف حدوداً أو مؤثرات.</li><li>لا تستخدم الـ design tokens لإعادة رسم الـ W.</li><li>استخدم الأيقونة وحدها في المساحات الصغيرة.</li>
+</ul></section>
+<section class="card"><h2>التدرج المرافق للواجهات</h2><div class="swatch" style="height:110px;background:linear-gradient(135deg,#29B148, #18A949 52%, #0FA348)"></div>
+<pre class="code">linear-gradient(135deg, #29B148 0%, #18A949 52%, #0FA348 100%)</pre>
+</section>
+<section class="card"><h2>محتويات الحزمة</h2><p>Logos • App Icons • Favicons • Design Tokens • UI/UX Guidelines • Social Templates • Next.js/Web assets • Mobile assets • Developer snippets.</p></section>
+</main></body></html>

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 
 import { APP_CONFIG } from "@/config"
 import { adminCompaniesService } from "../services/adminCompanies.service"
-import { showSuccessToast } from "@/lib/toast"
+import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { useFilters } from "@/hooks/useFilter"
 import { useSearchParams } from "react-router-dom"
 import { adminCompanyFilterConfig } from "../configs/adminCompanies.config"
@@ -60,6 +60,14 @@ export function useAdminCompanies() {
       showSuccessToast(t("toasts.suspended"))
     },
   })
+  const createMutation = useMutation({
+    mutationFn: adminCompaniesService.create,
+    onSuccess: async () => {
+      await refreshCompanies()
+      showSuccessToast("Company created")
+    },
+    onError: (error) => showErrorToast(error, "Unable to create company."),
+  })
   const filtering = useFilters({
     data: query.data?.items ?? [],
     config: adminCompanyFilterConfig,
@@ -97,5 +105,6 @@ export function useAdminCompanies() {
     approveMutation,
     rejectMutation,
     suspendMutation,
+    createMutation,
   }
 }

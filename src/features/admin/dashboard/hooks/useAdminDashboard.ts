@@ -122,9 +122,9 @@ export function useAdminDashboard() {
     const sampledCompanies = companies.meta.total > companies.items.length
 
     const roleDistribution: DistributionItem[] = [
-      { name: t("roles.jobSeekers"), value: jobSeekers, color: "#0645A5" },
-      { name: t("roles.employers"), value: employers, color: "#6C5CE7" },
-      { name: t("roles.admins"), value: admins, color: "#3357A8" },
+      { name: t("roles.jobSeekers"), value: jobSeekers, color: "#18A949" },
+      { name: t("roles.employers"), value: employers, color: "#1B2831" },
+      { name: t("roles.admins"), value: admins, color: "#29B148" },
     ]
 
     const companyDistribution: DistributionItem[] = [

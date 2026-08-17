@@ -1,10 +1,13 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { MailPlus, Users } from "lucide-react"
+import { Copy, MailPlus, Users } from "lucide-react"
 
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useEmployerTeam } from "../hooks/useEmployerTeam"
+import { ROUTES } from "@/config"
+import { Button } from "@/components/ui/button"
+import { showSuccessToast } from "@/lib/toast"
 import InvitationForm from "./InvitationForm"
 import InvitationList from "./InvitationList"
 import TeamMemberList from "./TeamMemberList"
@@ -29,6 +32,37 @@ export default function TeamManagementSection() {
             {t("team.inviteButton")}
           </button>
         </div>
+        {team.lastInvitationToken && (
+          <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-text-primary">Invitation link created</p>
+                <p className="break-all text-sm text-text-secondary">
+                  {window.location.origin}
+                  {ROUTES.public.companyInvitation(team.lastInvitationToken)}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(
+                      `${window.location.origin}${ROUTES.public.companyInvitation(team.lastInvitationToken!)}`,
+                    )
+                    showSuccessToast("Invitation link copied")
+                  }}
+                >
+                  <Copy className="h-4 w-4" />
+                  Copy
+                </Button>
+                <Button size="sm" variant="ghost" onClick={team.clearLastInvitationToken}>
+                  Dismiss
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
         <Tabs defaultValue="members">
           <TabsList className="mb-4">
             <TabsTrigger value="members">{t("team.tabs.members")}</TabsTrigger>
@@ -43,14 +77,20 @@ export default function TeamManagementSection() {
               isRemoving={team.removeMemberMutation.isPending}
               isTransferring={team.transferOwnershipMutation.isPending}
               onUpdateRole={(userId, role) =>
-                team.updateRoleMutation.mutate({ userId, input: { role } })
+                team.updateRoleMutation.mutate({ userId, input: { company_role: role } })
               }
               onUpdateStatus={(userId, status) =>
-                team.updateStatusMutation.mutate({ userId, input: { status } })
+                team.updateStatusMutation.mutate({
+                  userId,
+                  input: { membership_status: status === "suspended" ? "suspended" : "active" },
+                })
               }
               onRemove={(userId) => team.removeMemberMutation.mutate(userId)}
               onTransferOwnership={(userId) =>
-                team.transferOwnershipMutation.mutate({ user_id: userId })
+                team.transferOwnershipMutation.mutate({
+                  new_owner_user_id: userId,
+                  previous_owner_role: "company_admin",
+                })
               }
             />
           </TabsContent>

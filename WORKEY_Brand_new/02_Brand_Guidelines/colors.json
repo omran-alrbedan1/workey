@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "source": "Colors sampled from the user-supplied approved raster.",
+    "important": "Use the supplied logo image assets for the logo itself. Do not rebuild the logo from these color tokens."
+  },
+  "brand": {
+    "gradient": {
+      "start": "#29B148",
+      "mid": "#18A949",
+      "end": "#0FA348",
+      "css": "linear-gradient(135deg, #29B148 0%, #18A949 52%, #0FA348 100%)"
+    },
+    "ink": "#1B2831",
+    "paper": "#FDFDFD",
+    "surfaceSoft": "#F7F9F8",
+    "border": "#E1E6E3",
+    "successSoft": "#E8F7ED"
+  }
+}

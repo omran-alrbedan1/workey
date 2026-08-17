@@ -19,14 +19,14 @@ import { Form } from "@/components/ui/form"
 import type { Option } from "@/types/customFormField.types"
 import type { MemberRoleInput } from "../types/employerTeam.types"
 
-const roleSchema = z.object({ role: z.string().min(1) })
+const roleSchema = z.object({ company_role: z.string().min(1) })
 type RoleFormValues = z.infer<typeof roleSchema>
 
 const roleOptions: Option[] = [
-  { value: "admin", label: "team.roles.admin" },
+  { value: "company_admin", label: "team.roles.admin" },
   { value: "recruiter", label: "team.roles.recruiter" },
   { value: "interviewer", label: "team.roles.interviewer" },
-  { value: "member", label: "team.roles.member" },
+  { value: "reviewer", label: "team.roles.member" },
 ]
 
 export default function MemberRoleDialog({
@@ -47,11 +47,11 @@ export default function MemberRoleDialog({
   const { t } = useTranslation("employerCompany")
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleSchema),
-    defaultValues: { role: currentRole },
+    defaultValues: { company_role: currentRole },
   })
 
   useEffect(() => {
-    if (open) form.setValue("role", currentRole)
+    if (open) form.setValue("company_role", currentRole)
   }, [form, open, currentRole])
 
   return (
@@ -69,7 +69,7 @@ export default function MemberRoleDialog({
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
-                name="role"
+                name="company_role"
                 label={t("team.roleDialog.label")}
                 options={roleOptions.map((option) => ({
                   ...option,

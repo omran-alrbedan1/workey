@@ -1,6 +1,16 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { MailPlus, MoreVertical, ShieldCheck, UserRound } from "lucide-react"
+import {
+  Crown,
+  Clock,
+  Copy,
+  MailPlus,
+  MoreVertical,
+  ShieldCheck,
+  Trash2,
+  UserRound,
+  UserX,
+} from "lucide-react"
 
 import { StatusBadge } from "@/components/shared/badges"
 import { Button } from "@/components/ui/button"
@@ -16,12 +26,23 @@ import type { AdminCompanyMember } from "../types/adminCompanyMembers.types"
 import { useAdminCompanyMembers } from "../hooks/useAdminCompanyMembers"
 import CompanyInvitationDialog from "./CompanyInvitationDialog"
 import CompanyMemberRoleDialog from "./CompanyMemberRoleDialog"
+import { ROUTES } from "@/config"
+import { showSuccessToast } from "@/lib/toast"
 
 export default function CompanyMemberList({ companyId }: { companyId: string | number }) {
   const { t } = useTranslation("adminCompanies")
-  const { members, isLoading, inviteMutation, roleMutation } = useAdminCompanyMembers(
-    String(companyId),
-  )
+  const {
+    members,
+    invitations,
+    isLoading,
+    inviteMutation,
+    roleMutation,
+    statusMutation,
+    removeMutation,
+    transferOwnershipMutation,
+    lastInvitationToken,
+    clearLastInvitationToken,
+  } = useAdminCompanyMembers(String(companyId))
   const [inviteOpen, setInviteOpen] = useState(false)
   const [roleMember, setRoleMember] = useState<AdminCompanyMember | null>(null)
 
@@ -45,12 +66,45 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
         </Button>
       </div>
 
+      {lastInvitationToken && (
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-text-primary">Invitation link created</p>
+              <p className="break-all text-sm text-text-secondary">
+                {window.location.origin}
+                {ROUTES.public.companyInvitation(lastInvitationToken)}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(
+                    `${window.location.origin}${ROUTES.public.companyInvitation(lastInvitationToken)}`,
+                  )
+                  showSuccessToast("Invitation link copied")
+                }}
+              >
+                <Copy className="h-4 w-4" />
+                Copy
+              </Button>
+              <Button size="sm" variant="ghost" onClick={clearLastInvitationToken}>
+                Dismiss
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
         {members.length === 0 ? (
           <p className="px-6 py-8 text-center text-sm text-text-muted">{t("members.empty")}</p>
         ) : (
           members.map((member) => {
             const role = keyOf(member.role, "member")
+            const status = keyOf(member.status, "active")
             return (
               <div key={member.id} className="flex items-center gap-4 px-5 py-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -81,6 +135,47 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                         <ShieldCheck className="h-4 w-4" />
                         {t("members.actions.changeRole")}
                       </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          statusMutation.mutate({
+                            userId: member.id,
+                            input: {
+                              membership_status: status === "suspended" ? "active" : "suspended",
+                            },
+                          })
+                        }
+                      >
+                        <UserX className="h-4 w-4" />
+                        {status === "suspended" ? "Activate member" : "Suspend member"}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Transfer company ownership to ${member.name}? The current owner will become a company admin.`,
+                            )
+                          ) {
+                            transferOwnershipMutation.mutate({
+                              new_owner_user_id: member.id,
+                              previous_owner_role: "company_admin",
+                            })
+                          }
+                        }}
+                      >
+                        <Crown className="h-4 w-4" />
+                        Transfer ownership
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-rose-600"
+                        onClick={() => {
+                          if (window.confirm(`Remove ${member.name} from this company?`)) {
+                            removeMutation.mutate(member.id)
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Remove member
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
@@ -89,6 +184,39 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
           })
         )}
       </div>
+
+      <section className="space-y-3">
+        <div>
+          <h3 className="text-sm font-semibold text-text-primary">Invitations</h3>
+          <p className="text-xs text-text-muted">Pending and historical company invitations.</p>
+        </div>
+        <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
+          {invitations.length === 0 ? (
+            <p className="px-6 py-8 text-center text-sm text-text-muted">No invitations yet.</p>
+          ) : (
+            invitations.map((invitation) => (
+              <div key={invitation.id} className="flex items-center gap-4 px-5 py-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <MailPlus className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-text-primary">
+                    {invitation.email}
+                  </p>
+                  <p className="flex items-center gap-1 truncate text-xs text-text-muted">
+                    <Clock className="h-3 w-3" />
+                    {invitation.expires_at
+                      ? `Expires ${new Date(invitation.expires_at).toLocaleDateString()}`
+                      : "No expiry date"}
+                  </p>
+                </div>
+                <StatusBadge status={invitation.company_role} variant="soft" size="sm" />
+                <StatusBadge status={invitation.status} variant="soft" size="sm" />
+              </div>
+            ))
+          )}
+        </div>
+      </section>
 
       <CompanyInvitationDialog
         open={inviteOpen}

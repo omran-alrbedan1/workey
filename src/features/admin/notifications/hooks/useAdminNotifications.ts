@@ -4,6 +4,7 @@ import { adminNotificationsService } from "../services/adminNotifications.servic
 import { showSuccessToast } from "@/lib/toast"
 import { useTranslation } from "react-i18next"
 const root = ["admin", "notifications"] as const
+const employerRoot = ["employer", "notifications"] as const
 export function useAdminNotifications() {
   const { t } = useTranslation("adminNotifications")
   const [page, setPage] = useState(1)
@@ -19,14 +20,20 @@ export function useAdminNotifications() {
   const markReadMutation = useMutation({
     mutationFn: adminNotificationsService.markRead,
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: root, refetchType: "active" })
+      await Promise.all([
+        client.invalidateQueries({ queryKey: root, refetchType: "active" }),
+        client.invalidateQueries({ queryKey: employerRoot, refetchType: "active" }),
+      ])
       showSuccessToast(t("markedRead"))
     },
   })
   const markAllReadMutation = useMutation({
     mutationFn: adminNotificationsService.markAllRead,
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: root, refetchType: "active" })
+      await Promise.all([
+        client.invalidateQueries({ queryKey: root, refetchType: "active" }),
+        client.invalidateQueries({ queryKey: employerRoot, refetchType: "active" }),
+      ])
       showSuccessToast(t("markedAllRead"))
     },
   })

@@ -1,0 +1,11 @@
+/* Tailwind v4 theme extension */
+@theme {
+  --color-workey-green-start: #29B148;
+  --color-workey-green-mid: #18A949;
+  --color-workey-green-end: #0FA348;
+  --color-workey-ink: #1B2831;
+  --color-workey-paper: #FDFDFD;
+  --color-workey-border: #E1E6E3;
+  --font-workey-latin: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-workey-arabic: "Alexandria", ui-sans-serif, system-ui, sans-serif;
+}

@@ -8,6 +8,22 @@ interface UseVideoRoomOptions {
   onError?: (error: Error) => void
 }
 
+function connectionErrorMessage(error: unknown) {
+  const message = error instanceof Error ? error.message : "Failed to connect to the video room."
+  const lower = message.toLowerCase()
+
+  if (lower.includes("token") || lower.includes("jwt") || lower.includes("expired")) {
+    return "The video token expired or is invalid. Close this dialog and start a new session."
+  }
+  if (lower.includes("permission") || lower.includes("denied") || lower.includes("notallowed")) {
+    return "Camera or microphone access was denied. Allow browser access, then try again."
+  }
+  if (lower.includes("network") || lower.includes("websocket") || lower.includes("timeout")) {
+    return "Could not connect to the video room. Check your connection and try again."
+  }
+  return message
+}
+
 export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
   const roomRef = useRef<Room | null>(null)
   const [connectionState, setConnectionState] = useState<VideoRoomConnectionState>("idle")
@@ -61,8 +77,7 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
       await room.localParticipant.setCameraEnabled(true)
       refreshParticipants(room)
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to connect to the video room."
-      setError(message)
+      setError(connectionErrorMessage(err))
       setConnectionState("error")
     }
   }, [refreshParticipants, token, url])

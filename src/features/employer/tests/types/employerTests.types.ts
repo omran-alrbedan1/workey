@@ -1,5 +1,5 @@
 // LocalizedValue type for backend responses with key/value structure
-export interface LocalizedValue<T extends string = string> {
+export interface xLocalizedValue<T extends string = string> {
   key: T
   value: string
 }

@@ -71,10 +71,11 @@ export default function InformationRequests({ applicationId }: { applicationId: 
         setCancelRequestId(null)
         setCancelReason("")
       } catch (error: any) {
-        if (error?.response?.data?.code === "APPLICATION_INFORMATION_REQUEST_NOT_PENDING") {
+        const code = error?.code ?? error?.response?.data?.code
+        if (code === "APPLICATION_INFORMATION_REQUEST_NOT_PENDING") {
           showErrorToast("Cannot cancel - request is not pending")
         } else {
-          showErrorToast("Failed to cancel information request")
+          showErrorToast(error?.message || "Failed to cancel information request")
         }
       }
     }

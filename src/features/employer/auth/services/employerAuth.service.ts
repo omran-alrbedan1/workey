@@ -12,7 +12,6 @@ import type {
 } from "../types/employerAuth.types"
 
 function normalizeSession(response: unknown): EmployerAuthSession {
-  console.log(response);
   const payload = unwrapEmployerEntity<Record<string, unknown>>(response)
   const token = payload.access_token ?? payload.token
   const user = payload.user

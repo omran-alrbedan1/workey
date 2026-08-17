@@ -11,6 +11,7 @@ import { loginFormSchema, LoginFormValues } from "@/shared/auth/validation/auth.
 import { ROUTES } from "@/config"
 import { authService } from "../services/auth.service"
 import { showSuccessToast } from "@/lib/toast"
+import { keyOf } from "@/lib/keyValue"
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
@@ -30,7 +31,7 @@ const Login: React.FC = () => {
       showSuccessToast("Welcome back!", "You have been logged in successfully")
       
       // Redirect based on role
-      const role = session.user.role.key
+      const role = keyOf(session.user.role)
       if (role === "admin") {
         navigate(ROUTES.admin.root, { replace: true })
       } else if (role === "employer") {

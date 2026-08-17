@@ -17,8 +17,10 @@ export default function AdminUserActivityPanel({ user }: { user: AdminUserDetail
           timeStyle: "short",
         }).format(date)
   }
-  const renderItems = (items: AdminUserActivityItem[] | undefined, emptyKey: string) =>
-    items?.length ? (
+  const renderItems = (items: AdminUserActivityItem[] | undefined, emptyKey: string) => {
+    if (items === undefined) return <UnavailableNotice />
+
+    return items.length ? (
       <div className="space-y-3">
         {items.map((item) => (
           <article
@@ -57,6 +59,7 @@ export default function AdminUserActivityPanel({ user }: { user: AdminUserDetail
         {t(emptyKey)}
       </p>
     )
+  }
 
   return (
     <div className="grid gap-6 xl:grid-cols-2">
@@ -67,5 +70,14 @@ export default function AdminUserActivityPanel({ user }: { user: AdminUserDetail
         {renderItems(user.audit_logs, "activity.auditEmpty")}
       </SectionCard>
     </div>
+  )
+}
+
+function UnavailableNotice() {
+  const { t } = useTranslation("adminUsers")
+  return (
+    <p className="rounded-lg border border-dashed border-amber-500/30 bg-amber-500/5 p-4 text-sm text-text-secondary">
+      {t("details.backendCoverageWarning")}
+    </p>
   )
 }

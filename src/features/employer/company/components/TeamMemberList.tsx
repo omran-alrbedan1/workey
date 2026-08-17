@@ -133,7 +133,7 @@ export default function TeamMemberList({
         isPending={isUpdatingRole}
         onOpenChange={(open) => !open && setRoleMember(null)}
         onSubmit={(input) => {
-          if (roleMember) onUpdateRole(roleMember.id, input.role)
+          if (roleMember) onUpdateRole(roleMember.id, input.company_role)
           setRoleMember(null)
         }}
       />
@@ -144,7 +144,7 @@ export default function TeamMemberList({
         isPending={isUpdatingStatus}
         onOpenChange={(open) => !open && setStatusMember(null)}
         onSubmit={(input) => {
-          if (statusMember) onUpdateStatus(statusMember.id, input.status)
+          if (statusMember) onUpdateStatus(statusMember.id, input.membership_status)
           setStatusMember(null)
         }}
       />

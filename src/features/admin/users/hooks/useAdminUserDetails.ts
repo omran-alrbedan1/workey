@@ -19,14 +19,6 @@ const detailsKey = (id: string | number) => ["admin", "users", "details", String
 function mapRecordToDetails(user: AdminUserRecord): AdminUserDetails {
   return {
     ...user,
-    activity_logs: [],
-    audit_logs: [],
-    login_history: [],
-    active_sessions: [],
-    applications: [],
-    jobs: [],
-    interviews: [],
-    tests: [],
   }
 }
 
@@ -89,6 +81,10 @@ export function useAdminUserDetails(id?: string) {
       query.data.audit_logs !== undefined ||
       query.data.login_history !== undefined ||
       query.data.active_sessions !== undefined ||
+      query.data.applications !== undefined ||
+      query.data.jobs !== undefined ||
+      query.data.interviews !== undefined ||
+      query.data.tests !== undefined ||
       query.data.counts !== undefined),
   )
 

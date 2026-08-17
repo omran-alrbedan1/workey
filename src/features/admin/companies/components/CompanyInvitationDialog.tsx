@@ -21,15 +21,15 @@ import type { AdminCompanyInvitationInput } from "../types/adminCompanyMembers.t
 
 const invitationSchema = z.object({
   email: z.string().email(),
-  role: z.string().min(1),
+  company_role: z.string().min(1),
 })
 export type AdminInvitationFormValues = z.infer<typeof invitationSchema>
 
 const roleOptions: Option[] = [
-  { value: "admin", label: "members.roles.admin" },
+  { value: "company_admin", label: "members.roles.admin" },
   { value: "recruiter", label: "members.roles.recruiter" },
   { value: "interviewer", label: "members.roles.interviewer" },
-  { value: "member", label: "members.roles.member" },
+  { value: "reviewer", label: "members.roles.member" },
 ]
 
 export default function CompanyInvitationDialog({
@@ -46,7 +46,7 @@ export default function CompanyInvitationDialog({
   const { t } = useTranslation("adminCompanies")
   const form = useForm<AdminInvitationFormValues>({
     resolver: zodResolver(invitationSchema),
-    defaultValues: { email: "", role: "member" },
+    defaultValues: { email: "", company_role: "reviewer" },
   })
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function CompanyInvitationDialog({
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
-                name="role"
+                name="company_role"
                 label={t("members.invitationDialog.role")}
                 options={roleOptions.map((option) => ({
                   ...option,

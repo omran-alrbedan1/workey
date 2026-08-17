@@ -6,6 +6,9 @@ export const ROUTES = Object.freeze({
     resetPassword: "/reset-password",
     emailVerification: "/email-verification",
   },
+  public: {
+    companyInvitation: (token = ":token") => `/company-invitations/${token}`,
+  },
   admin: {
     root: "/admin",
     users: "/admin/all-users",

@@ -249,6 +249,36 @@ export interface ApplicationSubmittedCv {
   captured_at?: string | null
 }
 
+export interface ApplicationCvSummaryEvidence {
+  statement?: string | null
+  source?: string | null
+}
+
+export interface ApplicationCvSummaryGeneration {
+  provider?: string | null
+  model?: string | null
+  prompt_version?: string | null
+  generated_at?: string | null
+}
+
+export interface ApplicationCvSummary {
+  id: string | number
+  job_application_id: string | number
+  locale?: string | null
+  headline?: string | null
+  summary?: string | null
+  strengths?: string[]
+  gaps?: string[]
+  evidence?: ApplicationCvSummaryEvidence[]
+  ai_disclaimer?: string | null
+  is_stale?: boolean
+  generation?: ApplicationCvSummaryGeneration | null
+}
+
+export interface GenerateCvSummaryInput {
+  force?: boolean
+}
+
 // Status History
 export interface ApplicationStatusHistoryEntry {
   id: string | number

@@ -42,7 +42,6 @@ export interface LoginCredentials {
 }
 
 function normalizeSession(response: unknown): AuthSession {
-  console.log("Login response:", response)
   const payload = unwrapEmployerEntity<Record<string, unknown>>(response)
   const token = payload.access_token ?? payload.token
   const user = payload.user

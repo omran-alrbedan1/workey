@@ -9,6 +9,12 @@ import type {
   AdminReportFilters,
 } from "../types/adminReports.types"
 
+function cleanFilters<T extends AdminReportFilters>(filters: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(filters).filter(([, value]) => value !== "" && value !== undefined && value !== null),
+  ) as Partial<T>
+}
+
 export const adminReportsService = {
   async overview(): Promise<AdminOverviewReport> {
     return unwrapEntity<AdminOverviewReport>(await api.get(API_ENDPOINTS.admin.reports.overview))
@@ -16,19 +22,19 @@ export const adminReportsService = {
 
   async applications(filters: AdminReportFilters = {}): Promise<AdminApplicationsReport> {
     return unwrapEntity<AdminApplicationsReport>(
-      await api.get(API_ENDPOINTS.admin.reports.applications, { params: filters }),
+      await api.get(API_ENDPOINTS.admin.reports.applications, { params: cleanFilters(filters) }),
     )
   },
 
   async jobs(filters: AdminReportFilters = {}): Promise<AdminJobsReport> {
     return unwrapEntity<AdminJobsReport>(
-      await api.get(API_ENDPOINTS.admin.reports.jobs, { params: filters }),
+      await api.get(API_ENDPOINTS.admin.reports.jobs, { params: cleanFilters(filters) }),
     )
   },
 
   async cvParsing(filters: Pick<AdminReportFilters, "date_from" | "date_to"> = {}): Promise<AdminCvParsingReport> {
     return unwrapEntity<AdminCvParsingReport>(
-      await api.get(API_ENDPOINTS.admin.reports.cvParsing, { params: filters }),
+      await api.get(API_ENDPOINTS.admin.reports.cvParsing, { params: cleanFilters(filters) }),
     )
   },
 }

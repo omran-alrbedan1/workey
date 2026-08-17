@@ -4,10 +4,13 @@ export type CompanyMemberRole = "owner" | "admin" | "recruiter" | "interviewer" 
 
 export interface CompanyMember {
   id: string | number
+  user_id?: string | number
   name: string
   email: string
   role: KeyValueField
+  company_role?: KeyValueField
   status: KeyValueField
+  membership_status?: KeyValueField
   avatar_url?: string | null
   phone?: string | null
   last_active_at?: string | null
@@ -16,6 +19,12 @@ export interface CompanyMember {
   can_update_role?: boolean
   can_update_status?: boolean
   can_remove?: boolean
+  available_actions?: {
+    change_role?: boolean
+    suspend?: boolean
+    reactivate?: boolean
+    remove?: boolean
+  }
 }
 
 export type InvitationStatus = "pending" | "accepted" | "revoked" | "expired"
@@ -24,6 +33,7 @@ export interface CompanyInvitation {
   id: string | number
   email: string
   role: KeyValueField
+  company_role?: KeyValueField
   status: KeyValueField
   invited_by?: { id: string | number; name: string } | null
   token?: string
@@ -39,19 +49,21 @@ export interface TeamMemberInput {
 
 export interface CompanyInvitationInput {
   email: string
-  role: string
+  company_role: string
 }
 
 export interface MemberRoleInput {
-  role: string
+  company_role: string
 }
 
 export interface MemberStatusInput {
-  status: string
+  membership_status: "active" | "suspended"
 }
 
 export interface TransferOwnershipInput {
-  user_id: string | number
+  new_owner_user_id: string | number
+  current_owner_user_id?: string | number
+  previous_owner_role?: "company_admin" | "recruiter" | "interviewer" | "reviewer"
 }
 
 export interface CompanyTeamSummary {
@@ -61,5 +73,6 @@ export interface CompanyTeamSummary {
 
 export interface CompanyInvitationResponse {
   invitation: CompanyInvitation
+  token?: string
   message?: string
 }

@@ -30,7 +30,9 @@ export default function AdminUserRelatedPanel({ user }: { user: AdminUserDetails
     <div className="grid gap-6 xl:grid-cols-2">
       {sections.map((section) => (
         <SectionCard key={section.key} icon={section.icon} title={t(`related.${section.key}`)}>
-          {section.items?.length ? (
+          {section.items === undefined ? (
+            <UnavailableNotice />
+          ) : section.items.length ? (
             <div className="space-y-3">
               {section.items.map((item) => (
                 <article
@@ -62,5 +64,14 @@ export default function AdminUserRelatedPanel({ user }: { user: AdminUserDetails
         </SectionCard>
       ))}
     </div>
+  )
+}
+
+function UnavailableNotice() {
+  const { t } = useTranslation("adminUsers")
+  return (
+    <p className="rounded-lg border border-dashed border-amber-500/30 bg-amber-500/5 p-4 text-sm text-text-secondary">
+      {t("details.backendCoverageWarning")}
+    </p>
   )
 }
