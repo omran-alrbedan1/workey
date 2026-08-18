@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, keepPreviousData } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
 import { APP_CONFIG } from "@/config"
 import { adminJobsService } from "../services/adminJobs.service"
@@ -48,6 +48,7 @@ export function useAdminJobs(filters: AdminJobFilterForm = ADMIN_JOB_FILTER_DEFA
         sort_direction: normalizedFilters.sort_direction,
       }),
     retry: false,
+    placeholderData: keepPreviousData,
   })
   return { ...query, page, setPage }
 }

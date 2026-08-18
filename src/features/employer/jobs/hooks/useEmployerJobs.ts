@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
@@ -55,6 +55,7 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       })
     },
     retry: 1,
+    placeholderData: keepPreviousData,
   })
 
   const refresh = () =>

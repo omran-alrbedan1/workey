@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { showSuccessToast } from "@/lib/toast"
@@ -14,6 +14,7 @@ export function useEmployerNotifications() {
   const listQuery = useQuery({
     queryKey: [...rootKey, page],
     queryFn: () => employerNotificationsService.list(page),
+    placeholderData: keepPreviousData,
   })
 
   const unreadCountQuery = useQuery({

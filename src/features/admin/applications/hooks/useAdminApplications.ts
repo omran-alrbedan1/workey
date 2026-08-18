@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, keepPreviousData } from "@tanstack/react-query"
 import { useState } from "react"
 import { APP_CONFIG } from "@/config"
 import { adminApplicationsService } from "../services/adminApplications.service"
@@ -12,6 +12,7 @@ export function useAdminApplications() {
         per_page: APP_CONFIG.pagination.defaultPageSize,
       }),
     retry: false,
+    placeholderData: keepPreviousData,
   })
   return { ...query, page, setPage }
 }

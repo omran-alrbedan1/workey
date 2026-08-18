@@ -202,7 +202,7 @@ export default function EmployerApplicantsTable({
     {
       key: "actions",
       header: t("columns.nextStep"),
-      className: "text-right",
+      className: "text-end",
       cell: (application) => (
         <div className="flex justify-end">
           <DropdownMenu>

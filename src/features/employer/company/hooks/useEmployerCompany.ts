@@ -11,6 +11,7 @@ export function useEmployerCompany() {
   const query = useQuery({
     queryKey: employerCompanyKey,
     queryFn: employerCompanyService.get,
+    staleTime: 5 * 60_000,
   })
 
   const updateMutation = useMutation({

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
@@ -21,6 +21,7 @@ export function useEmployerApplicants(jobId?: string | number) {
     queryKey: [...rootKey, page],
     queryFn: () => employerApplicantsService.list(jobId!, page),
     enabled: Boolean(jobId),
+    placeholderData: keepPreviousData,
   })
   const statusMutation = useMutation({
     mutationFn: ({

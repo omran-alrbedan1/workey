@@ -70,7 +70,7 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-semibold text-text-primary">Invitation link created</p>
+              <p className="text-sm font-semibold text-text-primary">{t("members.invitationBanner.title")}</p>
               <p className="break-all text-sm text-text-secondary">
                 {window.location.origin}
                 {ROUTES.public.companyInvitation(lastInvitationToken)}
@@ -84,21 +84,21 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                   await navigator.clipboard.writeText(
                     `${window.location.origin}${ROUTES.public.companyInvitation(lastInvitationToken)}`,
                   )
-                  showSuccessToast("Invitation link copied")
+                  showSuccessToast(t("members.invitationBanner.copied"))
                 }}
               >
                 <Copy className="h-4 w-4" />
-                Copy
+                {t("members.invitationBanner.copy")}
               </Button>
               <Button size="sm" variant="ghost" onClick={clearLastInvitationToken}>
-                Dismiss
+                {t("members.invitationBanner.dismiss")}
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
+      <div className="space-y-2 overflow-hidden rounded-xl">
         {members.length === 0 ? (
           <p className="px-6 py-8 text-center text-sm text-text-muted">{t("members.empty")}</p>
         ) : (
@@ -106,7 +106,7 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
             const role = keyOf(member.role, "member")
             const status = keyOf(member.status, "active")
             return (
-              <div key={member.id} className="flex items-center gap-4 px-5 py-4">
+              <div key={member.id} className="flex items-center gap-4 rounded-xl border border-border/60 px-5 py-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <UserRound className="h-5 w-5" />
                 </div>
@@ -146,13 +146,13 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                         }
                       >
                         <UserX className="h-4 w-4" />
-                        {status === "suspended" ? "Activate member" : "Suspend member"}
+                        {status === "suspended" ? t("members.actions.activate") : t("members.actions.suspend")}
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Transfer company ownership to ${member.name}? The current owner will become a company admin.`,
+                              t("members.confirmations.transferOwnership", { name: member.name }),
                             )
                           ) {
                             transferOwnershipMutation.mutate({
@@ -163,18 +163,18 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                         }}
                       >
                         <Crown className="h-4 w-4" />
-                        Transfer ownership
+                        {t("members.actions.transferOwnership")}
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="text-rose-600"
                         onClick={() => {
-                          if (window.confirm(`Remove ${member.name} from this company?`)) {
+                          if (window.confirm(t("members.confirmations.removeMember", { name: member.name }))) {
                             removeMutation.mutate(member.id)
                           }
                         }}
                       >
                         <Trash2 className="h-4 w-4" />
-                        Remove member
+                        {t("members.actions.removeMember")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -187,15 +187,15 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
 
       <section className="space-y-3">
         <div>
-          <h3 className="text-sm font-semibold text-text-primary">Invitations</h3>
-          <p className="text-xs text-text-muted">Pending and historical company invitations.</p>
+          <h3 className="text-sm font-semibold text-text-primary">{t("members.invitations.title")}</h3>
+          <p className="text-xs text-text-muted">{t("members.invitations.description")}</p>
         </div>
-        <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
+      <div className="space-y-2 overflow-hidden rounded-xl">
           {invitations.length === 0 ? (
-            <p className="px-6 py-8 text-center text-sm text-text-muted">No invitations yet.</p>
+            <p className="px-6 py-8 text-center text-sm text-text-muted">{t("members.invitations.empty")}</p>
           ) : (
             invitations.map((invitation) => (
-              <div key={invitation.id} className="flex items-center gap-4 px-5 py-4">
+              <div key={invitation.id} className="flex items-center gap-4 rounded-xl border border-border/60 px-5 py-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <MailPlus className="h-5 w-5" />
                 </div>
@@ -206,8 +206,8 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                   <p className="flex items-center gap-1 truncate text-xs text-text-muted">
                     <Clock className="h-3 w-3" />
                     {invitation.expires_at
-                      ? `Expires ${new Date(invitation.expires_at).toLocaleDateString()}`
-                      : "No expiry date"}
+                      ? t("members.invitations.expires", { date: new Date(invitation.expires_at).toLocaleDateString() })
+                      : t("members.invitations.noExpiry")}
                   </p>
                 </div>
                 <StatusBadge status={invitation.company_role} variant="soft" size="sm" />

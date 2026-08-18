@@ -1,7 +1,7 @@
 services:
-  abusara-app:
-    image: beyond-gluten-frontend:${IMAGE_TAG:-latest}
-    container_name: ${CONTAINER_NAME:-beyond_gluten_front}
+  workey-app:
+    image: workey-frontend:${IMAGE_TAG:-latest}
+    container_name: ${CONTAINER_NAME:-workey_front}
     ports:
       - "${APP_PORT:-3005}:3000" 
     restart: unless-stopped

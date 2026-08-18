@@ -30,7 +30,7 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
       <Button
         variant="outline"
         className={cn(
-          "w-full justify-between text-left font-normal",
+          "w-full justify-between text-start font-normal",
           !field.value && "text-muted-foreground",
           inputClassName
         )}
@@ -38,7 +38,7 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
         onClick={() => setOpen(!open)}
       >
         {selectedOption ? selectedOption.label : placeholder || "Select option"}
-        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        <ChevronDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
       {open && (
         <div className="absolute top-full z-50 mt-1 bg-white border rounded-md shadow-lg w-full">

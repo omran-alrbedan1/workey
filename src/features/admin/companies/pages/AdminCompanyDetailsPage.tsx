@@ -80,7 +80,7 @@ export default function AdminCompanyDetailsPage() {
             ) : null}
             <Button size="sm" onClick={() => setEditOpen(true)} className="gap-2">
               <Edit className="h-4 w-4" />
-              Edit
+              {t("details.edit")}
             </Button>
           </div>
         }

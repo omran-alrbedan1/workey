@@ -87,7 +87,7 @@ function CandidateCard({ candidate }: { candidate: RankedCandidate }) {
                       value={value}
                       className="flex-1"
                     />
-                    <span className={cn("w-8 text-right text-xs font-medium", scoreColor(value))}>
+                    <span className={cn("w-8 text-end text-xs font-medium", scoreColor(value))}>
                       {Math.round(value)}%
                     </span>
                   </div>

@@ -30,12 +30,12 @@ export const SubmitButton = ({
     >
       {isLoading ? (
         <>
-          <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+          <Loader2 className="ms-2 h-4 w-4 animate-spin" />
           {loadingText || text }
         </>
       ) : (
         <>
-          {icon && <span className="ml-2">{icon}</span>}
+          {icon && <span className="ms-2">{icon}</span>}
           {text}
         </>
       )}

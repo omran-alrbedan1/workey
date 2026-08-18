@@ -145,7 +145,7 @@ export default function EmployerInterviewDetailsPage() {
 
       <section className="rounded-lg border border-border bg-background-card p-4 shadow-card">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className={cn("flex min-w-0 items-start gap-3", isRtl && "flex-row-reverse text-right")}>
+          <div className={cn("flex min-w-0 items-start gap-3", isRtl && "flex-row-reverse text-end")}>
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <UserRound className="h-5 w-5" />
             </div>
@@ -258,7 +258,7 @@ export default function EmployerInterviewDetailsPage() {
             {(data.confirmed_at || data.attendance_recorded_at || data.cancelled_at || data.completed_at) && (
               <div className={cn(
                 "grid gap-2 rounded-lg border border-border bg-muted/20 p-3 text-xs text-text-muted sm:col-span-2 sm:grid-cols-2",
-                isRtl && "text-right",
+                isRtl && "text-end",
               )}>
                 {data.confirmed_at && <span>{t("details.confirmedAt")}: {new Date(data.confirmed_at).toLocaleString()}</span>}
                 {data.attendance_recorded_at && <span>{t("details.attendanceAt")}: {new Date(data.attendance_recorded_at).toLocaleString()}</span>}
@@ -296,14 +296,14 @@ export default function EmployerInterviewDetailsPage() {
               )}
               {evaluation?.items && evaluation.items.length > 0 ? (
                 <div className="space-y-2">
-                  <p className={cn("text-xs font-medium text-text-muted", isRtl && "text-right")}>{t("details.evaluationItems")}</p>
+                  <p className={cn("text-xs font-medium text-text-muted", isRtl && "text-end")}>{t("details.evaluationItems")}</p>
                   {evaluation.items.map((item, i) => (
                     <div key={i} className="rounded-lg border border-border p-3">
-                      <div className={cn("flex items-center justify-between", isRtl && "flex-row-reverse text-right")}>
+                      <div className={cn("flex items-center justify-between", isRtl && "flex-row-reverse text-end")}>
                         <span className="text-sm font-medium text-text-primary">{item.criterion}</span>
                         <span className="text-sm font-semibold text-primary">{item.score}/5</span>
                       </div>
-                      {item.comment && <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>{item.comment}</p>}
+                      {item.comment && <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-end")}>{item.comment}</p>}
                     </div>
                   ))}
                 </div>
@@ -429,33 +429,33 @@ function InterviewActionsMenu({
         <DropdownMenuLabel>{t("actions.label")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {canReschedule && (
-          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onReschedule}>
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-end")} onSelect={onReschedule}>
             <CalendarSync /> {t("actions.reschedule")}
           </DropdownMenuItem>
         )}
         {canRecordAttendance && (
-          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onRecordAttendance}>
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-end")} onSelect={onRecordAttendance}>
             <ListChecks /> {t("actions.attendance")}
           </DropdownMenuItem>
         )}
         {canComplete && (
-          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onComplete}>
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-end")} onSelect={onComplete}>
             <CheckCircle /> {t("actions.complete")}
           </DropdownMenuItem>
         )}
         {canEvaluate && (
-          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onEvaluate}>
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-end")} onSelect={onEvaluate}>
             <ClipboardCheck /> {t("actions.evaluate")}
           </DropdownMenuItem>
         )}
         {canMarkNoShow && (
-          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-right")} onSelect={onMarkNoShow}>
+          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-end")} onSelect={onMarkNoShow}>
             <UserX /> {t("actions.noShow")}
           </DropdownMenuItem>
         )}
         {canCancel && (
           <DropdownMenuItem
-            className={cn("text-red-600 focus:text-red-700", isRtl && "flex-row-reverse text-right")}
+            className={cn("text-red-600 focus:text-red-700", isRtl && "flex-row-reverse text-end")}
             onSelect={onCancel}
           >
             <Ban /> {t("actions.cancel")}
@@ -491,13 +491,13 @@ function InterviewHistoryFromResponse({
     <div className="grid gap-4 lg:grid-cols-2">
       {statusHistory.length > 0 && (
         <section className="space-y-3 rounded-lg border border-border bg-background-card p-5 shadow-card">
-          <h3 className={cn("flex items-center gap-2 text-sm font-semibold text-text-primary", isRtl && "flex-row-reverse text-right")}>
+          <h3 className={cn("flex items-center gap-2 text-sm font-semibold text-text-primary", isRtl && "flex-row-reverse text-end")}>
             <History className="h-4 w-4 text-primary" />
             {t("history.statusTitle")}
           </h3>
           {statusHistory.map((item) => (
             <div key={item.id} className="rounded-lg border border-border p-3">
-              <div className={cn("flex flex-wrap items-center justify-between gap-2", isRtl && "flex-row-reverse text-right")}>
+              <div className={cn("flex flex-wrap items-center justify-between gap-2", isRtl && "flex-row-reverse text-end")}>
                 <p className="text-sm font-medium text-text-primary">
                   {interviewValue(item.from_status)} {"->"} {interviewValue(item.to_status)}
                 </p>
@@ -505,9 +505,9 @@ function InterviewHistoryFromResponse({
                   <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
                 )}
               </div>
-              {item.reason && <p className={cn("mt-2 text-sm text-text-muted", isRtl && "text-right")}>{item.reason}</p>}
+              {item.reason && <p className={cn("mt-2 text-sm text-text-muted", isRtl && "text-end")}>{item.reason}</p>}
               {item.changed_by?.name && (
-                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-end")}>
                   {t("history.actor", { actor: item.changed_by.name })}
                 </p>
               )}
@@ -518,13 +518,13 @@ function InterviewHistoryFromResponse({
 
       {scheduleHistory.length > 0 && (
         <section className="space-y-3 rounded-lg border border-border bg-background-card p-5 shadow-card">
-          <h3 className={cn("flex items-center gap-2 text-sm font-semibold text-text-primary", isRtl && "flex-row-reverse text-right")}>
+          <h3 className={cn("flex items-center gap-2 text-sm font-semibold text-text-primary", isRtl && "flex-row-reverse text-end")}>
             <CalendarSync className="h-4 w-4 text-primary" />
             {t("history.scheduleTitle")}
           </h3>
           {scheduleHistory.map((item) => (
             <div key={item.id} className="rounded-lg border border-border p-3">
-              <div className={cn("flex flex-wrap items-center justify-between gap-2", isRtl && "flex-row-reverse text-right")}>
+              <div className={cn("flex flex-wrap items-center justify-between gap-2", isRtl && "flex-row-reverse text-end")}>
                 <p className="text-sm font-medium text-text-primary">
                   {formatDateTime(item.previous_start_at)} {"->"} {formatDateTime(item.new_start_at)}
                 </p>
@@ -532,18 +532,18 @@ function InterviewHistoryFromResponse({
                   <p className="text-xs text-text-muted">{formatDateTime(item.created_at)}</p>
                 )}
               </div>
-              <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+              <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-end")}>
                 {interviewValue(item.previous_mode)} {"->"} {interviewValue(item.new_mode)}
               </p>
               {(item.previous_meeting_link || item.previous_location_text || item.new_meeting_link || item.new_location_text) && (
-                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-end")}>
                   {item.previous_meeting_link || item.previous_location_text || "-"} {"->"}{" "}
                   {item.new_meeting_link || item.new_location_text || "-"}
                 </p>
               )}
-              {item.reason && <p className={cn("mt-2 text-sm text-text-muted", isRtl && "text-right")}>{item.reason}</p>}
+              {item.reason && <p className={cn("mt-2 text-sm text-text-muted", isRtl && "text-end")}>{item.reason}</p>}
               {item.changed_by?.name && (
-                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-right")}>
+                <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-end")}>
                   {t("history.actor", { actor: item.changed_by.name })}
                 </p>
               )}
@@ -570,18 +570,18 @@ function DetailItem({
 }) {
   return (
     <div className={className}>
-      <p className={cn("mb-1 flex items-center gap-1.5 text-xs font-medium text-text-muted", isRtl && "flex-row-reverse text-right")}>
+      <p className={cn("mb-1 flex items-center gap-1.5 text-xs font-medium text-text-muted", isRtl && "flex-row-reverse text-end")}>
         <Icon className="h-3.5 w-3.5 text-primary" />
         {label}
       </p>
-      <p className={cn("text-sm font-medium text-text-primary", isRtl && "text-right")}>{value || "-"}</p>
+      <p className={cn("text-sm font-medium text-text-primary", isRtl && "text-end")}>{value || "-"}</p>
     </div>
   )
 }
 
 function TextBlock({ isRtl, label, value }: { isRtl: boolean; label: string; value?: string | null }) {
   return (
-    <div className={cn(isRtl && "text-right")}>
+    <div className={cn(isRtl && "text-end")}>
       <p className="text-xs font-medium text-text-muted">{label}</p>
       <p className="mt-1 text-sm text-text-primary">{value || "-"}</p>
     </div>

@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 import ForgotPasswordForm from "../components/ForgotPasswordForm"
 
 export default function ForgotPasswordPage({ loginPath }: { loginPath: string }) {
@@ -11,7 +11,7 @@ export default function ForgotPasswordPage({ loginPath }: { loginPath: string })
   return (
     <main className="flex min-h-screen items-center justify-center bg-background p-6">
       <div className="w-full max-w-md">
-        <img src={images.logo} alt="Workey" className="mb-8 h-24 w-auto" />
+        <Logo size="xl" alt="Workey" className="mb-8" />
         <h1 className="text-3xl font-bold text-text-primary">{t("forgot.title")}</h1>
         <p className="mt-2 text-sm text-text-secondary">
           {t("forgot.description")}

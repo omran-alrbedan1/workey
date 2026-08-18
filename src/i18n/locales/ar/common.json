@@ -97,9 +97,9 @@
   "register": "التسجيل",
   "dashboard": "لوحة التحكم",
   "users": "المستخدمون",
-  "vendors": "البائعون",
-  "products": "المنتجات",
-  "orders": "الطلبات",
+  "employers": " أصحاب العمل",
+  "candidates": "المرشحون",
+  "applications": "الطلبات",
   "reports": "التقارير",
   "notifications": "الإشعارات",
   "messages": "الرسائل",
@@ -210,5 +210,12 @@
       "messageRequired": "الرسالة مطلوبة",
       "messageTooLong": "يجب أن تكون الرسالة أقل من 500 حرف"
     }
+  },
+  "dataSource": {
+    "title": "مصادر البيانات:",
+    "live": "مباشر",
+    "partial": "جاري التحميل",
+    "unavailable": "غير متاح",
+    "stale": "قديم"
   }
 }

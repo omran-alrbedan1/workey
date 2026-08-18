@@ -1,6 +1,8 @@
 import { Building2, FileText, Briefcase, Users, Calendar, CheckCircle, XCircle, Clock, UserPlus, UserMinus, Mail, Shield } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
+import EmptyState from "@/components/shared/states/EmptyState"
+import PartialError from "@/components/shared/states/PartialError"
 import { activityService } from "@/shared/activity/services/activity.service"
 import type { Activity } from "@/types/activity.types"
 import { useQuery } from "@tanstack/react-query"
@@ -81,7 +83,7 @@ interface ActivityFeedProps {
 
 export default function ActivityFeed({ limit = 10 }: ActivityFeedProps) {
   const { t, i18n } = useTranslation("activity")
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["activity", limit],
     queryFn: () => activityService.getActivity({ per_page: limit }),
   })
@@ -102,11 +104,23 @@ export default function ActivityFeed({ limit = 10 }: ActivityFeedProps) {
     )
   }
 
-  if (isError || !data?.data?.length) {
+  if (isError) {
     return (
-      <div className="flex min-h-32 items-center justify-center text-sm text-text-muted">
-        {t("noActivity")}
-      </div>
+      <PartialError
+        message={t("activityLoadError", "Failed to load activity feed.")}
+        retry={() => void refetch()}
+      />
+    )
+  }
+
+  if (!data?.data?.length) {
+    return (
+      <EmptyState
+        title={t("noActivity")}
+        description={t("noActivityDescription", "No recent activity to display.")}
+        icon={Clock}
+        className="py-8 bg-transparent"
+      />
     )
   }
 

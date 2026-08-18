@@ -19,6 +19,74 @@ import { images } from "@/constants/images"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 import type { AdminTestRecord, AdminTestUpdateInput } from "../types/adminTests.types"
 
+interface AdminTestMobileCardProps {
+  test: AdminTestRecord
+  isDeleting: boolean
+  isUpdating: boolean
+  onEdit: (test: AdminTestRecord) => void
+  onDelete: (test: AdminTestRecord) => void
+}
+
+const AdminTestMobileCard = ({
+  test,
+  isDeleting,
+  isUpdating,
+  onEdit,
+  onDelete,
+}: AdminTestMobileCardProps) => {
+  const { t } = useTranslation("adminTests")
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <FileText className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">{test.title}</h3>
+          <p className="truncate text-xs text-text-muted">
+            {test.description || t("noDescription")}
+          </p>
+        </div>
+        <StatusBadge status={test.is_active ? "active" : "inactive"} variant="soft" />
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        <p className="flex items-center gap-2">
+          <Clock className="h-3.5 w-3.5 text-primary" />
+          {t("minutes", { count: test.duration_minutes })}
+        </p>
+        <p className="flex items-center gap-2">
+          <Target className="h-3.5 w-3.5 text-primary" />
+          {t("columns.passing")}: {test.passing_score} / {test.max_score}
+        </p>
+      </div>
+
+      <div className="mt-3 flex gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1"
+          disabled={isDeleting || isUpdating}
+          onClick={() => onEdit(test)}
+        >
+          <Edit className="h-4 w-4" />
+          {t("edit.action")}
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950/30"
+          disabled={isDeleting || isUpdating}
+          onClick={() => onDelete(test)}
+        >
+          <Trash2 className="h-4 w-4" />
+          {t("delete")}
+        </Button>
+      </div>
+    </article>
+  )
+}
+
 export default function AdminTestsTable({
   tests,
   isLoading,
@@ -83,7 +151,7 @@ export default function AdminTestsTable({
     {
       key: "actions",
       header: t("columns.actions"),
-      className: "text-right",
+      className: "text-end",
       cell: (test) => (
         <div className="flex justify-end">
           <DropdownMenu>
@@ -120,6 +188,16 @@ export default function AdminTestsTable({
     },
   ]
 
+  const MobileTestCard = ({ item }: { item: AdminTestRecord }) => (
+    <AdminTestMobileCard
+      test={item}
+      isDeleting={isDeleting}
+      isUpdating={isUpdating}
+      onEdit={setTestToEdit}
+      onDelete={setTestToDelete}
+    />
+  )
+
   return (
     <>
       <DataTable
@@ -134,6 +212,7 @@ export default function AdminTestsTable({
           perPage: pagination?.perPage,
         }}
         onPageChange={() => {}}
+        mobileCardComponent={MobileTestCard}
         emptyMessage={t("empty")}
         emptyDescription={t("emptyDescription")}
         emptyImage={images.emptyProducts}

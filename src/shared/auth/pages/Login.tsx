@@ -4,14 +4,15 @@ import { useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
 import { Form } from "@/components/ui/form"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
-import { images } from "@/constants/images"
-import { LogIn, Mail, Lock } from "lucide-react"  
+import Logo from "@/components/shared/logo/Logo"
+import { LogIn, Mail, Lock } from "lucide-react"
 import { SubmitButton } from "@/components/shared/buttons/SubmitButton"
 import { loginFormSchema, LoginFormValues } from "@/shared/auth/validation/auth.validation"
 import { ROUTES } from "@/config"
 import { authService } from "../services/auth.service"
 import { showSuccessToast } from "@/lib/toast"
 import { keyOf } from "@/lib/keyValue"
+import { images } from "@/constants/images"
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
@@ -59,7 +60,7 @@ const Login: React.FC = () => {
         <div className="w-full max-w-md">
           <div className="flex flex-col gap-6">
             <div className="mb-4 mx-auto">
-              <img src={images.logo} width={250} height={220} alt="Workey logo" />
+              <Logo size="xl" width={250} height={220} alt="Workey logo" />
             </div>
             
             <div>
@@ -98,13 +99,6 @@ const Login: React.FC = () => {
                     iconPosition="left"
                   />
                 </div>
-
-                {form.formState.errors.root && (
-                  <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200 text-center">
-                    {form.formState.errors.root.message}
-                  </div>
-                )}
-
                 <SubmitButton 
                   isLoading={loginMutation.isPending}
                   text="Login"

@@ -3,12 +3,12 @@ stages:
   - deploy
 
 variables:
-  DEPLOY_DIR: /opt/beyond-gluten/website
+  DEPLOY_DIR: /opt/workey/website
   IMAGE_TAG: latest
   APP_ENV: production
   APP_PORT: 3005
-  COMPOSE_PROJECT_NAME: beyond-gluten
-  CONTAINER_NAME: beyond_gluten_front
+  COMPOSE_PROJECT_NAME: workey
+  CONTAINER_NAME: workey_front
 
 build_prod:
   stage: build
@@ -17,7 +17,7 @@ build_prod:
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
   script:
-    - docker build -t beyond-gluten-frontend:${IMAGE_TAG} .
+    - docker build -t workey-frontend:${IMAGE_TAG} .
 
 deploy_prod:
   stage: deploy

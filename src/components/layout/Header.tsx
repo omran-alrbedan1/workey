@@ -30,15 +30,15 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onMenuToggle, isMobileMenuOpe
           {/* Notifications */}
           <button aria-label={t("header.notifications")} className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary">
             <Bell className="h-5 w-5" />
-            <span className="absolute right-1 top-1 flex h-2 w-2">
+            <span className="absolute end-1 top-1 flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
             </span>
           </button>
 
           {/* User Menu - hide on small mobile */}
-          <div className="hidden sm:flex items-center gap-3 border-l border-border pl-3">
-            <div className="text-right">
+          <div className="hidden sm:flex items-center gap-3 border-s border-border ps-3">
+            <div className="text-end">
               <p className="text-sm font-medium text-text">{t("header.adminUser")}</p>
               <p className="text-xs text-text-secondary">{t("header.administrator")}</p>
             </div>
@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onMenuToggle, isMobileMenuOpe
             onClick={onLogout}
             className="hidden sm:flex rounded-xl border border-border bg-background-card px-4 py-2 text-sm font-medium text-text transition hover:bg-background-secondary"
           >
-            <LogOut className="h-4 w-4 inline mr-2" />
+            <LogOut className="h-4 w-4 inline me-2" />
             {t("header.logout")}
           </button>
         </div>

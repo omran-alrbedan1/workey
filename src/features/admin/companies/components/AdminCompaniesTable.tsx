@@ -262,7 +262,7 @@ export default function AdminCompaniesTable({
       key: "actions",
       header: t("table.review"),
       headerIcon: ListChecks,
-      className: "text-right",
+      className: "text-end",
       cell: (company) => (
         <div className="flex justify-end" onClick={(event) => event.stopPropagation()}>
           <CompanyActionsDropdown

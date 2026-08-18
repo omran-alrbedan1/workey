@@ -2,7 +2,8 @@
   "page": {
     "title": "Companies",
     "description": "Review employer organizations and control approval status.",
-    "imageAlt": "Companies"
+    "imageAlt": "Companies",
+    "createCompany": "Create company"
   },
   "errors": {
     "listTitle": "companies",
@@ -66,6 +67,7 @@
     "employer": "Employer",
     "location": "Location",
     "companyId": "Company id",
+    "edit": "Edit",
     "tabs": {
       "overview": "Overview",
       "recruitment": "Recruitment",
@@ -87,7 +89,28 @@
       "member": "Member"
     },
     "actions": {
-      "changeRole": "Change role"
+      "changeRole": "Change role",
+      "activate": "Activate member",
+      "suspend": "Suspend member",
+      "transferOwnership": "Transfer ownership",
+      "removeMember": "Remove member"
+    },
+    "confirmations": {
+      "transferOwnership": "Transfer company ownership to {{name}}? The current owner will become a company admin.",
+      "removeMember": "Remove {{name}} from this company?"
+    },
+    "invitationBanner": {
+      "title": "Invitation link created",
+      "copy": "Copy",
+      "copied": "Invitation link copied",
+      "dismiss": "Dismiss"
+    },
+    "invitations": {
+      "title": "Invitations",
+      "description": "Pending and historical company invitations.",
+      "empty": "No invitations yet.",
+      "expires": "Expires {{date}}",
+      "noExpiry": "No expiry date"
     },
     "invitationDialog": {
       "title": "Invite team member",
@@ -98,7 +121,7 @@
     },
     "roleDialog": {
       "title": "Change member role",
-      "description": "Update the role of {name}.",
+      "description": "Update the role of {{name}}.",
       "label": "Role",
       "submit": "Update role"
     },

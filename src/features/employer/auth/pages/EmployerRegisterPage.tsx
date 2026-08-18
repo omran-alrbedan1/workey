@@ -2,7 +2,7 @@ import { BriefcaseBusiness } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { ROUTES } from "@/config"
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 import EmployerRegisterForm from "../components/EmployerRegisterForm"
 
 export default function EmployerRegisterPage() {
@@ -12,7 +12,7 @@ export default function EmployerRegisterPage() {
     <main className="grid min-h-screen bg-background lg:grid-cols-2">
       <section className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-xl">
-          <img src={images.logo} alt={t("logoAlt")} className="mb-6 h-20 w-auto" />
+          <Logo size="lg" alt={t("logoAlt")} className="mb-6" />
           <div className="mb-6">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <BriefcaseBusiness className="h-3.5 w-3.5" />

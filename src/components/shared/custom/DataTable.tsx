@@ -88,7 +88,7 @@ function DataTableSkeleton({ columns }: { columns: Column[] }) {
                   className={column.className}
                   style={{ width: column.width }}
                 >
-                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-3.5 w-20" />
                 </TableHead>
               ))}
             </TableRow>
@@ -98,7 +98,7 @@ function DataTableSkeleton({ columns }: { columns: Column[] }) {
               <TableRow key={index}>
                 {columns.map((column) => (
                   <TableCell key={column.key}>
-                    <Skeleton className="h-4 w-full max-w-[200px]" />
+                    <Skeleton className="h-3.5 w-full max-w-[180px]" />
                   </TableCell>
                 ))}
               </TableRow>
@@ -106,13 +106,13 @@ function DataTableSkeleton({ columns }: { columns: Column[] }) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between px-4 py-3 border-t border-border">
-        <Skeleton className="h-4 w-32" />
+      <div className="flex items-center justify-between px-4 py-2.5 border-t border-border">
+        <Skeleton className="h-3.5 w-32" />
         <div className="flex items-center gap-1">
-          <Skeleton className="h-8 w-20 rounded-md" />
-          <Skeleton className="h-8 w-8 rounded-md" />
-          <Skeleton className="h-8 w-8 rounded-md" />
-          <Skeleton className="h-8 w-20 rounded-md" />
+          <Skeleton className="h-7 w-16 rounded-md" />
+          <Skeleton className="h-7 w-7 rounded-md" />
+          <Skeleton className="h-7 w-7 rounded-md" />
+          <Skeleton className="h-7 w-16 rounded-md" />
         </div>
       </div>
     </div>
@@ -142,8 +142,8 @@ function DataTablePagination({
   if (lastPage <= 1) return null
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 border-t border-border">
-      <div className="text-sm text-muted-foreground order-2 sm:order-1">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-2.5 border-t border-border">
+      <div className="text-xs text-muted-foreground order-2 sm:order-1">
         {t("table.showing", {
           defaultValue: `Showing {{from}} to {{to}} of {{total}} results`,
           from: total === 0 ? 0 : (page - 1) * perPage + 1,
@@ -236,7 +236,7 @@ export function DataTable<T = any>({
   // Mobile view with custom card component
   if (isMobile && MobileCard) {
     return (
-      <div className={`space-y-3  ${className}`}>
+      <div className={`space-y-2 ${className}`}>
         {data.map((item) => (
           <MobileCard
             key={getRowId(item)}
@@ -252,7 +252,7 @@ export function DataTable<T = any>({
             description={emptyDescription || "There are no records to display yet."}
             imageUrl={emptyImage}
             imageAlt={emptyImageAlt}
-            className="rounded-2xl border border-border bg-background-card py-12"
+            className="rounded-2xl border border-border bg-background-card py-10"
           />
         )}
         <DataTablePagination
@@ -270,7 +270,7 @@ export function DataTable<T = any>({
   // Desktop table view
   return (
     <div className={`overflow-x-auto rounded-md border border-border ${className}`}>
-      <div className="min-w-3xl px-5">
+      <div className="min-w-3xl px-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -284,7 +284,7 @@ export function DataTable<T = any>({
                     className={cn(
                       "flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground",
                       column.className?.includes("text-center") && "justify-center",
-                      column.className?.includes("text-right") && "justify-end",
+                      column.className?.includes("text-end") && "justify-end",
                     )}
                   >
                     {column.headerIcon && (
@@ -307,7 +307,7 @@ export function DataTable<T = any>({
                 onClick={() => onRowClick?.(item)}
               >
                 {columns.map((column) => (
-                  <TableCell key={column.key} className={cn("text-sm", column.className)}>
+                  <TableCell key={column.key} className={cn("text-sm py-2.5", column.className)}>
                     {column.cell ? column.cell(item) : (item as any)[column.key] || "—"}
                   </TableCell>
                 ))}
@@ -324,7 +324,7 @@ export function DataTable<T = any>({
                     description={emptyDescription || "There are no records to display yet."}
                     imageUrl={emptyImage}
                     imageAlt={emptyImageAlt}
-                    className="bg-transparent py-12"
+                    className="bg-transparent py-10"
                   />
                 </TableCell>
               </TableRow>

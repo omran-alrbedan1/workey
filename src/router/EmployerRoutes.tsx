@@ -1,30 +1,37 @@
 import { Navigate, type RouteObject } from "react-router-dom"
-import type React from "react"
+import { lazy, type ReactNode } from "react"
 import EmployerLayout from "@/layouts/employer/EmployerLayout"
 import EmployerProtectedRoute from "@/features/employer/auth/components/EmployerProtectedRoute"
-import EmployerDashboard from "@/features/employer/dashboard/pages/EmployerDashboard"
-import EmployerJobsPage from "@/features/employer/jobs/pages/EmployerJobsPage"
-import EmployerCreateJobPage from "@/features/employer/jobs/pages/EmployerCreateJobPage"
-import EmployerEditJobPage from "@/features/employer/jobs/pages/EmployerEditJobPage"
-import EmployerJobDetailsPage from "@/features/employer/jobs/pages/EmployerJobDetailsPage"
-import EmployerApplicantsPage from "@/features/employer/applicants/pages/EmployerApplicantsPage"
-import EmployerApplicantDetailsPage from "@/features/employer/applicants/pages/EmployerApplicantDetailsPage"
-import EmployerApplicantTestDetailsPage from "@/features/employer/applicants/pages/EmployerApplicantTestDetailsPage"
-import EmployerInterviewsPage from "@/features/employer/interviews/pages/EmployerInterviewsPage"
-import EmployerInterviewDetailsPage from "@/features/employer/interviews/pages/EmployerInterviewDetailsPage"
-import EmployerTestsPage from "@/features/employer/tests/pages/EmployerTestsPage"
-import EmployerCreateTestPage from "@/features/employer/tests/pages/EmployerCreateTestPage"
-import EmployerEditTestPage from "@/features/employer/tests/pages/EmployerEditTestPage"
-import EmployerTestAttemptGradingPage from "@/features/employer/tests/pages/EmployerTestAttemptGradingPage"
-import EmployerCompanyPage from "@/features/employer/company/pages/EmployerCompanyPage"
-import EmployerProfilePage from "@/features/employer/profile/pages/EmployerProfilePage"
-import EmployerNotificationsPage from "@/features/employer/notifications/pages/EmployerNotificationsPage"
-import EmployerSettingsPage from "@/features/employer/settings/pages/EmployerSettingsPage"
 import EmployerCompanyGate from "@/features/employer/company/components/EmployerCompanyGate"
 import { ROUTES } from "@/config"
 import RouteErrorPage from "@/components/shared/states/RouteErrorPage"
+import { withRouteSuspense } from "./LazyRoute"
 
-const gated = (element: React.ReactNode) => <EmployerCompanyGate>{element}</EmployerCompanyGate>
+const EmployerDashboard = lazy(() => import("@/features/employer/dashboard/pages/EmployerDashboard"))
+const EmployerJobsPage = lazy(() => import("@/features/employer/jobs/pages/EmployerJobsPage"))
+const EmployerCreateJobPage = lazy(() => import("@/features/employer/jobs/pages/EmployerCreateJobPage"))
+const EmployerEditJobPage = lazy(() => import("@/features/employer/jobs/pages/EmployerEditJobPage"))
+const EmployerJobDetailsPage = lazy(() => import("@/features/employer/jobs/pages/EmployerJobDetailsPage"))
+const EmployerApplicantsPage = lazy(() => import("@/features/employer/applicants/pages/EmployerApplicantsPage"))
+const EmployerApplicantDetailsPage = lazy(() => import("@/features/employer/applicants/pages/EmployerApplicantDetailsPage"))
+const EmployerApplicantTestDetailsPage = lazy(
+  () => import("@/features/employer/applicants/pages/EmployerApplicantTestDetailsPage"),
+)
+const EmployerInterviewsPage = lazy(() => import("@/features/employer/interviews/pages/EmployerInterviewsPage"))
+const EmployerInterviewDetailsPage = lazy(() => import("@/features/employer/interviews/pages/EmployerInterviewDetailsPage"))
+const EmployerTestsPage = lazy(() => import("@/features/employer/tests/pages/EmployerTestsPage"))
+const EmployerCreateTestPage = lazy(() => import("@/features/employer/tests/pages/EmployerCreateTestPage"))
+const EmployerEditTestPage = lazy(() => import("@/features/employer/tests/pages/EmployerEditTestPage"))
+const EmployerTestAttemptGradingPage = lazy(
+  () => import("@/features/employer/tests/pages/EmployerTestAttemptGradingPage"),
+)
+const EmployerCompanyPage = lazy(() => import("@/features/employer/company/pages/EmployerCompanyPage"))
+const EmployerProfilePage = lazy(() => import("@/features/employer/profile/pages/EmployerProfilePage"))
+const EmployerNotificationsPage = lazy(() => import("@/features/employer/notifications/pages/EmployerNotificationsPage"))
+const EmployerSettingsPage = lazy(() => import("@/features/employer/settings/pages/EmployerSettingsPage"))
+
+const routePage = (element: ReactNode) => withRouteSuspense(element)
+const gated = (element: ReactNode) => routePage(<EmployerCompanyGate>{element}</EmployerCompanyGate>)
 
 export const employerRoutes: RouteObject = {
   path: ROUTES.employer.root,
@@ -35,7 +42,7 @@ export const employerRoutes: RouteObject = {
   ),
   errorElement: <RouteErrorPage />,
   children: [
-    { index: true, element: <EmployerDashboard /> },
+    { index: true, element: routePage(<EmployerDashboard />) },
     { path: ROUTES.employer.jobs, element: gated(<EmployerJobsPage />) },
     { path: ROUTES.employer.createJob, element: gated(<EmployerCreateJobPage />) },
     { path: ROUTES.employer.jobDetails(":id"), element: gated(<EmployerJobDetailsPage />) },
@@ -54,9 +61,9 @@ export const employerRoutes: RouteObject = {
       path: ROUTES.employer.testAttemptGrading(":id", ":attemptId"),
       element: gated(<EmployerTestAttemptGradingPage />),
     },
-    { path: ROUTES.employer.company, element: <EmployerCompanyPage /> },
-    { path: ROUTES.employer.profile, element: <EmployerProfilePage /> },
-    { path: ROUTES.employer.notifications, element: <EmployerNotificationsPage /> },
-    { path: ROUTES.employer.settings, element: <EmployerSettingsPage /> },
+    { path: ROUTES.employer.company, element: routePage(<EmployerCompanyPage />) },
+    { path: ROUTES.employer.profile, element: routePage(<EmployerProfilePage />) },
+    { path: ROUTES.employer.notifications, element: routePage(<EmployerNotificationsPage />) },
+    { path: ROUTES.employer.settings, element: routePage(<EmployerSettingsPage />) },
   ],
 }

@@ -1,31 +1,34 @@
+import { lazy } from "react"
 import type { RouteObject } from "react-router-dom"
 import { CircleHelp } from "lucide-react"
 
 import AdminSectionPage from "@/features/admin/shared/pages/AdminSectionPage"
-import AdminUsersPage from "@/features/admin/users/pages/AdminUsersPage"
-import AdminUserDetailsPage from "@/features/admin/users/pages/AdminUserDetailsPage"
-import AdminCandidatesPage from "@/features/admin/candidates/pages/AdminCandidatesPage"
-import AdminEmployersPage from "@/features/admin/employers/pages/AdminEmployersPage"
-import AdminCompaniesPage from "@/features/admin/companies/pages/AdminCompaniesPage"
-import AdminCompanyDetailsPage from "@/features/admin/companies/pages/AdminCompanyDetailsPage"
-import AdminJobsPage from "@/features/admin/jobs/pages/AdminJobsPage"
-import AdminJobDetailsPage from "@/features/admin/jobs/pages/AdminJobDetailsPage"
-import AdminApplicationsPage from "@/features/admin/applications/pages/AdminApplicationsPage"
-import AdminSkillsPage from "@/features/admin/skills/pages/AdminSkillsPage"
-import AdminTestsPage from "@/features/admin/tests/pages/AdminTestsPage"
-import AdminNotificationsPage from "@/features/admin/notifications/pages/AdminNotificationsPage"
-import AdminReportsLayout from "@/features/admin/reports/pages/AdminReportsLayout"
-import AdminReportsOverviewPage from "@/features/admin/reports/pages/AdminReportsOverviewPage"
-import AdminReportsApplicationsPage from "@/features/admin/reports/pages/AdminReportsApplicationsPage"
-import AdminReportsJobsPage from "@/features/admin/reports/pages/AdminReportsJobsPage"
-import AdminReportsCvParsingPage from "@/features/admin/reports/pages/AdminReportsCvParsingPage"
-import AdminAuditLogsPage from "@/features/admin/audit-logs/pages/AdminAuditLogsPage"
-import AdminSettingsPage from "@/features/admin/settings/pages/AdminSettingsPage"
 import AdminLayout from "@/layouts/admin/AdminLayout"
 import AdminProtectedRoute from "@/features/admin/auth/components/AdminProtectedRoute"
 import RouteErrorPage from "@/components/shared/states/RouteErrorPage"
-import AdminDashboard from "@/features/admin/dashboard/pages/AdminDashboard"
 import { ROUTES } from "@/config"
+import { withRouteSuspense } from "./LazyRoute"
+
+const AdminDashboard = lazy(() => import("@/features/admin/dashboard/pages/AdminDashboard"))
+const AdminUsersPage = lazy(() => import("@/features/admin/users/pages/AdminUsersPage"))
+const AdminUserDetailsPage = lazy(() => import("@/features/admin/users/pages/AdminUserDetailsPage"))
+const AdminCandidatesPage = lazy(() => import("@/features/admin/candidates/pages/AdminCandidatesPage"))
+const AdminEmployersPage = lazy(() => import("@/features/admin/employers/pages/AdminEmployersPage"))
+const AdminCompaniesPage = lazy(() => import("@/features/admin/companies/pages/AdminCompaniesPage"))
+const AdminCompanyDetailsPage = lazy(() => import("@/features/admin/companies/pages/AdminCompanyDetailsPage"))
+const AdminJobsPage = lazy(() => import("@/features/admin/jobs/pages/AdminJobsPage"))
+const AdminJobDetailsPage = lazy(() => import("@/features/admin/jobs/pages/AdminJobDetailsPage"))
+const AdminApplicationsPage = lazy(() => import("@/features/admin/applications/pages/AdminApplicationsPage"))
+const AdminSkillsPage = lazy(() => import("@/features/admin/skills/pages/AdminSkillsPage"))
+const AdminTestsPage = lazy(() => import("@/features/admin/tests/pages/AdminTestsPage"))
+const AdminNotificationsPage = lazy(() => import("@/features/admin/notifications/pages/AdminNotificationsPage"))
+const AdminReportsLayout = lazy(() => import("@/features/admin/reports/pages/AdminReportsLayout"))
+const AdminReportsOverviewPage = lazy(() => import("@/features/admin/reports/pages/AdminReportsOverviewPage"))
+const AdminReportsApplicationsPage = lazy(() => import("@/features/admin/reports/pages/AdminReportsApplicationsPage"))
+const AdminReportsJobsPage = lazy(() => import("@/features/admin/reports/pages/AdminReportsJobsPage"))
+const AdminReportsCvParsingPage = lazy(() => import("@/features/admin/reports/pages/AdminReportsCvParsingPage"))
+const AdminAuditLogsPage = lazy(() => import("@/features/admin/audit-logs/pages/AdminAuditLogsPage"))
+const AdminSettingsPage = lazy(() => import("@/features/admin/settings/pages/AdminSettingsPage"))
 
 export const adminRoutes: RouteObject = {
   path: ROUTES.admin.root,
@@ -36,32 +39,32 @@ export const adminRoutes: RouteObject = {
   ),
   errorElement: <RouteErrorPage />,
   children: [
-    { index: true, element: <AdminDashboard /> },
-    { path: ROUTES.admin.users, element: <AdminUsersPage /> },
-    { path: ROUTES.admin.userDetails(":id"), element: <AdminUserDetailsPage /> },
-    { path: ROUTES.admin.candidates, element: <AdminCandidatesPage /> },
-    { path: ROUTES.admin.employers, element: <AdminEmployersPage /> },
-    { path: ROUTES.admin.companies, element: <AdminCompaniesPage /> },
-    { path: ROUTES.admin.companyDetails(":id"), element: <AdminCompanyDetailsPage /> },
-    { path: ROUTES.admin.jobs, element: <AdminJobsPage /> },
-    { path: ROUTES.admin.jobDetails(":id"), element: <AdminJobDetailsPage /> },
-    { path: ROUTES.admin.applications, element: <AdminApplicationsPage /> },
-    { path: ROUTES.admin.skills, element: <AdminSkillsPage /> },
-    { path: ROUTES.admin.tests, element: <AdminTestsPage /> },
-    { path: ROUTES.admin.notifications, element: <AdminNotificationsPage /> },
+    { index: true, element: withRouteSuspense(<AdminDashboard />) },
+    { path: ROUTES.admin.users, element: withRouteSuspense(<AdminUsersPage />) },
+    { path: ROUTES.admin.userDetails(":id"), element: withRouteSuspense(<AdminUserDetailsPage />) },
+    { path: ROUTES.admin.candidates, element: withRouteSuspense(<AdminCandidatesPage />) },
+    { path: ROUTES.admin.employers, element: withRouteSuspense(<AdminEmployersPage />) },
+    { path: ROUTES.admin.companies, element: withRouteSuspense(<AdminCompaniesPage />) },
+    { path: ROUTES.admin.companyDetails(":id"), element: withRouteSuspense(<AdminCompanyDetailsPage />) },
+    { path: ROUTES.admin.jobs, element: withRouteSuspense(<AdminJobsPage />) },
+    { path: ROUTES.admin.jobDetails(":id"), element: withRouteSuspense(<AdminJobDetailsPage />) },
+    { path: ROUTES.admin.applications, element: withRouteSuspense(<AdminApplicationsPage />) },
+    { path: ROUTES.admin.skills, element: withRouteSuspense(<AdminSkillsPage />) },
+    { path: ROUTES.admin.tests, element: withRouteSuspense(<AdminTestsPage />) },
+    { path: ROUTES.admin.notifications, element: withRouteSuspense(<AdminNotificationsPage />) },
     {
       path: ROUTES.admin.reports.root,
-      element: <AdminReportsLayout />,
+      element: withRouteSuspense(<AdminReportsLayout />),
       children: [
-        { index: true, element: <AdminReportsOverviewPage /> },
-        { path: "overview", element: <AdminReportsOverviewPage /> },
-        { path: "applications", element: <AdminReportsApplicationsPage /> },
-        { path: "jobs", element: <AdminReportsJobsPage /> },
-        { path: "cv-parsing", element: <AdminReportsCvParsingPage /> },
+        { index: true, element: withRouteSuspense(<AdminReportsOverviewPage />) },
+        { path: "overview", element: withRouteSuspense(<AdminReportsOverviewPage />) },
+        { path: "applications", element: withRouteSuspense(<AdminReportsApplicationsPage />) },
+        { path: "jobs", element: withRouteSuspense(<AdminReportsJobsPage />) },
+        { path: "cv-parsing", element: withRouteSuspense(<AdminReportsCvParsingPage />) },
       ],
     },
-    { path: ROUTES.admin.auditLogs, element: <AdminAuditLogsPage /> },
-    { path: ROUTES.admin.settings, element: <AdminSettingsPage /> },
+    { path: ROUTES.admin.auditLogs, element: withRouteSuspense(<AdminAuditLogsPage />) },
+    { path: ROUTES.admin.settings, element: withRouteSuspense(<AdminSettingsPage />) },
     {
       path: ROUTES.admin.help,
       element: (

@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import { valueOf } from "@/lib/keyValue"
 import ErrorState from "@/components/shared/states/ErrorState"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -198,11 +199,12 @@ export default function EmployerTestAttemptGradingPage() {
           <Skeleton className="h-32 rounded-lg" />
         </div>
       ) : manualAnswers.length === 0 ? (
-        <Card>
-          <CardContent className="p-8 text-center text-sm text-text-muted">
-            {t("tests.noAnswers")}
-          </CardContent>
-        </Card>
+        <EmptyState
+          title={t("tests.noAnswers")}
+          description={t("tests.noAnswersDescription", "There are no manually-gradable answers in this attempt.")}
+          icon={CheckCircle2}
+          className="py-8 bg-transparent"
+        />
       ) : (
         <div className="space-y-4">
           {manualAnswers.map((answer, index) => {

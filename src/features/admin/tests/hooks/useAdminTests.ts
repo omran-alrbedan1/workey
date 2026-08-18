@@ -6,7 +6,7 @@ const key = ["admin", "tests"] as const
 export function useAdminTests() {
   const { t } = useTranslation("adminTests")
   const client = useQueryClient()
-  const query = useQuery({ queryKey: key, queryFn: adminTestsService.list })
+  const query = useQuery({ queryKey: key, queryFn: adminTestsService.list, staleTime: 10 * 60_000 })
   const refresh = () =>
     Promise.all([
       client.invalidateQueries({ queryKey: key, refetchType: "active" }),

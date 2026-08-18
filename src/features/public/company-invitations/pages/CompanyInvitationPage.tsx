@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import Logo from "@/components/shared/logo/Logo"
 import { ROUTES } from "@/config"
 import { images } from "@/constants/images"
 import { getErrorMessage, showErrorToast, showSuccessToast } from "@/lib/toast"
@@ -121,7 +122,7 @@ export default function CompanyInvitationPage() {
       <div className="mx-auto flex min-h-screen w-full max-w-5xl items-center justify-center px-6 py-10">
         <section className="grid w-full overflow-hidden rounded-xl border border-border bg-card shadow-sm lg:grid-cols-[1.05fr_0.95fr]">
           <div className="p-6 sm:p-8">
-            <img src={images.logo} alt="Workey logo" className="mb-8 h-16 w-auto" />
+            <Logo size="lg" alt="Workey logo" className="mb-8" />
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <ShieldCheck className="h-3.5 w-3.5" />
               Company invitation
@@ -226,7 +227,7 @@ function InvitationShell({
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-6 py-10">
       <section className="w-full max-w-md rounded-xl border border-border bg-card p-8 text-center shadow-sm">
-        <img src={images.logo} alt="Workey logo" className="mx-auto mb-8 h-16 w-auto" />
+        <Logo size="lg" alt="Workey logo" className="mx-auto mb-8" />
         <h1 className="text-2xl font-semibold text-text-primary">{title}</h1>
         <p className="mt-3 text-sm text-text-secondary">{description}</p>
         {action && <div className="mt-6">{action}</div>}

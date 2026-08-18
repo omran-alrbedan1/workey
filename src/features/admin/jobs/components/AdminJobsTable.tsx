@@ -5,6 +5,7 @@ import {
   ShieldCheck,
   MapPinned,
   UsersRound,
+  Building2,
 } from "lucide-react"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
@@ -15,6 +16,68 @@ import { ROUTES } from "@/config"
 import { keyOf, valueOf } from "@/lib/keyValue"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+
+interface AdminJobMobileCardProps {
+  job: AdminJobRecord
+}
+
+const AdminJobMobileCard = ({ job }: AdminJobMobileCardProps) => {
+  const { t } = useTranslation("adminJobs")
+  const navigate = useNavigate()
+  const accepting = job.is_accepting_applications ?? job.accepting_applications
+  const workModeKey = keyOf(job.work_mode)
+
+  return (
+    <article
+      className="rounded-2xl border border-border bg-background-card p-4 shadow-card"
+      onClick={() => navigate(ROUTES.admin.jobDetails(job.id))}
+    >
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <BriefcaseBusiness className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">{job.title}</h3>
+          <p className="truncate text-xs text-text-muted">
+            {job.company?.name || t("unknownCompany")}
+          </p>
+        </div>
+        <StatusBadge status={job.status} variant="soft" />
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        {job.location && (
+          <p className="flex items-center gap-2">
+            <MapPin className="h-3.5 w-3.5 text-primary" />
+            {job.location}
+          </p>
+        )}
+        {workModeKey && (
+          <p className="flex items-center gap-2">
+            <MapPinned className="h-3.5 w-3.5 text-primary" />
+            {t(`workModes.${workModeKey}`, { defaultValue: valueOf(job.work_mode, workModeKey) })}
+          </p>
+        )}
+        <p className="flex items-center gap-2">
+          <ClipboardList className="h-3.5 w-3.5 text-primary" />
+          {valueOf(job.employment_type, "-")}
+        </p>
+        {accepting !== undefined && (
+          <p className="flex items-center gap-2">
+            <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+            {accepting ? t("filters.accepting") : t("filters.notAccepting")}
+          </p>
+        )}
+        {job.applications_count != null && (
+          <p className="flex items-center gap-2">
+            <UsersRound className="h-3.5 w-3.5 text-primary" />
+            {job.applications_count} {t("columns.applications")}
+          </p>
+        )}
+      </div>
+    </article>
+  )
+}
 
 export default function AdminJobsTable({
   jobs,
@@ -101,6 +164,7 @@ export default function AdminJobsTable({
       }}
       onPageChange={onPageChange}
       onRowClick={(job) => navigate(ROUTES.admin.jobDetails(job.id))}
+      mobileCardComponent={AdminJobMobileCard}
       emptyMessage={t("empty")}
       emptyDescription={t("emptyDescription")}
       emptyImage={images.emptyJobs}

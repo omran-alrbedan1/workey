@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 import { createRejectSchema, type RejectFormValues } from "./validations/sharedModals.validation"
 
 interface RejectModalProps {
@@ -59,7 +59,7 @@ export default function RejectModal({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <div className="relative bg-red-100 px-6 pb-12 pt-6">
-              <img src={images.logo} alt="Workey" className="relative h-16 w-auto mx-auto " />
+              <Logo size="lg" alt="Workey" className="relative mx-auto" />
             </div>
 
             <div className="relative -mt-8 px-6 pb-6">
@@ -67,7 +67,7 @@ export default function RejectModal({
                 <Ban className="h-8 w-8" />
               </div>
 
-              <DialogHeader className="text-left">
+              <DialogHeader className="text-start">
                 <DialogTitle className="text-2xl font-bold text-text-primary">
                   {title ?? t("modals.reject.title")}
                 </DialogTitle>

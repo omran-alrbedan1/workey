@@ -10,6 +10,52 @@ function entityName(value: unknown) {
   return valueOf(value).split("\\").pop() || "-"
 }
 
+interface AdminAuditLogMobileCardProps {
+  log: AdminAuditLogRecord
+}
+
+const AdminAuditLogMobileCard = ({ log }: AdminAuditLogMobileCardProps) => {
+  const { t, i18n } = useTranslation("adminAuditLogs")
+  const actor = log.actor ?? log.user
+
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <Activity className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">{valueOf(log.action, "-")}</h3>
+          {log.description && (
+            <p className="truncate text-xs text-text-muted">{valueOf(log.description)}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        <p className="flex items-center gap-2">
+          <UserRound className="h-3.5 w-3.5 text-primary" />
+          <span className="truncate">
+            {valueOf(actor?.name, t("unknownActor"))}
+            {actor?.email && <span className="text-text-muted"> ({valueOf(actor.email)})</span>}
+          </span>
+        </p>
+        <p className="flex items-center gap-2">
+          <Boxes className="h-3.5 w-3.5 text-primary" />
+          {entityName(log.entity_type)}
+          <span className="text-text-muted">#{log.entity_id ?? "-"}</span>
+        </p>
+        {log.created_at && (
+          <p className="flex items-center gap-2">
+            <CalendarClock className="h-3.5 w-3.5 text-primary" />
+            {new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" }).format(new Date(log.created_at))}
+          </p>
+        )}
+      </div>
+    </article>
+  )
+}
+
 export default function AdminAuditLogsTable({
   logs,
   isLoading,
@@ -91,6 +137,7 @@ export default function AdminAuditLogsTable({
         perPage: pagination?.perPage,
       }}
       onPageChange={onPageChange}
+      mobileCardComponent={AdminAuditLogMobileCard}
       emptyMessage={t("empty")}
       emptyDescription={t("emptyDescription")}
       className="rounded-b-2xl mt-4 bg-background-card shadow-card"

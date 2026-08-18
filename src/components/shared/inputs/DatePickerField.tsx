@@ -63,14 +63,14 @@ export const DatePickerField: React.FC<DatePickerFieldProps> = ({
         type="button"
         variant="outline"
         className={cn(
-          "w-full justify-start text-left font-normal",
+          "w-full justify-start text-start font-normal",
           !field.value && "text-muted-foreground",
           inputClassName
         )}
         disabled={disabled}
         onClick={() => setOpen(!open)}
       >
-        <CalendarIcon className="mr-2 h-4 w-4" />
+        <CalendarIcon className="me-2 h-4 w-4" />
         {field.value ? (
           format(new Date(field.value), dateOptions?.format || "PPP")
         ) : (

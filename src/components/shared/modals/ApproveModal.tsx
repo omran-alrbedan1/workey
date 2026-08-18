@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 
 interface ApproveModalProps {
   open: boolean
@@ -39,11 +39,7 @@ export default function ApproveModal({
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent className="overflow-hidden border-primary/15 bg-background-card p-0 shadow-2xl sm:max-w-md">
         <div className="relative bg-primary/15  bg-gradient-primary/30 px-6 pb-12 pt-6">
-          <img
-            src={images.logo}
-            alt="Workey"
-            className="relative h-16 w-auto mx-auto "
-          />
+          <Logo size="lg" alt="Workey" className="relative mx-auto" />
         </div>
 
         <div className="relative -mt-8 px-6 pb-6">
@@ -51,7 +47,7 @@ export default function ApproveModal({
             <ShieldCheck className="h-8 w-8" />
           </div>
 
-          <DialogHeader className="text-left">
+          <DialogHeader className="text-start">
             <DialogTitle className="text-2xl font-bold text-text-primary">
               {title ?? t("modals.approve.title")}
             </DialogTitle>

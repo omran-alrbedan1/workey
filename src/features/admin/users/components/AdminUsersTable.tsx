@@ -1,6 +1,7 @@
-import { MoreHorizontal, ShieldCheck, ShieldOff, User, Shield, Clock } from "lucide-react"
+import { MoreHorizontal, ShieldCheck, ShieldOff, User, Shield, Clock, Mail, Briefcase } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
@@ -15,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { keyOf } from "@/lib/keyValue"
+import { ROUTES } from "@/config"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 import type { AdminUserRecord, AdminUserStatus } from "../types/adminUsers.types"
 import { images } from "@/constants/images"
@@ -34,6 +36,97 @@ interface AdminUsersTableProps {
   isUpdating: boolean
 }
 
+interface AdminUserMobileCardProps {
+  user: AdminUserRecord
+  isUpdating: boolean
+  onAction: (user: AdminUserRecord, action: UserStatusAction) => void
+}
+
+const AdminUserMobileCard = ({
+  user,
+  isUpdating,
+  onAction,
+}: AdminUserMobileCardProps) => {
+  const { t } = useTranslation("adminUsers")
+  const statusKey = keyOf(user.status)
+
+  const UserActionsDropdown = ({ fullWidth }: { fullWidth?: boolean }) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          size={fullWidth ? "sm" : "icon"}
+          variant="ghost"
+          disabled={isUpdating}
+          className={fullWidth ? "w-full" : "h-8 w-8"}
+          aria-label={`Open actions for ${user.name}`}
+        >
+          {fullWidth && <span>{t("actions.menuLabel")}</span>}
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-44">
+        <DropdownMenuLabel>{t("actions.menuLabel")}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="gap-2 text-emerald-700 focus:bg-emerald-50 focus:text-emerald-800"
+          disabled={statusKey === "active"}
+          onSelect={() => onAction(user, "activate")}
+        >
+          <ShieldCheck className="h-4 w-4" />
+          {t("actions.activate")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
+          disabled={statusKey === "suspended"}
+          onSelect={() => onAction(user, "suspend")}
+        >
+          <ShieldOff className="h-4 w-4" />
+          {t("actions.suspend")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <User className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">{user.name}</h3>
+          <p className="truncate text-xs text-text-muted">{user.email}</p>
+        </div>
+        <StatusBadge status={user.status} variant="soft" />
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        <p className="flex items-center gap-2">
+          <Shield className="h-3.5 w-3.5 text-primary" />
+          <span className="capitalize">{getRoleDisplay(user.role)}</span>
+        </p>
+        {user.created_at && (
+          <p className="flex items-center gap-2">
+            <Clock className="h-3.5 w-3.5 text-primary" />
+            {new Date(user.created_at).toLocaleDateString()}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <UserActionsDropdown fullWidth />
+      </div>
+    </article>
+  )
+}
+
+function getRoleDisplay(role: string | any) {
+  if (typeof role === 'object' && role !== null) {
+    return role.value || role.key || String(role)
+  }
+  return role || "—"
+}
+
 export default function AdminUsersTable({
   users,
   isLoading,
@@ -43,6 +136,7 @@ export default function AdminUsersTable({
   isUpdating,
 }: AdminUsersTableProps) {
   const { t } = useTranslation("adminUsers")
+  const navigate = useNavigate()
   const [selectedUser, setSelectedUser] = useState<AdminUserRecord | null>(null)
   const [selectedAction, setSelectedAction] = useState<UserStatusAction | null>(null)
 
@@ -69,13 +163,6 @@ export default function AdminUsersTable({
     await onStatusChange(selectedUser.id, "suspended", reason)
     setSelectedAction(null)
     setSelectedUser(null)
-  }
-
-  const getRoleDisplay = (role: string | any) => {
-    if (typeof role === 'object' && role !== null) {
-      return role.value || role.key || String(role)
-    }
-    return role || "—"
   }
 
   const columns: Column<AdminUserRecord>[] = [
@@ -154,6 +241,15 @@ export default function AdminUsersTable({
       },
     },
   ]
+
+  const MobileUserCard = ({ item }: { item: AdminUserRecord }) => (
+    <AdminUserMobileCard
+      user={item}
+      isUpdating={isUpdating}
+      onAction={openAction}
+    />
+  )
+
   return (
     <>
       <DataTable
@@ -168,6 +264,8 @@ export default function AdminUsersTable({
           perPage: pagination?.perPage,
         }}
         onPageChange={onPageChange}
+        onRowClick={(user) => navigate(ROUTES.admin.userDetails(user.id))}
+        mobileCardComponent={MobileUserCard}
         emptyMessage={t("list.emptyTitle")}
         emptyDescription={t("list.emptyDescription")}
         emptyImage={images.usersManagement}

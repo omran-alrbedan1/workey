@@ -90,7 +90,7 @@ export default function EmployerInterviewsTable({
     {
       key: "actions",
       header: t("columns.actions"),
-      className: "text-right",
+      className: "text-end",
       cell: (item) => (
         <div className="flex justify-end">
           <DropdownMenu>

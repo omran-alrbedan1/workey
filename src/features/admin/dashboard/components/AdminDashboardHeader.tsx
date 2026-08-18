@@ -19,8 +19,8 @@ export default function AdminDashboardHeader({ isFetching, onRefresh }: AdminDas
 
   return (
     <section className="relative min-h-44 overflow-hidden rounded-2xl bg-gradient-primary p-6 text-white shadow-soft sm:p-8">
-      <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10" />
-      <div className="absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-secondary/30" />
+      <div className="absolute -end-16 -top-20 h-56 w-56 rounded-full bg-white/10" />
+      <div className="absolute -bottom-24 end-24 h-48 w-48 rounded-full bg-secondary/30" />
 
       <div className="relative flex h-full flex-col justify-between gap-6 sm:flex-row sm:items-end">
         <div>

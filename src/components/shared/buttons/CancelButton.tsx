@@ -26,7 +26,7 @@ export const CancelButton = ({
       )}
       {...props}
     >
-      {icon && <span className="mr-2">{icon}</span>}
+      {icon && <span className="me-2">{icon}</span>}
       {text || children || t('cancel')}
     </Button>
   )

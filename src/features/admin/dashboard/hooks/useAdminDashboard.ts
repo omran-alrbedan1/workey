@@ -242,12 +242,30 @@ export function useAdminDashboard() {
 
   const queries = [usersQuery, companiesQuery, skillsQuery, testsQuery]
 
+  const dataSourceStatuses = useMemo(() => {
+    function sourceStatus(
+      query: (typeof queries)[number],
+      label: string,
+    ): { label: string; status: "live" | "partial" | "unavailable" } {
+      if (query.isError) return { label, status: "unavailable" }
+      if (query.isPending || query.isFetching) return { label, status: "partial" }
+      return { label, status: "live" }
+    }
+    return [
+      sourceStatus(usersQuery, t("sources.users")),
+      sourceStatus(companiesQuery, t("sources.companies")),
+      sourceStatus(skillsQuery, t("sources.skills")),
+      sourceStatus(testsQuery, t("sources.tests")),
+    ]
+  }, [usersQuery.status, companiesQuery.status, skillsQuery.status, testsQuery.status, t])
+
   return {
     data,
     isLoading: queries.some((query) => query.isPending),
     isFetching: queries.some((query) => query.isFetching),
-    isError: queries.every((query) => query.isError),
+    isError: queries.every((query) => query.error),
     error: queries.find((query) => query.error)?.error,
     refetch: () => Promise.all(queries.map((query) => query.refetch())),
+    dataSourceStatuses,
   }
 }

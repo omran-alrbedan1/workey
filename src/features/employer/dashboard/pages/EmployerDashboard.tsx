@@ -13,6 +13,9 @@ import {
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
+import ErrorState from "@/components/shared/states/ErrorState"
+import EmptyState from "@/components/shared/states/EmptyState"
+import DataSourceIndicator from "@/components/shared/states/DataSourceIndicator"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
@@ -102,6 +105,12 @@ export default function EmployerDashboard() {
         }
       />
 
+      <DataSourceIndicator
+        sources={dashboard.dataSourceStatuses ?? []}
+        onRefresh={() => void dashboard.refetch()}
+        isRefreshing={dashboard.isFetching}
+      />
+
       <section>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -127,9 +136,11 @@ export default function EmployerDashboard() {
             ))}
           </div>
         ) : dashboard.isError ? (
-          <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-            {t("stats.error")}
-          </div>
+          <ErrorState
+            variant="network"
+            size="sm"
+            retry={() => void dashboard.refetch()}
+          />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             {metrics.map(({ key, value, icon: Icon, tone }) => (
@@ -196,9 +207,12 @@ export default function EmployerDashboard() {
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-text-muted">
-            {t("recentJobs.empty")}
-          </div>
+          <EmptyState
+            title={t("recentJobs.empty")}
+            description={t("recentJobs.emptyDescription", "No jobs posted yet.")}
+            icon={BriefcaseBusiness}
+            className="py-8 bg-transparent"
+          />
         )}
       </section>
 

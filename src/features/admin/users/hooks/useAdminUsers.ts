@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 
 import { adminUsersService } from "../services/adminUsers.service"
@@ -53,6 +53,7 @@ export function useAdminUsers(filters: AdminUserFilterForm | string = ADMIN_USER
         role: asApiValue(normalizedFilters.role),
         status: asApiValue(normalizedFilters.status),
       }),
+    placeholderData: keepPreviousData,
   })
   const refreshUsers = () =>
     Promise.all([
@@ -85,9 +86,3 @@ export function useAdminUsers(filters: AdminUserFilterForm | string = ADMIN_USER
 
   return { ...query, page, setPage, statusMutation, roleMutation }
 }
-
-/// add country_id , city id to the filters in users .
-// add filter to the orders for specific vendor .
-// EDIT PRODUCT . EDIT  VENDOR . ADD PRODUCT FROM ADMIN .
-// FAVORITE(SAVED) TO THE ARTICLE >
-// CRITICLE MANAGE REASONS.

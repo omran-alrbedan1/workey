@@ -213,7 +213,7 @@
       const labelContent = (
         <Label className={cn("text-sm font-medium ", labelClassName)}>
           {label}
-          {required && <span className="text-destructive ml-1 text-red-500">*</span>}
+          {required && <span className="text-destructive ms-1 text-red-500">*</span>}
         </Label>
       )
 

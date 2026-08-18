@@ -47,7 +47,7 @@ export const PasswordField: React.FC<PasswordFieldProps> = ({
         disabled={disabled}
         className={cn(
           inputClassName,
-          "px-6 py-5 text-base text-left",
+          "px-6 py-5 text-base text-start",
           hasLeftIcon && "ltr:pl-14 rtl:pr-14",
           "ltr:pr-14 rtl:pl-14"
         )}
@@ -61,7 +61,7 @@ export const PasswordField: React.FC<PasswordFieldProps> = ({
         size="sm"
         className={cn(
           "absolute top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full p-0 hover:bg-transparent",
-          isRtl ? "left-3" : "right-3"
+          isRtl ? "start-3" : "end-3"
         )}
         onClick={() => setShowPassword(!showPassword)}
         disabled={disabled}

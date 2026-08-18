@@ -2,7 +2,8 @@
   "page": {
     "title": "الشركات",
     "description": "راجع منشآت أصحاب العمل وتحكم في حالة الموافقة عليها.",
-    "imageAlt": "الشركات"
+    "imageAlt": "الشركات",
+    "createCompany": "إنشاء شركة"
   },
   "errors": {
     "listTitle": "الشركات",
@@ -66,6 +67,7 @@
     "employer": "صاحب العمل",
     "location": "الموقع",
     "companyId": "معرّف الشركة",
+    "edit": "تعديل",
     "tabs": {
       "overview": "نظرة عامة",
       "recruitment": "التوظيف",
@@ -87,7 +89,28 @@
       "member": "عضو"
     },
     "actions": {
-      "changeRole": "تغيير الدور"
+      "changeRole": "تغيير الدور",
+      "activate": "تفعيل العضو",
+      "suspend": "إيقاف العضو",
+      "transferOwnership": "نقل الملكية",
+      "removeMember": "إزالة العضو"
+    },
+    "confirmations": {
+      "transferOwnership": "هل تريد نقل ملكية الشركة إلى {{name}}؟ سيصبح المالك الحالي مدير شركة.",
+      "removeMember": "إزالة {{name}} من هذه الشركة؟"
+    },
+    "invitationBanner": {
+      "title": "تم إنشاء رابط الدعوة",
+      "copy": "نسخ",
+      "copied": "تم نسخ رابط الدعوة",
+      "dismiss": "إغلاق"
+    },
+    "invitations": {
+      "title": "الدعوات",
+      "description": "الدعوات الحالية والسابقة للشركة.",
+      "empty": "لا توجد دعوات بعد.",
+      "expires": "تنتهي في {{date}}",
+      "noExpiry": "بلا تاريخ انتهاء"
     },
     "invitationDialog": {
       "title": "دعوة عضو فريق",
@@ -98,7 +121,7 @@
     },
     "roleDialog": {
       "title": "تغيير دور العضو",
-      "description": "قم بتحديث دور {name}.",
+      "description": "قم بتحديث دور {{name}}.",
       "label": "الدور",
       "submit": "تحديث الدور"
     },

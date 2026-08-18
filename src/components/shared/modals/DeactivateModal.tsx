@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 
 interface DeactivateModalProps {
   open: boolean
@@ -33,7 +33,7 @@ export default function DeactivateModal({
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent className="overflow-hidden border-red-500/15 bg-background-card p-0 shadow-2xl sm:max-w-md">
         <div className="relative bg-red-100 px-6 pb-12 pt-6 dark:bg-red-950/40">
-          <img src={images.logo} alt="Workey" className="relative mx-auto h-16 w-auto" />
+          <Logo size="lg" alt="Workey" className="relative mx-auto" />
         </div>
 
         <div className="relative -mt-8 px-6 pb-6">

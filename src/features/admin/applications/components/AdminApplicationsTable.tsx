@@ -4,7 +4,7 @@ import type { AdminPagination } from "@/features/admin/shared/types/adminApi.typ
 import type { AdminApplicationRecord } from "../types/adminApplications.types"
 import { images } from "@/constants/images"
 import { useTranslation } from "react-i18next"
-import { User, BriefcaseBusiness, ShieldCheck, Target, Calendar } from "lucide-react"
+import { User, BriefcaseBusiness, ShieldCheck, Target, Calendar, Building2 } from "lucide-react"
 
 type CandidateLike = NonNullable<ReturnType<typeof candidateFor>>
 
@@ -100,6 +100,61 @@ function appliedAtFor(item: AdminApplicationRecord) {
   return item.applied_at ?? item.submitted_at ?? item.created_at
 }
 
+interface AdminApplicationMobileCardProps {
+  application: AdminApplicationRecord
+}
+
+const AdminApplicationMobileCard = ({ application }: AdminApplicationMobileCardProps) => {
+  const { t } = useTranslation("adminApplications")
+  const job = jobFor(application)
+  const company = companyFor(application)
+  const score = application.match_score ?? application.matching_score
+
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <User className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">
+            {candidateNameFor(application) || candidateEmailFor(application) || t("unknownCandidate")}
+          </h3>
+          <p className="truncate text-xs text-text-muted">
+            {candidateEmailFor(application) || "-"}
+          </p>
+        </div>
+        <StatusBadge status={application.status} variant="soft" />
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        <p className="flex items-center gap-2">
+          <BriefcaseBusiness className="h-3.5 w-3.5 text-primary" />
+          <span className="truncate">{job?.title || "-"}</span>
+        </p>
+        {company?.name && (
+          <p className="flex items-center gap-2">
+            <Building2 className="h-3.5 w-3.5 text-primary" />
+            {company.name}
+          </p>
+        )}
+        {score != null && (
+          <p className="flex items-center gap-2">
+            <Target className="h-3.5 w-3.5 text-primary" />
+            {t("columns.match")}: {score}%
+          </p>
+        )}
+        {appliedAtFor(application) && (
+          <p className="flex items-center gap-2">
+            <Calendar className="h-3.5 w-3.5 text-primary" />
+            {new Date(appliedAtFor(application)!).toLocaleDateString()}
+          </p>
+        )}
+      </div>
+    </article>
+  )
+}
+
 export default function AdminApplicationsTable({
   applications,
   isLoading,
@@ -173,6 +228,7 @@ export default function AdminApplicationsTable({
         perPage: pagination?.perPage,
       }}
       onPageChange={onPageChange}
+      mobileCardComponent={AdminApplicationMobileCard}
       emptyMessage={t("empty")}
       emptyDescription={t("emptyDescription")}
       emptyImage={images.emptyJobs}

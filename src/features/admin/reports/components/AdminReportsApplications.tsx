@@ -72,7 +72,7 @@ export default function AdminReportsApplications({
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("applications.date")}</TableHead>
-                    <TableHead className="text-right">{t("applications.count")}</TableHead>
+                    <TableHead className="text-end">{t("applications.count")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -81,7 +81,7 @@ export default function AdminReportsApplications({
                       <TableCell className="text-sm text-text-primary">
                         {new Date(row.date).toLocaleDateString(i18n.language)}
                       </TableCell>
-                      <TableCell className="text-right text-sm font-semibold text-text-primary">
+                      <TableCell className="text-end text-sm font-semibold text-text-primary">
                         {row.count.toLocaleString()}
                       </TableCell>
                     </TableRow>

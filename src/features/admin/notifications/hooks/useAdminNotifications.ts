@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useState } from "react"
 import { adminNotificationsService } from "../services/adminNotifications.service"
 import { showSuccessToast } from "@/lib/toast"
@@ -12,6 +12,7 @@ export function useAdminNotifications() {
   const listQuery = useQuery({
     queryKey: [...root, page],
     queryFn: () => adminNotificationsService.list(page),
+    placeholderData: keepPreviousData,
   })
   const unreadQuery = useQuery({
     queryKey: [...root, "unread"],

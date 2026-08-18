@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { NavLink } from "react-router-dom"
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 import { ROUTES } from "@/config"
 
 interface EmployerSidebarProps {
@@ -73,7 +73,7 @@ export default function EmployerSidebar({ onNavigate }: EmployerSidebarProps) {
         onClick={onNavigate}
         className="flex h-24 items-center justify-center border-b border-border p-4"
       >
-        <img src={images.logo} alt={t("logoAlt")} className="h-14 w-auto" />
+        <Logo size="md" alt={t("logoAlt")} />
       </NavLink>
 
       <div className="flex-1 space-y-6 overflow-y-auto px-3 py-5">

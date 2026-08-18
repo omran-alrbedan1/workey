@@ -38,7 +38,7 @@ export default function AdminCompanyVerificationCard({
                   {item.note || t("verification.noReviewerNote")}
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-end">
                 <StatusBadge status={item.status} variant="soft" />
                 <p className="mt-2 text-xs text-text-muted">{formatDate(item.updated_at)}</p>
               </div>

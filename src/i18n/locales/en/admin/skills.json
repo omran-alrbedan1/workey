@@ -6,7 +6,9 @@
     "namePlaceholder": "API Design",
     "slug": "Slug",
     "slugPlaceholder": "api-design",
-    "add": "Add skill"
+    "add": "Add skill",
+    "dialogTitle": "Add skill",
+    "dialogDescription": "Add a new skill to the shared catalog."
   },
   "edit": {
     "action": "Edit",

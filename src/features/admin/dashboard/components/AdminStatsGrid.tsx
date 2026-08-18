@@ -47,8 +47,8 @@ function AdminStatCard({ metric }: { metric: DashboardMetric }) {
           {metric.approximate ? "+" : ""}
         </p>
       </div>
-      <div className="absolute bottom-0 right-0 flex h-16 w-16 items-center justify-center">
-        <div className="flex h-11 w-11 translate-x-1 translate-y-1 items-center justify-center rounded-full bg-primary text-white shadow-sm transition group-hover:scale-105">
+      <div className="absolute bottom-0 end-0 flex h-16 w-16 items-center justify-center">
+        <div className="flex h-11 w-11 ltr:translate-x-1 rtl:-translate-x-1 translate-y-1 items-center justify-center rounded-full bg-primary text-white shadow-sm transition group-hover:scale-105">
           <Icon className="h-5 w-5" />
         </div>
       </div>

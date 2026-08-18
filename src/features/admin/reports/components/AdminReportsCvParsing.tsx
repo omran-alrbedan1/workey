@@ -80,9 +80,9 @@ export default function AdminReportsCvParsing({
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("cvParsing.date")}</TableHead>
-                    <TableHead className="text-right">{t("cvParsing.parsed")}</TableHead>
+                    <TableHead className="text-end">{t("cvParsing.parsed")}</TableHead>
                     {dailyCounts[0]?.failed_count !== undefined && (
-                      <TableHead className="text-right">{t("cvParsing.failed")}</TableHead>
+                      <TableHead className="text-end">{t("cvParsing.failed")}</TableHead>
                     )}
                   </TableRow>
                 </TableHeader>
@@ -92,11 +92,11 @@ export default function AdminReportsCvParsing({
                       <TableCell className="text-sm text-text-primary">
                         {new Date(row.date).toLocaleDateString(i18n.language)}
                       </TableCell>
-                      <TableCell className="text-right text-sm font-semibold text-text-primary">
+                      <TableCell className="text-end text-sm font-semibold text-text-primary">
                         {row.parsed_count.toLocaleString()}
                       </TableCell>
                       {row.failed_count !== undefined && (
-                        <TableCell className="text-right text-sm text-text-primary">
+                        <TableCell className="text-end text-sm text-text-primary">
                           {row.failed_count.toLocaleString()}
                         </TableCell>
                       )}

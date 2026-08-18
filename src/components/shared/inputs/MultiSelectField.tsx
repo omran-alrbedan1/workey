@@ -36,14 +36,14 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
       <Button
         variant="outline"
         className={cn(
-          "w-full justify-start text-left font-normal",
+          "w-full justify-start text-start font-normal",
           !field.value?.length && "text-muted-foreground",
           inputClassName
         )}
         disabled={disabled}
         onClick={() => setOpen(!open)}
       >
-        <ChevronDown className="mr-2 h-4 w-4" />
+        <ChevronDown className="me-2 h-4 w-4" />
         {field.value?.length ? (
           <div className="flex gap-1 flex-wrap">
             {field.value.map((value: string) => (

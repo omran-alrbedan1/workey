@@ -97,9 +97,9 @@
   "register": "Register",
   "dashboard": "Dashboard",
   "users": "Users",
-  "vendors": "Vendors",
-  "products": "Products",
-  "orders": "Orders",
+  "employers": "Employers",
+  "candidates": "Candidates",
+  "applications": "Applications",
   "reports": "Reports",
   "notifications": "Notifications",
   "messages": "Messages",
@@ -210,5 +210,12 @@
       "messageRequired": "Message is required",
       "messageTooLong": "Message must be under 500 characters"
     }
+  },
+  "dataSource": {
+    "title": "Data sources:",
+    "live": "live",
+    "partial": "loading",
+    "unavailable": "unavailable",
+    "stale": "stale"
   }
 }

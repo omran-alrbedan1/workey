@@ -1,15 +1,29 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { adminSkillsService } from "../services/adminSkills.service"
 import { showSuccessToast } from "@/lib/toast"
 import { useTranslation } from "react-i18next"
-const key = ["admin", "skills"] as const
+
+const adminSkillsPageSize = 15
+
+export const adminSkillsKeys = {
+  all: ["admin", "skills"] as const,
+  list: (page: number) => ["admin", "skills", { page }] as const,
+}
+
 export function useAdminSkills() {
   const { t } = useTranslation("adminSkills")
+  const [page, setPage] = useState(1)
   const client = useQueryClient()
-  const query = useQuery({ queryKey: key, queryFn: adminSkillsService.list })
+  const query = useQuery({
+    queryKey: adminSkillsKeys.list(page),
+    queryFn: () => adminSkillsService.list({ page, per_page: adminSkillsPageSize }),
+    placeholderData: keepPreviousData,
+    staleTime: 10 * 60_000,
+  })
   const refresh = () =>
     Promise.all([
-      client.invalidateQueries({ queryKey: key, refetchType: "active" }),
+      client.invalidateQueries({ queryKey: adminSkillsKeys.all, refetchType: "active" }),
       client.invalidateQueries({
         queryKey: ["admin", "dashboard", "skills"],
         refetchType: "active",
@@ -36,5 +50,5 @@ export function useAdminSkills() {
       showSuccessToast(t("deleted"))
     },
   })
-  return { ...query, createMutation, updateMutation, deleteMutation }
+  return { ...query, page, setPage, createMutation, updateMutation, deleteMutation }
 }

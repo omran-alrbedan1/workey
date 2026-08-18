@@ -1,14 +1,18 @@
-import PublicCompanyPage from "@/features/public/company/pages/PublicCompanyPage"
-import CompanyInvitationPage from "@/features/public/company-invitations/pages/CompanyInvitationPage"
+import { lazy } from "react"
+
 import { ROUTES } from "@/config"
+import { withRouteSuspense } from "./LazyRoute"
+
+const PublicCompanyPage = lazy(() => import("@/features/public/company/pages/PublicCompanyPage"))
+const CompanyInvitationPage = lazy(() => import("@/features/public/company-invitations/pages/CompanyInvitationPage"))
 
 export const publicRoutes = [
   {
     path: "/companies/:slug",
-    element: <PublicCompanyPage />,
+    element: withRouteSuspense(<PublicCompanyPage />),
   },
   {
     path: ROUTES.public.companyInvitation(),
-    element: <CompanyInvitationPage />,
+    element: withRouteSuspense(<CompanyInvitationPage />),
   },
 ]

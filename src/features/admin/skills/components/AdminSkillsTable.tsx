@@ -120,6 +120,87 @@ function EditSkillDialog({
   )
 }
 
+interface AdminSkillMobileCardProps {
+  skill: AdminSkillRecord
+  isDeleting: boolean
+  isUpdating: boolean
+  onEdit: (skill: AdminSkillRecord) => void
+  onUploadIcon: (skill: AdminSkillRecord) => void
+  onDelete: (skill: AdminSkillRecord) => void
+}
+
+const AdminSkillMobileCard = ({
+  skill,
+  isDeleting,
+  isUpdating,
+  onEdit,
+  onUploadIcon,
+  onDelete,
+}: AdminSkillMobileCardProps) => {
+  const { t } = useTranslation("adminSkills")
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        {skill.icon ? (
+          <img src={skill.icon} alt={`${skill.name} icon`} className="h-10 w-10 rounded-xl object-cover" />
+        ) : (
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Badge className="h-5 w-5" />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">{skill.name}</h3>
+          <p className="truncate text-xs text-text-muted">
+            <code className="rounded bg-background-secondary px-1.5 py-0.5">{skill.slug}</code>
+          </p>
+        </div>
+      </div>
+
+      {skill.created_at && (
+        <div className="mt-3 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+          <p className="flex items-center gap-2">
+            <Calendar className="h-3.5 w-3.5 text-primary" />
+            {new Date(skill.created_at).toLocaleDateString()}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-3 flex gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1"
+          disabled={isDeleting || isUpdating}
+          onClick={() => onEdit(skill)}
+        >
+          <Edit className="h-4 w-4" />
+          {t("edit.action")}
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1"
+          disabled={isDeleting || isUpdating}
+          onClick={() => onUploadIcon(skill)}
+        >
+          <Upload className="h-4 w-4" />
+          {t("uploadIcon")}
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950/30"
+          disabled={isDeleting || isUpdating}
+          onClick={() => onDelete(skill)}
+        >
+          <Trash2 className="h-4 w-4" />
+          {t("delete")}
+        </Button>
+      </div>
+    </article>
+  )
+}
+
 export default function AdminSkillsTable({
   skills,
   isLoading,
@@ -129,6 +210,7 @@ export default function AdminSkillsTable({
   onDelete,
   onUpdate,
   onRefetch,
+  onPageChange,
 }: {
   skills: AdminSkillRecord[]
   isLoading: boolean
@@ -138,6 +220,7 @@ export default function AdminSkillsTable({
   onDelete: (id: string | number) => Promise<unknown>
   onUpdate: (input: AdminSkillInput & { id: string | number }) => Promise<unknown>
   onRefetch: () => void
+  onPageChange: (page: number) => void
 }) {
   const { t, i18n } = useTranslation("adminSkills")
   const [skillToDelete, setSkillToDelete] = useState<AdminSkillRecord | null>(null)
@@ -189,7 +272,7 @@ export default function AdminSkillsTable({
     {
       key: "actions",
       header: t("columns.actions"),
-      className: "text-right",
+      className: "text-end",
       cell: (skill) => (
         <div className="flex justify-end">
           <DropdownMenu>
@@ -230,6 +313,17 @@ export default function AdminSkillsTable({
     },
   ]
 
+  const MobileSkillCard = ({ item }: { item: AdminSkillRecord }) => (
+    <AdminSkillMobileCard
+      skill={item}
+      isDeleting={isDeleting}
+      isUpdating={isUpdating}
+      onEdit={setSkillToEdit}
+      onUploadIcon={setSkillToUploadIcon}
+      onDelete={setSkillToDelete}
+    />
+  )
+
   return (
     <>
       <DataTable
@@ -243,7 +337,8 @@ export default function AdminSkillsTable({
           lastPage: pagination?.lastPage ?? 1,
           perPage: pagination?.perPage,
         }}
-        onPageChange={() => {}}
+        onPageChange={onPageChange}
+        mobileCardComponent={MobileSkillCard}
         emptyMessage={t("empty")}
         emptyDescription={t("emptyDescription")}
         emptyImage={images.emptyProducts}

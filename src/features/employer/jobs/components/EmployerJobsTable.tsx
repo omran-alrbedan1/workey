@@ -107,7 +107,7 @@ export default function EmployerJobsTable({
     {
       key: "actions",
       header: t("columns.actions"),
-      className: "text-right",
+      className: "text-end",
       cell: (job) => (
         <div className="flex justify-end">
           <DropdownMenu>

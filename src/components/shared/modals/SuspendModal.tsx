@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 import { createSuspendSchema, type SuspendFormValues } from "./validations/sharedModals.validation"
 
 interface SuspendModalProps {
@@ -51,7 +51,7 @@ export default function SuspendModal({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <div className="relative bg-red-100 px-6 pb-12 pt-6 dark:bg-red-950/40">
-              <img src={images.logo} alt="Workey" className="relative mx-auto h-16 w-auto" />
+              <Logo size="lg" alt="Workey" className="relative mx-auto" />
             </div>
 
             <div className="relative -mt-8 px-6 pb-6">

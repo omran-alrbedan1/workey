@@ -6,7 +6,9 @@
     "namePlaceholder": "تصميم واجهات API",
     "slug": "المعرّف",
     "slugPlaceholder": "api-design",
-    "add": "إضافة مهارة"
+    "add": "إضافة مهارة",
+    "dialogTitle": "إضافة مهارة",
+    "dialogDescription": "أضف مهارة جديدة إلى الدليل المشترك."
   },
   "edit": {
     "action": "تعديل",

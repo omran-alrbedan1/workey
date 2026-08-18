@@ -20,7 +20,7 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 
-import { images } from "@/constants/images"
+import Logo from "@/components/shared/logo/Logo"
 import { ROUTES } from "@/config"
 
 interface SidebarProps {
@@ -119,7 +119,7 @@ function NavigationGroup({ item, onNavigate }: { item: NavigationItem; onNavigat
         <ChevronDown className={`h-4 w-4 transition ${open ? "rotate-0" : "-rotate-90"}`} />
       </button>
       {open && (
-        <div className="ml-4 mt-1 space-y-1 border-l border-border pl-2">
+        <div className="ms-4 mt-1 space-y-1 border-s border-border ps-2">
           {item.children?.map((child) => (
             <NavigationLink key={child.path} item={child} onNavigate={onNavigate} />
           ))}
@@ -154,7 +154,7 @@ function SidebarContent({ isMobile, onClose }: { isMobile: boolean; onClose?: ()
           }}
           className="mx-auto flex h-16 items-center justify-center"
         >
-          <img src={images.logo} alt={t("logoAlt")} className="h-14 w-auto" />
+          <Logo size="md" alt={t("logoAlt")} />
         </button>
       </div>
 
@@ -214,7 +214,7 @@ export default function Sidebar({ isOpen = true, isMobile = false, onClose }: Si
         className={`absolute inset-0 bg-black/50 transition-opacity ${isOpen ? "opacity-100" : "opacity-0"}`}
       />
       <div
-        className={`relative h-full w-64 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`relative h-full w-64 transition-transform duration-300 ${isOpen ? "translate-x-0" : "ltr:-translate-x-full rtl:translate-x-full"}`}
       >
         <SidebarContent isMobile onClose={onClose} />
       </div>
