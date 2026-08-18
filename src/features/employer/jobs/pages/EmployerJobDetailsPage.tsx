@@ -80,7 +80,18 @@ export default function EmployerJobDetailsPage() {
 
           {/* Screening Questions Tab */}
           <TabsContent value="screening">
-            <EmployerJobScreeningQuestionsTab screeningQuestions={job.screeningQuestions ?? []} />
+            <EmployerJobScreeningQuestionsTab
+              questions={job.screeningQuestions ?? []}
+              isLoading={job.isScreeningQuestionsLoading}
+              isPending={
+                job.createScreeningQuestionMutation.isPending ||
+                job.updateScreeningQuestionMutation.isPending ||
+                job.deleteScreeningQuestionMutation.isPending
+              }
+              onCreate={job.createScreeningQuestionMutation.mutateAsync}
+              onUpdate={(questionId, input) => job.updateScreeningQuestionMutation.mutateAsync({ questionId, input })}
+              onDelete={job.deleteScreeningQuestionMutation.mutateAsync}
+            />
           </TabsContent>
 
           {/* Ranked Candidates Tab */}
