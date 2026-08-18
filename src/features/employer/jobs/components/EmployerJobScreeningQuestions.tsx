@@ -232,7 +232,7 @@ export default function EmployerJobScreeningQuestions({
                         {questionTypeLabel(q.question_type)}
                       </Badge>
                       {q.is_required ? (
-                        <Badge variant="secondary" className="gap-1 text-xs">
+                        <Badge variant="outline" className="gap-1 text-xs border-primary/30 bg-primary/10 text-primary">
                           <CheckCircle2 className="h-3 w-3" />
                           {t("screeningQuestions.required")}
                         </Badge>
