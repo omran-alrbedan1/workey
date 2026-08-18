@@ -1,4 +1,4 @@
-import { Building2, Users } from "lucide-react"
+import { Building2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
@@ -28,21 +28,23 @@ export default function EmployerCompanyPage() {
     : "pending"
 
   const handleLogoUpload = (file: File) => {
-    const formData = new FormData()
-    formData.append("logo", file)
-    company.updateLogoMutation.mutate(formData)
+    company.updateLogoMutation.mutate(file)
   }
 
   const handleLogoRemove = () => {
-    const formData = new FormData()
-    formData.append("remove_logo", "1")
-    company.updateLogoMutation.mutate(formData)
+    if (!company.data) return
+    company.updateMutation.mutate({
+      name: company.data.name,
+      industry: company.data.industry,
+      website: company.data.website,
+      location: company.data.location,
+      description: company.data.description,
+      remove_logo: true,
+    })
   }
 
   const handleCoverUpload = (file: File) => {
-    const formData = new FormData()
-    formData.append("image", file)
-    company.updateCoverMutation.mutate(formData)
+    company.updateCoverMutation.mutate(file)
   }
 
   const handleCoverRemove = () => {

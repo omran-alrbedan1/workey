@@ -79,7 +79,7 @@ export default function EmployerCompanyForm({
           onRemove={onLogoRemove}
         />
         <CompanyCoverSection
-          coverUrl={company.cover_url}
+          coverUrl={company.cover_image_url || company.cover_url}
           isUploading={isCoverUploading}
           onUpload={onCoverUpload}
           onRemove={onCoverRemove}

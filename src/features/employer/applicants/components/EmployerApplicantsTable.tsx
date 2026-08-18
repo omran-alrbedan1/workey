@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { CalendarPlus, Download, Eye, MoreHorizontal } from "lucide-react"
+import { CalendarPlus, Download, Eye, MoreHorizontal, User, Calendar, Target, FileText } from "lucide-react"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
 import { Button } from "@/components/ui/button"
@@ -46,6 +46,118 @@ function getValue(v: unknown): string {
 function hasAllowedAction(application: EmployerApplicant, actions: string[]) {
   if (!application.allowed_actions) return true
   return actions.some((action) => application.allowed_actions?.includes(action))
+}
+
+interface EmployerApplicantMobileCardProps {
+  application: EmployerApplicant
+  isUpdating: boolean
+  downloadingId: string | number | null
+  onViewDetails: (application: EmployerApplicant) => void
+  onDownload: (application: EmployerApplicant) => void
+  onStatusChange: (application: EmployerApplicant, status: ApplicationStatusKey) => void
+}
+
+function EmployerApplicantMobileCard({
+  application,
+  isUpdating,
+  downloadingId,
+  onViewDetails,
+  onDownload,
+  onStatusChange,
+}: EmployerApplicantMobileCardProps) {
+  const { t, i18n } = useTranslation("employerApplicants")
+  const statusKey = getKey(application.status)
+  const statusValue = getValue(application.status)
+  const score = application.match_score ?? application.matching_score
+
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <User className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">
+            {candidateDisplayName(application, t("unknownCandidate"))}
+          </h3>
+          <p className="truncate text-xs text-text-muted">{candidateSecondaryText(application, "-")}</p>
+        </div>
+        <StatusBadge
+          status={statusKey}
+          label={statusValue || t(`statuses.${statusKey}`, { defaultValue: statusKey })}
+          variant="soft"
+        />
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        <p className="flex items-center gap-2">
+          <Calendar className="h-3.5 w-3.5 text-primary" />
+          {t("columns.applied")}:{" "}
+          {(() => {
+            const date = application.applied_at || application.created_at
+            return date ? new Date(date).toLocaleDateString(i18n.language) : "-"
+          })()}
+        </p>
+        <p className="flex items-center gap-2">
+          <Target className="h-3.5 w-3.5 text-primary" />
+          {t("columns.match")}:{" "}
+          {score == null ? "-" : `${score <= 1 ? Math.round(score * 100) : Math.round(score)}%`}
+        </p>
+        <p className="flex items-center gap-2">
+          <FileText className="h-3.5 w-3.5 text-primary" />
+          {t("columns.assessments")}:{" "}
+          {(() => {
+            const hasTests = application.tests_count != null && application.tests_count > 0
+            const hasInterviews = application.interviews_count != null && application.interviews_count > 0
+            const hasData = hasTests || hasInterviews
+            return hasData
+              ? t("assessmentCounts", {
+                  tests: application.tests_count ?? 0,
+                  interviews: application.interviews_count ?? 0,
+                })
+              : "-"
+          })()}
+        </p>
+      </div>
+
+      <div className="mt-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" variant="ghost" disabled={isUpdating} className="w-full">
+              {t("actions.label")} <MoreHorizontal className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>{t("actions.label")}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => onViewDetails(application)}>
+              <Eye /> {t("actions.viewDetails")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => onDownload(application)}
+              disabled={!hasSelectedCv(application) || downloadingId === application.id}
+            >
+              <Download />{" "}
+              {hasSelectedCv(application)
+                ? t("actions.downloadCv")
+                : t("actions.noCv", { defaultValue: "No CV attached" })}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            {(application.allowed_status_transitions?.map((s) => s.key) || nextStatuses)
+              .filter((status) => status !== statusKey)
+              .map((status) => (
+                <DropdownMenuItem
+                  key={status}
+                  onSelect={() => onStatusChange(application, status as ApplicationStatusKey)}
+                >
+                  {t(`statuses.${status}`)}
+                </DropdownMenuItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </article>
+  )
 }
 
 function useHandleDownload() {
@@ -116,6 +228,11 @@ export default function EmployerApplicantsTable({
     setStatusDialogOpen(false)
     setStatusDialogApplication(null)
     setTargetStatus(null)
+  }
+
+  const handleViewDetails = (application: EmployerApplicant) => navigate(ROUTES.employer.applicantDetails(application.id))
+  const handleCardStatusChange = (application: EmployerApplicant, status: ApplicationStatusKey) => {
+    handleStatusClick(application, status)
   }
 
   const columns: Column<EmployerApplicant>[] = [
@@ -252,6 +369,17 @@ export default function EmployerApplicantsTable({
     },
   ]
 
+  const MobileApplicantCard = ({ item }: { item: EmployerApplicant }) => (
+    <EmployerApplicantMobileCard
+      application={item}
+      isUpdating={isUpdating}
+      downloadingId={downloadingId}
+      onViewDetails={handleViewDetails}
+      onDownload={handleDownload}
+      onStatusChange={handleCardStatusChange}
+    />
+  )
+
   return (
     <>
       <DataTable
@@ -269,6 +397,7 @@ export default function EmployerApplicantsTable({
         emptyMessage={t("empty.title")}
         emptyDescription={t("empty.description")}
         className="bg-background-card shadow-card"
+        mobileCardComponent={MobileApplicantCard}
       />
       <ApplicationStatusChangeDialog
         open={statusDialogOpen}

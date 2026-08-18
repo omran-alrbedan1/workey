@@ -1,4 +1,4 @@
-import { CalendarCheck, Clock3, Eye, MoreHorizontal, Tag, UserRound } from "lucide-react"
+import { CalendarCheck, Clock3, Eye, MoreHorizontal, Tag, UserRound, Video } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
@@ -18,6 +18,73 @@ import { keyOf, valueOf } from "@/lib/keyValue"
 import type { EmployerInterview } from "../types/employerInterviews.types"
 import { interviewCandidateName } from "../utils/interviewDisplay"
 
+interface EmployerInterviewMobileCardProps {
+  interview: EmployerInterview
+  candidateFallbackName?: string
+  onViewDetails: (interview: EmployerInterview) => void
+}
+
+function EmployerInterviewMobileCard({
+  interview,
+  candidateFallbackName,
+  onViewDetails,
+}: EmployerInterviewMobileCardProps) {
+  const { t, i18n } = useTranslation("employerInterviews")
+  const statusKey = keyOf(interview.status)
+  const scheduledAt = interview.scheduled_start_at ?? interview.scheduled_at
+
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <Video className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">
+            {interviewCandidateName(interview, candidateFallbackName ?? t("unknownCandidate"))}
+          </h3>
+          <p className="truncate text-xs text-text-muted">
+            {valueOf(interview.mode ?? interview.interview_mode, "-")}
+          </p>
+        </div>
+        <StatusBadge
+          status={statusKey}
+          label={valueOf(interview.status) || t(`statuses.${statusKey}`, { defaultValue: statusKey })}
+          variant="soft"
+        />
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        <p className="flex items-center gap-2">
+          <Tag className="h-3.5 w-3.5 text-primary" />
+          {t("columns.type")}: <span className="capitalize">{valueOf(interview.type ?? interview.interview_type, "-")}</span>
+        </p>
+        <p className="flex items-center gap-2">
+          <Clock3 className="h-3.5 w-3.5 text-primary" />
+          {t("columns.scheduled")}:{" "}
+          {scheduledAt
+            ? new Date(scheduledAt).toLocaleString(i18n.language, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })
+            : "-"}
+        </p>
+      </div>
+
+      <div className="mt-4">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => onViewDetails(interview)}
+          className="w-full"
+        >
+          <Eye className="mr-2 h-4 w-4" /> {t("actions.viewDetails")}
+        </Button>
+      </div>
+    </article>
+  )
+}
+
 export default function EmployerInterviewsTable({
   interviews,
   isLoading,
@@ -33,6 +100,8 @@ export default function EmployerInterviewsTable({
 }) {
   const { t, i18n } = useTranslation("employerInterviews")
   const navigate = useNavigate()
+
+  const handleViewDetails = (interview: EmployerInterview) => navigate(ROUTES.employer.interviewDetails(interview.id))
 
   const columns: Column<EmployerInterview>[] = [
     {
@@ -102,7 +171,7 @@ export default function EmployerInterviewsTable({
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuLabel>{t("actions.label")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={() => navigate(ROUTES.employer.interviewDetails(item.id))}>
+              <DropdownMenuItem onSelect={() => handleViewDetails(item)}>
                 <Eye /> {t("actions.viewDetails")}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -111,6 +180,14 @@ export default function EmployerInterviewsTable({
       ),
     },
   ]
+
+  const MobileInterviewCard = ({ item }: { item: EmployerInterview }) => (
+    <EmployerInterviewMobileCard
+      interview={item}
+      candidateFallbackName={candidateFallbackName}
+      onViewDetails={handleViewDetails}
+    />
+  )
 
   return (
     <DataTable
@@ -128,6 +205,7 @@ export default function EmployerInterviewsTable({
       emptyMessage={t("empty.title")}
       emptyDescription={t("empty.description")}
       className="bg-background-card shadow-card"
+      mobileCardComponent={MobileInterviewCard}
     />
   )
 }

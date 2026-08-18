@@ -11,6 +11,7 @@ export interface EmployerCompany {
   approval_status?: KeyValueField | null
   logo_url?: string | null
   cover_url?: string | null
+  cover_image_url?: string | null
   created_at?: string
   updated_at?: string
 }

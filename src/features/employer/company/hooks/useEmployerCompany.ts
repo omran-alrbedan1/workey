@@ -28,7 +28,7 @@ export function useEmployerCompany() {
   })
 
   const updateLogoMutation = useMutation({
-    mutationFn: employerCompanyService.updateLogo,
+    mutationFn: (file: File) => employerCompanyService.updateLogo(file),
     onSuccess: async (company) => {
       client.setQueryData(employerCompanyKey, company)
       await client.invalidateQueries({ queryKey: ["employer", "dashboard"] })
@@ -41,7 +41,7 @@ export function useEmployerCompany() {
   })
 
   const updateCoverMutation = useMutation({
-    mutationFn: employerCompanyService.updateCoverImage,
+    mutationFn: (file: File) => employerCompanyService.updateCoverImage(file),
     onSuccess: async (company) => {
       client.setQueryData(employerCompanyKey, company)
       await client.invalidateQueries({ queryKey: ["employer", "dashboard"] })

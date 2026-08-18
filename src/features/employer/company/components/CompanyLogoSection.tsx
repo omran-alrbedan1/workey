@@ -13,21 +13,6 @@ interface CompanyLogoSectionProps {
 const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
 
-// Convert full backend URL to relative path for proxy
-const getProxyUrl = (url: string | null | undefined): string | null => {
-  if (!url) return null
-  try {
-    const urlObj = new URL(url)
-    // If it's the backend URL, convert to relative path for proxy
-    if (urlObj.hostname === "workey.onrender.com") {
-      return urlObj.pathname + urlObj.search
-    }
-    return url
-  } catch {
-    return url
-  }
-}
-
 export default function CompanyLogoSection({
   logoUrl,
   isUploading,
@@ -39,7 +24,9 @@ export default function CompanyLogoSection({
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  console.log(logoUrl)
+  // Log logoUrl on mount and when it changes
+  console.log("Logo URL from props:", logoUrl)
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -78,12 +65,12 @@ export default function CompanyLogoSection({
     fileInputRef.current?.click()
   }
 
-  const displayLogo = preview || getProxyUrl(logoUrl)
+  const displayLogo = preview || logoUrl
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-text-primary">{t("media.logo")}</h3>
-      
+
       <div className="flex items-start gap-4">
         {/* Logo Display */}
         <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-lg border-2 border-border bg-background-secondary">
@@ -92,7 +79,10 @@ export default function CompanyLogoSection({
               src={displayLogo}
               alt={t("media.logo")}
               className="h-full w-full object-contain"
-              onError={() => {
+              onError={(e) => {
+                console.error("Failed to load logo:", displayLogo)
+                console.error("Image error event:", e)
+                console.error("Current src:", e.currentTarget.src)
                 setError(t("media.loadError"))
                 setPreview(null)
               }}

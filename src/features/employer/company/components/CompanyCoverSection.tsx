@@ -13,21 +13,6 @@ interface CompanyCoverSectionProps {
 const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
 
-// Convert full backend URL to relative path for proxy
-const getProxyUrl = (url: string | null | undefined): string | null => {
-  if (!url) return null
-  try {
-    const urlObj = new URL(url)
-    // If it's the backend URL, convert to relative path for proxy
-    if (urlObj.hostname === "workey.onrender.com") {
-      return urlObj.pathname + urlObj.search
-    }
-    return url
-  } catch {
-    return url
-  }
-}
-
 export default function CompanyCoverSection({
   coverUrl,
   isUploading,
@@ -38,6 +23,9 @@ export default function CompanyCoverSection({
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Log coverUrl on mount and when it changes
+  console.log("Cover URL from props:", coverUrl)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -77,12 +65,12 @@ export default function CompanyCoverSection({
     fileInputRef.current?.click()
   }
 
-  const displayCover = preview || getProxyUrl(coverUrl)
+  const displayCover = preview || coverUrl
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-text-primary">{t("media.cover")}</h3>
-      
+
       {/* Cover Display */}
       <div className="relative h-48 w-full overflow-hidden rounded-lg border-2 border-border bg-background-secondary">
         {displayCover ? (
@@ -90,9 +78,15 @@ export default function CompanyCoverSection({
             src={displayCover}
             alt={t("media.cover")}
             className="h-full w-full object-cover"
-            onError={() => {
-              setError(t("media.loadError"))
-              setPreview(null)
+            onError={(e) => {
+              console.error("Failed to load cover:", displayCover)
+              // If proxy URL fails, try the original URL
+              if (displayCover !== coverUrl && coverUrl) {
+                e.currentTarget.src = coverUrl
+              } else {
+                setError(t("media.loadError"))
+                setPreview(null)
+              }
             }}
           />
         ) : (

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Eye, MoreHorizontal, Pencil, Send, Square, Trash2, UsersRound } from "lucide-react"
+import { Eye, MoreHorizontal, Pencil, Send, Square, Trash2, UsersRound, MapPin, Calendar, Briefcase } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
@@ -25,6 +25,97 @@ function getKey(v: unknown): string {
 
 function getValue(v: unknown): string {
   return valueOf(v)
+}
+
+interface EmployerJobMobileCardProps {
+  job: EmployerJob
+  isUpdating: boolean
+  onViewDetails: (job: EmployerJob) => void
+  onEdit: (job: EmployerJob) => void
+  onApplicants: (job: EmployerJob) => void
+  onPublish: (job: EmployerJob) => void
+  onClose: (job: EmployerJob) => void
+  onDelete: (job: EmployerJob) => void
+}
+
+function EmployerJobMobileCard({
+  job,
+  isUpdating,
+  onViewDetails,
+  onEdit,
+  onApplicants,
+  onPublish,
+  onClose,
+  onDelete,
+}: EmployerJobMobileCardProps) {
+  const { t, i18n } = useTranslation("employerJobs")
+  const statusKey = getKey(job.status) || "draft"
+
+  return (
+    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+          <Briefcase className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-text-primary">{job.title}</h3>
+          <p className="truncate text-xs text-text-muted">{job.location || "-"}</p>
+        </div>
+        <StatusBadge status={statusKey} variant="soft" />
+      </div>
+
+      <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
+        <p className="flex items-center gap-2">
+          <MapPin className="h-3.5 w-3.5 text-primary" />
+          {job.location || t("columns.noLocation")}
+        </p>
+        <p className="flex items-center gap-2">
+          <UsersRound className="h-3.5 w-3.5 text-primary" />
+          {t("columns.applications")}: {job.applications_count ?? 0}
+        </p>
+        <p className="flex items-center gap-2">
+          <Calendar className="h-3.5 w-3.5 text-primary" />
+          {job.created_at ? new Date(job.created_at).toLocaleDateString(i18n.language) : "-"}
+        </p>
+      </div>
+
+      <div className="mt-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" variant="ghost" disabled={isUpdating} className="w-full">
+              {t("actions.label")} <MoreHorizontal className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>{t("actions.label")}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => onViewDetails(job)}>
+              <Eye /> {t("actions.view")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => onEdit(job)}>
+              <Pencil /> {t("actions.edit")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => onApplicants(job)}>
+              <UsersRound /> {t("actions.applicants")}
+            </DropdownMenuItem>
+            {statusKey === "draft" && (
+              <DropdownMenuItem onSelect={() => onPublish(job)}>
+                <Send /> {t("actions.publish")}
+              </DropdownMenuItem>
+            )}
+            {statusKey !== "closed" && statusKey !== "draft" && (
+              <DropdownMenuItem onSelect={() => onClose(job)}>
+                <Square /> {t("actions.close")}
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem className="text-red-600 focus:text-red-700" onSelect={() => onDelete(job)}>
+              <Trash2 /> {t("actions.delete")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </article>
+  )
 }
 
 export default function EmployerJobsTable({
@@ -81,6 +172,13 @@ export default function EmployerJobsTable({
     }
   }
 
+  const handlePublish = (job: EmployerJob) => setJobToPublish(job)
+  const handleClose = (job: EmployerJob) => setJobToClose(job)
+  const handleDelete = (job: EmployerJob) => setJobToDelete(job)
+  const handleViewDetails = (job: EmployerJob) => navigate(ROUTES.employer.jobDetails(job.id))
+  const handleEdit = (job: EmployerJob) => navigate(ROUTES.employer.editJob(job.id))
+  const handleApplicants = (job: EmployerJob) => navigate(ROUTES.employer.jobApplicants(job.id))
+
   const columns: Column<EmployerJob>[] = [
     {
       key: "title",
@@ -119,28 +217,28 @@ export default function EmployerJobsTable({
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuLabel>{t("actions.label")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={() => navigate(ROUTES.employer.jobDetails(job.id))}>
+              <DropdownMenuItem onSelect={() => handleViewDetails(job)}>
                 <Eye /> {t("actions.view")}
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => navigate(ROUTES.employer.editJob(job.id))}>
+              <DropdownMenuItem onSelect={() => handleEdit(job)}>
                 <Pencil /> {t("actions.edit")}
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => navigate(ROUTES.employer.jobApplicants(job.id))}>
+              <DropdownMenuItem onSelect={() => handleApplicants(job)}>
                 <UsersRound /> {t("actions.applicants")}
               </DropdownMenuItem>
               {(getKey(job.status) || "draft") === "draft" && (
-                <DropdownMenuItem onSelect={() => setJobToPublish(job)}>
+                <DropdownMenuItem onSelect={() => handlePublish(job)}>
                   <Send /> {t("actions.publish")}
                 </DropdownMenuItem>
               )}
               {getKey(job.status) !== "closed" && getKey(job.status) !== "draft" && (
-                <DropdownMenuItem onSelect={() => setJobToClose(job)}>
+                <DropdownMenuItem onSelect={() => handleClose(job)}>
                   <Square /> {t("actions.close")}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem
                 className="text-red-600 focus:text-red-700"
-                onSelect={() => setJobToDelete(job)}
+                onSelect={() => handleDelete(job)}
               >
                 <Trash2 /> {t("actions.delete")}
               </DropdownMenuItem>
@@ -150,6 +248,19 @@ export default function EmployerJobsTable({
       ),
     },
   ]
+
+  const MobileJobCard = ({ item }: { item: EmployerJob }) => (
+    <EmployerJobMobileCard
+      job={item}
+      isUpdating={isUpdating}
+      onViewDetails={handleViewDetails}
+      onEdit={handleEdit}
+      onApplicants={handleApplicants}
+      onPublish={handlePublish}
+      onClose={handleClose}
+      onDelete={handleDelete}
+    />
+  )
 
   return (
     <>
@@ -168,6 +279,7 @@ export default function EmployerJobsTable({
         emptyMessage={t("empty.title")}
         emptyDescription={t("empty.description")}
         className="bg-background-card shadow-card"
+        mobileCardComponent={MobileJobCard}
       />
       <PublishModal
         open={jobToPublish !== null}
