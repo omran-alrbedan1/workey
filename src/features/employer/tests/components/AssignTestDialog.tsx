@@ -72,40 +72,49 @@ export default function AssignTestDialog({
     }
   }, [form, open])
 
-  useEffect(() => {
-    if (!selectedJobId) {
-      setApplicants([])
-      form.setValue("application_id", "")
-      return
-    }
+useEffect(() => {
+  if (!selectedJobId) {
+    setApplicants([])
     form.setValue("application_id", "")
-    setLoadingApplicants(true)
-    employerApplicantsService
-      .list(selectedJobId, 1)
-      .then((data) => {
-        const eligible = data.items.filter((application) => {
-          if (application.allowed_actions?.length) {
-            return (
-              application.allowed_actions.includes("assign_test") ||
-              application.allowed_actions.includes("manage_tests") ||
-              application.allowed_actions.includes("update_status")
-            )
-          }
+    return
+  }
+  form.setValue("application_id", "")
+  setLoadingApplicants(true)
+  employerApplicantsService
+    .list(selectedJobId, 1)
+    .then((data) => {
+      console.log(data);
+      const eligible = data.items.filter((application) => {
+        if (application.allowed_actions?.length) {
+          return (
+            application.allowed_actions.includes("assign_test") ||
+            application.allowed_actions.includes("manage_tests") ||
+            application.allowed_actions.includes("update_status")
+          )
+        }
 
-          return keyOf(application.status) === "shortlisted"
-        })
-        setApplicants(
-          eligible.map((a) => ({
+        // Fallback: check status.key
+        return application.status?.key === "shortlisted"
+      })
+      
+      setApplicants(
+        eligible.map((a) => {
+          // Get name from nested user object
+          const userName = a.job_seeker_profile?.user?.name
+          const userEmail = a.job_seeker_profile?.user?.email
+          
+          return {
             value: String(a.id),
-            label: a.candidate_summary?.name || a.candidate_summary?.email || `#${a.id}`,
-          })),
-        )
-      })
-      .catch(() => {
-        setApplicants([])
-      })
-      .finally(() => setLoadingApplicants(false))
-  }, [selectedJobId])
+            label: userName || userEmail || `#${a.id}`,
+          }
+        }),
+      )
+    })
+    .catch(() => {
+      setApplicants([])
+    })
+    .finally(() => setLoadingApplicants(false))
+}, [selectedJobId])
 
   const submit = async (values: AssignTestFormValues) => {
     if (!test) return
