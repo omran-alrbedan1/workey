@@ -78,44 +78,41 @@ useEffect(() => {
     form.setValue("application_id", "")
     return
   }
+
   form.setValue("application_id", "")
   setLoadingApplicants(true)
+
   employerApplicantsService
     .list(selectedJobId, 1)
     .then((data) => {
-      console.log(data);
-      const eligible = data.items.filter((application) => {
-        if (application.allowed_actions?.length) {
-          return (
-            application.allowed_actions.includes("assign_test") ||
-            application.allowed_actions.includes("manage_tests") ||
-            application.allowed_actions.includes("update_status")
-          )
-        }
+      console.log("========== ASSIGN TEST DEBUG ==========")
+      console.log("Selected Job ID:", selectedJobId)
+      console.log("API Response:", data)
+      console.log("Applications:", data.items)
 
-        // Fallback: check status.key
-        return application.status?.key === "shortlisted"
-      })
-      
       setApplicants(
-        eligible.map((a) => {
-          // Get name from nested user object
-          const userName = a.job_seeker_profile?.user?.name
-          const userEmail = a.job_seeker_profile?.user?.email
-          
+        data.items.map((application) => {
+          const userName = application.job_seeker_profile?.user?.name
+          const userEmail = application.job_seeker_profile?.user?.email
+
           return {
-            value: String(a.id),
-            label: userName || userEmail || `#${a.id}`,
+            value: String(application.id),
+            label: userName || userEmail || `#${application.id}`,
           }
         }),
       )
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error("========== APPLICATION FETCH ERROR ==========")
+      console.error("Selected Job ID:", selectedJobId)
+      console.error(error)
+
       setApplicants([])
     })
-    .finally(() => setLoadingApplicants(false))
+    .finally(() => {
+      setLoadingApplicants(false)
+    })
 }, [selectedJobId])
-
   const submit = async (values: AssignTestFormValues) => {
     if (!test) return
     await onSubmit(values.application_id, test.id, {
