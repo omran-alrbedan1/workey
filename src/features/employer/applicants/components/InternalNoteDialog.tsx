@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { FileText } from "lucide-react"
 
 import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
@@ -58,7 +59,10 @@ export default function InternalNoteDialog({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)}>
             <DialogHeader>
-              <DialogTitle>{t("internalNotes.dialogTitle")}</DialogTitle>
+              <DialogTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-primary" />
+                {t("internalNotes.dialogTitle")}
+              </DialogTitle>
               <DialogDescription>{t("internalNotes.dialogDescription")}</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-5">
