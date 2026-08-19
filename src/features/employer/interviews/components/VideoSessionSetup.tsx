@@ -49,10 +49,7 @@ export default function VideoSessionSetup({
     if (session) return
     setIsLoading(true)
     try {
-      const created = await employerInterviewsService.createVideoSession(interviewId, {
-        participant_name: "Interviewer",
-        role: "interviewer",
-      })
+      const created = await employerInterviewsService.createVideoSession(interviewId)
       setSession(created)
     } catch (error) {
       showErrorToast(videoSessionErrorMessage(error, t("video.sessionError")))
