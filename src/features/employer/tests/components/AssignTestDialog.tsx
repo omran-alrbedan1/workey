@@ -85,11 +85,6 @@ useEffect(() => {
   employerApplicantsService
     .list(selectedJobId, 1)
     .then((data) => {
-      console.log("========== ASSIGN TEST DEBUG ==========")
-      console.log("Selected Job ID:", selectedJobId)
-      console.log("API Response:", data)
-      console.log("Applications:", data.items)
-
       setApplicants(
         data.items.map((application) => {
           const userName = application.job_seeker_profile?.user?.name
@@ -103,8 +98,6 @@ useEffect(() => {
       )
     })
     .catch((error) => {
-      console.error("========== APPLICATION FETCH ERROR ==========")
-      console.error("Selected Job ID:", selectedJobId)
       console.error(error)
 
       setApplicants([])
@@ -113,6 +106,7 @@ useEffect(() => {
       setLoadingApplicants(false)
     })
 }, [selectedJobId])
+
   const submit = async (values: AssignTestFormValues) => {
     if (!test) return
     await onSubmit(values.application_id, test.id, {
