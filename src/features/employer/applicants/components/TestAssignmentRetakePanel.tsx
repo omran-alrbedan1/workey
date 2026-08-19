@@ -290,7 +290,7 @@ export default function TestAssignmentRetakePanel({
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <StatusBadge status={item.is_latest ? "active" : "inactive"} variant="soft" size="sm" />
-                      <StatusBadge status={valueOf(item.grading_status, "pending")} variant="soft" size="sm" />
+                      <StatusBadge status={String(valueOf(item.grading_status, "pending"))} variant="soft" size="sm" />
                       <span className="text-sm font-medium">
                         {score == null
                           ? t("tests.noAttemptScore")

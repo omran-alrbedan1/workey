@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Calendar, Clock, Edit2, FileText, Plus, XCircle, Download, MessageCircle } from "lucide-react"
+import { Calendar, Clock, Edit2, FileText, Plus, XCircle, Download, MessageCircle, FileText as FileTextIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import type { InformationRequest } from "../types/employerApplicants.types"
+import EmptyState from "@/components/shared/states/EmptyState"
 
 export default function InformationRequests({ applicationId }: { applicationId: string | number }) {
   const { t } = useTranslation("employerApplicants")
@@ -100,19 +101,28 @@ export default function InformationRequests({ applicationId }: { applicationId: 
   return (
     <>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <FileText className="h-5 w-5 text-primary" />
             {t("informationRequests.title")}
           </CardTitle>
-          <Button size="sm" className="text-white" onClick={handleCreate} disabled={isCreating || !canCreate}>
+          <Button size="sm" className="text-white shrink-0" onClick={handleCreate} disabled={isCreating || !canCreate}>
             <Plus className="h-4 w-4 mr-2" />
             {t("informationRequests.addRequest")}
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
           {requests.length === 0 ? (
-            <p className="py-8 text-center text-sm text-text-muted">{t("informationRequests.empty")}</p>
+            <EmptyState
+              title={t("informationRequests.empty")}
+              description={t("informationRequests.emptyDescription")}
+              icon={FileTextIcon}
+              primaryAction={{
+                label: t("informationRequests.addRequest"),
+                onClick: handleCreate,
+                icon: Plus,
+              }}
+            />
           ) : (
             requests.map((request) => (
               <div

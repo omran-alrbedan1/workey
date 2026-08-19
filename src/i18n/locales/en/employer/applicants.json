@@ -12,6 +12,8 @@
     "coverLetter": "Cover letter",
     "tests": "Tests",
     "interviews": "Interviews",
+    "internalNotes": "Internal Notes",
+    "informationRequests": "Information Requests",
     "finalReview": "Final review"
   },
   "columns": {
@@ -264,6 +266,7 @@
     "pageTitle": "Internal notes",
     "addNote": "Add Note",
     "empty": "No internal notes yet.",
+    "emptyDescription": "Add internal notes to track your team's thoughts and decisions about this candidate.",
     "dialogTitle": "Internal Note",
     "dialogDescription": "Add an internal note about this candidate. Notes are only visible to your team.",
     "placeholder": "Write your internal note here...",
@@ -276,6 +279,7 @@
     "pageTitle": "Information requests",
     "addRequest": "Request Information",
     "empty": "No information requests yet.",
+    "emptyDescription": "Request additional information from the candidate to support your evaluation.",
     "dialogTitle": "Request Information",
     "dialogDescription": "Request additional information from the candidate.",
     "messageLabel": "Message",

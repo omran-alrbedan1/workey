@@ -143,7 +143,7 @@ function AnswerGradeCard({
             {index + 1}. {answer.question_text || t("tests.unknownQuestion")}
           </p>
           <p className="mt-1 text-xs text-text-muted">
-            {valueOf(answer.question_type, "-")} - {maxPoints} {t("tests.points")}
+            {String(valueOf(answer.question_type, "-"))} - {maxPoints} {t("tests.points")}
           </p>
         </div>
         {answer.awarded_points != null && <StatusBadge status="reviewed" variant="soft" size="sm" />}

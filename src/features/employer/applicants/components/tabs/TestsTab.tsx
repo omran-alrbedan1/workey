@@ -3,7 +3,9 @@ import { useTranslation } from "react-i18next"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { keyOf, valueOf } from "@/lib/keyValue"
+import EmptyState from "@/components/shared/states/EmptyState"
 import type { EmployerTestAttempt } from "../../types/employerApplicants.types"
 
 interface TestsTabProps {
@@ -24,25 +26,39 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
 
   if (!tests.data?.items || tests.data.items.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-border bg-background/50 p-8 text-center text-sm text-text-muted">
-        {t("tests.empty")}
-      </div>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <ListChecks className="h-5 w-5 text-primary" />
+            {t("tests.title")}
+          </CardTitle>
+          <Button type="button" variant="outline" size="sm" onClick={onViewAll} className="shrink-0">
+            <FileText className="h-4 w-4 mr-2" /> {t("tests.viewAll")}
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <EmptyState
+            title={t("tests.empty")}
+            description={t("tests.emptyDescription", { defaultValue: "No tests are assigned to this application." })}
+            icon={ListChecks}
+          />
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="flex items-center gap-2 text-lg font-semibold text-text-primary">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between gap-3">
+        <CardTitle className="flex items-center gap-2 text-lg">
           <ListChecks className="h-5 w-5 text-primary" />
           {t("tests.title")}
-        </h3>
-        <Button type="button" variant="outline" size="sm" onClick={onViewAll}>
-          <FileText className="h-4 w-4" /> {t("tests.viewAll")}
+        </CardTitle>
+        <Button type="button" variant="outline" size="sm" onClick={onViewAll} className="shrink-0">
+          <FileText className="h-4 w-4 mr-2" /> {t("tests.viewAll")}
         </Button>
-      </div>
-
-      <div className="space-y-2">
+      </CardHeader>
+      <CardContent className="space-y-2">
         {tests.data.items.slice(0, 5).map((attempt) => {
           const score = attempt.attempt?.total_score ?? null
           const max = attempt.attempt?.max_score ?? attempt.test?.max_score ?? 0
@@ -80,7 +96,7 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
                   ? passed
                     ? t("tests.passed")
                     : t("tests.failed")
-                  : valueOf(attempt.state, "pending")}
+                  : String(valueOf(attempt.state, "pending"))}
               </Badge>
             </button>
           )
@@ -90,7 +106,7 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
             {t("tests.moreCount", { count: tests.data.items.length - 5 })}
           </p>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

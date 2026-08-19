@@ -173,7 +173,7 @@ export default function EmployerTestAttemptGradingPage() {
         <CardContent className="grid gap-4 p-5 sm:grid-cols-3">
           <div>
             <p className="text-xs text-text-muted">{t("tests.gradingStatus")}</p>
-            <p className="font-medium">{valueOf(result.data?.grading_status ?? result.data?.status, "-")}</p>
+            <p className="font-medium">{String(valueOf(result.data?.grading_status ?? result.data?.status, "-"))}</p>
           </div>
           <div>
             <p className="text-xs text-text-muted">{t("tests.currentScore")}</p>
@@ -220,7 +220,7 @@ export default function EmployerTestAttemptGradingPage() {
                       {index + 1}. {answer.question_text ?? t("tests.unknownQuestion")}
                     </p>
                     <p className="text-xs text-text-muted">
-                      {valueOf(answer.question_type, "-")} - {maxPoints} {t("tests.points")}
+                      {String(valueOf(answer.question_type, "-"))} - {maxPoints} {t("tests.points")}
                     </p>
                   </div>
 

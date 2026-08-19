@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Clock, Edit2, Plus, Trash2, User } from "lucide-react"
+import { Clock, Edit2, Plus, Trash2, User, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useInternalNotes } from "../hooks/useInternalNotes"
 import InternalNoteDialog from "./InternalNoteDialog"
 import { DeleteModal } from "@/components/shared/modals"
+import EmptyState from "@/components/shared/states/EmptyState"
 
 export default function InternalNotes({ applicationId }: { applicationId: string | number }) {
   const { t } = useTranslation("employerApplicants")
@@ -72,19 +73,28 @@ export default function InternalNotes({ applicationId }: { applicationId: string
   return (
     <>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <User className="h-5 w-5 text-primary" />
             {t("internalNotes.title")}
           </CardTitle>
-          <Button size="sm" onClick={handleCreate} disabled={isCreating}>
+          <Button size="sm" onClick={handleCreate} disabled={isCreating} className="shrink-0">
             <Plus className="h-4 w-4 mr-2" />
             {t("internalNotes.addNote")}
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
           {notes.length === 0 ? (
-            <p className="py-8 text-center text-sm text-text-muted">{t("internalNotes.empty")}</p>
+            <EmptyState
+              title={t("internalNotes.empty")}
+              description={t("internalNotes.emptyDescription")}
+              icon={MessageSquare}
+              primaryAction={{
+                label: t("internalNotes.addNote"),
+                onClick: handleCreate,
+                icon: Plus,
+              }}
+            />
           ) : (
             notes.map((note) => (
               <div

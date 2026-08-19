@@ -1,5 +1,6 @@
-import { CheckCircle2, ChevronDown, MessageSquare } from "lucide-react"
+import { CheckCircle2, ChevronDown, MessageSquare, ClipboardCheck } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { keyOf } from "@/lib/keyValue"
 import type { ApplicationScreeningAnswer } from "../../types/employerApplicants.types"
 
@@ -40,20 +41,37 @@ export default function ScreeningAnswersTab({ answers }: ScreeningAnswersTabProp
 
   if (!answers || answers.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-border bg-background/50 p-8 text-center text-sm text-text-muted">
-        {t("screeningAnswers.empty")}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <ClipboardCheck className="h-5 w-5 text-primary" />
+            {t("screeningAnswers.title")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-lg border border-dashed border-border bg-background/50 p-8 text-center text-sm text-text-muted">
+            {t("screeningAnswers.empty")}
+          </div>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-lg font-semibold text-text-primary">{t("screeningAnswers.title")}</h3>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {answers.map((answer, i) => (
-          <AnswerDisplay key={answer.id ?? i} answer={answer} />
-        ))}
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <ClipboardCheck className="h-5 w-5 text-primary" />
+          {t("screeningAnswers.title")}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {answers.map((answer, i) => (
+            <AnswerDisplay key={answer.id ?? i} answer={answer} />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 }

@@ -62,7 +62,7 @@ export default function CandidateInfoTab({
                 <div className="flex flex-wrap items-center gap-2">
                   <h2 className="text-2xl font-bold leading-tight text-text-primary">{candidateName}</h2>
                   <Badge variant="secondary" className="text-xs text-white">
-                    {valueOf(application.status, "applied")}
+                    {String(valueOf(application.status, "applied"))}
                   </Badge>
                 </div>
                 {(candidateHeadline(application) || profile?.identity?.email) && (
@@ -159,7 +159,7 @@ export default function CandidateInfoTab({
           <SummaryTile
             icon={Activity}
             label={t("candidate.latestStatus")}
-            value={valueOf(latestStatus?.to_status, valueOf(application.status, "-"))}
+            value={String(valueOf(latestStatus?.to_status, valueOf(application.status, "-")))}
           />
         </div>
       </section>
@@ -167,9 +167,9 @@ export default function CandidateInfoTab({
       <div className="grid gap-4 lg:grid-cols-2">
         <InfoCard title={t("candidate.applicationTitle")} icon={FileText}>
           <div className="grid gap-3 sm:grid-cols-2">
-            <InfoItem label={t("columns.status")} value={valueOf(application.status, "-")} />
-            <InfoItem label={t("candidate.lastUpdated")} value={formatDate(application.updated_at)} />
-            <InfoItem label={t("candidate.snapshotStatus")} value={valueOf(application.snapshot_status, "-")} />
+            <InfoItem label={t("columns.status")} value={String(valueOf(application.status, "-"))} />
+            <InfoItem label={t("candidate.lastUpdated")} value={formatDate(application.created_at)} />
+            <InfoItem label={t("candidate.snapshotStatus")} value={String(valueOf(application.snapshot_status, "-"))} />
             <InfoItem
               label={t("candidate.profileConsent")}
               value={application.consent_to_share_profile ? t("answers.yes") : t("answers.no")}
@@ -179,7 +179,7 @@ export default function CandidateInfoTab({
 
         <InfoCard title={t("candidate.latestActivity")} icon={Clock}>
           <div className="grid gap-3 sm:grid-cols-3">
-            <InfoItem label={t("candidate.latestStatus")} value={valueOf(latestStatus?.to_status, valueOf(application.status, "-"))} />
+            <InfoItem label={t("candidate.latestStatus")} value={String(valueOf(latestStatus?.to_status, valueOf(application.status, "-")))} />
             <InfoItem label={t("candidate.changedBy")} value={latestStatus?.changed_by?.name ?? "-"} />
             <InfoItem label={t("candidate.changedAt")} value={formatDate(latestStatus?.changed_at)} />
           </div>
@@ -196,10 +196,10 @@ export default function CandidateInfoTab({
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <InfoItem label={t("candidate.position")} value={job?.title ?? "-"} />
           <InfoItem label={t("candidate.department")} value={job?.department ?? "-"} />
-          <InfoItem label={t("candidate.employmentType")} value={valueOf(job?.employment_type, "-")} />
-          <InfoItem label={t("candidate.experienceLevel")} value={valueOf(job?.experience_level, "-")} />
-          <InfoItem label={t("candidate.educationLevel")} value={valueOf(job?.education_level, "-")} />
-          <InfoItem label={t("candidate.workMode")} value={valueOf(job?.work_mode, "-")} />
+          <InfoItem label={t("candidate.employmentType")} value={String(valueOf(job?.employment_type, "-"))} />
+          <InfoItem label={t("candidate.experienceLevel")} value={String(valueOf(job?.experience_level, "-"))} />
+          <InfoItem label={t("candidate.educationLevel")} value={String(valueOf(job?.education_level, "-"))} />
+          <InfoItem label={t("candidate.workMode")} value={String(valueOf(job?.work_mode, "-"))} />
           <InfoItem label={t("candidate.location")} value={job?.city || job?.location || "-"} />
           <InfoItem label={t("candidate.salary")} value={formatSalary(job?.salary_min, job?.salary_max)} />
         </div>

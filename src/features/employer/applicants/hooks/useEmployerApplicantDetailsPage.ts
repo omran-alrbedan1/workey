@@ -32,7 +32,6 @@ export interface EmployerApplicantDetailsModel {
   showScheduleDialog: boolean
   isStatusPending: boolean
   isCreateInterviewPending: boolean
-  showFinalReview: boolean
   hasCv: boolean
   tests: ReturnType<typeof useApplicationTests>
   interviews: ReturnType<typeof useApplicationInterviews>
@@ -147,7 +146,6 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
     showScheduleDialog,
     isStatusPending: statusMutation.isPending,
     isCreateInterviewPending: createInterview.isPending,
-    showFinalReview: application ? shouldShowFinalReview(application) : false,
     hasCv: application ? hasSelectedCv(application) : false,
     tests,
     interviews,
@@ -166,11 +164,3 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
   }
 }
 
-function shouldShowFinalReview(application: EmployerApplicantDetail) {
-  const status = keyOf(application.status)
-  const transitions = application.allowed_status_transitions?.map((item) => item.key) ?? []
-  return (
-    ["final_review", "accepted", "rejected", "on_hold"].includes(status) ||
-    transitions.some((transition) => ["accepted", "rejected", "on_hold", "need_more_information"].includes(transition))
-  )
-}

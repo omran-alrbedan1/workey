@@ -44,12 +44,12 @@ function EmployerInterviewMobileCard({
             {interviewCandidateName(interview, candidateFallbackName ?? t("unknownCandidate"))}
           </h3>
           <p className="truncate text-xs text-text-muted">
-            {valueOf(interview.mode ?? interview.interview_mode, "-")}
+            {String(valueOf(interview.mode ?? interview.interview_mode, "-"))}
           </p>
         </div>
         <StatusBadge
           status={statusKey}
-          label={valueOf(interview.status) || t(`statuses.${statusKey}`, { defaultValue: statusKey })}
+          label={String(valueOf(interview.status) || t(`statuses.${statusKey}`, { defaultValue: statusKey }))}
           variant="soft"
         />
       </div>
