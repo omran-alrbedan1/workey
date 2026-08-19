@@ -11,7 +11,7 @@ import {
   UsersRound,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { NavLink } from "react-router-dom"
+import { useLocation, NavLink } from "react-router-dom"
 import Logo from "@/components/shared/logo/Logo"
 import { ROUTES } from "@/config"
 
@@ -41,7 +41,7 @@ const sections: Array<{ label: string; items: EmployerNavigationItem[] }> = [
   {
     label: "sections.recruitment",
     items: [
-      { label: "items.jobs", path: ROUTES.employer.jobs, icon: BriefcaseBusiness },
+      { label: "items.jobs", path: ROUTES.employer.jobs, icon: BriefcaseBusiness, end: true },
       { label: "items.applicants", path: ROUTES.employer.applicants, icon: UsersRound },
       { label: "items.interviews", path: ROUTES.employer.interviews, icon: CalendarClock },
       { label: "items.tests", path: ROUTES.employer.tests, icon: FlaskConical },
@@ -65,6 +65,9 @@ const sections: Array<{ label: string; items: EmployerNavigationItem[] }> = [
 
 export default function EmployerSidebar({ onNavigate }: EmployerSidebarProps) {
   const { t } = useTranslation("employerNavigation")
+  const location = useLocation()
+
+  const isJobApplicantsPage = location.pathname.match(/^\/employer\/jobs\/\d+\/applicants$/)
 
   return (
     <aside className="flex h-screen w-64 shrink-0 flex-col border-e border-border bg-background-card shadow-lg">
@@ -83,24 +86,30 @@ export default function EmployerSidebar({ onNavigate }: EmployerSidebarProps) {
               {t(section.label)}
             </p>
             <nav className="space-y-1">
-              {section.items.map(({ label, path, icon: Icon, end }) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  end={end}
-                  onClick={onNavigate}
-                  className={({ isActive }) =>
-                    `flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition ${
-                      isActive
-                        ? "bg-gradient-primary text-white shadow-md"
-                        : "text-text-secondary hover:bg-background-secondary hover:text-text-primary"
-                    }`
-                  }
-                >
-                  <Icon className="h-[18px] w-[18px] shrink-0" />
-                  <span>{t(label)}</span>
-                </NavLink>
-              ))}
+              {section.items.map(({ label, path, icon: Icon, end }) => {
+                const isActive = 
+                  (path === ROUTES.employer.applicants && isJobApplicantsPage) ||
+                  (path === ROUTES.employer.applicants && location.pathname === ROUTES.employer.applicants)
+
+                return (
+                  <NavLink
+                    key={path}
+                    to={path}
+                    end={end}
+                    onClick={onNavigate}
+                    className={({ isActive: navLinkActive }) =>
+                      `flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition ${
+                        isActive || navLinkActive
+                          ? "bg-gradient-primary text-white shadow-md"
+                          : "text-text-secondary hover:bg-background-secondary hover:text-text-primary"
+                      }`
+                    }
+                  >
+                    <Icon className="h-[18px] w-[18px] shrink-0" />
+                    <span>{t(label)}</span>
+                  </NavLink>
+                )
+              })}
             </nav>
           </section>
         ))}

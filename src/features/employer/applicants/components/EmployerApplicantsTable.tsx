@@ -221,13 +221,13 @@ export default function EmployerApplicantsTable({
     setStatusDialogOpen(true)
   }
 
-  const handleStatusConfirm = (note?: string) => {
+  const handleStatusConfirm = async (note?: string) => {
     if (statusDialogApplication && targetStatus) {
-      onStatusChange(statusDialogApplication.id, targetStatus, note)
+      await onStatusChange(statusDialogApplication.id, targetStatus, note)
+      setStatusDialogOpen(false)
+      setStatusDialogApplication(null)
+      setTargetStatus(null)
     }
-    setStatusDialogOpen(false)
-    setStatusDialogApplication(null)
-    setTargetStatus(null)
   }
 
   const handleViewDetails = (application: EmployerApplicant) => navigate(ROUTES.employer.applicantDetails(application.id))

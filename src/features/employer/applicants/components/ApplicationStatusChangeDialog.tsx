@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/shared/buttons/SubmitButton"
 import {
   Dialog,
   DialogContent,
@@ -52,10 +53,13 @@ export default function ApplicationStatusChangeDialog({
   const shouldRequireNote = requireNote || Boolean(targetStatus && statusesRequiringNote.includes(targetStatus))
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={() => !isSubmitting && handleClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t("statusChange.title")}</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <RefreshCw className="h-5 w-5 text-primary" />
+            {t("statusChange.title")}
+          </DialogTitle>
           <DialogDescription>
             {t("statusChange.description")}
           </DialogDescription>
@@ -105,12 +109,13 @@ export default function ApplicationStatusChangeDialog({
           >
             {t("actions.cancel")}
           </Button>
-          <Button
+          <SubmitButton
             onClick={handleConfirm}
-            disabled={isSubmitting || (shouldRequireNote && !note.trim())}
-          >
-            {isSubmitting ? t("actions.processing") : t("actions.confirm")}
-          </Button>
+            isLoading={isSubmitting}
+            loadingText={t("actions.processing")}
+            text={t("actions.confirm")}
+            disabled={shouldRequireNote && !note.trim()}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

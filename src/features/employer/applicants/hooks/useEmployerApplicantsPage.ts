@@ -50,8 +50,8 @@ export function useEmployerApplicantsPage(): EmployerApplicantsPageModel {
     navigate(ROUTES.employer.jobApplicants(nextJobId))
   }
 
-  const changeStatus = (applicationId: string | number, status: string, note?: string) => {
-    applicants.statusMutation.mutate({
+  const changeStatus = async (applicationId: string | number, status: string, note?: string) => {
+    await applicants.statusMutation.mutateAsync({
       applicationId,
       input: { status: status as ApplicationStatusKey, note },
     })
