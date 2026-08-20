@@ -32,7 +32,14 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
   if (model.state === "loading") {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-24 w-full rounded-lg" />
+        <PageHeader
+          title={t("tests.untitled")}
+          description={t("detailDescription")}
+          icon={ListChecks}
+          showBackButton
+          backButtonLabel={t("actions.backToApplicant")}
+          onBackClick={model.goBack}
+        />
         <Skeleton className="h-72 w-full rounded-lg" />
       </div>
     )

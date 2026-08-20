@@ -74,7 +74,19 @@ export default function EmployerInterviewDetailsPage() {
   const [videoOpen, setVideoOpen] = useState(false)
 
   if (interview.isPending) {
-    return <InterviewDetailsSkeleton />
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title={t("details.title")}
+          icon={Calendar}
+          showBackButton
+          backButtonLabel={t("back")}
+          onBackClick={() => navigate(ROUTES.employer.interviews)}
+        />
+        <Skeleton className="h-32 w-full rounded-xl" />
+        <Skeleton className="h-64 w-full rounded-xl" />
+      </div>
+    )
   }
 
   if (interview.isError || !interview.data) {
@@ -463,16 +475,6 @@ function InterviewActionsMenu({
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
-
-function InterviewDetailsSkeleton() {
-  return (
-    <div className="space-y-6">
-      <Skeleton className="h-24 w-full rounded-xl" />
-      <Skeleton className="h-32 w-full rounded-xl" />
-      <Skeleton className="h-64 w-full rounded-xl" />
-    </div>
   )
 }
 

@@ -16,7 +16,13 @@ export default function AdminDashboard() {
   const { t } = useTranslation("adminDashboard")
   const { data, isLoading, isFetching, isError, error, refetch, dataSourceStatuses } = useAdminDashboard()
 
-  if (isLoading) return <AdminDashboardSkeleton />
+  if (isLoading)
+    return (
+      <div className="space-y-6">
+        <AdminDashboardHeader isFetching onRefresh={() => {}} />
+        <AdminDashboardSkeleton />
+      </div>
+    )
 
   if (isError) {
     return (

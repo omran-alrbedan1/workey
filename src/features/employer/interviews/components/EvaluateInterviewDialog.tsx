@@ -108,9 +108,9 @@ export default function EvaluateInterviewDialog({
                 rows={3}
               />
               <div className="space-y-3">
-                <FormLabel className="text-sm font-medium">
+                <Label className="text-sm font-medium">
                   {t("evaluate.evaluationItems")}
-                </FormLabel>
+                </Label>
                 {form.watch("items").map((item, index) => (
                   <div
                     key={item.criterion}

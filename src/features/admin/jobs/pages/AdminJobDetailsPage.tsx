@@ -93,7 +93,18 @@ export default function AdminJobDetailsPage() {
   }
 
   if (job.isPending) {
-    return <Skeleton className="h-[520px] w-full rounded-lg" />
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title={t("details.title")}
+          icon={BriefcaseBusiness}
+          showBackButton
+          backButtonLabel={t("details.back")}
+          onBackClick={() => navigate(ROUTES.admin.jobs)}
+        />
+        <Skeleton className="h-[400px] w-full rounded-lg" />
+      </div>
+    )
   }
 
   if (job.isError || !job.data) {
