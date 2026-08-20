@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { MailPlus, ShieldCheck } from "lucide-react"
+import { MailPlus, Send, ShieldCheck } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -41,7 +41,7 @@ export default function InvitationForm({
   open: boolean
   isPending: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (input: CompanyInvitationInput) => void
+  onSubmit: (input: CompanyInvitationInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerCompany")
   const form = useForm<InvitationFormValues>({
@@ -54,12 +54,15 @@ export default function InvitationForm({
   }, [form, open])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={isPending ? undefined : onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit((values) => onSubmit(values))}>
-            <DialogHeader>
-              <DialogTitle>{t("team.invitationDialog.title")}</DialogTitle>
+            <DialogHeader className="text-center">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                <Send className="h-6 w-6 text-primary" />
+              </div>
+              <DialogTitle className="text-xl">{t("team.invitationDialog.title")}</DialogTitle>
               <DialogDescription>{t("team.invitationDialog.description")}</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-5">
@@ -88,19 +91,20 @@ export default function InvitationForm({
                 iconPosition="left"
               />
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-2">
               <CancelButton
                 type="button"
                 disabled={isPending}
                 onClick={() => onOpenChange(false)}
                 text={t("team.cancel")}
+                className="flex-1"
               />
               <SubmitButton
                 isLoading={isPending}
                 text={t("team.invitationDialog.submit")}
                 loadingText={t("team.submitting")}
-                icon={<MailPlus />}
-                className="w-auto"
+                icon={<Send className="h-4 w-4" />}
+                className="w-auto flex-1"
               />
             </DialogFooter>
           </form>

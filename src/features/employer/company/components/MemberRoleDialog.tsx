@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ShieldCheck } from "lucide-react"
+import { ShieldCheck, UserCog } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -42,7 +42,7 @@ export default function MemberRoleDialog({
   currentRole: string
   isPending: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (input: MemberRoleInput) => void
+  onSubmit: (input: MemberRoleInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerCompany")
   const form = useForm<RoleFormValues>({
@@ -55,12 +55,15 @@ export default function MemberRoleDialog({
   }, [form, open, currentRole])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={isPending ? undefined : onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit((values) => onSubmit(values))}>
-            <DialogHeader>
-              <DialogTitle>{t("team.roleDialog.title")}</DialogTitle>
+            <DialogHeader className="text-center">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                <UserCog className="h-6 w-6 text-primary" />
+              </div>
+              <DialogTitle className="text-xl">{t("team.roleDialog.title")}</DialogTitle>
               <DialogDescription>
                 {t("team.roleDialog.description", { name: memberName })}
               </DialogDescription>
@@ -81,18 +84,20 @@ export default function MemberRoleDialog({
                 iconPosition="left"
               />
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-2">
               <CancelButton
                 type="button"
                 disabled={isPending}
                 onClick={() => onOpenChange(false)}
                 text={t("team.cancel")}
+                className="flex-1"
               />
               <SubmitButton
                 isLoading={isPending}
                 text={t("team.roleDialog.submit")}
                 loadingText={t("team.submitting")}
-                className="w-auto"
+                icon={<ShieldCheck className="h-4 w-4" />}
+                className="w-auto flex-1"
               />
             </DialogFooter>
           </form>

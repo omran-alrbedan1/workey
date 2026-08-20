@@ -76,18 +76,18 @@ export default function TeamManagementSection() {
               isUpdatingStatus={team.updateStatusMutation.isPending}
               isRemoving={team.removeMemberMutation.isPending}
               isTransferring={team.transferOwnershipMutation.isPending}
-              onUpdateRole={(userId, role) =>
-                team.updateRoleMutation.mutate({ userId, input: { company_role: role } })
+              onUpdateRole={async (userId, role) =>
+                await team.updateRoleMutation.mutateAsync({ userId, input: { company_role: role } })
               }
-              onUpdateStatus={(userId, status) =>
-                team.updateStatusMutation.mutate({
+              onUpdateStatus={async (userId, status) =>
+                await team.updateStatusMutation.mutateAsync({
                   userId,
                   input: { membership_status: status === "suspended" ? "suspended" : "active" },
                 })
               }
-              onRemove={(userId) => team.removeMemberMutation.mutate(userId)}
-              onTransferOwnership={(userId) =>
-                team.transferOwnershipMutation.mutate({
+              onRemove={async (userId) => await team.removeMemberMutation.mutateAsync(userId)}
+              onTransferOwnership={async (userId) =>
+                await team.transferOwnershipMutation.mutateAsync({
                   new_owner_user_id: userId,
                   previous_owner_role: "company_admin",
                 })
@@ -110,8 +110,8 @@ export default function TeamManagementSection() {
         open={inviteOpen}
         isPending={team.createInvitationMutation.isPending}
         onOpenChange={setInviteOpen}
-        onSubmit={(input) => {
-          team.createInvitationMutation.mutate(input)
+        onSubmit={async (input) => {
+          await team.createInvitationMutation.mutateAsync(input)
           setInviteOpen(false)
         }}
       />

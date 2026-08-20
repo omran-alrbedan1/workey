@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowRightLeft } from "lucide-react"
+import { ArrowRightLeft, Crown } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -33,7 +33,7 @@ export default function TransferOwnershipDialog({
   members: CompanyMember[]
   isPending: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (userId: string | number) => void
+  onSubmit: (userId: string | number) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerCompany")
   const form = useForm<TransferFormValues>({
@@ -53,14 +53,17 @@ export default function TransferOwnershipDialog({
     }))
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={isPending ? undefined : onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((values) => onSubmit(values.user_id))}
+            onSubmit={form.handleSubmit((values) => onSubmit(values.new_owner_user_id))}
           >
-            <DialogHeader>
-              <DialogTitle>{t("team.transferDialog.title")}</DialogTitle>
+            <DialogHeader className="text-center">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10">
+                <Crown className="h-6 w-6 text-amber-600" />
+              </div>
+              <DialogTitle className="text-xl">{t("team.transferDialog.title")}</DialogTitle>
               <DialogDescription>{t("team.transferDialog.description")}</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-5">
@@ -76,18 +79,20 @@ export default function TransferOwnershipDialog({
                 iconPosition="left"
               />
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-2">
               <CancelButton
                 type="button"
                 disabled={isPending}
                 onClick={() => onOpenChange(false)}
                 text={t("team.cancel")}
+                className="flex-1"
               />
               <SubmitButton
                 isLoading={isPending}
                 text={t("team.transferDialog.submit")}
                 loadingText={t("team.submitting")}
-                className="w-auto"
+                icon={<Crown className="h-4 w-4" />}
+                className="w-auto flex-1 bg-amber-600 hover:bg-amber-700"
               />
             </DialogFooter>
           </form>

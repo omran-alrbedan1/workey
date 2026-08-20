@@ -36,10 +36,10 @@ export default function TeamMemberList({
   isUpdatingStatus: boolean
   isRemoving: boolean
   isTransferring: boolean
-  onUpdateRole: (userId: string | number, role: string) => void
-  onUpdateStatus: (userId: string | number, status: string) => void
-  onRemove: (userId: string | number) => void
-  onTransferOwnership: (userId: string | number) => void
+  onUpdateRole: (userId: string | number, role: string) => Promise<unknown>
+  onUpdateStatus: (userId: string | number, status: string) => Promise<unknown>
+  onRemove: (userId: string | number) => Promise<unknown>
+  onTransferOwnership: (userId: string | number) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerCompany")
   const [roleMember, setRoleMember] = useState<CompanyMember | null>(null)
@@ -132,8 +132,8 @@ export default function TeamMemberList({
         currentRole={keyOf(roleMember?.role, "member")}
         isPending={isUpdatingRole}
         onOpenChange={(open) => !open && setRoleMember(null)}
-        onSubmit={(input) => {
-          if (roleMember) onUpdateRole(roleMember.id, input.company_role)
+        onSubmit={async (input) => {
+          if (roleMember) await onUpdateRole(roleMember.id, input.company_role)
           setRoleMember(null)
         }}
       />
@@ -143,8 +143,8 @@ export default function TeamMemberList({
         currentStatus={keyOf(statusMember?.status, "active")}
         isPending={isUpdatingStatus}
         onOpenChange={(open) => !open && setStatusMember(null)}
-        onSubmit={(input) => {
-          if (statusMember) onUpdateStatus(statusMember.id, input.membership_status)
+        onSubmit={async (input) => {
+          if (statusMember) await onUpdateStatus(statusMember.id, input.membership_status)
           setStatusMember(null)
         }}
       />
@@ -153,8 +153,8 @@ export default function TeamMemberList({
         members={members}
         isPending={isTransferring}
         onOpenChange={setTransferOpen}
-        onSubmit={(userId) => {
-          onTransferOwnership(userId)
+        onSubmit={async (userId) => {
+          await onTransferOwnership(userId)
           setTransferOpen(false)
         }}
       />
@@ -163,8 +163,8 @@ export default function TeamMemberList({
         name={removeMember?.name ?? t("team.member")}
         loading={isRemoving}
         onClose={() => setRemoveMember(null)}
-        onConfirm={() => {
-          if (removeMember) onRemove(removeMember.id)
+        onConfirm={async () => {
+          if (removeMember) await onRemove(removeMember.id)
           setRemoveMember(null)
         }}
       />

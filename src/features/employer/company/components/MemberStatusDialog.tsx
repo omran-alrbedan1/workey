@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ToggleRight } from "lucide-react"
+import { ToggleRight, UserCheck } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -40,7 +40,7 @@ export default function MemberStatusDialog({
   currentStatus: string
   isPending: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (input: MemberStatusInput) => void
+  onSubmit: (input: MemberStatusInput) => Promise<unknown>
 }) {
   const { t } = useTranslation("employerCompany")
   const form = useForm<StatusFormValues>({
@@ -53,12 +53,15 @@ export default function MemberStatusDialog({
   }, [form, open, currentStatus])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={isPending ? undefined : onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit((values) => onSubmit(values))}>
-            <DialogHeader>
-              <DialogTitle>{t("team.statusDialog.title")}</DialogTitle>
+            <DialogHeader className="text-center">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                <UserCheck className="h-6 w-6 text-primary" />
+              </div>
+              <DialogTitle className="text-xl">{t("team.statusDialog.title")}</DialogTitle>
               <DialogDescription>
                 {t("team.statusDialog.description", { name: memberName })}
               </DialogDescription>
@@ -79,18 +82,20 @@ export default function MemberStatusDialog({
                 iconPosition="left"
               />
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-2">
               <CancelButton
                 type="button"
                 disabled={isPending}
                 onClick={() => onOpenChange(false)}
                 text={t("team.cancel")}
+                className="flex-1"
               />
               <SubmitButton
                 isLoading={isPending}
                 text={t("team.statusDialog.submit")}
                 loadingText={t("team.submitting")}
-                className="w-auto"
+                icon={<ToggleRight className="h-4 w-4" />}
+                className="w-auto flex-1"
               />
             </DialogFooter>
           </form>
