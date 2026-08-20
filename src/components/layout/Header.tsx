@@ -1,8 +1,10 @@
 import React from "react"
 import { Bell, User, LogOut, Menu, X } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import { ModeToggle } from "../mode-toggle"
 import LanguageSwitcher from "../shared/buttons/language-switcher"
 import { useTranslation } from "react-i18next"
+import { ROUTES } from "@/config"
 
 interface HeaderProps {
   onLogout: () => void
@@ -12,6 +14,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onLogout, onMenuToggle, isMobileMenuOpen }) => {
   const { t } = useTranslation("adminShared")
+  const navigate = useNavigate()
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-background-card px-4 sm:px-6 py-4 shadow-sm">
       <div className="flex items-center justify-between">
@@ -28,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onMenuToggle, isMobileMenuOpe
 
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Notifications */}
-          <button aria-label={t("header.notifications")} className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary">
+          <button aria-label={t("header.notifications")} onClick={() => navigate(ROUTES.admin.notifications)} className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary">
             <Bell className="h-5 w-5" />
             <span className="absolute end-1 top-1 flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
