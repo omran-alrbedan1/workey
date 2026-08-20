@@ -125,6 +125,7 @@ export const API_ENDPOINTS = Object.freeze({
   },
   employer: {
     company: "/company",
+    coverImage: "/company/cover-image",
     profile: "/employer/profile",
     jobs: "/jobs/my",
     jobApplications: (id: string | number) => `/jobs/${id}/applications`,

@@ -33,9 +33,8 @@ export const employerCompanyService = {
   async updateCoverImage(file: File): Promise<EmployerCompany> {
     const formData = new FormData()
     formData.append("image", file)
-    formData.append("_method", "PUT")
     return unwrapEmployerEntity<EmployerCompany>(
-      await api.post("/company/cover-image", formData, {
+      await api.post(API_ENDPOINTS.employer.coverImage, formData, {
         timeout: UPLOAD_TIMEOUT,
         headers: {
           'Content-Type': undefined,
@@ -46,7 +45,7 @@ export const employerCompanyService = {
 
   async removeCoverImage(): Promise<EmployerCompany> {
     return unwrapEmployerEntity<EmployerCompany>(
-      await api.delete("/company/cover-image"),
+      await api.delete(API_ENDPOINTS.employer.coverImage),
     )
   },
 }
