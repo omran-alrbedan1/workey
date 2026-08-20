@@ -2,6 +2,7 @@ import { FileText } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { StatusBadge } from "@/components/shared/badges"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 import type { EmployerTestAttempt } from "../../types/employerApplicants.types"
 import { assignmentDeadline, formatDate } from "./testDetails.helpers"
 
@@ -17,6 +18,7 @@ export default function ApplicantTestOverviewTab({
   maxScore,
 }: ApplicantTestOverviewTabProps) {
   const { t } = useTranslation("employerApplicants")
+  const scorePercent = maxScore > 0 && score != null ? Math.round((score / maxScore) * 100) : null
 
   return (
     <div className="space-y-6">
@@ -34,11 +36,14 @@ export default function ApplicantTestOverviewTab({
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="space-y-1 p-4">
+          <CardContent className="space-y-2 p-4">
             <p className="text-xs text-text-muted">{t("tests.currentScore")}</p>
             <p className="font-semibold text-text-primary">
               {score == null ? "-" : `${score} / ${maxScore}`}
             </p>
+            {scorePercent != null && (
+              <Progress value={scorePercent} className="h-1.5" />
+            )}
           </CardContent>
         </Card>
         <Card>

@@ -1,5 +1,6 @@
-import { Send } from "lucide-react"
+import { AlertCircle, Send } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { EmptyState } from "@/components/shared/states"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -9,6 +10,7 @@ interface ApplicantTestNextStepTabProps {
   hasAnyResult: boolean
   nextStep: string
   isPending: boolean
+  isTerminalStatus: boolean
   onNextStepChange: (value: string) => void
   onApply: () => void
 }
@@ -17,6 +19,7 @@ export default function ApplicantTestNextStepTab({
   hasAnyResult,
   nextStep,
   isPending,
+  isTerminalStatus,
   onNextStepChange,
   onApply,
 }: ApplicantTestNextStepTabProps) {
@@ -24,9 +27,23 @@ export default function ApplicantTestNextStepTab({
 
   if (!hasAnyResult) {
     return (
-      <p className="rounded-lg border border-border bg-background-card p-4 text-sm text-text-muted">
-        {t("tests.notSubmittedHint")}
-      </p>
+      <EmptyState
+        title={t("tests.notSubmittedHint")}
+        description={t("tests.nextStepEmptyDescription", { defaultValue: "Grade the test first to unlock next step actions." })}
+        icon={Send}
+        className="py-8 bg-transparent"
+      />
+    )
+  }
+
+  if (isTerminalStatus) {
+    return (
+      <EmptyState
+        title={t("errors.terminalState")}
+        description={t("tests.terminalStatusHint", { defaultValue: "This application is in a final state. No further status changes are allowed." })}
+        icon={AlertCircle}
+        className="py-8 bg-transparent"
+      />
     )
   }
 

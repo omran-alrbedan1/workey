@@ -98,12 +98,18 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
             isGradingBusy={model.isGradingBusy}
             isBulkSaving={model.isBulkSaving}
             manualAnswersCount={model.manualAnswersCount}
+            gradedCount={model.gradedCount}
+            answerToDelete={model.answerToDelete}
             onRefresh={() => void model.loadAttemptDetails()}
             onBulkSave={() => void model.saveBulkGrades()}
             onDownloadFile={(answer) => void model.downloadAnswerFile(answer)}
             onDraftChange={model.updateDraft}
             onSaveGrade={(answer) => void model.saveAnswerGrade(answer)}
-            onDeleteGrade={(answer) => void model.deleteAnswerGrade(answer)}
+            onDeleteGrade={(answer) => void model.setAnswerToDelete(answer)}
+            onConfirmDelete={() => {
+              if (model.answerToDelete) void model.deleteAnswerGrade(model.answerToDelete)
+            }}
+            onCancelDelete={() => model.setAnswerToDelete(null)}
           />
         </TabsContent>
 
@@ -134,6 +140,7 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
             hasAnyResult={model.hasAnyResult}
             nextStep={model.nextStep}
             isPending={model.isStatusPending}
+            isTerminalStatus={model.isTerminalStatus}
             onNextStepChange={model.setNextStep}
             onApply={() => void model.applyNextStep()}
           />

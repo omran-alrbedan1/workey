@@ -26,7 +26,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
   const { t } = useTranslation('common')
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={loading ? undefined : onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="flex flex-col items-center gap-4 text-center">

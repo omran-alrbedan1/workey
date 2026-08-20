@@ -20,8 +20,13 @@ export default function EmployerLayout() {
 
   const handleLogoutConfirm = () => {
     logout.mutate()
-    setShowLogoutModal(false)
   }
+
+  useEffect(() => {
+    if (!logout.isPending && showLogoutModal && logout.isSuccess) {
+      setShowLogoutModal(false)
+    }
+  }, [logout.isPending, logout.isSuccess, showLogoutModal])
 
   useEffect(() => {
     if (!isMobileMenuOpen) return

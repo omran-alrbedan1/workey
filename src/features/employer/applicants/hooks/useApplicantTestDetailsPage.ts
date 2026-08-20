@@ -12,7 +12,7 @@ import {
   canManuallyGrade,
   type GradeDraft,
 } from "../components/test-details/testDetails.helpers"
-import { useApplicationStatusMutation } from "./useEmployerApplicantDetail"
+import { useApplicationStatusMutation, useEmployerApplicantDetail } from "./useEmployerApplicantDetail"
 import { useApplicationTests } from "./useApplicationTests"
 import type { ApplicationStatusKey, EmployerTestAttempt } from "../types/employerApplicants.types"
 import type { TestAttemptResult, TestAttemptResultBreakdownItem } from "@/features/employer/tests/types/employerTests.types"
@@ -36,10 +36,14 @@ export interface ApplicantTestDetailsModel {
   isGradingBusy: boolean
   isBulkSaving: boolean
   isStatusPending: boolean
+  isTerminalStatus: boolean
   manualAnswersCount: number
+  gradedCount: number
   nextStep: string
+  answerToDelete: TestAttemptResultBreakdownItem | null
   setActiveTab: (tab: string) => void
   setNextStep: (step: string) => void
+  setAnswerToDelete: (answer: TestAttemptResultBreakdownItem | null) => void
   goBack: () => void
   refetchTests: () => Promise<unknown>
   loadAttemptDetails: () => Promise<void>
@@ -56,6 +60,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   const navigate = useNavigate()
   const { id, assignmentId } = useParams()
   const tests = useApplicationTests(id)
+  const applicant = useEmployerApplicantDetail(id)
   const statusMutation = useApplicationStatusMutation(id)
   const [result, setResult] = useState<TestAttemptResult | null>(null)
   const [answers, setAnswers] = useState<TestAttemptResultBreakdownItem[]>([])
@@ -64,12 +69,14 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   const [downloadingQuestionId, setDownloadingQuestionId] = useState<string | number | null>(null)
   const [nextStep, setNextStep] = useState("")
   const [activeTab, setActiveTab] = useState("overview")
+  const [answerToDelete, setAnswerToDelete] = useState<TestAttemptResultBreakdownItem | null>(null)
 
   const assignment = tests.data?.items.find((item) => String(item.id) === String(assignmentId)) ?? null
   const activeAttemptId = attemptId(assignment)
   const score = result?.total_score ?? attemptScore(assignment)
   const maxScore = result?.max_score ?? attemptMaxScore(assignment)
   const manualAnswers = useMemo(() => answers.filter(canManuallyGrade), [answers])
+  const gradedCount = useMemo(() => manualAnswers.filter((a) => a.awarded_points != null).length, [manualAnswers])
   const state = getState(tests.isPending, tests.isError, assignment)
   const assignmentStatusKey = keyOf(assignment?.state)
   const submitted =
@@ -81,6 +88,13 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     tests.gradeMutation.isPending ||
     tests.deleteGradeMutation.isPending ||
     tests.bulkGradeMutation.isPending
+
+  const isTerminalStatus = useMemo(() => {
+    const app = applicant.data
+    if (!app) return false
+    const allowed = app.allowed_status_transitions
+    return Array.isArray(allowed) && allowed.length === 0
+  }, [applicant.data])
 
   const goBack = useCallback(() => {
     navigate(id ? ROUTES.employer.applicantDetails(id) : ROUTES.employer.applicants)
@@ -215,10 +229,14 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     isGradingBusy,
     isBulkSaving: tests.bulkGradeMutation.isPending,
     isStatusPending: statusMutation.isPending,
+    isTerminalStatus,
     manualAnswersCount: manualAnswers.length,
+    gradedCount,
     nextStep,
+    answerToDelete,
     setActiveTab,
     setNextStep,
+    setAnswerToDelete,
     goBack,
     refetchTests: tests.refetch,
     loadAttemptDetails,

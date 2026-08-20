@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Outlet } from "react-router-dom"
 import Sidebar from "./Sidebar"
 import Header from "./Header"
@@ -9,17 +9,20 @@ const MainLayout: React.FC = () => {
   const logout = useAdminLogout()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
-  
-  const handleLogout = () => logout.mutate()
 
   const handleLogoutClick = () => {
     setShowLogoutModal(true)
   }
 
   const handleLogoutConfirm = () => {
-    handleLogout()
-    setShowLogoutModal(false)
+    logout.mutate()
   }
+
+  useEffect(() => {
+    if (!logout.isPending && showLogoutModal && logout.isSuccess) {
+      setShowLogoutModal(false)
+    }
+  }, [logout.isPending, logout.isSuccess, showLogoutModal])
 
   const handleMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
