@@ -33,6 +33,7 @@ export const employerCompanyService = {
   async updateCoverImage(file: File): Promise<EmployerCompany> {
     const formData = new FormData()
     formData.append("image", file)
+    formData.append("_method", "PUT")
     return unwrapEmployerEntity<EmployerCompany>(
       await api.post("/company/cover-image", formData, {
         timeout: UPLOAD_TIMEOUT,
