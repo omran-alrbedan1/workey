@@ -59,7 +59,7 @@ export default function EvaluateInterviewDialog({
   onOpenChange: (open: boolean) => void
   onSubmit: (input: EmployerInterviewEvaluateInput) => Promise<unknown>
 }) {
-  const { t } = useTranslation("employerInterviews")
+  const { t } = useTranslation(["employerInterviews", "common"])
   const form = useForm<EvaluateInterviewFormValues>({
     resolver: zodResolver(evaluateInterviewSchema) as Resolver<EvaluateInterviewFormValues>,
     defaultValues: { recommendation: "hold", overall_comment: "", items: defaultItems() },
@@ -124,7 +124,11 @@ export default function EvaluateInterviewDialog({
                           <FormItem>
                             <FormLabel className="text-xs">{t("evaluate.criterion")}</FormLabel>
                             <FormControl>
-                              <Input {...field} readOnly />
+                              <Input
+                                {...field}
+                                value={t(`common:interviewCriteria.${field.value}`, { defaultValue: field.value })}
+                                readOnly
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>

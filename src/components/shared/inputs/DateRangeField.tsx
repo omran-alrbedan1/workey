@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -19,6 +20,7 @@ export const DateRangeField: React.FC<DateRangeFieldProps> = ({
   disabled,
   inputClassName,
 }) => {
+  const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
   const [range, setRange] = useState<DateRange>(
     field.value || { from: undefined, to: undefined }
@@ -68,7 +70,7 @@ export const DateRangeField: React.FC<DateRangeFieldProps> = ({
             format(range.from, "LLL dd, y")
           )
         ) : (
-          dateOptions?.placeholder || "Pick a date range"
+          dateOptions?.placeholder || t("datePicker.rangePlaceholder")
         )}
       </Button>
       {open && (

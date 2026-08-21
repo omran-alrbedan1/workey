@@ -15,19 +15,19 @@ import { employerInterviewsService } from "../services/employerInterviews.servic
 import type { VideoSessionResponse } from "../types/videoInterview.types"
 import VideoInterviewRoom from "./VideoInterviewRoom"
 
-function videoSessionErrorMessage(error: any, fallback: string) {
+function videoSessionErrorMessage(error: any, fallback: string, t: (key: string) => string) {
   const status = error?.status ?? error?.response?.status
   const code = String(error?.code ?? error?.response?.data?.code ?? "").toLowerCase()
   const message = error?.message ?? error?.response?.data?.message
 
   if (status === 401 || code.includes("token")) {
-    return "Your session expired. Sign in again, then rejoin the interview."
+    return t("common:videoErrors.sessionExpired")
   }
   if (status === 403 || code.includes("denied") || code.includes("forbidden")) {
-    return "You do not have access to this video interview."
+    return t("common:videoErrors.accessDenied")
   }
   if (code.includes("livekit") || code.includes("video")) {
-    return message || "The video provider could not create a room. Please try again shortly."
+    return message || t("common:videoErrors.roomCreationFailed")
   }
   return message || fallback
 }
@@ -41,7 +41,7 @@ export default function VideoSessionSetup({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const { t } = useTranslation("employerInterviews")
+  const { t } = useTranslation(["employerInterviews", "common"])
   const [session, setSession] = useState<VideoSessionResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -52,7 +52,7 @@ export default function VideoSessionSetup({
       const created = await employerInterviewsService.createVideoSession(interviewId)
       setSession(created)
     } catch (error) {
-      showErrorToast(videoSessionErrorMessage(error, t("video.sessionError")))
+      showErrorToast(videoSessionErrorMessage(error, t("video.sessionError"), t))
     } finally {
       setIsLoading(false)
     }

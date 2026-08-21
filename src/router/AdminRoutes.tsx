@@ -1,6 +1,7 @@
 import { lazy } from "react"
 import type { RouteObject } from "react-router-dom"
 import { CircleHelp } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import AdminSectionPage from "@/features/admin/shared/pages/AdminSectionPage"
 import AdminLayout from "@/layouts/admin/AdminLayout"
@@ -29,6 +30,17 @@ const AdminReportsJobsPage = lazy(() => import("@/features/admin/reports/pages/A
 const AdminReportsCvParsingPage = lazy(() => import("@/features/admin/reports/pages/AdminReportsCvParsingPage"))
 const AdminAuditLogsPage = lazy(() => import("@/features/admin/audit-logs/pages/AdminAuditLogsPage"))
 const AdminSettingsPage = lazy(() => import("@/features/admin/settings/pages/AdminSettingsPage"))
+
+function AdminHelpSection() {
+  const { t } = useTranslation("common")
+  return (
+    <AdminSectionPage
+      title={t("helpSupport.title")}
+      description={t("helpSupport.description")}
+      icon={CircleHelp}
+    />
+  )
+}
 
 export const adminRoutes: RouteObject = {
   path: ROUTES.admin.root,
@@ -67,13 +79,7 @@ export const adminRoutes: RouteObject = {
     { path: ROUTES.admin.settings, element: withRouteSuspense(<AdminSettingsPage />) },
     {
       path: ROUTES.admin.help,
-      element: (
-        <AdminSectionPage
-          title="Help & Support"
-          description="Find platform guidance and operational support resources."
-          icon={CircleHelp}
-        />
-      ),
+      element: <AdminHelpSection />,
     },
   ],
 }

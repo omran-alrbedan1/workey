@@ -249,7 +249,7 @@ export function DataTable<T = any>({
         {data.length === 0 && (
           <EmptyState
             title={emptyMessage || t("table.noData")}
-            description={emptyDescription || "There are no records to display yet."}
+            description={emptyDescription || t("table.noRecords")}
             imageUrl={emptyImage}
             imageAlt={emptyImageAlt}
             className="rounded-2xl border border-border bg-background-card py-10"
@@ -321,7 +321,7 @@ export function DataTable<T = any>({
                 >
                   <EmptyState
                     title={emptyMessage || t("table.noData")}
-                    description={emptyDescription || "There are no records to display yet."}
+                    description={emptyDescription || t("table.noRecords")}
                     imageUrl={emptyImage}
                     imageAlt={emptyImageAlt}
                     className="bg-transparent py-10"

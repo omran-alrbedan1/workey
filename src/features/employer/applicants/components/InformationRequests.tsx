@@ -22,7 +22,7 @@ import type { InformationRequest } from "../types/employerApplicants.types"
 import EmptyState from "@/components/shared/states/EmptyState"
 
 export default function InformationRequests({ applicationId }: { applicationId: string | number }) {
-  const { t } = useTranslation("employerApplicants")
+  const { t } = useTranslation(["employerApplicants", "common"])
   const {
     requests,
     isLoading,
@@ -74,9 +74,9 @@ export default function InformationRequests({ applicationId }: { applicationId: 
       } catch (error: any) {
         const code = error?.code ?? error?.response?.data?.code
         if (code === "APPLICATION_INFORMATION_REQUEST_NOT_PENDING") {
-          showErrorToast("Cannot cancel - request is not pending")
+          showErrorToast(t("common:informationRequestToasts.notPending"))
         } else {
-          showErrorToast(error?.message || "Failed to cancel information request")
+          showErrorToast(error?.message || t("common:informationRequestToasts.cancelFailed"))
         }
       }
     }

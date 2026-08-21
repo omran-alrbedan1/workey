@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import './i18n/config'
+import i18n from './i18n/config'
 import App from './App'
 import { ThemeProvider } from './components/theme-provider'
 import { APP_CONFIG, QUERY_CONFIG, STORAGE_KEYS } from './config'
@@ -14,7 +15,7 @@ const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
       const is403 = (error as any)?.statusCode === 403
-      if (query.state.data === undefined || is403) showErrorToast(error, "Unable to load data from the server.")
+      if (query.state.data === undefined || is403) showErrorToast(error, i18n.t("common:errors.loadDataFailed"))
     },
   }),
   mutationCache: new MutationCache({

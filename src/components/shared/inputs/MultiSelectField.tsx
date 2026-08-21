@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -20,6 +21,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
   inputClassName,
   options = [],
 }) => {
+  const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
   
   const handleToggle = (value: string) => {
@@ -53,15 +55,15 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
             ))}
           </div>
         ) : (
-          placeholder || "Select options"
+          placeholder || t("inputs.selectOptions")
         )}
       </Button>
       {open && (
         <div className="absolute top-full z-50 mt-1 bg-white border rounded-md shadow-lg w-full">
           <Command>
-            <CommandInput placeholder="Search options..." />
+            <CommandInput placeholder={t("inputs.searchOptions")} />
             <CommandList>
-              <CommandEmpty>No options found.</CommandEmpty>
+              <CommandEmpty>{t("inputs.noOptionsFound")}</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem

@@ -13,7 +13,7 @@ import InvitationList from "./InvitationList"
 import TeamMemberList from "./TeamMemberList"
 
 export default function TeamManagementSection() {
-  const { t } = useTranslation("employerCompany")
+  const { t } = useTranslation(["employerCompany", "common"])
   const team = useEmployerTeam()
   const [inviteOpen, setInviteOpen] = useState(false)
 
@@ -36,7 +36,7 @@ export default function TeamManagementSection() {
           <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold text-text-primary">Invitation link created</p>
+                <p className="text-sm font-semibold text-text-primary">{t("common:teamManagement.invitationLinkCreated")}</p>
                 <p className="break-all text-sm text-text-secondary">
                   {window.location.origin}
                   {ROUTES.public.companyInvitation(team.lastInvitationToken)}
@@ -50,14 +50,14 @@ export default function TeamManagementSection() {
                     await navigator.clipboard.writeText(
                       `${window.location.origin}${ROUTES.public.companyInvitation(team.lastInvitationToken!)}`,
                     )
-                    showSuccessToast("Invitation link copied")
+                    showSuccessToast(t("common:teamManagement.invitationLinkCopied"))
                   }}
                 >
                   <Copy className="h-4 w-4" />
-                  Copy
+                  {t("common:teamManagement.copy")}
                 </Button>
                 <Button size="sm" variant="ghost" onClick={team.clearLastInvitationToken}>
-                  Dismiss
+                  {t("common:teamManagement.dismiss")}
                 </Button>
               </div>
             </div>

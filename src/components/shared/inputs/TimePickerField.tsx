@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Clock } from "lucide-react"
@@ -18,6 +19,7 @@ export const TimePickerField: React.FC<TimePickerFieldProps> = ({
   disabled,
   inputClassName,
 }) => {
+  const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
   const interval = timeOptions?.interval || 30
   
@@ -50,7 +52,7 @@ export const TimePickerField: React.FC<TimePickerFieldProps> = ({
         {field.value ? (
           format(new Date(field.value), timeOptions?.format || "p")
         ) : (
-          timeOptions?.placeholder || "Pick a time"
+          timeOptions?.placeholder || t("datePicker.timePlaceholder")
         )}
       </Button>
       {open && (

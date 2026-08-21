@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Building2, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,13 +24,7 @@ interface AdminCompanyFormDialogProps {
   onSubmit: (input: AdminCompanyInput) => void
 }
 
-const approvalOptions = [
-  { value: "", label: "Keep default" },
-  { value: "pending", label: "Pending" },
-  { value: "approved", label: "Approved" },
-  { value: "rejected", label: "Rejected" },
-  { value: "suspended", label: "Suspended" },
-]
+const approvalStatusValues = ["", "pending", "approved", "rejected", "suspended"]
 
 function nullable(value: string) {
   const trimmed = value.trim()
@@ -44,6 +39,7 @@ export default function AdminCompanyFormDialog({
   onOpenChange,
   onSubmit,
 }: AdminCompanyFormDialogProps) {
+  const { t } = useTranslation("common")
   const initialValues = useMemo(
     () => ({
       name: company?.name ?? "",
@@ -69,11 +65,11 @@ export default function AdminCompanyFormDialog({
     if (open) setValues(initialValues)
   }, [initialValues, open])
 
-  const title = mode === "create" ? "Create company" : "Edit company"
+  const title = mode === "create" ? t("companyForm.createTitle") : t("companyForm.editTitle")
   const description =
     mode === "create"
-      ? "Create the company first, then invite employer users to join it."
-      : "Update company profile fields stored by the backend."
+      ? t("companyForm.createDescription")
+      : t("companyForm.editDescription")
 
   const canSubmit = values.name.trim().length > 0 && !isSubmitting
 
@@ -113,7 +109,7 @@ export default function AdminCompanyFormDialog({
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="company-name">Company name</Label>
+              <Label htmlFor="company-name">{t("companyForm.companyName")}</Label>
               <Input
                 id="company-name"
                 value={values.name}
@@ -123,7 +119,7 @@ export default function AdminCompanyFormDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company-industry">Industry</Label>
+              <Label htmlFor="company-industry">{t("companyForm.industry")}</Label>
               <Input
                 id="company-industry"
                 value={values.industry}
@@ -134,7 +130,7 @@ export default function AdminCompanyFormDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company-website">Website</Label>
+              <Label htmlFor="company-website">{t("companyForm.website")}</Label>
               <Input
                 id="company-website"
                 type="url"
@@ -147,7 +143,7 @@ export default function AdminCompanyFormDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company-location">Location</Label>
+              <Label htmlFor="company-location">{t("companyForm.location")}</Label>
               <Input
                 id="company-location"
                 value={values.location}
@@ -158,7 +154,7 @@ export default function AdminCompanyFormDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company-status">Approval status</Label>
+              <Label htmlFor="company-status">{t("companyForm.approvalStatus")}</Label>
               <select
                 id="company-status"
                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
@@ -168,15 +164,15 @@ export default function AdminCompanyFormDialog({
                 }
                 disabled={isSubmitting}
               >
-                {approvalOptions.map((option) => (
-                  <option key={option.value || "default"} value={option.value}>
-                    {option.label}
+                {approvalStatusValues.map((value) => (
+                  <option key={value || "default"} value={value}>
+                    {value ? t(`statuses.${value}`) : t("companyForm.keepDefault")}
                   </option>
                 ))}
               </select>
             </div>
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="company-description">Description</Label>
+              <Label htmlFor="company-description">{t("companyForm.description")}</Label>
               <Textarea
                 id="company-description"
                 value={values.description}
@@ -191,10 +187,10 @@ export default function AdminCompanyFormDialog({
 
           {mode === "create" && (
             <div className="rounded-lg border border-border p-4">
-              <p className="mb-3 text-sm font-semibold text-text-primary">Optional owner</p>
+              <p className="mb-3 text-sm font-semibold text-text-primary">{t("companyForm.optionalOwner")}</p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="owner-name">Owner name</Label>
+                  <Label htmlFor="owner-name">{t("companyForm.ownerName")}</Label>
                   <Input
                     id="owner-name"
                     value={values.ownerName}
@@ -205,7 +201,7 @@ export default function AdminCompanyFormDialog({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="owner-email">Owner email</Label>
+                  <Label htmlFor="owner-email">{t("companyForm.ownerEmail")}</Label>
                   <Input
                     id="owner-email"
                     type="email"
@@ -222,11 +218,11 @@ export default function AdminCompanyFormDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
-              Cancel
+              {t("cancel")}
             </Button>
             <Button type="submit" disabled={!canSubmit}>
               <Save className="h-4 w-4" />
-              {isSubmitting ? "Saving..." : "Save company"}
+              {isSubmitting ? t("saving") : t("companyForm.saveCompany")}
             </Button>
           </DialogFooter>
         </form>

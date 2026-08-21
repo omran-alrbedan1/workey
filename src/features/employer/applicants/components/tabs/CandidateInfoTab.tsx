@@ -40,7 +40,7 @@ export default function CandidateInfoTab({
   onStatusChange,
   isStatusPending,
 }: CandidateInfoTabProps) {
-  const { t } = useTranslation("employerApplicants")
+  const { t } = useTranslation(["employerApplicants", "common"])
   const profile = application.submitted_snapshot?.profile
   const job = application.job_posting
   const requiredSkills = job?.required_skills ?? []
@@ -92,13 +92,13 @@ export default function CandidateInfoTab({
                 </div>
                 <div className="mt-3 flex items-center gap-2">
                   {profile?.professional?.linkedin_url && (
-                    <ProfileLink href={profile.professional.linkedin_url} label="LinkedIn" />
+                    <ProfileLink href={profile.professional.linkedin_url} label={t("common:profileLinks.linkedin")} />
                   )}
                   {profile?.professional?.github_url && (
-                    <ProfileLink href={profile.professional.github_url} label="GitHub" />
+                    <ProfileLink href={profile.professional.github_url} label={t("common:profileLinks.github")} />
                   )}
                   {profile?.professional?.portfolio_url && (
-                    <ProfileLink href={profile.professional.portfolio_url} label="Portfolio" />
+                    <ProfileLink href={profile.professional.portfolio_url} label={t("common:profileLinks.portfolio")} />
                   )}
                 </div>
               </div>
@@ -220,9 +220,9 @@ export default function CandidateInfoTab({
           </InfoCard>
 
           <InfoCard title={t("candidate.linksTitle")} icon={Sparkles}>
-            <InfoItem label="LinkedIn" value={profile.professional?.linkedin_url ?? "-"} />
-            <InfoItem label="GitHub" value={profile.professional?.github_url ?? "-"} />
-            <InfoItem label="Portfolio" value={profile.professional?.portfolio_url ?? "-"} />
+            <InfoItem label={t("common:profileLinks.linkedin")} value={profile.professional?.linkedin_url ?? "-"} />
+            <InfoItem label={t("common:profileLinks.github")} value={profile.professional?.github_url ?? "-"} />
+            <InfoItem label={t("common:profileLinks.portfolio")} value={profile.professional?.portfolio_url ?? "-"} />
           </InfoCard>
         </div>
       )}

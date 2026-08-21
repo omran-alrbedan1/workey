@@ -16,7 +16,7 @@ export default function EmployerJobRankedCandidatesTab({
   isError,
   onRetry,
 }: EmployerJobRankedCandidatesTabProps) {
-  const { t } = useTranslation("employerJobs")
+  const { t } = useTranslation(["employerJobs", "common"])
 
   return (
     <div className="space-y-6">
@@ -34,7 +34,7 @@ export default function EmployerJobRankedCandidatesTab({
               <div className="hidden items-center gap-3 sm:flex">
                 <div className="rounded-lg bg-white/15 px-4 py-2 text-center backdrop-blur-sm">
                   <p className="text-2xl font-bold text-white">{candidates.length}</p>
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-white/70">Candidates</p>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-white/70">{t("common:candidates")}</p>
                 </div>
               </div>
             )}

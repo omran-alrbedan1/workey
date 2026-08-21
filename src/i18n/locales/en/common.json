@@ -112,8 +112,15 @@
   "version": "Version",
   "apply": "Apply",
   "activeFilters": "Active filters:",
+  "password": "Password",
+  "aria": {
+    "loadingPage": "Loading page",
+    "toggleTheme": "Toggle theme"
+  },
   "datePicker": {
-    "placeholder": "Pick a date"
+    "placeholder": "Pick a date",
+    "rangePlaceholder": "Pick a date range",
+    "timePlaceholder": "Pick a time"
   },
   "pagination": {
     "previous": "Previous",
@@ -123,7 +130,28 @@
   },
   "table": {
     "showing": "Showing {{from}} to {{to}} of {{total}} results",
-    "noData": "No data available"
+    "noData": "No data available",
+    "noRecords": "There are no records to display yet."
+  },
+  "helpSupport": {
+    "title": "Help & Support",
+    "description": "Find platform guidance and operational support resources."
+  },
+  "routeError": {
+    "brand": "Workey Admin",
+    "title": "This page could not be displayed",
+    "reload": "Reload page",
+    "adminDashboard": "Admin dashboard"
+  },
+  "emptyState": {
+    "imageAlt": "Empty state illustration"
+  },
+  "inputs": {
+    "selectOption": "Select option",
+    "selectOptions": "Select options",
+    "searchOptions": "Search options...",
+    "noOptionsFound": "No options found.",
+    "addTag": "Add tag..."
   },
   "statuses": {
     "pending": "Pending",
@@ -218,6 +246,131 @@
     "unavailable": "unavailable",
     "stale": "stale"
   },
+  "companyForm": {
+    "keepDefault": "Keep default",
+    "createTitle": "Create company",
+    "editTitle": "Edit company",
+    "createDescription": "Create the company first, then invite employer users to join it.",
+    "editDescription": "Update company profile fields stored by the backend.",
+    "companyName": "Company name",
+    "industry": "Industry",
+    "website": "Website",
+    "location": "Location",
+    "approvalStatus": "Approval status",
+    "description": "Description",
+    "optionalOwner": "Optional owner",
+    "ownerName": "Owner name",
+    "ownerEmail": "Owner email",
+    "saveCompany": "Save company"
+  },
+  "invitation": {
+    "logoAlt": "Workey logo",
+    "badge": "Company invitation",
+    "accepted": "Invitation accepted",
+    "rejected": "Invitation rejected",
+    "acceptedToastDesc": "You can now sign in to your employer account.",
+    "acceptError": "Unable to accept this invitation.",
+    "rejectError": "Unable to reject this invitation.",
+    "missingTitle": "Invitation link is missing",
+    "missingDescription": "Open the full invitation link sent by your company administrator.",
+    "checkingTitle": "Checking invitation",
+    "checkingDescription": "Please wait while we verify this invitation.",
+    "unavailableTitle": "Invitation unavailable",
+    "unavailableDescription": "We could not load this invitation.",
+    "invalidFallback": "This invitation may be invalid, expired, already used, or rejected.",
+    "backToLogin": "Back to login",
+    "signIn": "Sign in",
+    "acceptedDesc": "Your employer access is ready. Sign in with your account to continue.",
+    "rejectedDesc": "This invitation has been rejected. Contact the company administrator if this was a mistake.",
+    "joinTitle": "Join {{company}}",
+    "subtitle": "You have been invited to join this company workspace on Workey.",
+    "company": "Company",
+    "invitedEmail": "Invited email",
+    "role": "Role",
+    "expires": "Expires",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Enter your full name",
+    "password": "Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "confirmPassword": "Confirm password",
+    "confirmPasswordPlaceholder": "Repeat password",
+    "passwordMismatch": "Passwords do not match.",
+    "accept": "Accept invitation",
+    "accepting": "Accepting...",
+    "reject": "Reject",
+    "rejecting": "Rejecting..."
+  },
+  "loginPage": {
+    "logoAlt": "Workey logo",
+    "subtitle": "Welcome back! Please enter your details to login",
+    "submitting": "Logging in...",
+    "welcomeToast": "Welcome back!",
+    "welcomeToastDesc": "You have been logged in successfully",
+    "invalidCredentials": "Unable to login. Please check your credentials.",
+    "heroAlt": "Workey recruitment platform"
+  },
+  "companyGate": {
+    "unavailableTitle": "Company access unavailable",
+    "unavailableDescription": "We could not verify your company access. Refresh the page or contact an administrator if this continues.",
+    "pendingTitle": "Company approval is pending",
+    "pendingDescription": "Your company must be approved before you can manage jobs, applicants, interviews, tests, or ranked candidates.",
+    "rejectedTitle": "Company was rejected",
+    "rejectedDescription": "This company cannot use recruiting tools until an administrator reviews or updates its approval status.",
+    "suspendedTitle": "Company is suspended",
+    "suspendedDescription": "Recruiting tools are paused for this company. Contact an administrator before continuing.",
+    "viewCompany": "View company"
+  },
+  "teamManagement": {
+    "invitationLinkCreated": "Invitation link created",
+    "invitationLinkCopied": "Invitation link copied",
+    "copy": "Copy",
+    "dismiss": "Dismiss"
+  },
+  "cvSummary": {
+    "title": "CV summary",
+    "stale": "Stale",
+    "generatedAt": "Generated {{date}}",
+    "refresh": "Refresh",
+    "regenerate": "Regenerate",
+    "generate": "Generate",
+    "emptyDescription": "Generate an authorized backend CV summary for this applicant.",
+    "strengths": "Strengths",
+    "gaps": "Gaps",
+    "evidence": "Evidence"
+  },
+  "profileLinks": {
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "portfolio": "Portfolio"
+  },
+  "applicantsToasts": {
+    "noCvAttached": "No CV attached to this application",
+    "cvDownloaded": "CV downloaded",
+    "cvDownloadFailed": "Failed to download CV"
+  },
+  "informationRequestToasts": {
+    "notPending": "Cannot cancel - request is not pending",
+    "cancelFailed": "Failed to cancel information request"
+  },
+  "interviewCriteria": {
+    "Communication": "Communication",
+    "Technical Knowledge": "Technical Knowledge",
+    "Problem Solving": "Problem Solving",
+    "Job Fit": "Job Fit",
+    "Professionalism": "Professionalism"
+  },
+  "videoErrors": {
+    "sessionExpired": "Your session expired. Sign in again, then rejoin the interview.",
+    "accessDenied": "You do not have access to this video interview.",
+    "roomCreationFailed": "The video provider could not create a room. Please try again shortly."
+  },
+  "imageAlts": {
+    "companyCover": "{{name}} cover",
+    "companyLogo": "{{name}} logo"
+  },
+  "authNotes": {
+    "employerInvitationOnly": "Employer accounts are created through company invitations."
+  },
   "errors": {
     "serverError": "Server Error",
     "serverErrorDesc": "Our servers are having trouble. Please try again later.",
@@ -231,6 +384,8 @@
     "pageNotFoundDesc": "The page you're looking for doesn't exist or has been moved.",
     "customErrorDesc": "An error occurred.",
     "validationError": "Validation Error",
-    "validationErrorDesc": "Please check your input and try again."
+    "validationErrorDesc": "Please check your input and try again.",
+    "loadDataFailed": "Unable to load data from the server.",
+    "unexpectedPageError": "An unexpected page error occurred."
   }
 }

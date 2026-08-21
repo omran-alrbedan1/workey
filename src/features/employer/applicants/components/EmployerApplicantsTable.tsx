@@ -161,11 +161,12 @@ function EmployerApplicantMobileCard({
 }
 
 function useHandleDownload() {
+  const { t } = useTranslation(["employerApplicants", "common"])
   const [downloadingId, setDownloadingId] = useState<string | number | null>(null)
 
   const handleDownload = async (application: EmployerApplicant) => {
     if (!hasSelectedCv(application)) {
-      showErrorToast("No CV attached to this application")
+      showErrorToast(t("common:applicantsToasts.noCvAttached"))
       return
     }
 
@@ -180,9 +181,9 @@ function useHandleDownload() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
-      showSuccessToast("CV downloaded")
+      showSuccessToast(t("common:applicantsToasts.cvDownloaded"))
     } catch {
-      showErrorToast("Failed to download CV")
+      showErrorToast(t("common:applicantsToasts.cvDownloadFailed"))
     } finally {
       setDownloadingId(null)
     }

@@ -112,8 +112,15 @@
   "version": "الإصدار",
   "apply": "تطبيق",
   "activeFilters": "عوامل التصفية النشطة:",
+  "password": "كلمة المرور",
+  "aria": {
+    "loadingPage": "جاري تحميل الصفحة",
+    "toggleTheme": "تبديل المظهر"
+  },
   "datePicker": {
-    "placeholder": "اختر تاريخًا"
+    "placeholder": "اختر تاريخًا",
+    "rangePlaceholder": "اختر نطاق تاريخ",
+    "timePlaceholder": "اختر وقتًا"
   },
   "pagination": {
     "previous": "السابق",
@@ -123,7 +130,28 @@
   },
   "table": {
     "showing": "عرض {{from}} إلى {{to}} من أصل {{total}} نتيجة",
-    "noData": "لا توجد بيانات متاحة"
+    "noData": "لا توجد بيانات متاحة",
+    "noRecords": "لا توجد سجلات لعرضها بعد."
+  },
+  "helpSupport": {
+    "title": "المساعدة والدعم",
+    "description": "اعثر على إرشادات المنصة وموارد الدعم التشغيلي."
+  },
+  "routeError": {
+    "brand": "Workey للمشرفين",
+    "title": "تعذر عرض هذه الصفحة",
+    "reload": "إعادة تحميل الصفحة",
+    "adminDashboard": "لوحة تحكم المشرف"
+  },
+  "emptyState": {
+    "imageAlt": "رسم توضيحي لحالة فارغة"
+  },
+  "inputs": {
+    "selectOption": "اختر خيارًا",
+    "selectOptions": "اختر خيارات",
+    "searchOptions": "ابحث في الخيارات...",
+    "noOptionsFound": "لم يتم العثور على خيارات.",
+    "addTag": "أضف وسمًا..."
   },
   "statuses": {
     "pending": "قيد الانتظار",
@@ -218,6 +246,131 @@
     "unavailable": "غير متاح",
     "stale": "قديم"
   },
+  "companyForm": {
+    "keepDefault": "الإبقاء على الافتراضي",
+    "createTitle": "إنشاء شركة",
+    "editTitle": "تعديل الشركة",
+    "createDescription": "أنشئ الشركة أولًا، ثم ادعُ مستخدمي أصحاب العمل للانضمام إليها.",
+    "editDescription": "حدّث حقول ملف الشركة المخزنة في الواجهة الخلفية.",
+    "companyName": "اسم الشركة",
+    "industry": "المجال",
+    "website": "الموقع الإلكتروني",
+    "location": "الموقع",
+    "approvalStatus": "حالة الموافقة",
+    "description": "الوصف",
+    "optionalOwner": "مالك اختياري",
+    "ownerName": "اسم المالك",
+    "ownerEmail": "البريد الإلكتروني للمالك",
+    "saveCompany": "حفظ الشركة"
+  },
+  "invitation": {
+    "logoAlt": "شعار Workey",
+    "badge": "دعوة شركة",
+    "accepted": "تم قبول الدعوة",
+    "rejected": "تم رفض الدعوة",
+    "acceptedToastDesc": "يمكنك الآن تسجيل الدخول إلى حسابك كصاحب عمل.",
+    "acceptError": "تعذر قبول هذه الدعوة.",
+    "rejectError": "تعذر رفض هذه الدعوة.",
+    "missingTitle": "رابط الدعوة مفقود",
+    "missingDescription": "افتح رابط الدعوة الكامل المرسل من مسؤول شركتك.",
+    "checkingTitle": "جاري التحقق من الدعوة",
+    "checkingDescription": "يرجى الانتظار بينما نتحقق من هذه الدعوة.",
+    "unavailableTitle": "الدعوة غير متاحة",
+    "unavailableDescription": "لم نتمكن من تحميل هذه الدعوة.",
+    "invalidFallback": "قد تكون هذه الدعوة غير صالحة أو منتهية الصلاحية أو مستخدمة بالفعل أو مرفوضة.",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "signIn": "تسجيل الدخول",
+    "acceptedDesc": "وصولك كصاحب عمل جاهز. سجّل الدخول بحسابك للمتابعة.",
+    "rejectedDesc": "تم رفض هذه الدعوة. تواصل مع مسؤول الشركة إذا كان هذا خطأ.",
+    "joinTitle": "انضم إلى {{company}}",
+    "subtitle": "لقد تمت دعوتك للانضمام إلى مساحة عمل هذه الشركة على Workey.",
+    "company": "الشركة",
+    "invitedEmail": "البريد الإلكتروني المدعو",
+    "role": "الدور",
+    "expires": "تنتهي في",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "أدخل اسمك الكامل",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "8 أحرف على الأقل",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين.",
+    "accept": "قبول الدعوة",
+    "accepting": "جاري القبول...",
+    "reject": "رفض",
+    "rejecting": "جاري الرفض..."
+  },
+  "loginPage": {
+    "logoAlt": "شعار Workey",
+    "subtitle": "مرحبًا بعودتك! يرجى إدخال بياناتك لتسجيل الدخول",
+    "submitting": "جاري تسجيل الدخول...",
+    "welcomeToast": "مرحبًا بعودتك!",
+    "welcomeToastDesc": "تم تسجيل دخولك بنجاح",
+    "invalidCredentials": "تعذر تسجيل الدخول. يرجى التحقق من بيانات الاعتماد.",
+    "heroAlt": "منصة Workey للتوظيف"
+  },
+  "companyGate": {
+    "unavailableTitle": "وصول الشركة غير متاح",
+    "unavailableDescription": "لم نتمكن من التحقق من وصولك إلى الشركة. حدّث الصفحة أو تواصل مع مسؤول إذا استمرت المشكلة.",
+    "pendingTitle": "موافقة الشركة قيد الانتظار",
+    "pendingDescription": "يجب الموافقة على شركتك قبل أن تتمكن من إدارة الوظائف والطلبات والمقابلات والاختبارات أو المرشحين المصنفين.",
+    "rejectedTitle": "تم رفض الشركة",
+    "rejectedDescription": "لا يمكن لهذه الشركة استخدام أدوات التوظيف حتى يقوم مسؤول بمراجعة حالة الموافقة أو تحديثها.",
+    "suspendedTitle": "الشركة معلّقة",
+    "suspendedDescription": "تم إيقاف أدوات التوظيف مؤقتًا لهذه الشركة. تواصل مع مسؤول قبل المتابعة.",
+    "viewCompany": "عرض الشركة"
+  },
+  "teamManagement": {
+    "invitationLinkCreated": "تم إنشاء رابط الدعوة",
+    "invitationLinkCopied": "تم نسخ رابط الدعوة",
+    "copy": "نسخ",
+    "dismiss": "تجاهل"
+  },
+  "cvSummary": {
+    "title": "ملخص السيرة الذاتية",
+    "stale": "قديم",
+    "generatedAt": "تم الإنشاء {{date}}",
+    "refresh": "تحديث",
+    "regenerate": "إعادة الإنشاء",
+    "generate": "إنشاء",
+    "emptyDescription": "أنشئ ملخص سيرة ذاتية معتمدًا من الواجهة الخلفية لهذا المرشح.",
+    "strengths": "نقاط القوة",
+    "gaps": "الفجوات",
+    "evidence": "الأدلة"
+  },
+  "profileLinks": {
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "portfolio": "معرض الأعمال"
+  },
+  "applicantsToasts": {
+    "noCvAttached": "لا توجد سيرة ذاتية مرفقة بهذا الطلب",
+    "cvDownloaded": "تم تنزيل السيرة الذاتية",
+    "cvDownloadFailed": "فشل تنزيل السيرة الذاتية"
+  },
+  "informationRequestToasts": {
+    "notPending": "لا يمكن الإلغاء - الطلب ليس قيد الانتظار",
+    "cancelFailed": "فشل إلغاء طلب المعلومات"
+  },
+  "interviewCriteria": {
+    "Communication": "التواصل",
+    "Technical Knowledge": "المعرفة التقنية",
+    "Problem Solving": "حل المشكلات",
+    "Job Fit": "الملاءمة للوظيفة",
+    "Professionalism": "الاحترافية"
+  },
+  "videoErrors": {
+    "sessionExpired": "انتهت صلاحية جلستك. سجّل الدخول مرة أخرى ثم أعد الانضمام إلى المقابلة.",
+    "accessDenied": "ليس لديك صلاحية الوصول إلى هذه المقابلة المرئية.",
+    "roomCreationFailed": "تعذر على مزود الفيديو إنشاء غرفة. يرجى المحاولة بعد قليل."
+  },
+  "imageAlts": {
+    "companyCover": "غلاف {{name}}",
+    "companyLogo": "شعار {{name}}"
+  },
+  "authNotes": {
+    "employerInvitationOnly": "يتم إنشاء حسابات أصحاب العمل من خلال دعوات الشركات."
+  },
   "errors": {
     "serverError": "خطأ في الخادم",
     "serverErrorDesc": "خوادمنا تواجه مشاكل. يرجى المحاولة مرة أخرى لاحقًا.",
@@ -231,6 +384,8 @@
     "pageNotFoundDesc": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
     "customErrorDesc": "حدث خطأ.",
     "validationError": "خطأ في التحقق",
-    "validationErrorDesc": "يرجى التحقق من إدخالك والمحاولة مرة أخرى."
+    "validationErrorDesc": "يرجى التحقق من إدخالك والمحاولة مرة أخرى.",
+    "loadDataFailed": "تعذر تحميل البيانات من الخادم.",
+    "unexpectedPageError": "حدث خطأ غير متوقع في الصفحة."
   }
 }

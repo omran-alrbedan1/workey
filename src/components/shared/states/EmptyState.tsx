@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { useTranslation } from "react-i18next"
 import { LucideIcon, Inbox, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -26,12 +27,15 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   description,
   icon: Icon = Inbox,
   imageUrl,
-  imageAlt = "Empty state illustration",
+  imageAlt,
   primaryAction,
   secondaryAction,
   className,
   children,
 }) => {
+  const { t } = useTranslation("common")
+  const resolvedImageAlt = imageAlt ?? t("emptyState.imageAlt")
+
   return (
     <div
       className={cn(
@@ -41,7 +45,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       )}
     >
       {imageUrl ? (
-        <img src={imageUrl} alt={imageAlt} className="mb-6 h-40 w-52 object-contain sm:h-48" />
+        <img src={imageUrl} alt={resolvedImageAlt} className="mb-6 h-40 w-52 object-contain sm:h-48" />
       ) : (
         <div className="mb-6 rounded-full bg-primary/10 p-4">
           <Icon className="h-16 w-16 text-primary/60" />

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { Building2, CheckCircle2, Clock, LogIn, Mail, ShieldCheck, XCircle } from "lucide-react"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -12,6 +13,7 @@ import { getErrorMessage, showErrorToast, showSuccessToast } from "@/lib/toast"
 import { companyInvitationService } from "../services/companyInvitation.service"
 
 export default function CompanyInvitationPage() {
+  const { t } = useTranslation("common")
   const { token = "" } = useParams()
   const navigate = useNavigate()
   const [name, setName] = useState("")
@@ -49,18 +51,18 @@ export default function CompanyInvitationPage() {
       ),
     onSuccess: () => {
       setCompleted("accepted")
-      showSuccessToast("Invitation accepted", "You can now sign in to your employer account.")
+      showSuccessToast(t("invitation.accepted"), t("invitation.acceptedToastDesc"))
     },
-    onError: (error) => showErrorToast(error, "Unable to accept this invitation."),
+    onError: (error) => showErrorToast(error, t("invitation.acceptError")),
   })
 
   const rejectMutation = useMutation({
     mutationFn: () => companyInvitationService.reject(token),
     onSuccess: () => {
       setCompleted("rejected")
-      showSuccessToast("Invitation rejected")
+      showSuccessToast(t("invitation.rejected"))
     },
-    onError: (error) => showErrorToast(error, "Unable to reject this invitation."),
+    onError: (error) => showErrorToast(error, t("invitation.rejectError")),
   })
 
   const registrationInvalid =
@@ -68,48 +70,48 @@ export default function CompanyInvitationPage() {
     (!name.trim() || password.length < 8 || password !== passwordConfirmation)
 
   if (!token) {
-    return <InvitationShell title="Invitation link is missing" description="Open the full invitation link sent by your company administrator." />
+    return <InvitationShell title={t("invitation.missingTitle")} description={t("invitation.missingDescription")} />
   }
 
   if (invitationQuery.isLoading) {
-    return <InvitationShell title="Checking invitation" description="Please wait while we verify this invitation." />
+    return <InvitationShell title={t("invitation.checkingTitle")} description={t("invitation.checkingDescription")} />
   }
 
   if (invitationQuery.isError) {
     return (
       <InvitationShell
-        title="Invitation unavailable"
+        title={t("invitation.unavailableTitle")}
         description={getErrorMessage(
           invitationQuery.error,
-          "This invitation may be invalid, expired, already used, or rejected.",
+          t("invitation.invalidFallback"),
         )}
-        action={<Button asChild><Link to={ROUTES.auth.login}>Back to login</Link></Button>}
+        action={<Button asChild><Link to={ROUTES.auth.login}>{t("invitation.backToLogin")}</Link></Button>}
       />
     )
   }
 
   if (!invitation) {
-    return <InvitationShell title="Invitation unavailable" description="We could not load this invitation." />
+    return <InvitationShell title={t("invitation.unavailableTitle")} description={t("invitation.unavailableDescription")} />
   }
 
   if (completed) {
     return (
       <InvitationShell
-        title={completed === "accepted" ? "Invitation accepted" : "Invitation rejected"}
+        title={completed === "accepted" ? t("invitation.accepted") : t("invitation.rejected")}
         description={
           completed === "accepted"
-            ? "Your employer access is ready. Sign in with your account to continue."
-            : "This invitation has been rejected. Contact the company administrator if this was a mistake."
+            ? t("invitation.acceptedDesc")
+            : t("invitation.rejectedDesc")
         }
         action={
           completed === "accepted" ? (
             <Button onClick={() => navigate(ROUTES.auth.login)}>
               <LogIn className="h-4 w-4" />
-              Sign in
+              {t("invitation.signIn")}
             </Button>
           ) : (
             <Button asChild variant="outline">
-              <Link to={ROUTES.auth.login}>Back to login</Link>
+              <Link to={ROUTES.auth.login}>{t("invitation.backToLogin")}</Link>
             </Button>
           )
         }
@@ -122,63 +124,63 @@ export default function CompanyInvitationPage() {
       <div className="mx-auto flex min-h-screen w-full max-w-5xl items-center justify-center px-6 py-10">
         <section className="grid w-full overflow-hidden rounded-xl border border-border bg-card shadow-sm lg:grid-cols-[1.05fr_0.95fr]">
           <div className="p-6 sm:p-8">
-            <Logo size="lg" alt="Workey logo" className="mb-8" />
+            <Logo size="lg" alt={t("invitation.logoAlt")} className="mb-8" />
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Company invitation
+              {t("invitation.badge")}
             </div>
             <h1 className="text-2xl font-semibold text-text-primary sm:text-3xl">
-              Join {invitation.company.name}
+              {t("invitation.joinTitle", { company: invitation.company.name })}
             </h1>
             <p className="mt-2 text-sm text-text-secondary">
-              You have been invited to join this company workspace on Workey.
+              {t("invitation.subtitle")}
             </p>
 
             <div className="mt-6 grid gap-3 text-sm">
-              <InfoRow icon={Building2} label="Company" value={invitation.company.name} />
-              <InfoRow icon={Mail} label="Invited email" value={invitation.email} />
-              <InfoRow icon={ShieldCheck} label="Role" value={invitation.company_role.value} />
-              {expiresAt && <InfoRow icon={Clock} label="Expires" value={expiresAt} />}
+              <InfoRow icon={Building2} label={t("invitation.company")} value={invitation.company.name} />
+              <InfoRow icon={Mail} label={t("invitation.invitedEmail")} value={invitation.email} />
+              <InfoRow icon={ShieldCheck} label={t("invitation.role")} value={invitation.company_role.value} />
+              {expiresAt && <InfoRow icon={Clock} label={t("invitation.expires")} value={expiresAt} />}
             </div>
 
             {invitation.requires_registration && (
               <div className="mt-7 space-y-4">
                 <div>
-                  <Label htmlFor="invitation-name">Full name</Label>
+                  <Label htmlFor="invitation-name">{t("invitation.fullName")}</Label>
                   <Input
                     id="invitation-name"
                     value={name}
                     onChange={(event) => setName(event.target.value)}
-                    placeholder="Enter your full name"
+                    placeholder={t("invitation.fullNamePlaceholder")}
                     disabled={acceptMutation.isPending || rejectMutation.isPending}
                   />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="invitation-password">Password</Label>
+                    <Label htmlFor="invitation-password">{t("invitation.password")}</Label>
                     <Input
                       id="invitation-password"
                       type="password"
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
-                      placeholder="At least 8 characters"
+                      placeholder={t("invitation.passwordPlaceholder")}
                       disabled={acceptMutation.isPending || rejectMutation.isPending}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="invitation-password-confirmation">Confirm password</Label>
+                    <Label htmlFor="invitation-password-confirmation">{t("invitation.confirmPassword")}</Label>
                     <Input
                       id="invitation-password-confirmation"
                       type="password"
                       value={passwordConfirmation}
                       onChange={(event) => setPasswordConfirmation(event.target.value)}
-                      placeholder="Repeat password"
+                      placeholder={t("invitation.confirmPasswordPlaceholder")}
                       disabled={acceptMutation.isPending || rejectMutation.isPending}
                     />
                   </div>
                 </div>
                 {password && passwordConfirmation && password !== passwordConfirmation && (
-                  <p className="text-sm text-rose-600">Passwords do not match.</p>
+                  <p className="text-sm text-rose-600">{t("invitation.passwordMismatch")}</p>
                 )}
               </div>
             )}
@@ -189,7 +191,7 @@ export default function CompanyInvitationPage() {
                 disabled={Boolean(registrationInvalid) || acceptMutation.isPending || rejectMutation.isPending}
               >
                 <CheckCircle2 className="h-4 w-4" />
-                {acceptMutation.isPending ? "Accepting..." : "Accept invitation"}
+                {acceptMutation.isPending ? t("invitation.accepting") : t("invitation.accept")}
               </Button>
               <Button
                 type="button"
@@ -198,7 +200,7 @@ export default function CompanyInvitationPage() {
                 disabled={acceptMutation.isPending || rejectMutation.isPending}
               >
                 <XCircle className="h-4 w-4" />
-                {rejectMutation.isPending ? "Rejecting..." : "Reject"}
+                {rejectMutation.isPending ? t("invitation.rejecting") : t("invitation.reject")}
               </Button>
             </div>
           </div>
@@ -224,10 +226,11 @@ function InvitationShell({
   description: string
   action?: React.ReactNode
 }) {
+  const { t } = useTranslation("common")
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-6 py-10">
       <section className="w-full max-w-md rounded-xl border border-border bg-card p-8 text-center shadow-sm">
-        <Logo size="lg" alt="Workey logo" className="mx-auto mb-8" />
+        <Logo size="lg" alt={t("invitation.logoAlt")} className="mx-auto mb-8" />
         <h1 className="text-2xl font-semibold text-text-primary">{title}</h1>
         <p className="mt-3 text-sm text-text-secondary">{description}</p>
         {action && <div className="mt-6">{action}</div>}

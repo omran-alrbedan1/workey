@@ -36,66 +36,50 @@ interface ErrorStateProps {
   size?: "sm" | "md" | "lg"
 }
 
-const variantConfig: Record<ErrorVariant, { 
-  icon: LucideIcon; 
-  defaultTitle: string; 
-  defaultDescription: string;
+const variantConfig: Record<ErrorVariant, {
+  icon: LucideIcon;
   color: string;
   bgColor: string;
   borderColor: string;
 }> = {
   default: {
     icon: AlertCircle,
-    defaultTitle: "Something went wrong",
-    defaultDescription: "An unexpected error occurred. Please try again.",
     color: "text-red-600",
     bgColor: "bg-red-50",
     borderColor: "border-red-200"
   },
   "404": {
     icon: FileWarning,
-    defaultTitle: "Page not found",
-    defaultDescription: "The page you're looking for doesn't exist or has been moved.",
     color: "text-amber-600",
     bgColor: "bg-amber-50",
     borderColor: "border-amber-200"
   },
   "500": {
     icon: Server,
-    defaultTitle: "Server error",
-    defaultDescription: "Our servers are having trouble. Please try again later.",
     color: "text-red-600",
     bgColor: "bg-red-50",
     borderColor: "border-red-200"
   },
   "403": {
     icon: Lock,
-    defaultTitle: "Access denied",
-    defaultDescription: "You don't have permission to access this resource.",
     color: "text-orange-600",
     bgColor: "bg-orange-50",
     borderColor: "border-orange-200"
   },
   network: {
     icon: WifiOff,
-    defaultTitle: "Network error",
-    defaultDescription: "Please check your internet connection and try again.",
     color: "text-blue-600",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-200"
   },
   timeout: {
     icon: AlertCircle,
-    defaultTitle: "Request timeout",
-    defaultDescription: "The request took too long to complete. Please try again.",
     color: "text-purple-600",
     bgColor: "bg-purple-50",
     borderColor: "border-purple-200"
   },
   custom: {
     icon: AlertCircle,
-    defaultTitle: "Error",
-    defaultDescription: "An error occurred.",
     color: "text-gray-600",
     bgColor: "bg-gray-50",
     borderColor: "border-gray-200"

@@ -1,5 +1,6 @@
 import { AlertTriangle, Building2 } from "lucide-react"
 import type React from "react"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { ROUTES } from "@/config"
@@ -7,6 +8,7 @@ import { keyOf } from "@/lib/keyValue"
 import { useEmployerCompany } from "../hooks/useEmployerCompany"
 
 export default function EmployerCompanyGate({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation("common")
   const company = useEmployerCompany()
 
   if (company.isPending) return <div className="h-96 animate-pulse rounded-lg bg-background-secondary" />
@@ -14,8 +16,8 @@ export default function EmployerCompanyGate({ children }: { children: React.Reac
   if (company.isError || !company.data) {
     return (
       <CompanyGateState
-        title="Company access unavailable"
-        description="We could not verify your company access. Refresh the page or contact an administrator if this continues."
+        title={t("companyGate.unavailableTitle")}
+        description={t("companyGate.unavailableDescription")}
       />
     )
   }
@@ -25,19 +27,16 @@ export default function EmployerCompanyGate({ children }: { children: React.Reac
 
   const copyByStatus: Record<string, { title: string; description: string }> = {
     pending: {
-      title: "Company approval is pending",
-      description:
-        "Your company must be approved before you can manage jobs, applicants, interviews, tests, or ranked candidates.",
+      title: t("companyGate.pendingTitle"),
+      description: t("companyGate.pendingDescription"),
     },
     rejected: {
-      title: "Company was rejected",
-      description:
-        "This company cannot use recruiting tools until an administrator reviews or updates its approval status.",
+      title: t("companyGate.rejectedTitle"),
+      description: t("companyGate.rejectedDescription"),
     },
     suspended: {
-      title: "Company is suspended",
-      description:
-        "Recruiting tools are paused for this company. Contact an administrator before continuing.",
+      title: t("companyGate.suspendedTitle"),
+      description: t("companyGate.suspendedDescription"),
     },
   }
 
@@ -47,6 +46,7 @@ export default function EmployerCompanyGate({ children }: { children: React.Reac
 }
 
 function CompanyGateState({ title, description }: { title: string; description: string }) {
+  const { t } = useTranslation("common")
   return (
     <section className="flex min-h-[420px] items-center justify-center rounded-xl border border-amber-300/50 bg-amber-50/60 p-8 text-center dark:border-amber-500/30 dark:bg-amber-950/20">
       <div className="max-w-lg">
@@ -58,7 +58,7 @@ function CompanyGateState({ title, description }: { title: string; description: 
         <Button asChild className="mt-6">
           <Link to={ROUTES.employer.company}>
             <Building2 className="h-4 w-4" />
-            View company
+            {t("companyGate.viewCompany")}
           </Link>
         </Button>
       </div>

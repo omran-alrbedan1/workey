@@ -1,10 +1,12 @@
 import { Suspense, type ReactNode } from "react"
 import { Loader2 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export function RouteLoadingFallback() {
+  const { t } = useTranslation("common")
   return (
     <div className="flex min-h-[320px] items-center justify-center p-6 text-text-muted">
-      <Loader2 className="h-6 w-6 animate-spin" aria-label="Loading page" />
+      <Loader2 className="h-6 w-6 animate-spin" aria-label={t("aria.loadingPage")} />
     </div>
   )
 }

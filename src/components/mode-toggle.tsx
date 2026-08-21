@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { useTheme } from "./theme-provider"
 import { useCallback, useRef } from "react"
 import { flushSync } from "react-dom"
@@ -15,6 +16,7 @@ export function ModeToggle({
   ...props
 }: AnimatedThemeTogglerProps) {
   const { theme, setTheme } = useTheme()
+  const { t } = useTranslation("common")
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const toggleTheme = useCallback(async () => {
@@ -78,7 +80,7 @@ export function ModeToggle({
     >
       <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
       <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-12 scale-0 transition-all dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
+      <span className="sr-only">{t("aria.toggleTheme")}</span>
     </button>
   )
 }

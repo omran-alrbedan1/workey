@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import { ROUTES } from "@/config"
 import Logo from "@/components/shared/logo/Logo"
 import EmployerRegisterForm from "../components/EmployerRegisterForm"
+import { images } from "@/constants/images"
 
 export default function EmployerRegisterPage() {
   const { t } = useTranslation("employerAuth")

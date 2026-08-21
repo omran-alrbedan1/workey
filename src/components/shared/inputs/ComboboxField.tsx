@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
@@ -20,6 +21,7 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
   inputClassName,
   options = [],
 }) => {
+  const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState("")
   
@@ -37,19 +39,19 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
         disabled={disabled}
         onClick={() => setOpen(!open)}
       >
-        {selectedOption ? selectedOption.label : placeholder || "Select option"}
+        {selectedOption ? selectedOption.label : placeholder || t("inputs.selectOption")}
         <ChevronDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
       {open && (
         <div className="absolute top-full z-50 mt-1 bg-white border rounded-md shadow-lg w-full">
           <Command>
             <CommandInput
-              placeholder="Search options..."
+              placeholder={t("inputs.searchOptions")}
               value={inputValue}
               onValueChange={setInputValue}
             />
             <CommandList>
-              <CommandEmpty>No options found.</CommandEmpty>
+              <CommandEmpty>{t("inputs.noOptionsFound")}</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem

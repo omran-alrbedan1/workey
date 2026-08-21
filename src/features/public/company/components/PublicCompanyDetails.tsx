@@ -11,6 +11,7 @@ interface PublicCompanyDetailsProps {
 
 export default function PublicCompanyDetails({ company, isLoading }: PublicCompanyDetailsProps) {
   const { t } = useTranslation("publicCompany")
+  const { t: tCommon } = useTranslation("common")
 
   if (isLoading) {
     return (
@@ -32,7 +33,7 @@ export default function PublicCompanyDetails({ company, isLoading }: PublicCompa
         <div className="relative h-48 overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20">
           <img
             src={company.cover_image}
-            alt={`${company.name} cover`}
+            alt={tCommon("imageAlts.companyCover", { name: company.name })}
             className="h-full w-full object-cover"
           />
         </div>
@@ -44,7 +45,7 @@ export default function PublicCompanyDetails({ company, isLoading }: PublicCompa
           <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-border bg-background-card">
             <img
               src={company.logo}
-              alt={`${company.name} logo`}
+              alt={tCommon("imageAlts.companyLogo", { name: company.name })}
               className="h-full w-full object-cover"
             />
           </div>

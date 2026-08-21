@@ -2,9 +2,10 @@ import { BriefcaseBusiness } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import Logo from "@/components/shared/logo/Logo"
 import EmployerLoginForm from "../components/EmployerLoginForm"
+import { images } from "@/constants/images"
 
 export default function EmployerLoginPage() {
-  const { t } = useTranslation("employerAuth")
+  const { t } = useTranslation(["employerAuth", "common"])
 
   return (
     <main className="grid min-h-screen bg-background lg:grid-cols-2">
@@ -21,7 +22,7 @@ export default function EmployerLoginPage() {
           </div>
           <EmployerLoginForm />
           <p className="mt-6 text-center text-sm text-text-secondary">
-            Employer accounts are created through company invitations.
+            {t("common:authNotes.employerInvitationOnly")}
           </p>
         </div>
       </section>

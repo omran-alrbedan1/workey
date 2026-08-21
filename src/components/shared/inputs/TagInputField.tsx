@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
@@ -21,6 +22,7 @@ export const TagInputField: React.FC<TagInputFieldProps> = ({
   inputClassName,
   tagInputOptions,
 }) => {
+  const { t } = useTranslation("common")
   const [inputValue, setInputValue] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
   
@@ -62,7 +64,7 @@ export const TagInputField: React.FC<TagInputFieldProps> = ({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder || "Add tag..."}
+        placeholder={placeholder || t("inputs.addTag")}
         className="flex-1 min-w-25 outline-none bg-transparent"
         disabled={disabled}
       />

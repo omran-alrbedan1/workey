@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import { useMutation } from "@tanstack/react-query"
 import { Form } from "@/components/ui/form"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
@@ -16,6 +17,7 @@ import { images } from "@/constants/images"
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation("common")
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -29,7 +31,7 @@ const Login: React.FC = () => {
     mutationFn: authService.login,
     onSuccess: (session) => {
       authService.storeSession(session)
-      showSuccessToast("Welcome back!", "You have been logged in successfully")
+      showSuccessToast(t("loginPage.welcomeToast"), t("loginPage.welcomeToastDesc"))
       
       // Redirect based on role
       const role = keyOf(session.user.role)
@@ -44,7 +46,7 @@ const Login: React.FC = () => {
     },
     onError: (error: any) => {
       form.setError("root", {
-        message: error.message || "Unable to login. Please check your credentials.",
+        message: error.message || t("loginPage.invalidCredentials"),
       })
     },
   })
@@ -60,15 +62,15 @@ const Login: React.FC = () => {
         <div className="w-full max-w-md">
           <div className="flex flex-col gap-6">
             <div className="mb-4 mx-auto">
-              <Logo size="xl" width={250} height={220} alt="Workey logo" />
+              <Logo size="xl" width={250} height={220} alt={t("loginPage.logoAlt")} />
             </div>
             
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
-                Login
+                {t("login")}
               </h1>
               <p className="text-sm text-text-secondary">
-                Welcome back! Please enter your details to login
+                {t("loginPage.subtitle")}
               </p>
             </div>
 
@@ -79,7 +81,7 @@ const Login: React.FC = () => {
                     fieldType={FormFieldType.EMAIL}
                     control={form.control}
                     name="email"
-                    label="Email"
+                    label={t("email")}
                     placeholder="name@example.com"
                     disabled={loginMutation.isPending}
                     leftIcon={Mail}  
@@ -92,7 +94,7 @@ const Login: React.FC = () => {
                     fieldType={FormFieldType.PASSWORD}
                     control={form.control}
                     name="password"
-                    label="Password"
+                    label={t("password")}
                     placeholder="••••••••••••"
                     disabled={loginMutation.isPending}
                     leftIcon={Lock}  
@@ -101,8 +103,8 @@ const Login: React.FC = () => {
                 </div>
                 <SubmitButton 
                   isLoading={loginMutation.isPending}
-                  text="Login"
-                  loadingText="Logging in..."
+                  text={t("login")}
+                  loadingText={t("loginPage.submitting")}
                   icon={<LogIn className="h-4 w-4" />}
                 />
               </form>
@@ -115,7 +117,7 @@ const Login: React.FC = () => {
       <div className="relative hidden w-1/2 md:block">
         <img
         src={images.workeyLoginHero}
-          alt="Workey recruitment platform"
+          alt={t("loginPage.heroAlt")}
           className="h-screen w-full object-cover "
         />
       </div>
