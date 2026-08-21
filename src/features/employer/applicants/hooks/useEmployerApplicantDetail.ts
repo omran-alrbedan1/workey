@@ -57,13 +57,9 @@ export function useApplicationStatusMutation(applicationId?: string | number) {
     mutationFn: (input: ApplicationStatusChangeInput) =>
       employerApplicantsService.updateStatus(applicationId!, input),
     onSuccess: async () => {
-      await Promise.all([
-        client.invalidateQueries({ queryKey: ["employer", "applicants"] }),
-        client.invalidateQueries({ queryKey: ["employer", "applicants", "detail", String(applicationId ?? "")] }),
-        client.invalidateQueries({ queryKey: ["application-interviews", applicationId] }),
-        client.invalidateQueries({ queryKey: ["employer", "applications", String(applicationId ?? ""), "tests"] }),
-        client.invalidateQueries({ queryKey: ["internalNotes", applicationId] }),
-      ])
+      // Only application data changes on a status change — refresh the detail
+      // and applicant lists, leaving tests/interviews/notes/requests untouched.
+      await client.invalidateQueries({ queryKey: ["employer", "applicants"] })
       showSuccessToast(t("toasts.statusUpdated"))
     },
     onError: (error: { message?: string; code?: string; statusCode?: number }) => {

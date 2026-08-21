@@ -7,13 +7,15 @@
     "noJobs": "أنشئ وظيفة لبدء استقبال المتقدمين"
   },
   "tabs": {
-    "candidate": "المرشح",
-    "screening": "الأسئلة التمهيدية",
-    "coverLetter": "رسالة التقديم",
+    "overview": "نظرة عامة",
+    "profile": "ملف المرشح",
+    "screening": "إجابات الفرز",
     "tests": "الاختبارات",
     "interviews": "المقابلات",
     "internalNotes": "الملاحظات الداخلية",
     "informationRequests": "طلبات المعلومات",
+    "matching": "نتيجة المطابقة",
+    "statusHistory": "سجل الحالات",
     "finalReview": "المراجعة النهائية"
   },
   "columns": {
@@ -32,6 +34,7 @@
     "changeStatus": "تغيير الحالة",
     "changeStatusFor": "تغيير حالة {{name}}",
     "scheduleInterview": "جدولة مقابلة",
+    "requestInformation": "طلب معلومات",
     "viewDetails": "عرض التفاصيل",
     "downloadCv": "تحميل السيرة الذاتية",
     "downloading": "جار التحميل...",
@@ -48,6 +51,23 @@
   "answers": {
     "yes": "نعم",
     "no": "لا"
+  },
+  "overview": {
+    "actionsTitle": "الإجراءات",
+    "actionsFromApiHint": "الإجراءات المتاحة محددة حسب الصلاحيات الممنوحة لهذا الطلب.",
+    "actionsFallbackHint": "الإجراءات المتاحة بناءً على حالة الطلب الحالية.",
+    "noActions": "لا توجد إجراءات متاحة لهذا الطلب."
+  },
+  "matching": {
+    "title": "نتيجة المطابقة",
+    "supportOnly": "المطابقة أداة مساعدة للقرار فقط، ولا تتخذ القرار النهائي أو تؤتمته.",
+    "unavailableShort": "غير متوفرة",
+    "unavailable": "معلومات المطابقة غير متوفرة لهذا الطلب.",
+    "matchedSkills": "المهارات المطلوبة المتطابقة",
+    "missingSkills": "المهارات المطلوبة الناقصة",
+    "niceMatched": "مهارات إضافية متطابقة",
+    "allRequiredMatched": "جميع المهارات المطلوبة متطابقة.",
+    "noRequiredSkills": "لا تحتوي هذه الوظيفة على مهارات مطلوبة للمقارنة."
   },
   "screeningAnswers": {
     "title": "إجابات الأسئلة التمهيدية",
@@ -79,6 +99,7 @@
     "requiredSkills": "المهارات المطلوبة",
     "niceSkills": "مهارات إضافية",
     "profileTitle": "ملف المرشح",
+    "profileEmpty": "لا يتوفر ملف مرشح مُرسل.",
     "summary": "الملخص",
     "availability": "التوفر",
     "linksTitle": "الروابط المهنية",

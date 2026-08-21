@@ -1,26 +1,29 @@
 import {
   ClipboardCheck,
-  FileText,
+  FileQuestion,
+  History,
+  LayoutDashboard,
   ListChecks,
-  MailQuestion,
-  MessageCircle,
-  User,
-  FileText as FileTextIcon,
   MessageSquare,
+  Target,
+  UserRound,
+  Video,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import CandidateInfoTab from "../tabs/CandidateInfoTab"
-import CoverLetterTab from "../tabs/CoverLetterTab"
-import InterviewsTab from "../tabs/InterviewsTab"
 import ScreeningAnswersTab from "../tabs/ScreeningAnswersTab"
 import TestsTab from "../tabs/TestsTab"
+import InterviewsTab from "../tabs/InterviewsTab"
 import InformationRequests from "../InformationRequests"
 import InternalNotes from "../InternalNotes"
-import CvSummaryPanel from "../CvSummaryPanel"
+import ApplicationStatusHistory from "../ApplicationStatusHistory"
+import ApplicationStatusChangeDialog from "../ApplicationStatusChangeDialog"
+import CandidateProfileSection from "./CandidateProfileSection"
+import MatchingScoreSection from "./MatchingScoreSection"
+import OverviewSection from "./OverviewSection"
 import ScheduleInterviewDialog from "../ScheduleInterviewDialog"
 import type { EmployerApplicantDetailsModel } from "../../hooks/useEmployerApplicantDetailsPage"
 
@@ -46,7 +49,7 @@ export default function EmployerApplicantDetailsView({ model }: EmployerApplican
       <PageHeader
         title={t("detailTitle")}
         description={model.candidateName}
-        icon={User}
+        icon={UserRound}
         showBackButton
         backButtonLabel={t("actions.back")}
         onBackClick={model.goBack}
@@ -68,6 +71,17 @@ export default function EmployerApplicantDetailsView({ model }: EmployerApplican
             onOpenChange={model.setShowScheduleDialog}
             onSubmit={model.handleScheduleInterview}
           />
+
+          <ApplicationStatusChangeDialog
+            open={model.pendingStatusTarget !== null}
+            onOpenChange={(open) => {
+              if (!open) model.closeStatusDialog()
+            }}
+            currentStatus={model.application.status ?? null}
+            targetStatus={model.pendingStatusTarget}
+            onConfirm={model.confirmStatusChange}
+            isSubmitting={model.isStatusPending}
+          />
         </>
       ) : null}
     </div>
@@ -85,43 +99,44 @@ function ApplicantDetailsSkeleton() {
 
 function ApplicantDetailsTabs({ model }: { model: EmployerApplicantDetailsModel }) {
   const { t } = useTranslation("employerApplicants")
-  const application = model.application
-
-  if (!application) return null
 
   return (
     <TabsList className="w-full justify-start overflow-x-auto pb-2">
-      <TabsTrigger value="candidate" className="gap-2 whitespace-nowrap">
-        <User className="h-4 w-4" />
-        {t("tabs.candidate")}
+      <TabsTrigger value="overview" className="gap-2 whitespace-nowrap">
+        <LayoutDashboard className="h-4 w-4" />
+        {t("tabs.overview")}
       </TabsTrigger>
-      {application.screening_answers && application.screening_answers.length > 0 && (
-        <TabsTrigger value="screening" className="gap-2 whitespace-nowrap">
-          <ClipboardCheck className="h-4 w-4" />
-          {t("tabs.screening")}
-        </TabsTrigger>
-      )}
-      {application.cover_letter && (
-        <TabsTrigger value="coverLetter" className="gap-2 whitespace-nowrap">
-          <FileText className="h-4 w-4" />
-          {t("tabs.coverLetter")}
-        </TabsTrigger>
-      )}
+      <TabsTrigger value="profile" className="gap-2 whitespace-nowrap">
+        <UserRound className="h-4 w-4" />
+        {t("tabs.profile")}
+      </TabsTrigger>
+      <TabsTrigger value="screening" className="gap-2 whitespace-nowrap">
+        <ClipboardCheck className="h-4 w-4" />
+        {t("tabs.screening")}
+      </TabsTrigger>
+      <TabsTrigger value="matching" className="gap-2 whitespace-nowrap">
+        <Target className="h-4 w-4" />
+        {t("tabs.matching")}
+      </TabsTrigger>
       <TabsTrigger value="tests" className="gap-2 whitespace-nowrap">
         <ListChecks className="h-4 w-4" />
         {t("tabs.tests")}
       </TabsTrigger>
       <TabsTrigger value="interviews" className="gap-2 whitespace-nowrap">
-        <MessageCircle className="h-4 w-4" />
+        <Video className="h-4 w-4" />
         {t("tabs.interviews")}
+      </TabsTrigger>
+      <TabsTrigger value="informationRequests" className="gap-2 whitespace-nowrap">
+        <FileQuestion className="h-4 w-4" />
+        {t("tabs.informationRequests")}
       </TabsTrigger>
       <TabsTrigger value="internalNotes" className="gap-2 whitespace-nowrap">
         <MessageSquare className="h-4 w-4" />
         {t("tabs.internalNotes")}
       </TabsTrigger>
-      <TabsTrigger value="informationRequests" className="gap-2 whitespace-nowrap">
-        <FileTextIcon className="h-4 w-4" />
-        {t("tabs.informationRequests")}
+      <TabsTrigger value="statusHistory" className="gap-2 whitespace-nowrap">
+        <History className="h-4 w-4" />
+        {t("tabs.statusHistory")}
       </TabsTrigger>
     </TabsList>
   )
@@ -134,33 +149,34 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
 
   return (
     <>
-      <TabsContent value="candidate">
-        <div className="space-y-6">
-          <CandidateInfoTab
-            application={application}
-            candidateName={model.candidateName}
-            cvDocument={model.cvDocument}
-            isCvBusy={model.isCvBusy}
-            onStatusChange={model.handleStatusChange}
-            onPreviewCv={() => void model.handlePreviewCv()}
-            onDownloadCv={() => void model.handleDownloadCv()}
-            isStatusPending={model.isStatusPending}
-          />
-          {model.id && <CvSummaryPanel applicationId={model.id} />}
-        </div>
+      <TabsContent value="overview">
+        <OverviewSection
+          application={application}
+          candidateName={model.candidateName}
+          isStatusPending={model.isStatusPending}
+          onOpenStatusDialog={model.openStatusDialog}
+          onScheduleInterview={() => model.setShowScheduleDialog(true)}
+          onRequestInformation={model.handleRequestInformation}
+        />
       </TabsContent>
 
-      {application.screening_answers && application.screening_answers.length > 0 && (
-        <TabsContent value="screening">
-          <ScreeningAnswersTab answers={application.screening_answers} />
-        </TabsContent>
-      )}
+      <TabsContent value="profile">
+        <CandidateProfileSection
+          application={application}
+          cvDocument={model.cvDocument}
+          isCvBusy={model.isCvBusy}
+          onPreviewCv={() => void model.handlePreviewCv()}
+          onDownloadCv={() => void model.handleDownloadCv()}
+        />
+      </TabsContent>
 
-      {application.cover_letter && (
-        <TabsContent value="coverLetter">
-          <CoverLetterTab coverLetter={application.cover_letter} />
-        </TabsContent>
-      )}
+      <TabsContent value="screening">
+        <ScreeningAnswersTab answers={application.screening_answers ?? []} />
+      </TabsContent>
+
+      <TabsContent value="matching">
+        <MatchingScoreSection application={application} />
+      </TabsContent>
 
       <TabsContent value="tests">
         <TestsTab tests={model.tests} onViewAll={model.openFirstTest} onOpenTest={model.openTest} />
@@ -170,14 +186,25 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
         <InterviewsTab interviews={model.interviews} onSchedule={() => model.setShowScheduleDialog(true)} />
       </TabsContent>
 
+      <TabsContent value="informationRequests">
+        {model.id && (
+          <InformationRequests
+            applicationId={model.id}
+            createOpen={model.informationRequestDialogOpen}
+            onCreateOpenChange={model.setInformationRequestDialogOpen}
+          />
+        )}
+      </TabsContent>
+
       <TabsContent value="internalNotes">
         {model.id && <InternalNotes applicationId={model.id} />}
       </TabsContent>
 
-      <TabsContent value="informationRequests">
-        {model.id && <InformationRequests applicationId={model.id} />}
+      <TabsContent value="statusHistory">
+        <section className="rounded-xl border border-border bg-background-card p-5 shadow-card">
+          <ApplicationStatusHistory history={application.status_history ?? []} />
+        </section>
       </TabsContent>
-   
     </>
   )
 }

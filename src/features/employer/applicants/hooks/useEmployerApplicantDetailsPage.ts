@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { ROUTES } from "@/config"
-import { keyOf } from "@/lib/keyValue"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { useCreateEmployerInterview } from "@/features/employer/interviews/hooks/useCreateEmployerInterview"
 import {
@@ -30,23 +29,27 @@ export interface EmployerApplicantDetailsModel {
   activeTab: string
   isCvBusy: boolean
   showScheduleDialog: boolean
+  pendingStatusTarget: ApplicationStatusKey | null
   isStatusPending: boolean
   isCreateInterviewPending: boolean
   cvDocument: ApplicationCvDocument | null
+  informationRequestDialogOpen: boolean
   tests: ReturnType<typeof useApplicationTests>
   interviews: ReturnType<typeof useApplicationInterviews>
   setActiveTab: (tab: string) => void
   setShowScheduleDialog: (open: boolean) => void
+  openStatusDialog: (target: ApplicationStatusKey) => void
+  closeStatusDialog: () => void
+  confirmStatusChange: (note?: string) => void
+  setInformationRequestDialogOpen: (open: boolean) => void
+  handleRequestInformation: () => void
   refetch: () => Promise<unknown>
   goBack: () => void
-  handleStatusChange: (status: ApplicationStatusKey, note?: string) => void
-  handleStatusDecision: (status: "accepted" | "rejected" | "on_hold", note: string) => Promise<void>
   handlePreviewCv: () => Promise<void>
   handleDownloadCv: () => Promise<void>
   handleScheduleInterview: (applicationId: string | number, input: EmployerInterviewInput) => Promise<void>
   openFirstTest: () => void
   openTest: (assignment: EmployerTestAttempt) => void
-  showCandidateTab: () => void
 }
 
 export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): EmployerApplicantDetailsModel {
@@ -61,7 +64,9 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
   const createInterview = useCreateEmployerInterview()
   const [isCvBusy, setIsCvBusy] = useState(false)
   const [showScheduleDialog, setShowScheduleDialog] = useState(false)
-  const [activeTab, setActiveTab] = useState("candidate")
+  const [pendingStatusTarget, setPendingStatusTarget] = useState<ApplicationStatusKey | null>(null)
+  const [informationRequestDialogOpen, setInformationRequestDialogOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState("overview")
 
   const application = applicant.data
   const candidateName = candidateDisplayName(application, unknownCandidateLabel)
@@ -107,13 +112,23 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
     }
   }
 
-  const handleStatusChange = (status: ApplicationStatusKey, note?: string) => {
-    if (!id) return
-    statusMutation.mutate({ status, note })
+  const openStatusDialog = (target: ApplicationStatusKey) => setPendingStatusTarget(target)
+
+  const closeStatusDialog = () => setPendingStatusTarget(null)
+
+  const confirmStatusChange = (note?: string) => {
+    if (!id || !pendingStatusTarget) return
+    statusMutation.mutate(
+      { status: pendingStatusTarget, note },
+      { onSettled: () => setPendingStatusTarget(null) },
+    )
   }
 
-  const handleStatusDecision = async (status: "accepted" | "rejected" | "on_hold", note: string) => {
-    await statusMutation.mutateAsync({ status, note })
+  // Action-specific flow for the "request information" action: opens the
+  // Information Requests section with its create dialog ready to fill.
+  const handleRequestInformation = () => {
+    setActiveTab("informationRequests")
+    setInformationRequestDialogOpen(true)
   }
 
   const handleScheduleInterview = async (applicationId: string | number, input: EmployerInterviewInput) => {
@@ -144,23 +159,26 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
     activeTab,
     isCvBusy,
     showScheduleDialog,
+    pendingStatusTarget,
     isStatusPending: statusMutation.isPending,
     isCreateInterviewPending: createInterview.isPending,
     cvDocument: application ? getApplicationCvDocument(application) : null,
+    informationRequestDialogOpen,
     tests,
     interviews,
     setActiveTab,
     setShowScheduleDialog,
+    openStatusDialog,
+    closeStatusDialog,
+    confirmStatusChange,
+    setInformationRequestDialogOpen,
+    handleRequestInformation,
     refetch: applicant.refetch,
     goBack,
-    handleStatusChange,
-    handleStatusDecision,
     handlePreviewCv,
     handleDownloadCv,
     handleScheduleInterview,
     openFirstTest,
     openTest,
-    showCandidateTab: () => setActiveTab("candidate"),
   }
 }
-

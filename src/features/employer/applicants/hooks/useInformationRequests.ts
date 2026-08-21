@@ -15,8 +15,22 @@ function apiErrorMessage(error: any, fallback: string) {
   return error?.message ?? error?.response?.data?.message ?? fallback
 }
 
+/**
+ * Refreshes only the queries an information-request action can affect:
+ * the request list itself and the application detail (status may move to
+ * need_more_information).
+ */
+function useRefreshAfterRequestChange(applicationId: string | number | undefined) {
+  const queryClient = useQueryClient()
+  return () => {
+    queryClient.invalidateQueries({ queryKey: ["informationRequests", applicationId] })
+    queryClient.invalidateQueries({ queryKey: ["employer", "applicants", "detail", String(applicationId ?? "")] })
+  }
+}
+
 export function useInformationRequests(applicationId: string | number | undefined) {
   const queryClient = useQueryClient()
+  const refreshAfterChange = useRefreshAfterRequestChange(applicationId)
 
   const listQuery = useQuery({
     queryKey: ["informationRequests", applicationId],
@@ -28,8 +42,7 @@ export function useInformationRequests(applicationId: string | number | undefine
     mutationFn: (input: InformationRequestInput) =>
       employerApplicantsService.createInformationRequest(applicationId!, input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["informationRequests", applicationId] })
-      queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
+      refreshAfterChange()
       showSuccessToast("Information request created")
     },
     onError: (error: any) => {
@@ -47,7 +60,6 @@ export function useInformationRequests(applicationId: string | number | undefine
       employerApplicantsService.updateInformationRequest(requestId, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["informationRequests", applicationId] })
-      queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
       showSuccessToast("Information request updated")
     },
     onError: (error: any) => {
@@ -59,8 +71,7 @@ export function useInformationRequests(applicationId: string | number | undefine
     mutationFn: ({ requestId, input }: { requestId: string | number; input: CancelInformationRequestInput }) =>
       employerApplicantsService.cancelInformationRequest(requestId, input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["informationRequests", applicationId] })
-      queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
+      refreshAfterChange()
       showSuccessToast("Information request cancelled")
     },
     onError: (error: any) => {

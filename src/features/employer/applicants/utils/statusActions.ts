@@ -60,6 +60,23 @@ function transitionKeys(transitions?: ApplicationStatus[]): ApplicationStatusKey
     .filter(Boolean)
 }
 
+/**
+ * Keeps only statuses that may be offered as direct "change status" actions:
+ * unique, not the current status, not terminal, and never workflow-only
+ * (those are produced by their own dedicated flows instead).
+ */
+export function filterDirectTransitionTargets(
+  currentKey: ApplicationStatusKey | null,
+  candidates: readonly ApplicationStatusKey[],
+): ApplicationStatusKey[] {
+  return Array.from(new Set(candidates)).filter(
+    (status) =>
+      status !== currentKey &&
+      !WORKFLOW_ONLY_STATUSES.has(status) &&
+      !TERMINAL_STATUSES.has(status),
+  )
+}
+
 export function isTerminalApplicationStatus(statusKey?: string | null): boolean {
   if (!statusKey) return false
   return TERMINAL_STATUSES.has(statusKey as ApplicationStatusKey)
@@ -88,9 +105,7 @@ export function getApplicationStatusActions(
       ? fromBackend
       : (FALLBACK_TRANSITIONS[currentStatusKey] ?? [])
 
-  const targets = Array.from(new Set(rawTargets)).filter(
-    (status) => status !== currentStatusKey && !WORKFLOW_ONLY_STATUSES.has(status),
-  )
+  const targets = filterDirectTransitionTargets(currentStatusKey, rawTargets)
 
   return {
     currentStatusKey,

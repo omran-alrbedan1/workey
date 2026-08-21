@@ -15,8 +15,8 @@ export function useInternalNotes(applicationId: string | number | undefined) {
   const queryClient = useQueryClient()
 
   const refreshNotes = () => {
+    // Notes never change application data — refresh the notes list only.
     queryClient.invalidateQueries({ queryKey: ["internalNotes", applicationId] })
-    queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
   }
 
   const listQuery = useQuery({
@@ -29,8 +29,7 @@ export function useInternalNotes(applicationId: string | number | undefined) {
     mutationFn: (input: ApplicationInternalNoteInput) =>
       employerApplicantsService.createInternalNote(applicationId!, input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["internalNotes", applicationId] })
-      queryClient.invalidateQueries({ queryKey: ["employerApplicantDetail", applicationId] })
+      refreshNotes()
       showSuccessToast("Internal note created")
     },
     onError: (error: any) => {

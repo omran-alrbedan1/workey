@@ -21,7 +21,18 @@ import { Textarea } from "@/components/ui/textarea"
 import type { InformationRequest } from "../types/employerApplicants.types"
 import EmptyState from "@/components/shared/states/EmptyState"
 
-export default function InformationRequests({ applicationId }: { applicationId: string | number }) {
+interface InformationRequestsProps {
+  applicationId: string | number
+  /** Controlled open state for the create dialog (used by the request-information action flow). */
+  createOpen?: boolean
+  onCreateOpenChange?: (open: boolean) => void
+}
+
+export default function InformationRequests({
+  applicationId,
+  createOpen,
+  onCreateOpenChange,
+}: InformationRequestsProps) {
   const { t } = useTranslation(["employerApplicants", "common"])
   const {
     requests,
@@ -35,10 +46,16 @@ export default function InformationRequests({ applicationId }: { applicationId: 
   } = useInformationRequests(applicationId)
   const { downloadAttachment } = useDownloadAttachment()
 
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [internalDialogOpen, setInternalDialogOpen] = useState(false)
   const [editingRequest, setEditingRequest] = useState<InformationRequest | null>(null)
   const [cancelRequestId, setCancelRequestId] = useState<InformationRequest | null>(null)
   const [cancelReason, setCancelReason] = useState("")
+
+  const dialogOpen = createOpen ?? internalDialogOpen
+  const setDialogOpen = (open: boolean) => {
+    setInternalDialogOpen(open)
+    onCreateOpenChange?.(open)
+  }
 
   const handleCreate = () => {
     setEditingRequest(null)
@@ -226,8 +243,7 @@ export default function InformationRequests({ applicationId }: { applicationId: 
         request={editingRequest}
         onSubmit={handleSubmit}
         isSubmitting={isCreating || isUpdating}
-      />
-      <Dialog
+      />      <Dialog
         open={cancelRequestId !== null}
         onOpenChange={(open) => {
           if (!open) {

@@ -7,13 +7,15 @@
     "noJobs": "Create a job to start receiving applicants"
   },
   "tabs": {
-    "candidate": "Candidate",
-    "screening": "Screening",
-    "coverLetter": "Cover letter",
+    "overview": "Overview",
+    "profile": "Candidate Profile",
+    "screening": "Screening Answers",
     "tests": "Tests",
     "interviews": "Interviews",
     "internalNotes": "Internal Notes",
     "informationRequests": "Information Requests",
+    "matching": "Matching Score",
+    "statusHistory": "Status History",
     "finalReview": "Final review"
   },
   "columns": {
@@ -32,6 +34,7 @@
     "changeStatus": "Change status",
     "changeStatusFor": "Change status for {{name}}",
     "scheduleInterview": "Schedule interview",
+    "requestInformation": "Request information",
     "viewDetails": "View details",
     "downloadCv": "Download CV",
     "downloading": "Downloading...",
@@ -48,6 +51,23 @@
   "answers": {
     "yes": "Yes",
     "no": "No"
+  },
+  "overview": {
+    "actionsTitle": "Actions",
+    "actionsFromApiHint": "Available actions are limited by the permissions granted for this application.",
+    "actionsFallbackHint": "Available actions based on the current application status.",
+    "noActions": "No actions are available for this application."
+  },
+  "matching": {
+    "title": "Matching Score",
+    "supportOnly": "Matching is decision support only. It does not make or automate the final decision.",
+    "unavailableShort": "Not available",
+    "unavailable": "Matching information is not available for this application.",
+    "matchedSkills": "Matched required skills",
+    "missingSkills": "Missing required skills",
+    "niceMatched": "Nice-to-have skills matched",
+    "allRequiredMatched": "All required skills are matched.",
+    "noRequiredSkills": "This job has no required skills to compare against."
   },
   "screeningAnswers": {
     "title": "Screening Answers",
@@ -79,6 +99,7 @@
     "requiredSkills": "Required skills",
     "niceSkills": "Nice to have",
     "profileTitle": "Candidate profile",
+    "profileEmpty": "No submitted candidate profile is available.",
     "summary": "Summary",
     "availability": "Availability",
     "linksTitle": "Professional links",
