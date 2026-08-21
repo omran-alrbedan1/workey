@@ -13,7 +13,7 @@ import {
 import { useApplicationInterviews } from "./useApplicationInterviews"
 import { useApplicationTests } from "./useApplicationTests"
 import { candidateDisplayName } from "../utils/candidateDisplay"
-import { hasSelectedCv } from "../utils/cv"
+import { canPreviewCv, getApplicationCvDocument, type ApplicationCvDocument } from "../utils/cv"
 import type {
   ApplicationStatusKey,
   EmployerApplicantDetail,
@@ -32,7 +32,7 @@ export interface EmployerApplicantDetailsModel {
   showScheduleDialog: boolean
   isStatusPending: boolean
   isCreateInterviewPending: boolean
-  hasCv: boolean
+  cvDocument: ApplicationCvDocument | null
   tests: ReturnType<typeof useApplicationTests>
   interviews: ReturnType<typeof useApplicationInterviews>
   setActiveTab: (tab: string) => void
@@ -75,8 +75,8 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
   }
 
   const handleDownloadCv = async () => {
-    if (!application || !hasSelectedCv(application)) {
-      showErrorToast("No CV attached to this application")
+    if (!application || !getApplicationCvDocument(application)?.canDownload) {
+      showErrorToast("CV download is not available for this application")
       return
     }
 
@@ -92,7 +92,7 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
   }
 
   const handlePreviewCv = async () => {
-    if (!application || !hasSelectedCv(application)) {
+    if (!application || !canPreviewCv(application)) {
       showErrorToast("CV preview is unavailable")
       return
     }
@@ -146,7 +146,7 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
     showScheduleDialog,
     isStatusPending: statusMutation.isPending,
     isCreateInterviewPending: createInterview.isPending,
-    hasCv: application ? hasSelectedCv(application) : false,
+    cvDocument: application ? getApplicationCvDocument(application) : null,
     tests,
     interviews,
     setActiveTab,

@@ -48,7 +48,6 @@ export function candidateSecondaryText(application: EmployerApplicant | null | u
   const professional = application?.submitted_snapshot?.profile?.professional
   const profile = application?.job_seeker_profile
   const candidate = (application as any)?.candidate
-  const selectedCv = (application as any)?.selected_cv
 
   return (
     application?.candidate_summary?.email ||
@@ -63,7 +62,6 @@ export function candidateSecondaryText(application: EmployerApplicant | null | u
     identity?.summary ||
     professional?.summary ||
     profile?.summary ||
-    selectedCv?.original_name ||
     fallback
   )
 }

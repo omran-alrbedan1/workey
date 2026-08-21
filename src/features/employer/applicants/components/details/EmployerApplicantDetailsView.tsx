@@ -139,7 +139,11 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
           <CandidateInfoTab
             application={application}
             candidateName={model.candidateName}
+            cvDocument={model.cvDocument}
+            isCvBusy={model.isCvBusy}
             onStatusChange={model.handleStatusChange}
+            onPreviewCv={() => void model.handlePreviewCv()}
+            onDownloadCv={() => void model.handleDownloadCv()}
             isStatusPending={model.isStatusPending}
           />
           {model.id && <CvSummaryPanel applicationId={model.id} />}

@@ -169,8 +169,6 @@ export interface EmployerApplicantListItem {
   job_posting: JobPostingReference
   job_posting_id?: string | number
   job_seeker_profile_id?: string | number
-  selected_cv_file_id?: string | number | null
-  selected_cv?: ApplicationSelectedCv | null
   submitted_cv?: ApplicationSubmittedCv | null
   snapshot_status?: KeyValueField | null
   status: ApplicationStatus
@@ -228,17 +226,6 @@ export interface EmployerApplicantDetail extends EmployerApplicantListItem {
 
 // Backward compatibility alias
 export type EmployerApplicant = EmployerApplicantDetail
-
-export interface ApplicationSelectedCv {
-  id: string | number
-  original_name?: string | null
-  version_label?: string | null
-  mime_type?: string | null
-  extension?: string | null
-  size_bytes?: number | null
-  download_url?: string | null
-  uploaded_at?: string | null
-}
 
 export interface ApplicationSubmittedCv {
   source?: string | null

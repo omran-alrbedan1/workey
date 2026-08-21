@@ -20,7 +20,7 @@ import type { EmployerCollection } from "@/features/employer/shared/services/emp
 import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerApplicants.types"
 import { employerApplicantsService } from "../services/employerApplicants.service"
 import { candidateDisplayName, candidateSecondaryText } from "../utils/candidateDisplay"
-import { hasSelectedCv, selectedCvDownloadName } from "../utils/cv"
+import { canDownloadCv, getApplicationCvDocument } from "../utils/cv"
 import { getApplicationStatusActions } from "../utils/statusActions"
 import ApplicationStatusChangeDialog from "./ApplicationStatusChangeDialog"
 
@@ -125,10 +125,10 @@ function EmployerApplicantMobileCard({
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() => onDownload(application)}
-              disabled={!hasSelectedCv(application) || downloadingId === application.id}
+              disabled={!canDownloadCv(application) || downloadingId === application.id}
             >
               <Download />{" "}
-              {hasSelectedCv(application)
+              {canDownloadCv(application)
                 ? t("actions.downloadCv")
                 : t("actions.noCv", { defaultValue: "No CV attached" })}
             </DropdownMenuItem>
@@ -157,18 +157,18 @@ function useHandleDownload() {
   const [downloadingId, setDownloadingId] = useState<string | number | null>(null)
 
   const handleDownload = async (application: EmployerApplicant) => {
-    if (!hasSelectedCv(application)) {
+    if (!canDownloadCv(application)) {
       showErrorToast(t("common:applicantsToasts.noCvAttached"))
       return
     }
 
     setDownloadingId(application.id)
     try {
-      const blob = await employerApplicantsService.downloadSelectedCv(application.id)
+      const blob = await employerApplicantsService.downloadCv(application.id)
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = selectedCvDownloadName(application)
+      a.download = getApplicationCvDocument(application)?.name ?? `cv-${application.id}`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -337,10 +337,10 @@ export default function EmployerApplicantsTable({
               </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => void handleDownload(application)}
-                disabled={!hasSelectedCv(application) || downloadingId === application.id}
+                disabled={!canDownloadCv(application) || downloadingId === application.id}
               >
                 <Download />{" "}
-                {hasSelectedCv(application)
+                {canDownloadCv(application)
                   ? t("actions.downloadCv")
                   : t("actions.noCv", { defaultValue: "No CV attached" })}
               </DropdownMenuItem>

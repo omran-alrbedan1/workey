@@ -1,12 +1,18 @@
 import {
   Activity,
+  Award,
   Briefcase,
+  Building2,
   Calendar,
   Clock,
+  Download,
+  Eye,
   FileText,
+  GraduationCap,
   IdCard,
   Mail,
   MapPin,
+  Paperclip,
   Phone,
   Link,
   Sparkles,
@@ -15,6 +21,7 @@ import {
 import type { ComponentType, ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -26,23 +33,36 @@ import { cn } from "@/lib/utils"
 import { valueOf } from "@/lib/keyValue"
 import { candidateHeadline } from "../../utils/candidateDisplay"
 import { getApplicationStatusActions } from "../../utils/statusActions"
+import type { ApplicationCvDocument } from "../../utils/cv"
 import ApplicationStatusHistory from "../ApplicationStatusHistory"
-import type { ApplicationStatusKey, EmployerApplicantDetail } from "../../types/employerApplicants.types"
+import type {
+  ApplicationStatusKey,
+  ApplicationSnapshotProfile,
+  EmployerApplicantDetail,
+} from "../../types/employerApplicants.types"
 
 interface CandidateInfoTabProps {
   application: EmployerApplicantDetail
   candidateName: string
+  cvDocument: ApplicationCvDocument | null
+  isCvBusy: boolean
   onStatusChange: (status: ApplicationStatusKey) => void
+  onPreviewCv: () => void
+  onDownloadCv: () => void
   isStatusPending: boolean
 }
 
 export default function CandidateInfoTab({
   application,
   candidateName,
+  cvDocument,
+  isCvBusy,
   onStatusChange,
+  onPreviewCv,
+  onDownloadCv,
   isStatusPending,
 }: CandidateInfoTabProps) {
-  const { t } = useTranslation(["employerApplicants", "common"])
+  const { t, i18n } = useTranslation(["employerApplicants", "common"])
   const profile = application.submitted_snapshot?.profile
   const job = application.job_posting
   const requiredSkills = job?.required_skills ?? []
@@ -216,16 +236,91 @@ export default function CandidateInfoTab({
       {profile && (
         <div className="grid gap-4 lg:grid-cols-2">
           <InfoCard title={t("candidate.profileTitle")} icon={UserRound}>
-            <InfoItem label={t("candidate.summary")} value={profile.identity?.summary ?? profile.professional?.summary ?? "-"} />
+            <InfoItem
+              label={t("candidate.summary")}
+              value={profile.identity?.summary ?? profile.professional?.summary ?? "-"}
+            />
             <InfoItem label={t("candidate.availability")} value={profile.availability?.status ?? "-"} />
           </InfoCard>
 
           <InfoCard title={t("candidate.linksTitle")} icon={Sparkles}>
-            <InfoItem label={t("common:profileLinks.linkedin")} value={profile.professional?.linkedin_url ?? "-"} />
-            <InfoItem label={t("common:profileLinks.github")} value={profile.professional?.github_url ?? "-"} />
-            <InfoItem label={t("common:profileLinks.portfolio")} value={profile.professional?.portfolio_url ?? "-"} />
+            <ProfileLinkItems profile={profile} />
           </InfoCard>
+
+          {(profile.skills?.length ?? 0) > 0 && (
+            <InfoCard title={t("candidate.skillsTitle")} icon={Award} className="lg:col-span-2">
+              <div className="flex flex-wrap gap-2">
+                {profile.skills!.map((skill, index) => (
+                  <Badge key={`${skill.slug ?? skill.name ?? index}-${index}`} variant="secondary">
+                    {skill.name || skill.slug || "-"}
+                  </Badge>
+                ))}
+              </div>
+            </InfoCard>
+          )}
         </div>
+      )}
+
+      {(profile?.experiences?.length ?? 0) > 0 && (
+        <InfoCard title={t("candidate.experiencesTitle")} icon={Building2}>
+          <div className="space-y-3">
+            {profile!.experiences!.map((experience, index) => (
+              <TimelineItem
+                key={`${experience.title ?? "experience"}-${index}`}
+                title={experience.title || "-"}
+                subtitle={experience.company}
+                meta={formatPeriod(experience.start_date, experience.end_date, experience.is_current, i18n.language, t("candidate.present"))}
+                description={experience.description}
+              />
+            ))}
+          </div>
+        </InfoCard>
+      )}
+
+      {(profile?.education?.length ?? 0) > 0 && (
+        <InfoCard title={t("candidate.educationTitle")} icon={GraduationCap}>
+          <div className="space-y-3">
+            {profile!.education!.map((education, index) => (
+              <TimelineItem
+                key={`${education.degree ?? "education"}-${index}`}
+                title={education.degree || "-"}
+                subtitle={
+                  [education.institution, education.field_of_study].filter(Boolean).join(" · ") || undefined
+                }
+                meta={formatPeriod(education.start_date, education.end_date, education.is_current, i18n.language, t("candidate.present"))}
+              />
+            ))}
+          </div>
+        </InfoCard>
+      )}
+
+      {cvDocument && (
+        <section className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-background-card p-5 shadow-card">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <Paperclip className="h-4 w-4" />
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-sm font-semibold text-text-primary">{t("candidate.documentsTitle")}</h3>
+              <p className="truncate text-xs text-text-muted" title={cvDocument.name}>
+                {cvDocument.name}
+              </p>
+              <p className="text-xs text-text-muted">{t("candidate.cvSupplementaryHint")}</p>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            {cvDocument.canPreview && (
+              <Button variant="outline" size="sm" disabled={isCvBusy} onClick={onPreviewCv}>
+                <Eye className="h-4 w-4" /> {t("candidate.previewCv")}
+              </Button>
+            )}
+            {cvDocument.canDownload && (
+              <Button variant="outline" size="sm" disabled={isCvBusy} onClick={onDownloadCv}>
+                <Download className="h-4 w-4" /> {t("candidate.downloadCv")}
+              </Button>
+            )}
+          </div>
+        </section>
       )}
 
       <section className="rounded-xl border border-border bg-background-card p-5 shadow-card">
@@ -275,13 +370,20 @@ function InfoCard({
   title,
   icon: Icon,
   children,
+  className,
 }: {
   title: string
   icon: ComponentType<{ className?: string }>
   children: ReactNode
+  className?: string
 }) {
   return (
-    <section className="rounded-xl border border-border bg-background-card p-5 shadow-card transition-shadow hover:shadow-md">
+    <section
+      className={cn(
+        "rounded-xl border border-border bg-background-card p-5 shadow-card transition-shadow hover:shadow-md",
+        className,
+      )}
+    >
       <h3 className="mb-4 flex items-center gap-3 text-sm font-semibold text-text-primary">
         <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
           <Icon className="h-4 w-4" />
@@ -291,6 +393,93 @@ function InfoCard({
       <div className="space-y-3">{children}</div>
     </section>
   )
+}
+
+function ProfileLinkItems({ profile }: { profile: ApplicationSnapshotProfile }) {
+  const { t } = useTranslation(["employerApplicants", "common"])
+
+  const namedLinks = [
+    { label: t("common:profileLinks.linkedin"), url: profile.professional?.linkedin_url },
+    { label: t("common:profileLinks.github"), url: profile.professional?.github_url },
+    { label: t("common:profileLinks.portfolio"), url: profile.professional?.portfolio_url },
+  ].filter((link): link is { label: string; url: string } => Boolean(link.url))
+
+  const extraLinks = [
+    ...(profile.professional_links ?? []),
+    ...(profile.professional?.other_links ?? []),
+  ]
+    .filter((link): link is { label?: string; url: string } => Boolean(link.url))
+    .map((link) => ({ label: link.label?.trim() || hostOf(link.url), url: link.url }))
+
+  const links = [...namedLinks, ...extraLinks]
+  if (links.length === 0) {
+    return <p className="text-sm text-text-muted">-</p>
+  }
+
+  return (
+    <div className="space-y-2">
+      {links.map((link) => (
+        <a
+          key={link.url}
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex min-w-0 items-center gap-2 text-sm font-medium text-primary hover:underline"
+        >
+          <Link className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{link.label}</span>
+        </a>
+      ))}
+    </div>
+  )
+}
+
+function TimelineItem({
+  title,
+  subtitle,
+  meta,
+  description,
+}: {
+  title: string
+  subtitle?: string | null
+  meta?: string | null
+  description?: string | null
+}) {
+  return (
+    <div className="rounded-lg border border-border bg-background p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm font-semibold text-text-primary">{title}</p>
+        {meta && <span className="text-xs font-medium text-text-muted">{meta}</span>}
+      </div>
+      {subtitle && <p className="mt-0.5 text-sm text-text-secondary">{subtitle}</p>}
+      {description && (
+        <p className="mt-1 whitespace-pre-line text-sm leading-6 text-text-muted">{description}</p>
+      )}
+    </div>
+  )
+}
+
+function hostOf(url: string) {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url
+  }
+}
+
+function formatPeriod(
+  start?: string | null,
+  end?: string | null,
+  isCurrent?: boolean,
+  language?: string,
+  presentLabel = "Present",
+) {
+  const format = (value?: string | null) =>
+    value ? new Date(value).toLocaleDateString(language, { year: "numeric", month: "short" }) : null
+  const from = format(start)
+  const to = isCurrent ? presentLabel : format(end)
+  if (!from && !to) return undefined
+  return [from, to].filter(Boolean).join(" – ")
 }
 
 function InfoItem({ label, value }: { label: string; value?: ReactNode }) {

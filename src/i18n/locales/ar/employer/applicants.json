@@ -78,10 +78,18 @@
     "salary": "الراتب",
     "requiredSkills": "المهارات المطلوبة",
     "niceSkills": "مهارات إضافية",
-    "profileTitle": "ملف المرشح المرسل",
+    "profileTitle": "ملف المرشح",
     "summary": "الملخص",
     "availability": "التوفر",
-    "linksTitle": "الروابط المهنية"
+    "linksTitle": "الروابط المهنية",
+    "skillsTitle": "المهارات",
+    "experiencesTitle": "الخبرات",
+    "educationTitle": "التعليم",
+    "present": "حتى الآن",
+    "documentsTitle": "المستندات",
+    "cvSupplementaryHint": "السيرة الذاتية المرفقة من المرشح — متاحة كمستند إضافي فقط.",
+    "previewCv": "معاينة السيرة الذاتية",
+    "downloadCv": "تنزيل السيرة الذاتية"
   },
   "statuses": {
     "submitted": "مقدم",

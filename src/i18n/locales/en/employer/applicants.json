@@ -78,10 +78,18 @@
     "salary": "Salary",
     "requiredSkills": "Required skills",
     "niceSkills": "Nice to have",
-    "profileTitle": "Submitted profile",
+    "profileTitle": "Candidate profile",
     "summary": "Summary",
     "availability": "Availability",
-    "linksTitle": "Professional links"
+    "linksTitle": "Professional links",
+    "skillsTitle": "Skills",
+    "experiencesTitle": "Experiences",
+    "educationTitle": "Education",
+    "present": "Present",
+    "documentsTitle": "Documents",
+    "cvSupplementaryHint": "CV attached by the candidate — available as a supplementary document only.",
+    "previewCv": "Preview CV",
+    "downloadCv": "Download CV"
   },
   "statuses": {
     "submitted": "Submitted",

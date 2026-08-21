@@ -152,14 +152,14 @@ export const employerApplicantsService = {
     )
   },
 
-  async downloadSelectedCv(applicationId: string | number): Promise<Blob> {
+  async downloadCv(applicationId: string | number): Promise<Blob> {
     const response = await rawApi.get(API_ENDPOINTS.applications.cvDownload(applicationId), {
       responseType: "blob",
     })
     return response.data
   },
 
-  async previewSelectedCv(applicationId: string | number): Promise<Blob> {
+  async previewCv(applicationId: string | number): Promise<Blob> {
     const response = await rawApi.get(API_ENDPOINTS.applications.cvPreview(applicationId), {
       responseType: "blob",
     })
