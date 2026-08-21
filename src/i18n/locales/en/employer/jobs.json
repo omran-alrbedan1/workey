@@ -3,6 +3,53 @@
   "description": "Create and manage your company's job postings.",
   "createTitle": "Create Job",
   "createDescription": "Create a draft job posting for your company.",
+  "wizard": {
+    "steps": {
+      "basic": "Basic Info",
+      "description": "Description",
+      "skills": "Skills",
+      "additional": "Additional",
+      "review": "Review & Publish"
+    },
+    "stepOf": "Step {{current}} of {{total}}",
+    "next": "Next",
+    "back": "Back",
+    "saveDraft": "Save Draft",
+    "savingDraft": "Saving...",
+    "publish": "Publish",
+    "publishing": "Publishing...",
+    "sections": {
+      "basicInfo": "Basic information",
+      "jobDescription": "Job description",
+      "skillsTitle": "Required skills",
+      "niceToHaveTitle": "Nice-to-have skills",
+      "additionalDetails": "Additional details",
+      "review": "Review your job posting"
+    },
+    "skillsHint": "Select skills from the platform catalog. The weight indicates how important each skill is (1 = low, 5 = high).",
+    "weightLabel": "Importance",
+    "selectedEmpty": "No {{group}} selected yet.",
+    "readiness": {
+      "title": "Readiness checklist",
+      "subtitle": "All required items must pass before the job can be published.",
+      "requiredTag": "Required",
+      "optionalTag": "Optional",
+      "items": {
+        "title": "Job title provided",
+        "description": "Description provided",
+        "requirements": "Requirements provided",
+        "workModeLocation": "Work mode and location are consistent",
+        "salaryRange": "Salary range is valid",
+        "deadline": "Application deadline is in the future",
+        "requiredSkills": "At least one required skill selected"
+      }
+    },
+    "summary": {
+      "title": "Summary",
+      "notProvided": "Not provided",
+      "skillsCount": "{{count}} required · {{nice}} nice-to-have"
+    }
+  },
   "detailsTitle": "Job Details",
   "detailsDescription": "View job posting details and ranked candidates.",
   "editTitle": "Edit Job",

@@ -40,7 +40,7 @@ export const employerJobsService = {
     )
   },
 
-  async create(input: EmployerJobInput): Promise<EmployerJob> {
+  async create(input: EmployerJobInput & EmployerJobSkillsInput): Promise<EmployerJob> {
     return unwrapEmployerEntity<EmployerJob>(await api.post(API_ENDPOINTS.jobs.create, input))
   },
 

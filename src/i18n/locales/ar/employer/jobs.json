@@ -3,6 +3,53 @@
   "description": "أنشئ وأدر إعلانات الوظائف الخاصة بشركتك.",
   "createTitle": "إنشاء وظيفة",
   "createDescription": "أنشئ مسودة إعلان وظيفي لشركتك.",
+  "wizard": {
+    "steps": {
+      "basic": "المعلومات الأساسية",
+      "description": "الوصف",
+      "skills": "المهارات",
+      "additional": "تفاصيل إضافية",
+      "review": "المراجعة والنشر"
+    },
+    "stepOf": "الخطوة {{current}} من {{total}}",
+    "next": "التالي",
+    "back": "السابق",
+    "saveDraft": "حفظ كمسودة",
+    "savingDraft": "جارٍ الحفظ...",
+    "publish": "نشر",
+    "publishing": "جارٍ النشر...",
+    "sections": {
+      "basicInfo": "المعلومات الأساسية",
+      "jobDescription": "وصف الوظيفة",
+      "skillsTitle": "المهارات المطلوبة",
+      "niceToHaveTitle": "مهارات مفيدة",
+      "additionalDetails": "تفاصيل إضافية",
+      "review": "راجع إعلان الوظيفة"
+    },
+    "skillsHint": "اختر المهارات من قائمة المنصة. يشير الوزن إلى أهمية كل مهارة (1 = منخفضة، 5 = عالية).",
+    "weightLabel": "الأهمية",
+    "selectedEmpty": "لم يتم اختيار {{group}} بعد.",
+    "readiness": {
+      "title": "قائمة جاهزية النشر",
+      "subtitle": "يجب استيفاء جميع العناصر المطلوبة قبل نشر الوظيفة.",
+      "requiredTag": "مطلوب",
+      "optionalTag": "اختياري",
+      "items": {
+        "title": "تم إدخال المسمى الوظيفي",
+        "description": "تم إدخال الوصف",
+        "requirements": "تم إدخال المتطلبات",
+        "workModeLocation": "نمط العمل والموقع متوافقان",
+        "salaryRange": "نطاق الراتب صحيح",
+        "deadline": "الموعد النهائي للتقديم في المستقبل",
+        "requiredSkills": "تم اختيار مهارة مطلوبة واحدة على الأقل"
+      }
+    },
+    "summary": {
+      "title": "ملخص",
+      "notProvided": "غير مُدخل",
+      "skillsCount": "{{count}} مطلوبة · {{nice}} مفيدة"
+    }
+  },
   "detailsTitle": "تفاصيل الوظيفة",
   "detailsDescription": "عرض تفاصيل الوظيفة والمتقدمين المرتبين.",
   "editTitle": "تعديل الوظيفة",

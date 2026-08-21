@@ -3,13 +3,11 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import { ROUTES } from "@/config"
-import EmployerJobForm from "../components/EmployerJobForm"
-import { useCreateEmployerJob } from "../hooks/useCreateEmployerJob"
+import EmployerCreateJobWizard from "../components/EmployerCreateJobWizard"
 
 export default function EmployerCreateJobPage() {
   const { t } = useTranslation("employerJobs")
   const navigate = useNavigate()
-  const createJob = useCreateEmployerJob()
 
   return (
     <div className="space-y-6">
@@ -21,7 +19,7 @@ export default function EmployerCreateJobPage() {
         backButtonLabel={t("actions.back")}
         onBackClick={() => navigate(ROUTES.employer.jobs)}
       />
-      <EmployerJobForm isPending={createJob.isPending} onSubmit={createJob.mutateAsync} />
+      <EmployerCreateJobWizard />
     </div>
   )
 }
