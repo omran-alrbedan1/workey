@@ -1,7 +1,9 @@
-import { BriefcaseBusiness, LogOut, Menu } from "lucide-react"
+import { BriefcaseBusiness, LogOut, Menu, Bell } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import { ModeToggle } from "@/components/mode-toggle"
 import LanguageSwitcher from "@/components/shared/buttons/language-switcher"
+import { ROUTES } from "@/config"
 
 interface EmployerHeaderProps {
   employerName?: string
@@ -17,6 +19,7 @@ export default function EmployerHeader({
   onMenuToggle,
 }: EmployerHeaderProps) {
   const { t } = useTranslation("employerNavigation")
+  const navigate = useNavigate()
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background-card px-4 py-4 shadow-sm sm:px-6">
@@ -42,6 +45,19 @@ export default function EmployerHeader({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Notifications */}
+          <button
+            type="button"
+            aria-label={t("notifications")}
+            onClick={() => navigate(ROUTES.employer.notifications)}
+            className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary"
+          >
+            <Bell className="h-5 w-5" />
+            <span className="absolute end-1 top-1 flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+            </span>
+          </button>
           <ModeToggle />
           <LanguageSwitcher />
           <button
