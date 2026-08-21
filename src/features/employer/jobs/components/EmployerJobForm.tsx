@@ -109,6 +109,15 @@ export default function EmployerJobForm({
     }
   }, [form, initialValues])
 
+  const workMode = form.watch("work_mode")
+
+  useEffect(() => {
+    if (workMode !== "remote") return
+    if (!form.getValues("location")) return
+    form.setValue("location", "")
+    form.clearErrors("location")
+  }, [workMode, form])
+
   return (
     <Form {...form}>
       <form
@@ -124,7 +133,7 @@ export default function EmployerJobForm({
             experience_level: values.experience_level,
             education_level: values.education_level?.trim() || null,
             work_mode: values.work_mode,
-            location: values.location?.trim() || null,
+            location: values.work_mode === "remote" ? null : values.location?.trim() || null,
             application_deadline: values.application_deadline || null,
             salary_min: values.salary_min ?? null,
             salary_max: values.salary_max ?? null,
@@ -195,13 +204,15 @@ export default function EmployerJobForm({
           }))}
           leftIcon={MapPin}
         />
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name="location"
-          label={t("fields.location")}
-          leftIcon={MapPin}
-        />
+        {workMode !== "remote" && (
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="location"
+            label={t("fields.location")}
+            leftIcon={MapPin}
+          />
+        )}
         <CustomFormField
           fieldType={FormFieldType.DATE_PICKER}
           control={form.control}
