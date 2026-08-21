@@ -1,4 +1,4 @@
-import { Briefcase, ListChecks, Trophy } from "lucide-react"
+import { Briefcase, ListChecks, Users } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
@@ -8,11 +8,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
 import { useEmployerJob } from "../hooks/useEmployerJob"
 import { useEmployerSkills } from "../hooks/useEmployerSkills"
-import { useRankedCandidates } from "../hooks/useRankedCandidates"
+import { useJobApplicants } from "../hooks/useJobApplicants"
 import EmployerJobOverview from "../components/EmployerJobOverview"
 import EmployerJobSkills from "../components/EmployerJobSkills"
 import EmployerJobScreeningQuestionsTab from "../components/EmployerJobScreeningQuestionsTab"
-import EmployerJobRankedCandidatesTab from "../components/EmployerJobRankedCandidatesTab"
+import EmployerJobApplicantsTab from "../components/EmployerJobApplicantsTab"
 
 export default function EmployerJobDetailsPage() {
   const { t } = useTranslation("employerJobs")
@@ -20,7 +20,7 @@ export default function EmployerJobDetailsPage() {
   const { id } = useParams()
   const job = useEmployerJob(id)
   const skills = useEmployerSkills()
-  const rankedCandidates = useRankedCandidates(id)
+  const applicants = useJobApplicants(id)
 
   if (job.isError) {
     return (
@@ -46,24 +46,24 @@ export default function EmployerJobDetailsPage() {
       {job.isPending ? (
         <Skeleton className="h-96 w-full rounded-xl" />
       ) : job.data ? (
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs defaultValue="information" className="space-y-6">
           <TabsList className="w-full">
-            <TabsTrigger value="overview" className="gap-2">
+            <TabsTrigger value="information" className="gap-2">
               <Briefcase className="h-4 w-4" />
-              {t("tabs.overview")}
+              {t("tabs.jobInformation")}
+            </TabsTrigger>
+            <TabsTrigger value="applicants" className="gap-2">
+              <Users className="h-4 w-4" />
+              {t("tabs.applicants")}
             </TabsTrigger>
             <TabsTrigger value="screening" className="gap-2">
               <ListChecks className="h-4 w-4" />
               {t("tabs.screeningQuestions")}
             </TabsTrigger>
-            <TabsTrigger value="ranked" className="gap-2">
-              <Trophy className="h-4 w-4" />
-              {t("tabs.rankedCandidates")}
-            </TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
+          {/* Job Information Tab */}
+          <TabsContent value="information" className="space-y-6">
             <EmployerJobOverview job={job.data} showSkills={false} />
             <EmployerJobSkills
               skills={job.data.skills ?? []}
@@ -75,6 +75,19 @@ export default function EmployerJobDetailsPage() {
               }
               onAttach={job.attachSkillsMutation.mutateAsync}
               onDetach={(skillId) => job.detachSkillMutation.mutate(skillId)}
+            />
+          </TabsContent>
+
+          {/* Applicants Tab */}
+          <TabsContent value="applicants">
+            <EmployerJobApplicantsTab
+              rows={applicants.rows}
+              collection={applicants.collection}
+              isLoading={applicants.isLoading}
+              isError={applicants.isError}
+              sortBy={applicants.sortBy}
+              onSortChange={applicants.setSortBy}
+              onRetry={applicants.retry}
             />
           </TabsContent>
 
@@ -91,16 +104,6 @@ export default function EmployerJobDetailsPage() {
               onCreate={job.createScreeningQuestionMutation.mutateAsync}
               onUpdate={(questionId, input) => job.updateScreeningQuestionMutation.mutateAsync({ questionId, input })}
               onDelete={job.deleteScreeningQuestionMutation.mutateAsync}
-            />
-          </TabsContent>
-
-          {/* Ranked Candidates Tab */}
-          <TabsContent value="ranked">
-            <EmployerJobRankedCandidatesTab
-              candidates={rankedCandidates.data?.items ?? []}
-              isLoading={rankedCandidates.isPending}
-              isError={rankedCandidates.isError}
-              onRetry={() => void rankedCandidates.refetch()}
             />
           </TabsContent>
         </Tabs>

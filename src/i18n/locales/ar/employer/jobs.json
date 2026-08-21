@@ -51,13 +51,37 @@
     }
   },
   "detailsTitle": "تفاصيل الوظيفة",
-  "detailsDescription": "عرض تفاصيل الوظيفة والمتقدمين المرتبين.",
+  "detailsDescription": "عرض تفاصيل الوظيفة وإدارة المتقدمين.",
   "editTitle": "تعديل الوظيفة",
   "editDescription": "حدّث إعلان الوظيفة واحفظ التغييرات.",
   "tabs": {
-    "overview": "نظرة عامة",
-    "screeningQuestions": "أسئلة الفرز",
-    "rankedCandidates": "المتقدمون المرتبون"
+    "jobInformation": "معلومات الوظيفة",
+    "applicants": "المتقدمون",
+    "screeningQuestions": "أسئلة الفرز"
+  },
+  "applicantsTab": {
+    "description": "جميع من تقدموا لهذه الوظيفة. استخدم درجة التوافق الذكية للترتيب وتحديد أولويات المراجعة.",
+    "matchHelperHint": "درجة التوافق الذكية — أداة مساعدة للترتيب والتصفية",
+    "unknownCandidate": "مرشح غير معروف",
+    "viewDetails": "عرض التفاصيل",
+    "loadError": "تعذر تحميل المتقدمين.",
+    "retry": "إعادة المحاولة",
+    "emptyTitle": "لا يوجد متقدمون بعد",
+    "emptyDescription": "لم يتقدم أي مرشح لهذه الوظيفة بعد.",
+    "columns": {
+      "candidate": "المرشح",
+      "status": "الحالة",
+      "appliedAt": "تاريخ التقديم",
+      "matchScore": "درجة التوافق",
+      "matchedSkills": "المهارات المتوافقة",
+      "missingSkills": "المهارات المطلوبة الناقصة"
+    },
+    "sort": {
+      "label": "ترتيب حسب",
+      "newest": "الأحدث تقديماً",
+      "matchHighToLow": "درجة التوافق (من الأعلى)",
+      "matchLowToHigh": "درجة التوافق (من الأدنى)"
+    }
   },
   "fields": {
     "title": "المسمى الوظيفي",
@@ -228,26 +252,6 @@
     "title": "العنوان",
     "desc": "الأحدث",
     "asc": "الأقدم"
-  },
-  "rankedCandidates": {
-    "title": "ترتيب المتقدمين",
-    "description": "ترتيب المدعوم بالذكاء الاصطناعي للمتقدمين بناءً على ملاءمتهم للوظيفة.",
-    "score": "نسبة التطابق",
-    "version": "الإصدار",
-    "matchedSkills": "المهارات المتطابقة",
-    "missingSkills": "المهارات المفقودة",
-    "reasons": "ملاحظات",
-    "empty": "لا يوجد متقدمون مرتبون بعد.",
-    "loadError": "تعذر تحميل ترتيب المتقدمين.",
-    "retry": "حاول مرة أخرى",
-    "breakdown": {
-      "title": "تفصيل النتيجة",
-      "skills": "المهارات",
-      "experience": "الخبرة",
-      "education": "التعليم",
-      "recency": "حداثة النشاط",
-      "profileCompleteness": "اكتمال الملف"
-    }
   },
   "errors": {
     "title": "تعذر تحميل الوظائف",

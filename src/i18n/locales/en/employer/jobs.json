@@ -51,13 +51,37 @@
     }
   },
   "detailsTitle": "Job Details",
-  "detailsDescription": "View job posting details and ranked candidates.",
+  "detailsDescription": "View job posting details and manage applicants.",
   "editTitle": "Edit Job",
   "editDescription": "Update this job posting and save your changes.",
   "tabs": {
-    "overview": "Overview",
-    "screeningQuestions": "Screening Questions",
-    "rankedCandidates": "Ranked Candidates"
+    "jobInformation": "Job Information",
+    "applicants": "Applicants",
+    "screeningQuestions": "Screening Questions"
+  },
+  "applicantsTab": {
+    "description": "Everyone who applied to this job. Use the AI match score to sort and prioritize your review.",
+    "matchHelperHint": "AI match score — a helper for sorting and filtering applicants",
+    "unknownCandidate": "Unknown candidate",
+    "viewDetails": "View details",
+    "loadError": "Could not load applicants.",
+    "retry": "Try again",
+    "emptyTitle": "No applicants yet",
+    "emptyDescription": "No candidates have applied to this job yet.",
+    "columns": {
+      "candidate": "Candidate",
+      "status": "Status",
+      "appliedAt": "Applied",
+      "matchScore": "Match score",
+      "matchedSkills": "Matched skills",
+      "missingSkills": "Missing required skills"
+    },
+    "sort": {
+      "label": "Sort by",
+      "newest": "Newest applications",
+      "matchHighToLow": "Match score (high to low)",
+      "matchLowToHigh": "Match score (low to high)"
+    }
   },
   "fields": {
     "title": "Job title",
@@ -233,28 +257,6 @@
     "title": "Title",
     "desc": "Newest",
     "asc": "Oldest"
-  },
-  "rankedCandidates": {
-    "title": "Ranked Candidates",
-    "pageTitle": "Ranked candidates",
-    "pageDescription": "Review AI-ranked candidates for this job.",
-    "description": "AI-powered ranking of applicants based on job fit.",
-    "score": "Match score",
-    "version": "Version",
-    "matchedSkills": "Matched skills",
-    "missingSkills": "Missing skills",
-    "reasons": "Notes",
-    "empty": "No ranked candidates yet.",
-    "loadError": "Could not load ranked candidates.",
-    "retry": "Try again",
-    "breakdown": {
-      "title": "Score breakdown",
-      "skills": "Skills",
-      "experience": "Experience",
-      "education": "Education",
-      "recency": "Recency",
-      "profileCompleteness": "Profile completeness"
-    }
   },
   "errors": {
     "title": "Unable to load jobs",
