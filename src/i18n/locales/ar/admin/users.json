@@ -13,14 +13,18 @@
     },
     "emptyTitle": "لم يتم العثور على مستخدمين.",
     "emptyDescription": "لا توجد حسابات مستخدمين تطابق العرض الحالي.",
-    "emptyImageAlt": "لا يوجد مستخدمون"
+    "emptyImageAlt": "لا يوجد مستخدمون",
+    "tabsLabel": "تصفية المستخدمين حسب الدور",
+    "tabs": {
+      "administrators": "مشرفو النظام",
+      "jobSeekers": "الباحثون عن عمل",
+      "employers": "أصحاب العمل"
+    }
   },
   "filters": {
     "title": "تصفية المستخدمين",
     "searchLabel": "بحث",
     "searchPlaceholder": "ابحث بالاسم أو البريد",
-    "roleLabel": "الدور",
-    "allRoles": "كل الأدوار",
     "statusLabel": "الحالة",
     "allStatuses": "كل الحالات"
   },
@@ -34,8 +38,21 @@
       "overview": "نظرة عامة",
       "activity": "النشاط والسجلات",
       "security": "الأمان",
-      "related": "السجلات المرتبطة"
+      "related": "السجلات المرتبطة",
+      "administrativeAudit": "التدقيق الإداري",
+      "loginHistory": "سجل تسجيل الدخول",
+      "activeSessions": "الجلسات النشطة",
+      "applications": "طلبات التقديم",
+      "interviews": "المقابلات",
+      "assessments": "التقييمات / الاختبارات",
+      "companyMembership": "عضوية الشركة",
+      "jobs": "الوظائف",
+      "recruitmentActivity": "نشاط التوظيف"
     },
+    "companyTitle": "عضوية الشركة",
+    "companyName": "الشركة",
+    "companyStatus": "حالة الشركة",
+    "noCompany": "هذا المستخدم غير مرتبط بأي شركة.",
     "metrics": {
       "applications": "طلبات التقديم",
       "jobs": "الوظائف",

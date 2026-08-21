@@ -4,19 +4,36 @@ import { useTranslation } from "react-i18next"
 
 import { AdminFeatureError } from "@/features/admin/shared/components"
 import PageHeader from "@/components/shared/headers/PageHeader"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import AdminUsersTable from "../components/AdminUsersTable"
 import AdminUsersFilter from "../components/AdminUsersFilter"
 import { useAdminUsers } from "../hooks/useAdminUsers"
 import { images } from "@/constants/images"
-import {
-  ADMIN_USER_FILTER_DEFAULTS,
-  type AdminUserFilterForm,
-} from "../types/adminUsers.types"
+import type { AdminUserFilterForm, AdminUserRole } from "../types/adminUsers.types"
+
+const ROLE_TABS: ReadonlyArray<{ value: AdminUserRole; labelKey: string }> = [
+  { value: "admin", labelKey: "list.tabs.administrators" },
+  { value: "job_seeker", labelKey: "list.tabs.jobSeekers" },
+  { value: "employer", labelKey: "list.tabs.employers" },
+]
+
+interface AdminUsersPageFilters {
+  search: string
+  status: string
+}
 
 export default function AdminUsersPage() {
   const { t } = useTranslation("adminUsers")
-  const [filters, setFilters] = useState<AdminUserFilterForm>(ADMIN_USER_FILTER_DEFAULTS)
-  const users = useAdminUsers(filters)
+  const [activeRole, setActiveRole] = useState<AdminUserRole>("admin")
+  const [filters, setFilters] = useState<AdminUsersPageFilters>({ search: "", status: "all" })
+
+  const roleFilters: AdminUserFilterForm = {
+    search: filters.search,
+    status: filters.status,
+    role: activeRole,
+  }
+  const users = useAdminUsers(roleFilters)
+
   if (users.isError)
     return (
       <>
@@ -52,11 +69,20 @@ export default function AdminUsersPage() {
           alt: t("list.imageAlt"),
         }}
       />
+      <Tabs value={activeRole} onValueChange={(value) => setActiveRole(value as AdminUserRole)}>
+        <TabsList aria-label={t("list.tabsLabel")}>
+          {ROLE_TABS.map((tab) => (
+            <TabsTrigger key={tab.value} value={tab.value} className="gap-2 whitespace-nowrap px-4">
+              {t(tab.labelKey)}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
       <AdminUsersFilter
         initialFilters={filters}
         isLoading={users.isFetching}
         onApplyFilters={setFilters}
-        onResetFilters={() => setFilters(ADMIN_USER_FILTER_DEFAULTS)}
+        onResetFilters={() => setFilters({ search: "", status: "all" })}
       />
       <AdminUsersTable
         users={users.data?.items ?? []}

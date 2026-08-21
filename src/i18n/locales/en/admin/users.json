@@ -13,14 +13,18 @@
     },
     "emptyTitle": "No users were returned.",
     "emptyDescription": "No user accounts match the current view.",
-    "emptyImageAlt": "No users"
+    "emptyImageAlt": "No users",
+    "tabsLabel": "Filter users by role",
+    "tabs": {
+      "administrators": "System Administrators",
+      "jobSeekers": "Job Seekers",
+      "employers": "Employers"
+    }
   },
   "filters": {
     "title": "Filter users",
     "searchLabel": "Search",
     "searchPlaceholder": "Search name or email",
-    "roleLabel": "Role",
-    "allRoles": "All roles",
     "statusLabel": "Status",
     "allStatuses": "All statuses"
   },
@@ -34,8 +38,21 @@
       "overview": "Overview",
       "activity": "Activity & logs",
       "security": "Security",
-      "related": "Related records"
+      "related": "Related records",
+      "administrativeAudit": "Administrative Audit",
+      "loginHistory": "Login History",
+      "activeSessions": "Active Sessions",
+      "applications": "Applications",
+      "interviews": "Interviews",
+      "assessments": "Assessments / Tests",
+      "companyMembership": "Company Membership",
+      "jobs": "Jobs",
+      "recruitmentActivity": "Recruitment Activity"
     },
+    "companyTitle": "Company membership",
+    "companyName": "Company",
+    "companyStatus": "Company status",
+    "noCompany": "This user is not linked to any company.",
     "metrics": {
       "applications": "Applications",
       "jobs": "Jobs",

@@ -48,6 +48,7 @@ const AdminUserMobileCard = ({
   onAction,
 }: AdminUserMobileCardProps) => {
   const { t } = useTranslation("adminUsers")
+  const roleLabel = useRoleLabel()
   const statusKey = keyOf(user.status)
 
   const UserActionsDropdown = ({ fullWidth }: { fullWidth?: boolean }) => (
@@ -103,7 +104,7 @@ const AdminUserMobileCard = ({
       <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
         <p className="flex items-center gap-2">
           <Shield className="h-3.5 w-3.5 text-primary" />
-          <span className="capitalize">{getRoleDisplay(user.role)}</span>
+          <span>{roleLabel(user.role)}</span>
         </p>
         {user.created_at && (
           <p className="flex items-center gap-2">
@@ -124,7 +125,16 @@ function getRoleDisplay(role: string | any) {
   if (typeof role === 'object' && role !== null) {
     return role.value || role.key || String(role)
   }
-  return role || "—"
+  return role || ""
+}
+
+function useRoleLabel() {
+  const { t } = useTranslation("adminUsers")
+  return (role: string | any) => {
+    const display = getRoleDisplay(role)
+    if (!display) return "—"
+    return t(`roles.${display}`, { defaultValue: display })
+  }
 }
 
 export default function AdminUsersTable({
@@ -136,6 +146,7 @@ export default function AdminUsersTable({
   isUpdating,
 }: AdminUsersTableProps) {
   const { t } = useTranslation("adminUsers")
+  const roleLabel = useRoleLabel()
   const navigate = useNavigate()
   const [selectedUser, setSelectedUser] = useState<AdminUserRecord | null>(null)
   const [selectedAction, setSelectedAction] = useState<UserStatusAction | null>(null)
@@ -181,7 +192,7 @@ export default function AdminUsersTable({
       key: "role",
       header: t("list.columns.role"),
       headerIcon: Shield,
-      cell: (user) => <span className="capitalize">{getRoleDisplay(user.role)}</span>,
+      cell: (user) => <span>{roleLabel(user.role)}</span>,
     },
     {
       key: "status",

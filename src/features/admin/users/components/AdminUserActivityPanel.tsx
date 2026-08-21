@@ -6,7 +6,17 @@ import { SectionCard } from "@/components/shared/cards/SectionCard"
 
 import type { AdminUserActivityItem, AdminUserDetails } from "../types/adminUsers.types"
 
-export default function AdminUserActivityPanel({ user }: { user: AdminUserDetails }) {
+export type AdminUserActivityLogsVariant = "both" | "activity" | "audit"
+
+interface AdminUserActivityPanelProps {
+  user: AdminUserDetails
+  logs?: AdminUserActivityLogsVariant
+}
+
+export default function AdminUserActivityPanel({
+  user,
+  logs = "both",
+}: AdminUserActivityPanelProps) {
   const { t, i18n } = useTranslation("adminUsers")
   const formatDate = (input: string) => {
     const date = new Date(input)
@@ -61,14 +71,21 @@ export default function AdminUserActivityPanel({ user }: { user: AdminUserDetail
     )
   }
 
+  const showActivity = logs === "both" || logs === "activity"
+  const showAudit = logs === "both" || logs === "audit"
+
   return (
-    <div className="grid gap-6 xl:grid-cols-2">
-      <SectionCard icon={Activity} title={t("activity.title")}>
-        {renderItems(user.activity_logs, "activity.empty")}
-      </SectionCard>
-      <SectionCard icon={ClipboardList} title={t("activity.auditTitle")}>
-        {renderItems(user.audit_logs, "activity.auditEmpty")}
-      </SectionCard>
+    <div className={showActivity && showAudit ? "grid gap-6 xl:grid-cols-2" : "space-y-6"}>
+      {showActivity ? (
+        <SectionCard icon={Activity} title={t("activity.title")}>
+          {renderItems(user.activity_logs, "activity.empty")}
+        </SectionCard>
+      ) : null}
+      {showAudit ? (
+        <SectionCard icon={ClipboardList} title={t("activity.auditTitle")}>
+          {renderItems(user.audit_logs, "activity.auditEmpty")}
+        </SectionCard>
+      ) : null}
     </div>
   )
 }

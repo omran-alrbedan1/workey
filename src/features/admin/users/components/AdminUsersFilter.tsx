@@ -1,4 +1,4 @@
-import { Search, ShieldCheck, UserRound } from "lucide-react"
+import { Search, ShieldCheck } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { CustomFilter, type FilterField } from "@/components/shared/custom/CustomFilter"
@@ -8,7 +8,7 @@ import {
 } from "../types/adminUsers.types"
 
 interface AdminUsersFilterProps {
-  onApplyFilters: (values: AdminUserFilterForm) => void
+  onApplyFilters: (values: Partial<AdminUserFilterForm>) => void
   onResetFilters: () => void
   isLoading: boolean
   initialFilters: Partial<AdminUserFilterForm>
@@ -29,19 +29,6 @@ export default function AdminUsersFilter({
       placeholder: t("filters.searchPlaceholder"),
       icon: Search,
       minWidth: "240px",
-    },
-    {
-      name: "role",
-      label: t("filters.roleLabel"),
-      type: "select",
-      icon: UserRound,
-      emptyValue: "all",
-      options: [
-        { value: "all", label: t("filters.allRoles") },
-        { value: "admin", label: t("roles.admin") },
-        { value: "employer", label: t("roles.employer") },
-        { value: "job_seeker", label: t("roles.job_seeker") },
-      ],
     },
     {
       name: "status",
