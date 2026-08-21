@@ -23,8 +23,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { keyOf, valueOf } from "@/lib/keyValue"
+import { valueOf } from "@/lib/keyValue"
 import { candidateHeadline } from "../../utils/candidateDisplay"
+import { getApplicationStatusActions } from "../../utils/statusActions"
+import ApplicationStatusHistory from "../ApplicationStatusHistory"
 import type { ApplicationStatusKey, EmployerApplicantDetail } from "../../types/employerApplicants.types"
 
 interface CandidateInfoTabProps {
@@ -47,7 +49,8 @@ export default function CandidateInfoTab({
   const niceSkills = job?.nice_to_have_skills ?? []
   const latestStatus = application.status_history?.[application.status_history.length - 1]
   const matchScore = application.match_score ?? application.matching_score
-  const nextStatuses = application.allowed_status_transitions?.map((status) => status.key) ?? []
+  const statusActions = getApplicationStatusActions(application)
+  const nextStatuses = statusActions.targets
 
   return (
     <div className="space-y-6">
@@ -129,13 +132,11 @@ export default function CandidateInfoTab({
                       <SelectValue placeholder={t("actions.changeStatus")} />
                     </SelectTrigger>
                     <SelectContent>
-                      {nextStatuses
-                        .filter((s) => s !== keyOf(application.status))
-                        .map((s) => (
-                          <SelectItem key={s} value={s}>
-                            {t(`statuses.${s}`)}
-                          </SelectItem>
-                        ))}
+                      {nextStatuses.map((s) => (
+                        <SelectItem key={s} value={s}>
+                          {t(`statuses.${s}`)}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -226,6 +227,10 @@ export default function CandidateInfoTab({
           </InfoCard>
         </div>
       )}
+
+      <section className="rounded-xl border border-border bg-background-card p-5 shadow-card">
+        <ApplicationStatusHistory history={application.status_history ?? []} />
+      </section>
     </div>
   )
 }

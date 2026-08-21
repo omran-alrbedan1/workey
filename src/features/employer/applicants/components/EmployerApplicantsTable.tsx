@@ -21,19 +21,8 @@ import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerA
 import { employerApplicantsService } from "../services/employerApplicants.service"
 import { candidateDisplayName, candidateSecondaryText } from "../utils/candidateDisplay"
 import { hasSelectedCv, selectedCvDownloadName } from "../utils/cv"
+import { getApplicationStatusActions } from "../utils/statusActions"
 import ApplicationStatusChangeDialog from "./ApplicationStatusChangeDialog"
-
-const nextStatuses = [
-  "under_review",
-  "shortlisted",
-  "test_pending",
-  "test_completed",
-  "interview_pending",
-  "final_review",
-  "on_hold",
-  "accepted",
-  "rejected",
-] as const
 
 function getKey(v: unknown): string {
   return keyOf(v)
@@ -68,6 +57,7 @@ function EmployerApplicantMobileCard({
   const { t, i18n } = useTranslation("employerApplicants")
   const statusKey = getKey(application.status)
   const statusValue = getValue(application.status)
+  const statusActions = getApplicationStatusActions(application)
   const score = application.match_score ?? application.matching_score
 
   return (
@@ -142,17 +132,19 @@ function EmployerApplicantMobileCard({
                 ? t("actions.downloadCv")
                 : t("actions.noCv", { defaultValue: "No CV attached" })}
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            {(application.allowed_status_transitions?.map((s) => s.key) || nextStatuses)
-              .filter((status) => status !== statusKey)
-              .map((status) => (
-                <DropdownMenuItem
-                  key={status}
-                  onSelect={() => onStatusChange(application, status as ApplicationStatusKey)}
-                >
-                  {t(`statuses.${status}`)}
-                </DropdownMenuItem>
-              ))}
+            {statusActions.targets.length > 0 && (
+              <>
+                <DropdownMenuSeparator />
+                {statusActions.targets.map((status) => (
+                  <DropdownMenuItem
+                    key={status}
+                    onSelect={() => onStatusChange(application, status as ApplicationStatusKey)}
+                  >
+                    {t(`statuses.${status}`)}
+                  </DropdownMenuItem>
+                ))}
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -352,17 +344,23 @@ export default function EmployerApplicantsTable({
                   ? t("actions.downloadCv")
                   : t("actions.noCv", { defaultValue: "No CV attached" })}
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {(application.allowed_status_transitions?.map((s) => s.key) || nextStatuses)
-                .filter((status) => status !== getKey(application.status))
-                .map((status) => (
-                  <DropdownMenuItem
-                    key={status}
-                    onSelect={() => handleStatusClick(application, status as ApplicationStatusKey)}
-                  >
-                    {t(`statuses.${status}`)}
-                  </DropdownMenuItem>
-                ))}
+              {(() => {
+                const targets = getApplicationStatusActions(application).targets
+                if (targets.length === 0) return null
+                return (
+                  <>
+                    <DropdownMenuSeparator />
+                    {targets.map((status) => (
+                      <DropdownMenuItem
+                        key={status}
+                        onSelect={() => handleStatusClick(application, status as ApplicationStatusKey)}
+                      >
+                        {t(`statuses.${status}`)}
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                )
+              })()}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

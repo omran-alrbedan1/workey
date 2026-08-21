@@ -4,13 +4,13 @@ import { EmptyState } from "@/components/shared/states"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { nextSteps } from "./testDetails.helpers"
 
 interface ApplicantTestNextStepTabProps {
   hasAnyResult: boolean
   nextStep: string
   isPending: boolean
   isTerminalStatus: boolean
+  allowedSteps: ReadonlyArray<{ value: string; labelKey: string }>
   onNextStepChange: (value: string) => void
   onApply: () => void
 }
@@ -20,6 +20,7 @@ export default function ApplicantTestNextStepTab({
   nextStep,
   isPending,
   isTerminalStatus,
+  allowedSteps,
   onNextStepChange,
   onApply,
 }: ApplicantTestNextStepTabProps) {
@@ -61,7 +62,7 @@ export default function ApplicantTestNextStepTab({
             <SelectValue placeholder={t("tests.selectNextStep")} />
           </SelectTrigger>
           <SelectContent>
-            {nextSteps.map((step) => (
+            {allowedSteps.map((step) => (
               <SelectItem key={step.value} value={step.value}>
                 {t(step.labelKey)}
               </SelectItem>

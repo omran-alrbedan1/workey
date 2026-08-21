@@ -36,6 +36,7 @@ import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { employerTestsService } from "@/features/employer/tests/services/employerTests.service"
 import { useApplicationTests } from "../hooks/useApplicationTests"
 import { candidateDisplayName } from "../utils/candidateDisplay"
+import { getApplicationStatusActions } from "../utils/statusActions"
 import TestAssignmentDeadlinePanel from "./TestAssignmentDeadlinePanel"
 import TestAssignmentRetakePanel from "./TestAssignmentRetakePanel"
 import type { EmployerApplicant, EmployerTestAttempt } from "../types/employerApplicants.types"
@@ -136,6 +137,10 @@ export default function ApplicationTestsDialog({
   const { t } = useTranslation("employerApplicants")
   const navigate = useNavigate()
   const tests = useApplicationTests(application?.id)
+  const allowedNextSteps = useMemo(() => {
+    const targets = getApplicationStatusActions(application).targets
+    return nextSteps.filter((step) => targets.includes(step.value))
+  }, [application])
   const [gradingAttempt, setGradingAttempt] = useState<EmployerTestAttempt | null>(null)
   const [deadlineAttempt, setDeadlineAttempt] = useState<EmployerTestAttempt | null>(null)
   const [retakeAttempt, setRetakeAttempt] = useState<EmployerTestAttempt | null>(null)
@@ -671,7 +676,7 @@ export default function ApplicationTestsDialog({
           </div>
         )}
 
-        {hasAnyResult && onNextStep && (
+        {hasAnyResult && onNextStep && allowedNextSteps.length > 0 && (
           <div className="rounded-lg border border-border bg-background p-4">
             <h3 className="mb-3 font-semibold">{t("tests.nextStep")}</h3>
             <div className="flex items-center gap-3">
@@ -681,7 +686,7 @@ export default function ApplicationTestsDialog({
                     <SelectValue placeholder={t("tests.selectNextStep")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {nextSteps.map((step) => (
+                    {allowedNextSteps.map((step) => (
                       <SelectItem key={step.value} value={step.value}>
                         {t(step.labelKey)}
                       </SelectItem>

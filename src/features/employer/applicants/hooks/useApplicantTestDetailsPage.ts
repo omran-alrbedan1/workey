@@ -14,6 +14,8 @@ import {
 } from "../components/test-details/testDetails.helpers"
 import { useApplicationStatusMutation, useEmployerApplicantDetail } from "./useEmployerApplicantDetail"
 import { useApplicationTests } from "./useApplicationTests"
+import { getApplicationStatusActions, isTerminalApplicationStatus } from "../utils/statusActions"
+import { nextSteps } from "../components/test-details/testDetails.helpers"
 import type { ApplicationStatusKey, EmployerTestAttempt } from "../types/employerApplicants.types"
 import type { TestAttemptResult, TestAttemptResultBreakdownItem } from "@/features/employer/tests/types/employerTests.types"
 
@@ -37,6 +39,7 @@ export interface ApplicantTestDetailsModel {
   isBulkSaving: boolean
   isStatusPending: boolean
   isTerminalStatus: boolean
+  allowedNextSteps: typeof nextSteps
   manualAnswersCount: number
   gradedCount: number
   nextStep: string
@@ -93,7 +96,12 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     const app = applicant.data
     if (!app) return false
     const allowed = app.allowed_status_transitions
-    return Array.isArray(allowed) && allowed.length === 0
+    return isTerminalApplicationStatus(keyOf(app.status)) || (Array.isArray(allowed) && allowed.length === 0)
+  }, [applicant.data])
+
+  const allowedNextSteps = useMemo(() => {
+    const targets = getApplicationStatusActions(applicant.data).targets
+    return nextSteps.filter((step) => targets.includes(step.value))
   }, [applicant.data])
 
   const goBack = useCallback(() => {
@@ -208,6 +216,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
 
   const applyNextStep = async () => {
     if (!nextStep) return
+    if (!allowedNextSteps.some((step) => step.value === nextStep)) return
     await statusMutation.mutateAsync({ status: nextStep as ApplicationStatusKey })
     setNextStep("")
   }
@@ -230,6 +239,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     isBulkSaving: tests.bulkGradeMutation.isPending,
     isStatusPending: statusMutation.isPending,
     isTerminalStatus,
+    allowedNextSteps,
     manualAnswersCount: manualAnswers.length,
     gradedCount,
     nextStep,

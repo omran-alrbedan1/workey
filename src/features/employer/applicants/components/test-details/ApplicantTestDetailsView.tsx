@@ -148,6 +148,7 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
             nextStep={model.nextStep}
             isPending={model.isStatusPending}
             isTerminalStatus={model.isTerminalStatus}
+            allowedSteps={model.allowedNextSteps}
             onNextStepChange={model.setNextStep}
             onApply={() => void model.applyNextStep()}
           />

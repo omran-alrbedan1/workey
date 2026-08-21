@@ -118,7 +118,7 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
 
   const handleScheduleInterview = async (applicationId: string | number, input: EmployerInterviewInput) => {
     await createInterview.mutateAsync({ applicationId, input })
-    await interviews.refetch()
+    await Promise.all([interviews.refetch(), applicant.refetch()])
     setShowScheduleDialog(false)
   }
 
