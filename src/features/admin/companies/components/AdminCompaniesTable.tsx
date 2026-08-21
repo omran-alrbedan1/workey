@@ -32,8 +32,12 @@ import { images } from "@/constants/images"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 
 import type { AdminCompanyRecord } from "../types/adminCompanies.types"
+import {
+  getCompanyApprovalActions,
+  type CompanyApprovalAction,
+} from "../utils/approvalActions"
 
-type CompanyAction = "approve" | "reject" | "suspend"
+type CompanyAction = CompanyApprovalAction
 
 interface CompanyActionsDropdownProps {
   company: AdminCompanyRecord
@@ -51,6 +55,8 @@ function CompanyActionsDropdown({
   onSelect,
 }: CompanyActionsDropdownProps) {
   const { t } = useTranslation("adminCompanies")
+  const allowedActions = getCompanyApprovalActions(company)
+  const hasApprovalActions = allowedActions.length > 0
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -72,27 +78,34 @@ function CompanyActionsDropdown({
           <Eye className="h-4 w-4" />
           {t("actions.viewDetails")}
         </DropdownMenuItem>
-        <DropdownMenuItem
-          className="gap-2 text-primary focus:bg-primary/10 focus:text-primary"
-          onSelect={() => onSelect(company, "approve")}
-        >
-          <Check className="h-4 w-4" />
-          {t("actions.approve")}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
-          onSelect={() => onSelect(company, "suspend")}
-        >
-          <Ban className="h-4 w-4" />
-          {t("actions.suspend")}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
-          onSelect={() => onSelect(company, "reject")}
-        >
-          <X className="h-4 w-4" />
-          {t("actions.reject")}
-        </DropdownMenuItem>
+        {hasApprovalActions ? <DropdownMenuSeparator /> : null}
+        {allowedActions.includes("approve") ? (
+          <DropdownMenuItem
+            className="gap-2 text-primary focus:bg-primary/10 focus:text-primary"
+            onSelect={() => onSelect(company, "approve")}
+          >
+            <Check className="h-4 w-4" />
+            {t("actions.approve")}
+          </DropdownMenuItem>
+        ) : null}
+        {allowedActions.includes("suspend") ? (
+          <DropdownMenuItem
+            className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
+            onSelect={() => onSelect(company, "suspend")}
+          >
+            <Ban className="h-4 w-4" />
+            {t("actions.suspend")}
+          </DropdownMenuItem>
+        ) : null}
+        {allowedActions.includes("reject") ? (
+          <DropdownMenuItem
+            className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/30"
+            onSelect={() => onSelect(company, "reject")}
+          >
+            <X className="h-4 w-4" />
+            {t("actions.reject")}
+          </DropdownMenuItem>
+        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   )

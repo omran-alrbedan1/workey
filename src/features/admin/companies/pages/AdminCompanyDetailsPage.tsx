@@ -1,10 +1,21 @@
-import { Building2, BriefcaseBusiness, Edit, ExternalLink, ShieldCheck, Users } from "lucide-react"
+import {
+  Ban,
+  Building2,
+  BriefcaseBusiness,
+  Check,
+  Edit,
+  ExternalLink,
+  ShieldCheck,
+  Users,
+  X,
+} from "lucide-react"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
 import PageHeader from "@/components/shared/headers/PageHeader"
+import { ApproveModal, RejectModal, SuspendModal } from "@/components/shared/modals"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
@@ -18,6 +29,10 @@ import AdminCompanyVerificationCard from "../components/AdminCompanyVerification
 import AdminCompanyFormDialog from "../components/AdminCompanyFormDialog"
 import CompanyMemberList from "../components/CompanyMemberList"
 import { useAdminCompanyDetails } from "../hooks/useAdminCompanyDetails"
+import {
+  getCompanyApprovalActions,
+  type CompanyApprovalAction,
+} from "../utils/approvalActions"
 
 export default function AdminCompanyDetailsPage() {
   const { id } = useParams<{ id: string }>()
@@ -25,6 +40,7 @@ export default function AdminCompanyDetailsPage() {
   const { t } = useTranslation("adminCompanies")
   const companyQuery = useAdminCompanyDetails(id)
   const [editOpen, setEditOpen] = useState(false)
+  const [approvalAction, setApprovalAction] = useState<CompanyApprovalAction | null>(null)
 
   if (!id) {
     return (
@@ -51,6 +67,27 @@ export default function AdminCompanyDetailsPage() {
   const company = companyQuery.company
   if (!company) return null
 
+  const approvalActions = getCompanyApprovalActions(company)
+  const isUpdating =
+    companyQuery.approveMutation.isPending ||
+    companyQuery.rejectMutation.isPending ||
+    companyQuery.suspendMutation.isPending
+  const closeApprovalModal = () => {
+    if (!isUpdating) setApprovalAction(null)
+  }
+  const confirmApprove = async () => {
+    await companyQuery.approveMutation.mutateAsync()
+    setApprovalAction(null)
+  }
+  const confirmReject = async (reason: string) => {
+    await companyQuery.rejectMutation.mutateAsync(reason)
+    setApprovalAction(null)
+  }
+  const confirmSuspend = async () => {
+    await companyQuery.suspendMutation.mutateAsync()
+    setApprovalAction(null)
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -65,11 +102,46 @@ export default function AdminCompanyDetailsPage() {
           alt: t("details.imageAlt"),
         }}
         rightContent={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <StatusBadge
               status={company.approval_status ?? company.status ?? "pending"}
               variant="soft"
             />
+            {approvalActions.includes("approve") ? (
+              <Button
+                size="sm"
+                disabled={isUpdating}
+                onClick={() => setApprovalAction("approve")}
+                className="gap-2"
+              >
+                <Check className="h-4 w-4" />
+                {t("actions.approve")}
+              </Button>
+            ) : null}
+            {approvalActions.includes("reject") ? (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={isUpdating}
+                onClick={() => setApprovalAction("reject")}
+                className="gap-2 text-red-600 hover:bg-red-50 hover:text-red-700"
+              >
+                <X className="h-4 w-4" />
+                {t("actions.reject")}
+              </Button>
+            ) : null}
+            {approvalActions.includes("suspend") ? (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={isUpdating}
+                onClick={() => setApprovalAction("suspend")}
+                className="gap-2 text-red-600 hover:bg-red-50 hover:text-red-700"
+              >
+                <Ban className="h-4 w-4" />
+                {t("actions.suspend")}
+              </Button>
+            ) : null}
             {company.website ? (
               <Button asChild size="sm" variant="outline" className="gap-2">
                 <a href={company.website} target="_blank" rel="noreferrer">
@@ -175,6 +247,34 @@ export default function AdminCompanyDetailsPage() {
           <CompanyMemberList companyId={company.id} />
         </TabsContent>
       </Tabs>
+
+      <ApproveModal
+        open={approvalAction === "approve"}
+        name={company.name}
+        loading={isUpdating}
+        onClose={closeApprovalModal}
+        onConfirm={confirmApprove}
+        title={t("modals.approveTitle")}
+        description={t("modals.approveDescription", { name: company.name })}
+        confirmText={t("modals.approveConfirm")}
+      />
+      <RejectModal
+        open={approvalAction === "reject"}
+        name={company.name}
+        loading={isUpdating}
+        onClose={closeApprovalModal}
+        onConfirm={confirmReject}
+        title={t("modals.rejectTitle")}
+        description={t("modals.rejectDescription", { name: company.name })}
+        confirmText={t("modals.rejectConfirm")}
+      />
+      <SuspendModal
+        open={approvalAction === "suspend"}
+        name={company.name}
+        loading={isUpdating}
+        onClose={closeApprovalModal}
+        onConfirm={confirmSuspend}
+      />
     </div>
   )
 }
