@@ -217,5 +217,20 @@
     "partial": "جاري التحميل",
     "unavailable": "غير متاح",
     "stale": "قديم"
+  },
+  "errors": {
+    "serverError": "خطأ في الخادم",
+    "serverErrorDesc": "خوادمنا تواجه مشاكل. يرجى المحاولة مرة أخرى لاحقًا.",
+    "accessDenied": "الوصول مرفوض",
+    "accessDeniedDesc": "ليس لديك إذن للوصول إلى هذا المورد.",
+    "networkError": "خطأ في الشبكة",
+    "networkErrorDesc": "يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.",
+    "timeoutError": "انتهت مهلة الطلب",
+    "timeoutErrorDesc": "استغرق الطلب وقتًا طويلاً للإكمال. يرجى المحاولة مرة أخرى.",
+    "defaultErrorDesc": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+    "pageNotFoundDesc": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "customErrorDesc": "حدث خطأ.",
+    "validationError": "خطأ في التحقق",
+    "validationErrorDesc": "يرجى التحقق من إدخالك والمحاولة مرة أخرى."
   }
 }

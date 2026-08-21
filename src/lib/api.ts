@@ -135,11 +135,19 @@ API.interceptors.response.use(
       if (!backendErrorMessages[code]) {
         apiError.message = error.response?.data?.message || 'You do not have permission to perform this action.';
       }
+      // Redirect to Access Denied page
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/access-denied')) {
+        window.location.href = '/access-denied';
+      }
     }
 
     // Handle 404 Not Found
     if (error.response?.status === 404) {
       apiError.message = error.response?.data?.message || 'The requested resource was not found.';
+      // Redirect to Not Found page
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/not-found')) {
+        window.location.href = '/not-found';
+      }
     }
 
     // Handle 409 Conflict - resource conflict
@@ -156,6 +164,16 @@ API.interceptors.response.use(
       if (error.response?.data?.errors) {
         apiError.errors = error.response.data.errors;
       }
+    }
+
+    // Handle network errors
+    if (!error.response && error.code === 'ERR_NETWORK') {
+      apiError.message = 'Network error. Please check your internet connection and try again.';
+    }
+
+    // Handle timeout errors
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      apiError.message = 'Request timeout. The request took too long to complete. Please try again.';
     }
     
     return Promise.reject(apiError);

@@ -217,5 +217,20 @@
     "partial": "loading",
     "unavailable": "unavailable",
     "stale": "stale"
+  },
+  "errors": {
+    "serverError": "Server Error",
+    "serverErrorDesc": "Our servers are having trouble. Please try again later.",
+    "accessDenied": "Access Denied",
+    "accessDeniedDesc": "You don't have permission to access this resource.",
+    "networkError": "Network Error",
+    "networkErrorDesc": "Please check your internet connection and try again.",
+    "timeoutError": "Request Timeout",
+    "timeoutErrorDesc": "The request took too long to complete. Please try again.",
+    "defaultErrorDesc": "An unexpected error occurred. Please try again.",
+    "pageNotFoundDesc": "The page you're looking for doesn't exist or has been moved.",
+    "customErrorDesc": "An error occurred.",
+    "validationError": "Validation Error",
+    "validationErrorDesc": "Please check your input and try again."
   }
 }
