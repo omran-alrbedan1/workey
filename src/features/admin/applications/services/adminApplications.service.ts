@@ -1,8 +1,11 @@
 import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
-import { unwrapCollection } from "@/features/admin/shared/services/adminResponse.utils"
+import { unwrapCollection, unwrapEntity } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminCollection, AdminListParams } from "@/features/admin/shared/types/adminApi.types"
-import type { AdminApplicationRecord } from "../types/adminApplications.types"
+import type {
+  AdminApplicationDetailRecord,
+  AdminApplicationRecord,
+} from "../types/adminApplications.types"
 import type { AdminJobRecord } from "@/features/admin/jobs/types/adminJobs.types"
 
 interface ApiErrorLike {
@@ -83,5 +86,11 @@ export const adminApplicationsService = {
         },
       }
     }
+  },
+
+  async show(id: string | number): Promise<AdminApplicationDetailRecord> {
+    return unwrapEntity<AdminApplicationDetailRecord>(
+      await api.get(API_ENDPOINTS.admin.applicationById(id)),
+    )
   },
 }

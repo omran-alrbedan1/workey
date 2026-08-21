@@ -4,114 +4,52 @@ import type { AdminPagination } from "@/features/admin/shared/types/adminApi.typ
 import type { AdminApplicationRecord } from "../types/adminApplications.types"
 import { images } from "@/constants/images"
 import { useTranslation } from "react-i18next"
-import { User, BriefcaseBusiness, ShieldCheck, Target, Calendar, Building2 } from "lucide-react"
-
-type CandidateLike = NonNullable<ReturnType<typeof candidateFor>>
-
-function candidateFor(item: AdminApplicationRecord) {
-  return (
-    item.candidate ??
-    item.job_seeker ??
-    item.jobSeeker ??
-    item.applicant ??
-    item.seeker ??
-    item.candidate_user ??
-    item.job_seeker_user ??
-    item.candidate_profile ??
-    item.job_seeker_profile ??
-    item.profile ??
-    item.user ??
-    item.application?.candidate ??
-    item.application?.job_seeker ??
-    item.application?.jobSeeker ??
-    item.application?.applicant ??
-    item.application?.seeker ??
-    item.application?.candidate_user ??
-    item.application?.job_seeker_user ??
-    item.application?.candidate_profile ??
-    item.application?.job_seeker_profile ??
-    item.application?.profile ??
-    item.application?.user
-  )
-}
-
-function fullNameFromParts(person?: CandidateLike) {
-  return [person?.first_name, person?.last_name].filter(Boolean).join(" ").trim()
-}
-
-function personName(person?: CandidateLike): string | undefined {
-  if (!person) return undefined
-  return (
-    person.full_name ||
-    person.name ||
-    fullNameFromParts(person) ||
-    person.user?.full_name ||
-    person.user?.name ||
-    fullNameFromParts(person.user) ||
-    person.profile?.full_name ||
-    person.profile?.name ||
-    [person.profile?.first_name, person.profile?.last_name].filter(Boolean).join(" ").trim() ||
-    undefined
-  )
-}
-
-function personEmail(person?: CandidateLike): string | undefined {
-  if (!person) return undefined
-  return person.email || person.user?.email || person.profile?.email || undefined
-}
-
-function candidateNameFor(item: AdminApplicationRecord) {
-  const candidate = candidateFor(item)
-  return (
-    personName(candidate) ||
-    item.candidate_name ||
-    item.job_seeker_name ||
-    item.applicant_name ||
-    item.application?.candidate_name ||
-    item.application?.job_seeker_name ||
-    item.application?.applicant_name
-  )
-}
-
-function candidateEmailFor(item: AdminApplicationRecord) {
-  const candidate = candidateFor(item)
-  return (
-    personEmail(candidate) ||
-    item.candidate_email ||
-    item.job_seeker_email ||
-    item.applicant_email ||
-    item.application?.candidate_email ||
-    item.application?.job_seeker_email ||
-    item.application?.applicant_email
-  )
-}
-
-function jobFor(item: AdminApplicationRecord) {
-  return item.job ?? item.application?.job
-}
-
-function companyFor(item: AdminApplicationRecord) {
-  return (
-    item.company ?? item.job?.company ?? item.application?.company ?? item.application?.job?.company
-  )
-}
-
-function appliedAtFor(item: AdminApplicationRecord) {
-  return item.applied_at ?? item.submitted_at ?? item.created_at
-}
+import { useNavigate } from "react-router-dom"
+import {
+  User,
+  BriefcaseBusiness,
+  ShieldCheck,
+  Target,
+  Calendar,
+  Building2,
+  Eye,
+} from "lucide-react"
+import { ROUTES } from "@/config"
+import {
+  appliedAtFor,
+  candidateEmailFor,
+  candidateNameFor,
+  companyFor,
+  jobFor,
+} from "../utils/applicationDisplay"
 
 interface AdminApplicationMobileCardProps {
   application: AdminApplicationRecord
+  onViewDetails: (application: AdminApplicationRecord) => void
 }
 
-const AdminApplicationMobileCard = ({ application }: AdminApplicationMobileCardProps) => {
+const AdminApplicationMobileCard = ({
+  application,
+  onViewDetails,
+}: AdminApplicationMobileCardProps) => {
   const { t } = useTranslation("adminApplications")
   const job = jobFor(application)
   const company = companyFor(application)
   const score = application.match_score ?? application.matching_score
 
   return (
-    <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={() => onViewDetails(application)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault()
+          onViewDetails(application)
+        }
+      }}
+      className="cursor-pointer rounded-2xl border border-border bg-background-card p-4 shadow-card transition-colors hover:bg-muted/30"
+    >
       <div className="flex items-start gap-3">
         <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
           <User className="h-5 w-5" />
@@ -151,6 +89,13 @@ const AdminApplicationMobileCard = ({ application }: AdminApplicationMobileCardP
           </p>
         )}
       </div>
+
+      <div className="mt-4">
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+          <Eye className="h-3.5 w-3.5" />
+          {t("actions.viewDetails")}
+        </span>
+      </div>
     </article>
   )
 }
@@ -167,6 +112,16 @@ export default function AdminApplicationsTable({
   onPageChange: (page: number) => void
 }) {
   const { t } = useTranslation("adminApplications")
+  const navigate = useNavigate()
+
+  const viewDetails = (application: AdminApplicationRecord) => {
+    navigate(ROUTES.admin.applicationDetails(application.id))
+  }
+
+  const MobileCardWrapper = ({ item }: { item: AdminApplicationRecord }) => (
+    <AdminApplicationMobileCard application={item} onViewDetails={viewDetails} />
+  )
+
   const columns: Column<AdminApplicationRecord>[] = [
     {
       key: "candidate",
@@ -228,7 +183,8 @@ export default function AdminApplicationsTable({
         perPage: pagination?.perPage,
       }}
       onPageChange={onPageChange}
-      mobileCardComponent={AdminApplicationMobileCard}
+      onRowClick={viewDetails}
+      mobileCardComponent={MobileCardWrapper}
       emptyMessage={t("empty")}
       emptyDescription={t("emptyDescription")}
       emptyImage={images.emptyJobs}

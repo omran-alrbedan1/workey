@@ -20,6 +20,7 @@ const AdminCompanyDetailsPage = lazy(() => import("@/features/admin/companies/pa
 const AdminJobsPage = lazy(() => import("@/features/admin/jobs/pages/AdminJobsPage"))
 const AdminJobDetailsPage = lazy(() => import("@/features/admin/jobs/pages/AdminJobDetailsPage"))
 const AdminApplicationsPage = lazy(() => import("@/features/admin/applications/pages/AdminApplicationsPage"))
+const AdminApplicationDetailsPage = lazy(() => import("@/features/admin/applications/pages/AdminApplicationDetailsPage"))
 const AdminSkillsPage = lazy(() => import("@/features/admin/skills/pages/AdminSkillsPage"))
 const AdminTestsPage = lazy(() => import("@/features/admin/tests/pages/AdminTestsPage"))
 const AdminNotificationsPage = lazy(() => import("@/features/admin/notifications/pages/AdminNotificationsPage"))
@@ -61,6 +62,7 @@ export const adminRoutes: RouteObject = {
     { path: ROUTES.admin.jobs, element: withRouteSuspense(<AdminJobsPage />) },
     { path: ROUTES.admin.jobDetails(":id"), element: withRouteSuspense(<AdminJobDetailsPage />) },
     { path: ROUTES.admin.applications, element: withRouteSuspense(<AdminApplicationsPage />) },
+    { path: ROUTES.admin.applicationDetails(":id"), element: withRouteSuspense(<AdminApplicationDetailsPage />) },
     { path: ROUTES.admin.skills, element: withRouteSuspense(<AdminSkillsPage />) },
     { path: ROUTES.admin.tests, element: withRouteSuspense(<AdminTestsPage />) },
     { path: ROUTES.admin.notifications, element: withRouteSuspense(<AdminNotificationsPage />) },
