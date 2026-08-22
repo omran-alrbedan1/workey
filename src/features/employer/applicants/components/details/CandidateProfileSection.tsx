@@ -1,5 +1,6 @@
 import { Award, Building2, Download, Eye, GraduationCap, Paperclip, Sparkles, UserRound } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { valueOf } from "@/lib/keyValue"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { ApplicationCvDocument } from "../../utils/cv"
@@ -39,7 +40,10 @@ export default function CandidateProfileSection({
                 label={t("candidate.summary")}
                 value={profile.identity?.summary ?? profile.professional?.summary ?? "-"}
               />
-              <InfoItem label={t("candidate.availability")} value={profile.availability?.status ?? "-"} />
+              <InfoItem
+                label={t("candidate.availability")}
+                value={valueOf(profile.availability?.status) || "-"}
+              />
             </SectionCard>
 
             <SectionCard title={t("candidate.linksTitle")} icon={Sparkles}>

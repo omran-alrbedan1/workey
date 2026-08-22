@@ -70,10 +70,6 @@ function EmployerJobMobileCard({
           {job.location || t("columns.noLocation")}
         </p>
         <p className="flex items-center gap-2">
-          <UsersRound className="h-3.5 w-3.5 text-primary" />
-          {t("columns.applications")}: {job.applications_count ?? 0}
-        </p>
-        <p className="flex items-center gap-2">
           <Calendar className="h-3.5 w-3.5 text-primary" />
           {job.created_at ? new Date(job.created_at).toLocaleDateString(i18n.language) : "-"}
         </p>
@@ -196,7 +192,6 @@ export default function EmployerJobsTable({
       cell: (job) => <StatusBadge status={job.status ?? "draft"} variant="soft" />,
     },
     { key: "type", header: t("columns.type"), cell: (job) => getValue(job.employment_type) },
-    { key: "applications", header: t("columns.applications"), cell: (job) => job.applications_count ?? 0 },
     {
       key: "created",
       header: t("columns.created"),

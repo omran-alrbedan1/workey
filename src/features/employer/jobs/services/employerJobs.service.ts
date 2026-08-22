@@ -1,6 +1,7 @@
 import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
 import {
+  isRecord,
   unwrapEmployerCollection,
   unwrapEmployerEntity,
   type EmployerCollection,
@@ -14,6 +15,42 @@ import type {
   JobScreeningQuestionInput,
   RankedCandidate,
 } from "../types/employerJobs.types"
+
+/**
+ * The backend has returned the applications total under several shapes
+ * (applications_count, applicants_count, stats.applications_count,
+ * applications[] / applications{total}). Normalize them all so the
+ * jobs table never falls back to 0 while applications exist.
+ */
+function withApplicationsCount(job: EmployerJob): EmployerJob {
+  const source = job as unknown as Record<string, unknown>
+
+  const direct = source.applications_count ?? source.applicants_count ?? source.job_applications_count
+  if (direct !== undefined && direct !== null) {
+    return { ...job, applications_count: Number(direct) }
+  }
+
+  const stats = (source.stats ?? source.statistics) as Record<string, unknown> | undefined
+  const fromStats = isRecord(stats)
+    ? (stats.applications_count ?? stats.applications ?? stats.applicants)
+    : undefined
+  if (fromStats !== undefined && fromStats !== null) {
+    return { ...job, applications_count: Number(fromStats) }
+  }
+
+  const applications = source.applications
+  if (Array.isArray(applications)) {
+    return { ...job, applications_count: applications.length }
+  }
+  if (isRecord(applications)) {
+    const nested = applications.total ?? applications.count
+    if (nested !== undefined && nested !== null) {
+      return { ...job, applications_count: Number(nested) }
+    }
+  }
+
+  return job
+}
 
 export const employerJobsService = {
   async listSkills(search = "", limit = 100): Promise<EmployerCollection<EmployerJobSkill>> {
@@ -33,11 +70,12 @@ export const employerJobsService = {
     } = {},
     perPage = 15,
   ): Promise<EmployerCollection<EmployerJob>> {
-    return unwrapEmployerCollection<EmployerJob>(
+    const collection = unwrapEmployerCollection<EmployerJob>(
       await api.get(API_ENDPOINTS.employer.jobs, {
         params: { page, per_page: perPage, ...filters },
       }),
     )
+    return { ...collection, items: collection.items.map(withApplicationsCount) }
   },
 
   async create(input: EmployerJobInput & EmployerJobSkillsInput): Promise<EmployerJob> {
@@ -45,7 +83,9 @@ export const employerJobsService = {
   },
 
   async get(id: string | number): Promise<EmployerJob> {
-    return unwrapEmployerEntity<EmployerJob>(await api.get(API_ENDPOINTS.jobs.byId(id)))
+    return withApplicationsCount(
+      unwrapEmployerEntity<EmployerJob>(await api.get(API_ENDPOINTS.jobs.byId(id))),
+    )
   },
 
   async update(id: string | number, input: EmployerJobInput): Promise<EmployerJob> {

@@ -106,7 +106,7 @@ export interface ApplicationSnapshotProfile {
     icon_url?: string
   }>
   availability?: {
-    status?: "immediately" | "within_1_month" | "within_3_months" | "flexible" | "not_looking"
+    status?: KeyValueField
     notice_period_days?: number | null
   }
 }
