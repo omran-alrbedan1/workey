@@ -90,10 +90,16 @@ export default function OverviewSection({
                       {profile.identity.phone}
                     </span>
                   )}
-                  {(profile?.location?.city || profile?.location?.full_address || profile?.location?.location_text) && (
+                  {(valueOf(profile?.location?.city) ||
+                    valueOf(profile?.location?.country) ||
+                    profile?.location?.full_address ||
+                    profile?.location?.location_text) && (
                     <span className="flex items-center gap-1.5">
                       <MapPin className="h-3.5 w-3.5" />
-                      {profile.location.city || profile.location.full_address || profile.location.location_text}
+                      {valueOf(profile?.location?.city) ||
+                        valueOf(profile?.location?.country) ||
+                        profile?.location?.full_address ||
+                        profile?.location?.location_text}
                     </span>
                   )}
                 </div>
@@ -185,7 +191,10 @@ export default function OverviewSection({
           <InfoItem label={t("candidate.experienceLevel")} value={String(valueOf(job?.experience_level, "-"))} />
           <InfoItem label={t("candidate.educationLevel")} value={String(valueOf(job?.education_level, "-"))} />
           <InfoItem label={t("candidate.workMode")} value={String(valueOf(job?.work_mode, "-"))} />
-          <InfoItem label={t("candidate.location")} value={job?.city || job?.location || "-"} />
+          <InfoItem
+            label={t("candidate.location")}
+            value={valueOf(job?.city) || job?.location || "-"}
+          />
           <InfoItem label={t("candidate.salary")} value={formatSalary(job?.salary_min, job?.salary_max)} />
         </div>
 

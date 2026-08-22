@@ -102,6 +102,7 @@ function WizardSkillPicker({
   isLoading,
   loadFailed,
   selected,
+  takenIds,
   isPending,
   onAdd,
   onRemove,
@@ -113,6 +114,7 @@ function WizardSkillPicker({
   isLoading: boolean
   loadFailed: boolean
   selected: JobSkillAssignmentInput[]
+  takenIds?: Array<string | number>
   isPending: boolean
   onAdd: (skill: { id: string | number; name?: string }) => void
   onRemove: (skillId: string | number) => void
@@ -120,7 +122,11 @@ function WizardSkillPicker({
 }) {
   const { t } = useTranslation("employerJobs")
   const selectedIds = new Set(selected.map((item) => String(item.skill_id)))
-  const available = choices.filter((skill) => !selectedIds.has(String(skill.id)))
+  // Skills picked in the other group cannot belong to this one as well.
+  const takenElsewhere = new Set((takenIds ?? []).map((id) => String(id)))
+  const available = choices.filter(
+    (skill) => !selectedIds.has(String(skill.id)) && !takenElsewhere.has(String(skill.id)),
+  )
 
   return (
     <div className="space-y-3 rounded-lg border border-border p-4">
@@ -302,14 +308,23 @@ export default function EmployerCreateJobWizard() {
     }
   }
 
-  const buildPayload = (raw: EmployerJobFormValues, shouldPublish: boolean) => ({
-    input: {
-      ...buildInput(raw),
-      ...(requiredSkills.length > 0 ? { required_skills: requiredSkills } : {}),
-      ...(niceToHaveSkills.length > 0 ? { nice_to_have_skills: niceToHaveSkills } : {}),
-    },
-    shouldPublish,
-  })
+  const buildPayload = (raw: EmployerJobFormValues, shouldPublish: boolean) => {
+    // A skill may only appear in one group per request; keep the payload valid
+    // even if state ever drifts out of sync.
+    const requiredIds = new Set(requiredSkills.map((skill) => String(skill.skill_id)))
+    const safeNiceToHave = niceToHaveSkills.filter(
+      (skill) => !requiredIds.has(String(skill.skill_id)),
+    )
+
+    return {
+      input: {
+        ...buildInput(raw),
+        ...(requiredSkills.length > 0 ? { required_skills: requiredSkills } : {}),
+        ...(safeNiceToHave.length > 0 ? { nice_to_have_skills: safeNiceToHave } : {}),
+      },
+      shouldPublish,
+    }
+  }
 
   const goToStep = (index: number) => {
     if (createJob.isPending) return
@@ -625,6 +640,7 @@ export default function EmployerCreateJobWizard() {
                   isLoading={skillsQuery.isLoading}
                   loadFailed={skillsQuery.isError}
                   selected={requiredSkills}
+                  takenIds={niceToHaveSkills.map((skill) => skill.skill_id)}
                   isPending={createJob.isPending}
                   onAdd={(skill) => addSkill(setRequiredSkills, skill)}
                   onRemove={(skillId) => removeSkill(setRequiredSkills, skillId)}
@@ -637,6 +653,7 @@ export default function EmployerCreateJobWizard() {
                   isLoading={skillsQuery.isLoading}
                   loadFailed={skillsQuery.isError}
                   selected={niceToHaveSkills}
+                  takenIds={requiredSkills.map((skill) => skill.skill_id)}
                   isPending={createJob.isPending}
                   onAdd={(skill) => addSkill(setNiceToHaveSkills, skill)}
                   onRemove={(skillId) => removeSkill(setNiceToHaveSkills, skillId)}
@@ -732,32 +749,32 @@ export default function EmployerCreateJobWizard() {
                   </span>
                   {t("wizard.summary.title")}
                 </h3>
-                <div className="grid gap-4 lg:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
                   {summarySections.map((section) => (
                     <div
                       key={section.titleKey}
-                      className="rounded-lg border border-border bg-background p-4 shadow-sm"
+                      className="rounded-lg border border-border bg-background p-3 shadow-sm sm:p-4"
                     >
-                      <div className="mb-3 flex items-center gap-2 border-b border-border pb-2.5">
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                      <div className="mb-2.5 flex items-center gap-2 border-b border-border pb-2 sm:mb-3 sm:gap-2.5 sm:pb-2.5">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary sm:h-7 sm:w-7">
                           <section.icon className="h-3.5 w-3.5" />
                         </span>
-                        <h4 className="text-sm font-semibold text-text-primary">
+                        <h4 className="text-xs font-semibold text-text-primary sm:text-sm">
                           {t(section.titleKey)}
                         </h4>
                       </div>
-                      <dl className="space-y-3">
+                      <dl className="space-y-2.5 sm:space-y-3">
                         {section.rows.map((row) => (
-                          <div key={row.label} className="flex items-start gap-2.5">
+                          <div key={row.label} className="flex items-start gap-2 sm:gap-2.5">
                             <row.icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-text-muted" />
                             <div className="min-w-0 flex-1">
-                              <dt className="text-xs uppercase tracking-wide text-text-muted">
+                              <dt className="text-[11px] uppercase tracking-wide text-text-muted sm:text-xs">
                                 {row.label}
                               </dt>
                               <dd
                                 className={cn(
-                                  "text-sm text-text-primary",
-                                  row.multiline ? "whitespace-pre-line" : "truncate",
+                                  "break-words text-xs text-text-primary sm:text-sm",
+                                  row.multiline ? "whitespace-pre-line" : "line-clamp-2 sm:line-clamp-none sm:truncate",
                                 )}
                                 title={row.multiline ? undefined : row.value}
                               >

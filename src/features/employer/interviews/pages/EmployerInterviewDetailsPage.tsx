@@ -39,7 +39,7 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { ROUTES } from "@/config"
-import type { KeyValueField } from "@/lib/keyValue"
+import { valueOf, type KeyValueField } from "@/lib/keyValue"
 import { showErrorToast } from "@/lib/toast"
 import { cn } from "@/lib/utils"
 import CompleteInterviewDialog from "../components/CompleteInterviewDialog"
@@ -576,7 +576,10 @@ function CandidateContextCard({
   const education = [...(profile?.education ?? [])].slice(0, 2)
   const summary = identity?.summary || profile?.professional?.summary
   const headline = identity?.headline || profile?.professional?.headline
-  const location = profile?.location?.city || profile?.location?.country || profile?.location?.full_address
+  const location =
+    valueOf(profile?.location?.city) ||
+    valueOf(profile?.location?.country) ||
+    profile?.location?.full_address
   const hasContext = Boolean(headline || summary || location || skills.length || experiences.length || education.length)
 
   return (

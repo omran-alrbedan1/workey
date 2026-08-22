@@ -61,9 +61,9 @@ export default function ApplicationStatusHistory({ history }: ApplicationStatusH
                 {entry.changed_by && (
                   <div className="flex items-center gap-1">
                     <User className="h-3 w-3" />
-                    <span>{entry.changed_by.name || "Unknown"}</span>
+                    <span>{valueOf(entry.changed_by.name) || "Unknown"}</span>
                     {entry.changed_by.role && (
-                      <span className="text-text-muted">({entry.changed_by.role})</span>
+                      <span className="text-text-muted">({valueOf(entry.changed_by.role)})</span>
                     )}
                   </div>
                 )}

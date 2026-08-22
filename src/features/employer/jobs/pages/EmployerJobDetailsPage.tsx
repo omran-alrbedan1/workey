@@ -88,6 +88,8 @@ export default function EmployerJobDetailsPage() {
               sortBy={applicants.sortBy}
               onSortChange={applicants.setSortBy}
               onRetry={applicants.retry}
+              page={applicants.page}
+              onPageChange={applicants.setPage}
             />
           </TabsContent>
 

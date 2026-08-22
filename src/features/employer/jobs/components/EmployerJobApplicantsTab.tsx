@@ -75,6 +75,8 @@ interface EmployerJobApplicantsTabProps {
   sortBy: JobApplicantSortKey
   onSortChange: (sort: JobApplicantSortKey) => void
   onRetry: () => void
+  page?: number
+  onPageChange?: (page: number) => void
 }
 
 export default function EmployerJobApplicantsTab({
@@ -85,6 +87,7 @@ export default function EmployerJobApplicantsTab({
   sortBy,
   onSortChange,
   onRetry,
+  onPageChange,
 }: EmployerJobApplicantsTabProps) {
   const { t, i18n } = useTranslation("employerJobs")
   const navigate = useNavigate()
@@ -223,7 +226,7 @@ export default function EmployerJobApplicantsTab({
             lastPage: collection?.pagination.lastPage ?? 1,
             perPage: collection?.pagination.perPage,
           }}
-          onPageChange={setPage}
+          onPageChange={(page) => onPageChange?.(page)}
           onRowClick={openDetails}
           emptyMessage={t("applicantsTab.emptyTitle")}
           emptyDescription={t("applicantsTab.emptyDescription")}

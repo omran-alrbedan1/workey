@@ -127,6 +127,16 @@ export interface ApplicationScreeningAnswer {
   }
 }
 
+// Some endpoints return city/country as reference objects instead of plain strings
+export interface GeoReference {
+  id?: string | number
+  code?: string
+  name?: string
+  country_code?: string
+}
+
+export type GeoLike = string | GeoReference | null | undefined
+
 // Job Posting Reference
 export interface JobPostingReference {
   id: string | number
@@ -138,7 +148,7 @@ export interface JobPostingReference {
   education_level?: KeyValueField | null
   work_mode?: KeyValueField | null
   location?: string | null
-  city?: string | null
+  city?: GeoLike
   salary_min?: string | number | null
   salary_max?: string | number | null
   company?: {
