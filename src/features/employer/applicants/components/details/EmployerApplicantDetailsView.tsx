@@ -26,6 +26,7 @@ import MatchingScoreSection from "./MatchingScoreSection"
 import OverviewSection from "./OverviewSection"
 import ScheduleInterviewDialog from "../ScheduleInterviewDialog"
 import type { EmployerApplicantDetailsModel } from "../../hooks/useEmployerApplicantDetailsPage"
+import { getAllowedApplicationActions } from "../../utils/applicationActions"
 
 interface EmployerApplicantDetailsViewProps {
   model: EmployerApplicantDetailsModel
@@ -186,6 +187,7 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
       <TabsContent value="interviews">
         <InterviewsTab
           interviews={model.interviews}
+          canSchedule={getAllowedApplicationActions(application).flows.includes("schedule_interview")}
           onSchedule={() => model.setShowScheduleDialog(true)}
         />
       </TabsContent>
@@ -219,4 +221,3 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
     </>
   )
 }
-

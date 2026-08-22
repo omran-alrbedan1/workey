@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import { StatusBadge } from "@/components/shared/badges"
 import { Button } from "@/components/ui/button"
 import {
@@ -60,8 +61,6 @@ import type {
 } from "../types/employerInterviews.types"
 import {
   actionAllowed,
-  bothPartiesPresent,
-  hasStarted,
   interviewCandidateName,
   interviewJobTitle,
   interviewKey,
@@ -99,19 +98,27 @@ export default function EmployerInterviewDetailsPage() {
     )
   }
 
-  if (interview.isError || !interview.data) {
+  if (interview.isError) {
+    return (
+      <EmployerFeatureError
+        title={t("title")}
+        error={interview.error}
+        retry={() => void interview.refetch()}
+      />
+    )
+  }
+
+  if (!interview.data) {
     return (
       <ErrorState
         title={t("errors.title")}
         description={t("errors.notFound")}
-        retry={() => void interview.refetch()}
       />
     )
   }
 
   const data = interview.data
   const statusKey = interviewKey(data.status)
-  const isCompleted = statusKey === "completed"
   const startAt = scheduledStart(data)
   const endAt = scheduledEnd(data)
   const interviewType = data.type ?? data.interview_type
@@ -119,18 +126,14 @@ export default function EmployerInterviewDetailsPage() {
   const modeKey = interviewKey(interviewMode)
   const isOnline = modeKey === "online"
   const active = isActiveInterview(data)
-  const started = hasStarted(data)
-  const canReschedule = actionAllowed(data, "reschedule", active)
-  const canCancel = actionAllowed(data, "cancel", active)
-  const canRecordAttendance = actionAllowed(data, "attendance", active && started)
-  const canMarkNoShow = actionAllowed(data, "no_show", active && started)
-  const canComplete = actionAllowed(
-    data,
-    "complete",
-    statusKey === "confirmed" && started && bothPartiesPresent(data),
-  )
-  const canEvaluate = actionAllowed(data, "evaluate", isCompleted && !data.evaluation)
-  const canJoinVideo = isOnline && active && actionAllowed(data, "join_video", true)
+  const canUpdate = actionAllowed(data, "update")
+  const canReschedule = actionAllowed(data, "reschedule")
+  const canCancel = actionAllowed(data, "cancel")
+  const canRecordAttendance = actionAllowed(data, "attendance")
+  const canMarkNoShow = actionAllowed(data, "no_show")
+  const canComplete = actionAllowed(data, "complete")
+  const canEvaluate = actionAllowed(data, "evaluate") && !data.evaluation
+  const canJoinVideo = isOnline && active && actionAllowed(data, "join_video")
   const durationMinutes =
     startAt && endAt
       ? Math.round((new Date(endAt).getTime() - new Date(startAt).getTime()) / 60_000)
@@ -187,6 +190,7 @@ export default function EmployerInterviewDetailsPage() {
         <div className="grid gap-4 lg:grid-cols-2">
           <PrivateNotesCard
             savedNote={data.internal_note || data.note || data.notes}
+            canEdit={canUpdate}
             isSaving={interview.noteMutation.isPending}
             onSave={(value) => interview.noteMutation.mutateAsync(value)}
           />
@@ -517,10 +521,12 @@ function InterviewInfoSection({
 
 function PrivateNotesCard({
   savedNote,
+  canEdit,
   isSaving,
   onSave,
 }: {
   savedNote?: string | null
+  canEdit: boolean
   isSaving: boolean
   onSave: (value: string) => Promise<unknown>
 }) {
@@ -544,13 +550,13 @@ function PrivateNotesCard({
         onChange={(event) => setDraft(event.target.value)}
         placeholder={t("hrAssistance.privateNotes.placeholder")}
         rows={6}
-        disabled={isSaving}
+        disabled={isSaving || !canEdit}
         className="resize-none"
       />
       <div className="flex justify-end">
         <Button
           size="sm"
-          disabled={!dirty || isSaving}
+          disabled={!dirty || isSaving || !canEdit}
           onClick={() => {
             void onSave(draft).catch((error) => showErrorToast(error))
           }}
@@ -997,3 +1003,8 @@ function formatDateTime(value?: string | null) {
   const date = new Date(value)
   return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString()
 }
+
+
+
+
+

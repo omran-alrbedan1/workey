@@ -45,7 +45,7 @@ export function interviewJobTitle(interview: EmployerInterview) {
   return interview.job_application?.job_posting?.title
 }
 
-export function actionAllowed(interview: EmployerInterview, action: string, fallback: boolean) {
+export function actionAllowed(interview: EmployerInterview, action: string, fallback = false) {
   const actions = interview.allowed_actions
   if (Array.isArray(actions)) return actions.includes(action)
   if (actions && typeof actions === "object") {

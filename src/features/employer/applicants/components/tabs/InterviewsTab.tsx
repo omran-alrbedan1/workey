@@ -6,21 +6,40 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { valueOf } from "@/lib/keyValue"
 import EmptyState from "@/components/shared/states/EmptyState"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import type { EmployerInterview } from "@/features/employer/interviews/types/employerInterviews.types"
 
 interface InterviewsTabProps {
   interviews: {
     isPending: boolean
+    isError: boolean
+    error?: unknown
+    refetch: () => Promise<unknown>
     data?: { items: EmployerInterview[] }
   }
+  canSchedule?: boolean
   onSchedule: () => void
 }
 
-export default function InterviewsTab({ interviews, onSchedule }: InterviewsTabProps) {
+export default function InterviewsTab({
+  interviews,
+  canSchedule = false,
+  onSchedule,
+}: InterviewsTabProps) {
   const { t } = useTranslation("employerApplicants")
 
   if (interviews.isPending) {
     return <Skeleton className="h-64 w-full" />
+  }
+
+  if (interviews.isError) {
+    return (
+      <EmployerFeatureError
+        title={t("interview.title")}
+        error={interviews.error}
+        retry={() => void interviews.refetch()}
+      />
+    )
   }
 
   if (!interviews.data?.items || interviews.data.items.length === 0) {
@@ -31,15 +50,17 @@ export default function InterviewsTab({ interviews, onSchedule }: InterviewsTabP
             <Video className="h-5 w-5 text-primary" />
             {t("interview.title")}
           </CardTitle>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onSchedule}
-            className="shrink-0"
-          >
-            <Calendar className="h-4 w-4 mr-2" /> {t("interview.schedule")}
-          </Button>
+          {canSchedule && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onSchedule}
+              className="shrink-0"
+            >
+              <Calendar className="h-4 w-4 mr-2" /> {t("interview.schedule")}
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           <EmptyState
@@ -48,11 +69,15 @@ export default function InterviewsTab({ interviews, onSchedule }: InterviewsTabP
               defaultValue: "No interviews are scheduled for this application.",
             })}
             icon={Video}
-            primaryAction={{
-              label: t("interview.schedule"),
-              onClick: onSchedule,
-              icon: CalendarPlus,
-            }}
+            primaryAction={
+              canSchedule
+                ? {
+                    label: t("interview.schedule"),
+                    onClick: onSchedule,
+                    icon: CalendarPlus,
+                  }
+                : undefined
+            }
           />
         </CardContent>
       </Card>
@@ -66,9 +91,11 @@ export default function InterviewsTab({ interviews, onSchedule }: InterviewsTabP
           <Video className="h-5 w-5 text-primary" />
           {t("interview.title")}
         </CardTitle>
-        <Button type="button" variant="outline" size="sm" onClick={onSchedule} className="shrink-0">
-          <Calendar className="h-4 w-4 mr-2" /> {t("interview.schedule")}
-        </Button>
+        {canSchedule && (
+          <Button type="button" variant="outline" size="sm" onClick={onSchedule} className="shrink-0">
+            <Calendar className="h-4 w-4 mr-2" /> {t("interview.schedule")}
+          </Button>
+        )}
       </CardHeader>
       <CardContent className="space-y-2">
         {interviews.data.items.slice(0, 5).map((interview) => {
