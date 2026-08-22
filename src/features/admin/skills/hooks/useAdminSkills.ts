@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { adminSkillsService } from "../services/adminSkills.service"
 import { showSuccessToast } from "@/lib/toast"
@@ -8,16 +8,37 @@ const adminSkillsPageSize = 15
 
 export const adminSkillsKeys = {
   all: ["admin", "skills"] as const,
-  list: (page: number) => ["admin", "skills", { page }] as const,
+  list: (page: number, search: string) => ["admin", "skills", { page, search }] as const,
 }
 
 export function useAdminSkills() {
   const { t } = useTranslation("adminSkills")
   const [page, setPage] = useState(1)
+  const [search, setSearchValue] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
   const client = useQueryClient()
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setDebouncedSearch(search.trim())
+    }, 300)
+
+    return () => window.clearTimeout(timeout)
+  }, [search])
+
+  const setSearch = (value: string) => {
+    setSearchValue(value)
+    setPage(1)
+  }
+
   const query = useQuery({
-    queryKey: adminSkillsKeys.list(page),
-    queryFn: () => adminSkillsService.list({ page, per_page: adminSkillsPageSize }),
+    queryKey: adminSkillsKeys.list(page, debouncedSearch),
+    queryFn: () =>
+      adminSkillsService.list({
+        page,
+        per_page: adminSkillsPageSize,
+        ...(debouncedSearch ? { search: debouncedSearch } : {}),
+      }),
     placeholderData: keepPreviousData,
     staleTime: 10 * 60_000,
   })
@@ -50,5 +71,14 @@ export function useAdminSkills() {
       showSuccessToast(t("deleted"))
     },
   })
-  return { ...query, page, setPage, createMutation, updateMutation, deleteMutation }
+  return {
+    ...query,
+    page,
+    search,
+    setPage,
+    setSearch,
+    createMutation,
+    updateMutation,
+    deleteMutation,
+  }
 }

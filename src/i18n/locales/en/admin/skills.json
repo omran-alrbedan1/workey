@@ -17,6 +17,10 @@
     "save": "Save changes",
     "cancel": "Cancel"
   },
+  "search": {
+    "label": "Search skills",
+    "placeholder": "Search by skill name or slug"
+  },
   "columns": { "icon": "Icon", "skill": "Skill", "slug": "Slug", "created": "Created", "actions": "Actions" },
   "actions": "Skill actions",
   "actionsFor": "Actions for {{name}}",
