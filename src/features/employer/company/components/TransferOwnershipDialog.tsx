@@ -25,12 +25,14 @@ type TransferFormValues = z.infer<typeof transferSchema>
 export default function TransferOwnershipDialog({
   open,
   members,
+  initialUserId,
   isPending,
   onOpenChange,
   onSubmit,
 }: {
   open: boolean
   members: CompanyMember[]
+  initialUserId?: string | number
   isPending: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (userId: string | number) => Promise<unknown>
@@ -42,8 +44,10 @@ export default function TransferOwnershipDialog({
   })
 
   useEffect(() => {
-    if (open) form.reset()
-  }, [form, open])
+    if (open) {
+      form.reset({ new_owner_user_id: initialUserId != null ? String(initialUserId) : "" })
+    }
+  }, [form, initialUserId, open])
 
   const options: Option[] = members
     .filter((member) => member.id !== undefined)

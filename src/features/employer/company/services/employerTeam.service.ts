@@ -20,6 +20,8 @@ function normalizeMember(member: CompanyMember): CompanyMember {
     user_id?: string | number
     company_role?: CompanyMember["role"]
     membership_status?: CompanyMember["status"]
+    can_transfer_ownership?: boolean
+    available_actions?: CompanyMember["available_actions"]
   }
   const role = raw.company_role ?? raw.role
   const status = raw.membership_status ?? raw.status
@@ -36,6 +38,8 @@ function normalizeMember(member: CompanyMember): CompanyMember {
       member.can_update_status ??
       Boolean(member.available_actions?.suspend || member.available_actions?.reactivate),
     can_remove: member.can_remove ?? member.available_actions?.remove,
+    can_transfer_ownership:
+      raw.can_transfer_ownership ?? raw.available_actions?.transfer_ownership ?? false,
   }
 }
 

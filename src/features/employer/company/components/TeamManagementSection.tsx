@@ -91,7 +91,6 @@ export default function TeamManagementSection() {
               onTransferOwnership={async (userId) =>
                 await team.transferOwnershipMutation.mutateAsync({
                   new_owner_user_id: userId,
-                  previous_owner_role: "company_admin",
                 })
               }
             />

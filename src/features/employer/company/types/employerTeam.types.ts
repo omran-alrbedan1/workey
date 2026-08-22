@@ -24,11 +24,13 @@ export interface CompanyMember {
   can_update_role?: boolean
   can_update_status?: boolean
   can_remove?: boolean
+  can_transfer_ownership?: boolean
   available_actions?: {
     change_role?: boolean
     suspend?: boolean
     reactivate?: boolean
     remove?: boolean
+    transfer_ownership?: boolean
   }
 }
 
@@ -68,7 +70,6 @@ export interface MemberStatusInput {
 export interface TransferOwnershipInput {
   new_owner_user_id: string | number
   current_owner_user_id?: string | number
-  previous_owner_role?: "company_admin" | "recruiter" | "interviewer" | "reviewer"
 }
 
 export interface CompanyTeamSummary {

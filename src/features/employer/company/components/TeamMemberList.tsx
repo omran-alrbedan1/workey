@@ -46,7 +46,7 @@ export default function TeamMemberList({
   const { t } = useTranslation("employerCompany")
   const [roleMember, setRoleMember] = useState<CompanyMember | null>(null)
   const [statusMember, setStatusMember] = useState<CompanyMember | null>(null)
-  const [transferOpen, setTransferOpen] = useState(false)
+  const [transferMember, setTransferMember] = useState<CompanyMember | null>(null)
   const [removeMember, setRemoveMember] = useState<CompanyMember | null>(null)
 
   if (isLoading) {
@@ -59,6 +59,10 @@ export default function TeamMemberList({
     )
   }
 
+  const transferableMembers = members.filter(
+    (member) => member.id !== undefined && member.can_transfer_ownership === true,
+  )
+
   return (
     <>
       <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
@@ -67,6 +71,12 @@ export default function TeamMemberList({
         ) : (
           members.map((member) => {
             const role = keyOf(member.company_role ?? member.role, DEFAULT_COMPANY_ROLE)
+            const canChangeRole = member.can_update_role !== false
+            const canChangeStatus = member.can_update_status !== false
+            const canTransferOwnership = member.can_transfer_ownership === true
+            const canRemove = member.can_remove !== false && !member.is_current_user && role !== "owner"
+            const hasActions = canChangeRole || canChangeStatus || canTransferOwnership || canRemove
+
             return (
               <div key={member.id} className="flex items-center gap-4 px-5 py-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -87,30 +97,30 @@ export default function TeamMemberList({
                 <StatusBadge status={member.membership_status ?? member.status} variant="soft" size="sm" />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={!hasActions}>
                       <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    {member.can_update_role !== false && (
+                    {canChangeRole && (
                       <DropdownMenuItem onClick={() => setRoleMember(member)}>
                         <ShieldCheck className="h-4 w-4" />
                         {t("team.actions.changeRole")}
                       </DropdownMenuItem>
                     )}
-                    {member.can_update_status !== false && (
+                    {canChangeStatus && (
                       <DropdownMenuItem onClick={() => setStatusMember(member)}>
                         <ShieldCheck className="h-4 w-4" />
                         {t("team.actions.changeStatus")}
                       </DropdownMenuItem>
                     )}
-                    {role !== "owner" && (
-                      <DropdownMenuItem onClick={() => setTransferOpen(true)}>
+                    {canTransferOwnership && (
+                      <DropdownMenuItem onClick={() => setTransferMember(member)}>
                         <ShieldCheck className="h-4 w-4" />
                         {t("team.actions.transferOwnership")}
                       </DropdownMenuItem>
                     )}
-                    {member.can_remove !== false && !member.is_current_user && role !== "owner" && (
+                    {canRemove && (
                       <DropdownMenuItem
                         className="text-red-600 focus:text-red-700"
                         onClick={() => setRemoveMember(member)}
@@ -150,13 +160,16 @@ export default function TeamMemberList({
         }}
       />
       <TransferOwnershipDialog
-        open={transferOpen}
-        members={members}
+        open={transferMember !== null}
+        members={transferableMembers}
+        initialUserId={transferMember?.id}
         isPending={isTransferring}
-        onOpenChange={setTransferOpen}
+        onOpenChange={(open) => {
+          if (!open) setTransferMember(null)
+        }}
         onSubmit={async (userId) => {
           await onTransferOwnership(userId)
-          setTransferOpen(false)
+          setTransferMember(null)
         }}
       />
       <DeleteModal
