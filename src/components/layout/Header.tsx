@@ -5,6 +5,7 @@ import { ModeToggle } from "../mode-toggle"
 import LanguageSwitcher from "../shared/buttons/language-switcher"
 import { useTranslation } from "react-i18next"
 import { ROUTES } from "@/config"
+import { useNotificationUnreadCount } from "@/shared/notifications/hooks/useNotificationUnreadCount"
 
 interface HeaderProps {
   onLogout: () => void
@@ -15,6 +16,8 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onLogout, onMenuToggle, isMobileMenuOpen }) => {
   const { t } = useTranslation("adminShared")
   const navigate = useNavigate()
+  const unreadCount = useNotificationUnreadCount("admin").data ?? 0
+
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-background-card px-4 sm:px-6 py-4 shadow-sm">
       <div className="flex items-center justify-between">
@@ -33,10 +36,11 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onMenuToggle, isMobileMenuOpe
           {/* Notifications */}
           <button aria-label={t("header.notifications")} onClick={() => navigate(ROUTES.admin.notifications)} className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary">
             <Bell className="h-5 w-5" />
-            <span className="absolute end-1 top-1 flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
-            </span>
+            {unreadCount > 0 && (
+              <span className="absolute -end-1 -top-1 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-[10px] font-semibold leading-none text-white">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
           </button>
 
           {/* User Menu - hide on small mobile */}

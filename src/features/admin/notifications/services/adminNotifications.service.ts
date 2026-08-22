@@ -30,4 +30,7 @@ export const adminNotificationsService = {
   async markAllRead(): Promise<void> {
     await api.patch(API_ENDPOINTS.notifications.markAllRead)
   },
+  async delete(id: string | number): Promise<void> {
+    await api.delete(API_ENDPOINTS.notifications.delete(id))
+  },
 }

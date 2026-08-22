@@ -6,16 +6,16 @@ import { useTranslation } from "react-i18next"
 const root = ["admin", "notifications"] as const
 const employerRoot = ["employer", "notifications"] as const
 export function useAdminNotifications() {
-  const { t } = useTranslation("adminNotifications")
+  const { t, i18n } = useTranslation("adminNotifications")
   const [page, setPage] = useState(1)
   const client = useQueryClient()
   const listQuery = useQuery({
-    queryKey: [...root, page],
+    queryKey: [...root, "list", i18n.resolvedLanguage, page],
     queryFn: () => adminNotificationsService.list(page),
     placeholderData: keepPreviousData,
   })
   const unreadQuery = useQuery({
-    queryKey: [...root, "unread"],
+    queryKey: [...root, "unreadCount", i18n.resolvedLanguage],
     queryFn: adminNotificationsService.unreadCount,
   })
   const markReadMutation = useMutation({
@@ -38,6 +38,16 @@ export function useAdminNotifications() {
       showSuccessToast(t("markedAllRead"))
     },
   })
+  const deleteMutation = useMutation({
+    mutationFn: adminNotificationsService.delete,
+    onSuccess: async () => {
+      await Promise.all([
+        client.invalidateQueries({ queryKey: root, refetchType: "active" }),
+        client.invalidateQueries({ queryKey: employerRoot, refetchType: "active" }),
+      ])
+      showSuccessToast(t("deleted"))
+    },
+  })
   return {
     ...listQuery,
     page,
@@ -45,5 +55,6 @@ export function useAdminNotifications() {
     unreadCount: unreadQuery.data ?? 0,
     markReadMutation,
     markAllReadMutation,
+    deleteMutation,
   }
 }

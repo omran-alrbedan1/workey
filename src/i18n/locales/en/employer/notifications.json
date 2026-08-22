@@ -1,19 +1,20 @@
 {
   "title": "Notifications",
   "description": "Review hiring and company activity notifications.",
+  "fallback": "-",
   "columns": {
     "title": "Notification",
     "type": "Type",
     "date": "Date"
   },
   "types": {
-    "interview_scheduled": "Interview Scheduled",
-    "interview_completed": "Interview Completed",
-    "interview_cancelled": "Interview Cancelled",
-    "application_received": "Application Received",
-    "application_status": "Application Status",
-    "test_assigned": "Test Assigned",
-    "test_completed": "Test Completed",
+    "interview_scheduled": "Interview scheduled",
+    "interview_completed": "Interview completed",
+    "interview_cancelled": "Interview cancelled",
+    "application_received": "Application received",
+    "application_status": "Application status",
+    "test_assigned": "Test assigned",
+    "test_completed": "Test completed",
     "general": "General"
   },
   "empty": {
@@ -21,10 +22,13 @@
     "description": "You have no notifications yet."
   },
   "actions": {
-    "markAllRead": "Mark all as read"
+    "markAsRead": "Mark as read",
+    "markAllRead": "Mark all as read",
+    "delete": "Delete"
   },
   "toasts": {
-    "allRead": "All notifications marked as read"
+    "allRead": "All notifications marked as read",
+    "deleted": "Notification deleted"
   },
   "errors": {
     "title": "Unable to load notifications",

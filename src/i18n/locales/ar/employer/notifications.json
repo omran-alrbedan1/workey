@@ -1,6 +1,7 @@
 {
   "title": "الإشعارات",
   "description": "راجع إشعارات التوظيف ونشاط الشركة.",
+  "fallback": "-",
   "columns": {
     "title": "الإشعار",
     "type": "النوع",
@@ -10,7 +11,7 @@
     "interview_scheduled": "مقابلة مجدولة",
     "interview_completed": "مقابلة مكتملة",
     "interview_cancelled": "مقابلة ملغاة",
-    "application_received": "طلب استقبال",
+    "application_received": "طلب جديد",
     "application_status": "حالة الطلب",
     "test_assigned": "اختبار مخصص",
     "test_completed": "اختبار مكتمل",
@@ -21,10 +22,13 @@
     "description": "ليست لديك أي إشعارات بعد."
   },
   "actions": {
-    "markAllRead": "تحديد الكل كمقروء"
+    "markAsRead": "تحديد كمقروء",
+    "markAllRead": "تحديد الكل كمقروء",
+    "delete": "حذف"
   },
   "toasts": {
-    "allRead": "تم تحديد جميع الإشعارات كمقروءة"
+    "allRead": "تم تحديد جميع الإشعارات كمقروءة",
+    "deleted": "تم حذف الإشعار"
   },
   "errors": {
     "title": "تعذر تحميل الإشعارات",

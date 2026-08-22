@@ -1,8 +1,34 @@
 {
-  "title": "الإشعارات", "description": "{{count}} إشعارات غير مقروءة.",
-  "columns": { "notification": "الإشعار", "status": "الحالة", "received": "تاريخ الاستلام", "action": "الإجراء" },
-  "platformNotification": "إشعار المنصة", "details": "افتح الإشعار لعرض التفاصيل.", "markRead": "تحديد كمقروء",
-  "markAllRead": "تحديد الكل كمقروء", "markingAllRead": "جارٍ تحديد الكل...",
-  "empty": "لم يتم إرجاع إشعارات.", "emptyDescription": "لا توجد إشعارات للمنصة حالياً.",
-  "markedRead": "تم تحديد الإشعار كمقروء", "markedAllRead": "تم تحديد جميع الإشعارات كمقروءة"
+  "title": "الإشعارات",
+  "description": "{{count}} إشعارات منصة غير مقروءة.",
+  "columns": {
+    "notification": "الإشعار",
+    "status": "الحالة",
+    "type": "النوع",
+    "received": "تاريخ الاستلام",
+    "action": "الإجراء"
+  },
+  "types": {
+    "interview_scheduled": "مقابلة مجدولة",
+    "interview_completed": "مقابلة مكتملة",
+    "interview_cancelled": "مقابلة ملغاة",
+    "application_received": "طلب جديد",
+    "application_status": "حالة الطلب",
+    "test_assigned": "اختبار مخصص",
+    "test_completed": "اختبار مكتمل",
+    "company_approved": "شركة معتمدة",
+    "company_rejected": "شركة مرفوضة",
+    "general": "عام"
+  },
+  "platformNotification": "إشعار المنصة",
+  "details": "افتح الإشعار لعرض التفاصيل.",
+  "markRead": "تحديد كمقروء",
+  "markAllRead": "تحديد الكل كمقروء",
+  "markingAllRead": "جار تحديد الكل...",
+  "delete": "حذف",
+  "empty": "لم يتم إرجاع أي إشعارات.",
+  "emptyDescription": "لا توجد إشعارات للمنصة حاليا.",
+  "markedRead": "تم تحديد الإشعار كمقروء",
+  "markedAllRead": "تم تحديد جميع الإشعارات كمقروءة",
+  "deleted": "تم حذف الإشعار"
 }

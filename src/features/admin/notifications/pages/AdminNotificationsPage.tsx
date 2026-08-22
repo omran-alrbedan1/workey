@@ -5,12 +5,31 @@ import AdminNotificationsTable from "../components/AdminNotificationsTable"
 import { useAdminNotifications } from "../hooks/useAdminNotifications"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import {
+  isNotificationUnread,
+  resolveNotificationTarget,
+} from "@/shared/notifications/notification.utils"
+import type { AdminNotificationRecord } from "../types/adminNotifications.types"
+
 export default function AdminNotificationsPage() {
   const { t } = useTranslation("adminNotifications")
   const notifications = useAdminNotifications()
+  const navigate = useNavigate()
   const updating =
     notifications.markReadMutation.isPending ||
-    notifications.markAllReadMutation.isPending
+    notifications.markAllReadMutation.isPending ||
+    notifications.deleteMutation.isPending
+
+  const openNotification = (notification: AdminNotificationRecord) => {
+    if (isNotificationUnread(notification)) {
+      notifications.markReadMutation.mutate(notification.id)
+    }
+
+    const target = resolveNotificationTarget(notification, "admin")
+    if (target) navigate(target)
+  }
+
   if (notifications.isError)
     return (
       <AdminFeatureError
@@ -49,6 +68,8 @@ export default function AdminNotificationsPage() {
         pagination={notifications.data?.pagination}
         onPageChange={notifications.setPage}
         onRead={(id) => notifications.markReadMutation.mutate(id)}
+        onDelete={(id) => notifications.deleteMutation.mutate(id)}
+        onOpen={openNotification}
       />
     </div>
   )

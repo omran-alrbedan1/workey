@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { ModeToggle } from "@/components/mode-toggle"
 import LanguageSwitcher from "@/components/shared/buttons/language-switcher"
 import { ROUTES } from "@/config"
+import { useNotificationUnreadCount } from "@/shared/notifications/hooks/useNotificationUnreadCount"
 
 interface EmployerHeaderProps {
   employerName?: string
@@ -20,6 +21,7 @@ export default function EmployerHeader({
 }: EmployerHeaderProps) {
   const { t } = useTranslation("employerNavigation")
   const navigate = useNavigate()
+  const unreadCount = useNotificationUnreadCount("employer").data ?? 0
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background-card px-4 py-4 shadow-sm sm:px-6">
@@ -53,10 +55,11 @@ export default function EmployerHeader({
             className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary"
           >
             <Bell className="h-5 w-5" />
-            <span className="absolute end-1 top-1 flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
-            </span>
+            {unreadCount > 0 && (
+              <span className="absolute -end-1 -top-1 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-[10px] font-semibold leading-none text-white">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
           </button>
           <ModeToggle />
           <LanguageSwitcher />

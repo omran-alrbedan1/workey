@@ -1,8 +1,34 @@
 {
-  "title": "Notifications", "description": "{{count}} unread platform notifications.",
-  "columns": { "notification": "Notification", "status": "Status", "received": "Received", "action": "Action" },
-  "platformNotification": "Platform notification", "details": "Open this notification for details.", "markRead": "Mark read",
-  "markAllRead": "Mark all as read", "markingAllRead": "Marking all...",
-  "empty": "No notifications were returned.", "emptyDescription": "You have no platform notifications right now.",
-  "markedRead": "Notification marked as read", "markedAllRead": "All notifications marked as read"
+  "title": "Notifications",
+  "description": "{{count}} unread platform notifications.",
+  "columns": {
+    "notification": "Notification",
+    "status": "Status",
+    "type": "Type",
+    "received": "Received",
+    "action": "Action"
+  },
+  "types": {
+    "interview_scheduled": "Interview scheduled",
+    "interview_completed": "Interview completed",
+    "interview_cancelled": "Interview cancelled",
+    "application_received": "Application received",
+    "application_status": "Application status",
+    "test_assigned": "Test assigned",
+    "test_completed": "Test completed",
+    "company_approved": "Company approved",
+    "company_rejected": "Company rejected",
+    "general": "General"
+  },
+  "platformNotification": "Platform notification",
+  "details": "Open this notification for details.",
+  "markRead": "Mark read",
+  "markAllRead": "Mark all as read",
+  "markingAllRead": "Marking all...",
+  "delete": "Delete",
+  "empty": "No notifications were returned.",
+  "emptyDescription": "You have no platform notifications right now.",
+  "markedRead": "Notification marked as read",
+  "markedAllRead": "All notifications marked as read",
+  "deleted": "Notification deleted"
 }

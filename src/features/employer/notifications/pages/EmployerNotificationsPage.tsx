@@ -5,9 +5,16 @@ import ErrorState from "@/components/shared/states/ErrorState"
 import { Skeleton } from "@/components/ui/skeleton"
 import EmployerNotificationsTable from "../components/EmployerNotificationsTable"
 import { useEmployerNotifications } from "../hooks/useEmployerNotifications"
+import { useNavigate } from "react-router-dom"
+import {
+  isNotificationUnread,
+  resolveNotificationTarget,
+} from "@/shared/notifications/notification.utils"
+import type { EmployerNotification } from "../types/employerNotifications.types"
 
 export default function EmployerNotificationsPage() {
   const { t } = useTranslation("employerNotifications")
+  const navigate = useNavigate()
   const {
     data,
     isPending,
@@ -16,8 +23,18 @@ export default function EmployerNotificationsPage() {
     unreadCount,
     markReadMutation,
     markAllReadMutation,
+    deleteMutation,
     setPage,
   } = useEmployerNotifications()
+
+  const openNotification = (notification: EmployerNotification) => {
+    if (isNotificationUnread(notification)) {
+      markReadMutation.mutate(notification.id)
+    }
+
+    const target = resolveNotificationTarget(notification, "employer")
+    if (target) navigate(target)
+  }
 
   if (isError) {
     return (
@@ -46,9 +63,11 @@ export default function EmployerNotificationsPage() {
         <EmployerNotificationsTable
           collection={data}
           isLoading={false}
-          isMarking={markReadMutation.isPending || markAllReadMutation.isPending}
+          isMarking={markReadMutation.isPending || markAllReadMutation.isPending || deleteMutation.isPending}
           onMarkRead={(id) => markReadMutation.mutate(id)}
           onMarkAllRead={() => markAllReadMutation.mutate()}
+          onDelete={(id) => deleteMutation.mutate(id)}
+          onOpen={openNotification}
           onPageChange={setPage}
         />
       )}
