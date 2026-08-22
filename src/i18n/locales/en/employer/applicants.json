@@ -305,6 +305,16 @@
     "emptyDescription": "Add internal notes to track your team's thoughts and decisions about this candidate.",
     "dialogTitle": "Internal Note",
     "dialogDescription": "Add an internal note about this candidate. Notes are only visible to your team.",
+    "viewRevisions": "View revisions",
+    "editNote": "Edit note",
+    "deleteNote": "Delete note",
+    "revisionsTitle": "Note revisions",
+    "revisionsDescription": "Review the backend-provided edit history for this internal note.",
+    "revisionsEmpty": "No revisions available.",
+    "revisionsEmptyDescription": "The backend did not return any earlier revisions for this note.",
+    "revisionsError": "Revisions could not be loaded",
+    "revisionsErrorDescription": "Try again in a moment to load this note history.",
+    "revisionBodyEmpty": "No note body was stored for this revision.",
     "placeholder": "Write your internal note here...",
     "cancel": "Cancel",
     "submit": "Save Note",
@@ -440,4 +450,5 @@
     }
   }
 }
+
 

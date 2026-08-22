@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Clock, Edit2, Plus, Trash2, User, MessageSquare } from "lucide-react"
+import { Clock, Edit2, History, Plus, Trash2, User, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useInternalNotes } from "../hooks/useInternalNotes"
 import InternalNoteDialog from "./InternalNoteDialog"
+import InternalNoteRevisionsDialog from "./InternalNoteRevisionsDialog"
 import { DeleteModal } from "@/components/shared/modals"
 import EmptyState from "@/components/shared/states/EmptyState"
 
@@ -37,6 +38,7 @@ export default function InternalNotes({
   const [deleteNoteId, setDeleteNoteId] = useState<{ id: string | number; version: number } | null>(
     null,
   )
+  const [historyNoteId, setHistoryNoteId] = useState<string | number | undefined>()
 
   const handleCreate = () => {
     if (!canCreate) return
@@ -132,10 +134,20 @@ export default function InternalNotes({
                       size="icon"
                       variant="ghost"
                       className="h-7 w-7"
+                      onClick={() => setHistoryNoteId(note.id)}
+                      title={t("internalNotes.viewRevisions")}
+                    >
+                      <History className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7"
                       onClick={() =>
                         handleEdit({ id: note.id, body: note.body || "", version: note.version })
                       }
                       disabled={isUpdating || note.can_edit === false}
+                      title={t("internalNotes.editNote")}
                     >
                       <Edit2 className="h-3.5 w-3.5" />
                     </Button>
@@ -145,6 +157,7 @@ export default function InternalNotes({
                       className="h-7 w-7 text-red-600 hover:text-red-700"
                       onClick={() => handleDelete(note.id, note.version)}
                       disabled={isDeleting || note.can_delete === false}
+                      title={t("internalNotes.deleteNote")}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -153,7 +166,7 @@ export default function InternalNotes({
                 <div className="flex items-center gap-3 text-xs text-text-muted">
                   <div className="flex items-center gap-1">
                     <User className="h-3 w-3" />
-                    <span>{note.author?.name || "Unknown"}</span>
+                    <span>{note.author?.name || t("unknownCandidate")}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
@@ -172,6 +185,13 @@ export default function InternalNotes({
         initialBody={editingNote?.body || ""}
         onSubmit={handleSubmit}
         isSubmitting={isCreating || isUpdating}
+      />
+      <InternalNoteRevisionsDialog
+        noteId={historyNoteId}
+        open={historyNoteId !== undefined}
+        onOpenChange={(open) => {
+          if (!open) setHistoryNoteId(undefined)
+        }}
       />
       <DeleteModal
         open={deleteNoteId !== null}
