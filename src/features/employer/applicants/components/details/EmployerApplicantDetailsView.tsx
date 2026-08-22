@@ -195,6 +195,7 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
           <InformationRequests
             applicationId={model.id}
             canCreate={application.permissions?.can_request_information !== false}
+            canCancel={application.permissions?.can_cancel_information_requests !== false}
             createOpen={model.informationRequestDialogOpen}
             onCreateOpenChange={model.setInformationRequestDialogOpen}
           />
@@ -218,3 +219,4 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
     </>
   )
 }
+

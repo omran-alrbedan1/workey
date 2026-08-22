@@ -30,10 +30,12 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import type { InformationRequest } from "../types/employerApplicants.types"
 import EmptyState from "@/components/shared/states/EmptyState"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 
 interface InformationRequestsProps {
   applicationId: string | number
   canCreate?: boolean
+  canCancel?: boolean
   createOpen?: boolean
   onCreateOpenChange?: (open: boolean) => void
 }
@@ -41,6 +43,7 @@ interface InformationRequestsProps {
 export default function InformationRequests({
   applicationId,
   canCreate = true,
+  canCancel = true,
   createOpen,
   onCreateOpenChange,
 }: InformationRequestsProps) {
@@ -48,6 +51,9 @@ export default function InformationRequests({
   const {
     requests,
     isLoading,
+    isError,
+    error,
+    refetch,
     createRequest,
     updateRequest,
     cancelRequest,
@@ -75,11 +81,13 @@ export default function InformationRequests({
   }
 
   const handleEdit = (request: InformationRequest) => {
+    if (!canCreate) return
     setEditingRequest(request)
     setDialogOpen(true)
   }
 
   const handleCancel = (request: InformationRequest) => {
+    if (!canCancel) return
     setCancelRequestId(request)
     setCancelReason("")
   }
@@ -114,7 +122,8 @@ export default function InformationRequests({
     }
   }
 
-  const canCreateRequest = canCreate && !requests.some((r) => keyOf(r.status) === "pending")
+  const hasPendingRequest = requests.some((r) => keyOf(r.status) === "pending")
+  const canCreateRequest = canCreate && !hasPendingRequest
 
   if (isLoading) {
     return (
@@ -127,6 +136,16 @@ export default function InformationRequests({
           <Skeleton className="h-20 w-full" />
         </CardContent>
       </Card>
+    )
+  }
+
+  if (isError) {
+    return (
+      <EmployerFeatureError
+        title={t("informationRequests.pageTitle")}
+        error={error}
+        retry={() => void refetch()}
+      />
     )
   }
 
@@ -165,60 +184,64 @@ export default function InformationRequests({
               }
             />
           ) : (
-            requests.map((request) => (
-              <div
-                key={request.id}
-                className="rounded-lg border border-border bg-background p-4 space-y-3"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 space-y-2">
-                    <p className="text-sm text-text-primary">{String(request.message || "")}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {request.requested_items?.map((item, idx) => (
-                        <span
-                          key={idx}
-                          className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2 py-1 text-xs"
-                        >
-                          {String(item.label || "")}
-                          {item.is_required && <span className="text-red-500">*</span>}
-                        </span>
-                      ))}
-                    </div>
-                    {request.response && (
-                      <div className="mt-3 rounded-lg border border-border bg-background/50 p-3 space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
-                          <MessageCircle className="h-4 w-4 text-primary" />
-                          {t("informationRequests.responseTitle")}
-                        </div>
-                        {request.response.message && (
-                          <p className="text-sm text-text-secondary">{request.response.message}</p>
-                        )}
-                        {request.response.attachments &&
-                          request.response.attachments.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                              {request.response.attachments.map((attachment) => (
-                                <Button
-                                  key={attachment.id}
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() =>
-                                    downloadAttachment(attachment.id, attachment.original_name)
-                                  }
-                                  disabled={attachment.download_available === false}
-                                  className="gap-1"
-                                >
-                                  <Download className="h-3.5 w-3.5" />
-                                  {attachment.original_name}
-                                </Button>
-                              ))}
-                            </div>
-                          )}
+            requests.map((request) => {
+              const isPending = keyOf(request.status) === "pending"
+              const canEditRequest = canCreate && isPending
+              const canCancelRequest = canCancel && isPending
+
+              return (
+                <div
+                  key={request.id}
+                  className="rounded-lg border border-border bg-background p-4 space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 space-y-2">
+                      <p className="text-sm text-text-primary">{String(request.message || "")}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {request.requested_items?.map((item, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2 py-1 text-xs"
+                          >
+                            {String(item.label || "")}
+                            {item.is_required && <span className="text-red-500">*</span>}
+                          </span>
+                        ))}
                       </div>
-                    )}
-                  </div>
-                  <div className="flex gap-1">
-                    {keyOf(request.status) === "pending" && canCreate && (
-                      <>
+                      {request.response && (
+                        <div className="mt-3 rounded-lg border border-border bg-background/50 p-3 space-y-2">
+                          <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
+                            <MessageCircle className="h-4 w-4 text-primary" />
+                            {t("informationRequests.responseTitle")}
+                          </div>
+                          {request.response.message && (
+                            <p className="text-sm text-text-secondary">{request.response.message}</p>
+                          )}
+                          {request.response.attachments &&
+                            request.response.attachments.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {request.response.attachments.map((attachment) => (
+                                  <Button
+                                    key={attachment.id}
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      downloadAttachment(attachment.id, attachment.original_name)
+                                    }
+                                    disabled={attachment.download_available === false}
+                                    className="gap-1"
+                                  >
+                                    <Download className="h-3.5 w-3.5" />
+                                    {attachment.original_name}
+                                  </Button>
+                                ))}
+                              </div>
+                            )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex gap-1">
+                      {canEditRequest && (
                         <Button
                           size="icon"
                           variant="ghost"
@@ -227,6 +250,8 @@ export default function InformationRequests({
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                         </Button>
+                      )}
+                      {canCancelRequest && (
                         <Button
                           size="icon"
                           variant="ghost"
@@ -236,27 +261,27 @@ export default function InformationRequests({
                         >
                           <XCircle className="h-3.5 w-3.5" />
                         </Button>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-text-muted">
-                  <StatusBadge status={request.status ?? undefined} variant="soft" />
-                  {request.due_at && (
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>{new Date(request.due_at).toLocaleString()}</span>
+                      )}
                     </div>
-                  )}
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    <span>
-                      {request.created_at ? new Date(request.created_at).toLocaleString() : ""}
-                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-text-muted">
+                    <StatusBadge status={request.status ?? undefined} variant="soft" />
+                    {request.due_at && (
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>{new Date(request.due_at).toLocaleString()}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      <span>
+                        {request.created_at ? new Date(request.created_at).toLocaleString() : ""}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              )
+            })
           )}
         </CardContent>
       </Card>

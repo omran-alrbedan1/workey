@@ -95,6 +95,7 @@ export function useInformationRequests(applicationId: string | number | undefine
     requests: listQuery.data?.items ?? [],
     isLoading: listQuery.isLoading,
     isError: listQuery.isError,
+    error: listQuery.error,
     refetch: listQuery.refetch,
     createRequest: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
