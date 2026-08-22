@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { ROUTES } from "@/config"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { useCreateEmployerInterview } from "@/features/employer/interviews/hooks/useCreateEmployerInterview"
@@ -48,12 +48,14 @@ export interface EmployerApplicantDetailsModel {
   handlePreviewCv: () => Promise<void>
   handleDownloadCv: () => Promise<void>
   handleScheduleInterview: (applicationId: string | number, input: EmployerInterviewInput) => Promise<void>
+  goToTests: () => void
   openFirstTest: () => void
   openTest: (assignment: EmployerTestAttempt) => void
 }
 
 export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): EmployerApplicantDetailsModel {
   const navigate = useNavigate()
+  const location = useLocation()
   const { id } = useParams()
   const applicant = useEmployerApplicantDetail(id)
   const downloadCv = useDownloadCv()
@@ -67,6 +69,15 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
   const [pendingStatusTarget, setPendingStatusTarget] = useState<ApplicationStatusKey | null>(null)
   const [informationRequestDialogOpen, setInformationRequestDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
+
+  useEffect(() => {
+    const state = location.state as { openInformationRequest?: boolean } | null
+    if (!state?.openInformationRequest) return
+
+    setActiveTab("informationRequests")
+    setInformationRequestDialogOpen(true)
+    navigate(location.pathname, { replace: true, state: null })
+  }, [location.pathname, location.state, navigate])
 
   const application = applicant.data
   const candidateName = candidateDisplayName(application, unknownCandidateLabel)
@@ -137,6 +148,8 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
     setShowScheduleDialog(false)
   }
 
+  const goToTests = () => navigate(ROUTES.employer.tests)
+
   const openFirstTest = () => {
     const firstTest = tests.data?.items[0]
     if (application && firstTest) {
@@ -178,6 +191,7 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
     handlePreviewCv,
     handleDownloadCv,
     handleScheduleInterview,
+    goToTests,
     openFirstTest,
     openTest,
   }

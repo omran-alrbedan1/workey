@@ -62,7 +62,7 @@ function transitionKeys(transitions?: ApplicationStatus[]): ApplicationStatusKey
 
 /**
  * Keeps only statuses that may be offered as direct "change status" actions:
- * unique, not the current status, not terminal, and never workflow-only
+ * unique, not the current status, and never workflow-only
  * (those are produced by their own dedicated flows instead).
  */
 export function filterDirectTransitionTargets(
@@ -72,8 +72,7 @@ export function filterDirectTransitionTargets(
   return Array.from(new Set(candidates)).filter(
     (status) =>
       status !== currentKey &&
-      !WORKFLOW_ONLY_STATUSES.has(status) &&
-      !TERMINAL_STATUSES.has(status),
+      !WORKFLOW_ONLY_STATUSES.has(status),
   )
 }
 

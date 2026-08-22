@@ -36,7 +36,7 @@ import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { employerTestsService } from "@/features/employer/tests/services/employerTests.service"
 import { useApplicationTests } from "../hooks/useApplicationTests"
 import { candidateDisplayName } from "../utils/candidateDisplay"
-import { getApplicationStatusActions } from "../utils/statusActions"
+import { getAllowedApplicationActions } from "../utils/applicationActions"
 import TestAssignmentDeadlinePanel from "./TestAssignmentDeadlinePanel"
 import TestAssignmentRetakePanel from "./TestAssignmentRetakePanel"
 import type { EmployerApplicant, EmployerTestAttempt } from "../types/employerApplicants.types"
@@ -138,7 +138,7 @@ export default function ApplicationTestsDialog({
   const navigate = useNavigate()
   const tests = useApplicationTests(application?.id)
   const allowedNextSteps = useMemo(() => {
-    const targets = getApplicationStatusActions(application).targets
+    const targets = getAllowedApplicationActions(application).statusTargets
     return nextSteps.filter((step) => targets.includes(step.value))
   }, [application])
   const [gradingAttempt, setGradingAttempt] = useState<EmployerTestAttempt | null>(null)

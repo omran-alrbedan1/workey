@@ -34,6 +34,7 @@
     "changeStatus": "Change status",
     "changeStatusFor": "Change status for {{name}}",
     "scheduleInterview": "Schedule interview",
+    "assignTest": "Assign test",
     "requestInformation": "Request information",
     "viewDetails": "View details",
     "downloadCv": "Download CV",

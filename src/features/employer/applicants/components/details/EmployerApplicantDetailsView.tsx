@@ -155,6 +155,7 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
           candidateName={model.candidateName}
           isStatusPending={model.isStatusPending}
           onOpenStatusDialog={model.openStatusDialog}
+          onAssignTest={model.goToTests}
           onScheduleInterview={() => model.setShowScheduleDialog(true)}
           onRequestInformation={model.handleRequestInformation}
         />

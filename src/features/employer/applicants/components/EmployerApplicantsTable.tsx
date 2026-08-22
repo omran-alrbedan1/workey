@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { CalendarPlus, Download, Eye, MoreHorizontal, User, Calendar, Target, FileText } from "lucide-react"
+import { CalendarPlus, Download, Eye, FileText, MailQuestion, MoreHorizontal, User, Calendar, Target } from "lucide-react"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
 import { Button } from "@/components/ui/button"
@@ -21,7 +21,7 @@ import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerA
 import { employerApplicantsService } from "../services/employerApplicants.service"
 import { candidateDisplayName, candidateSecondaryText } from "../utils/candidateDisplay"
 import { canDownloadCv, getApplicationCvDocument } from "../utils/cv"
-import { getApplicationStatusActions } from "../utils/statusActions"
+import { getAllowedApplicationActions } from "../utils/applicationActions"
 import ApplicationStatusChangeDialog from "./ApplicationStatusChangeDialog"
 
 function getKey(v: unknown): string {
@@ -32,11 +32,6 @@ function getValue(v: unknown): string {
   return valueOf(v)
 }
 
-function hasAllowedAction(application: EmployerApplicant, actions: string[]) {
-  if (!application.allowed_actions) return true
-  return actions.some((action) => application.allowed_actions?.includes(action))
-}
-
 interface EmployerApplicantMobileCardProps {
   application: EmployerApplicant
   isUpdating: boolean
@@ -44,6 +39,8 @@ interface EmployerApplicantMobileCardProps {
   onViewDetails: (application: EmployerApplicant) => void
   onDownload: (application: EmployerApplicant) => void
   onStatusChange: (application: EmployerApplicant, status: ApplicationStatusKey) => void
+  onScheduleInterview: (application: EmployerApplicant) => void
+  onRequestInformation: (application: EmployerApplicant) => void
 }
 
 function EmployerApplicantMobileCard({
@@ -53,11 +50,13 @@ function EmployerApplicantMobileCard({
   onViewDetails,
   onDownload,
   onStatusChange,
+  onScheduleInterview,
+  onRequestInformation,
 }: EmployerApplicantMobileCardProps) {
   const { t, i18n } = useTranslation("employerApplicants")
   const statusKey = getKey(application.status)
   const statusValue = getValue(application.status)
-  const statusActions = getApplicationStatusActions(application)
+  const allowedActions = getAllowedApplicationActions(application)
   const score = application.match_score ?? application.matching_score
 
   return (
@@ -132,10 +131,10 @@ function EmployerApplicantMobileCard({
                 ? t("actions.downloadCv")
                 : t("actions.noCv", { defaultValue: "No CV attached" })}
             </DropdownMenuItem>
-            {statusActions.targets.length > 0 && (
+            {(allowedActions.statusTargets.length > 0 || allowedActions.flows.length > 0) && (
               <>
                 <DropdownMenuSeparator />
-                {statusActions.targets.map((status) => (
+                {allowedActions.statusTargets.map((status) => (
                   <DropdownMenuItem
                     key={status}
                     onSelect={() => onStatusChange(application, status as ApplicationStatusKey)}
@@ -143,6 +142,21 @@ function EmployerApplicantMobileCard({
                     {t(`statuses.${status}`)}
                   </DropdownMenuItem>
                 ))}
+                {allowedActions.flows.includes("assign_test") && (
+                  <DropdownMenuItem onSelect={() => navigate(ROUTES.employer.tests)}>
+                    <FileText /> {t("actions.assignTest")}
+                  </DropdownMenuItem>
+                )}
+                {allowedActions.flows.includes("schedule_interview") && (
+                  <DropdownMenuItem onSelect={() => onScheduleInterview(application)}>
+                    <CalendarPlus /> {t("actions.scheduleInterview")}
+                  </DropdownMenuItem>
+                )}
+                {allowedActions.flows.includes("request_information") && (
+                  <DropdownMenuItem onSelect={() => onRequestInformation(application)}>
+                    <MailQuestion /> {t("actions.requestInformation")}
+                  </DropdownMenuItem>
+                )}
               </>
             )}
           </DropdownMenuContent>
@@ -224,6 +238,11 @@ export default function EmployerApplicantsTable({
   }
 
   const handleViewDetails = (application: EmployerApplicant) => navigate(ROUTES.employer.applicantDetails(application.id))
+  const handleRequestInformation = (application: EmployerApplicant) => {
+    navigate(ROUTES.employer.applicantDetails(application.id), {
+      state: { openInformationRequest: true },
+    })
+  }
   const handleCardStatusChange = (application: EmployerApplicant, status: ApplicationStatusKey) => {
     handleStatusClick(application, status)
   }
@@ -296,7 +315,7 @@ export default function EmployerApplicantsTable({
             ) : (
               <span className="text-sm text-text-muted">-</span>
             )}
-            {hasAllowedAction(application, ["schedule_interview", "create_interview", "MANAGE_INTERVIEWS"]) && (
+            {getAllowedApplicationActions(application).flows.includes("schedule_interview") && (
               <button
                 type="button"
                 className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
@@ -345,12 +364,12 @@ export default function EmployerApplicantsTable({
                   : t("actions.noCv", { defaultValue: "No CV attached" })}
               </DropdownMenuItem>
               {(() => {
-                const targets = getApplicationStatusActions(application).targets
-                if (targets.length === 0) return null
+                const allowedActions = getAllowedApplicationActions(application)
+                if (allowedActions.statusTargets.length === 0 && allowedActions.flows.length === 0) return null
                 return (
                   <>
                     <DropdownMenuSeparator />
-                    {targets.map((status) => (
+                    {allowedActions.statusTargets.map((status) => (
                       <DropdownMenuItem
                         key={status}
                         onSelect={() => handleStatusClick(application, status as ApplicationStatusKey)}
@@ -358,6 +377,21 @@ export default function EmployerApplicantsTable({
                         {t(`statuses.${status}`)}
                       </DropdownMenuItem>
                     ))}
+                    {allowedActions.flows.includes("assign_test") && (
+                      <DropdownMenuItem onSelect={() => navigate(ROUTES.employer.tests)}>
+                        <FileText /> {t("actions.assignTest")}
+                      </DropdownMenuItem>
+                    )}
+                    {allowedActions.flows.includes("schedule_interview") && (
+                      <DropdownMenuItem onSelect={() => onScheduleInterview(application)}>
+                        <CalendarPlus /> {t("actions.scheduleInterview")}
+                      </DropdownMenuItem>
+                    )}
+                    {allowedActions.flows.includes("request_information") && (
+                      <DropdownMenuItem onSelect={() => handleRequestInformation(application)}>
+                        <MailQuestion /> {t("actions.requestInformation")}
+                      </DropdownMenuItem>
+                    )}
                   </>
                 )
               })()}
@@ -376,6 +410,8 @@ export default function EmployerApplicantsTable({
       onViewDetails={handleViewDetails}
       onDownload={handleDownload}
       onStatusChange={handleCardStatusChange}
+      onScheduleInterview={onScheduleInterview}
+      onRequestInformation={handleRequestInformation}
     />
   )
 

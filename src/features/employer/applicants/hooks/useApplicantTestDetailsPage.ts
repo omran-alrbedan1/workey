@@ -14,7 +14,8 @@ import {
 } from "../components/test-details/testDetails.helpers"
 import { useApplicationStatusMutation, useEmployerApplicantDetail } from "./useEmployerApplicantDetail"
 import { useApplicationTests } from "./useApplicationTests"
-import { getApplicationStatusActions, isTerminalApplicationStatus } from "../utils/statusActions"
+import { isTerminalApplicationStatus } from "../utils/statusActions"
+import { getAllowedApplicationActions } from "../utils/applicationActions"
 import { nextSteps } from "../components/test-details/testDetails.helpers"
 import type { ApplicationStatusKey, EmployerTestAttempt } from "../types/employerApplicants.types"
 import type { TestAttemptResult, TestAttemptResultBreakdownItem } from "@/features/employer/tests/types/employerTests.types"
@@ -95,12 +96,11 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   const isTerminalStatus = useMemo(() => {
     const app = applicant.data
     if (!app) return false
-    const allowed = app.allowed_status_transitions
-    return isTerminalApplicationStatus(keyOf(app.status)) || (Array.isArray(allowed) && allowed.length === 0)
+    return isTerminalApplicationStatus(keyOf(app.status)) || getAllowedApplicationActions(app).statusTargets.length === 0
   }, [applicant.data])
 
   const allowedNextSteps = useMemo(() => {
-    const targets = getApplicationStatusActions(applicant.data).targets
+    const targets = getAllowedApplicationActions(applicant.data).statusTargets
     return nextSteps.filter((step) => targets.includes(step.value))
   }, [applicant.data])
 

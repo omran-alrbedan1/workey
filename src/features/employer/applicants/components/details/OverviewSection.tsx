@@ -37,6 +37,7 @@ interface OverviewSectionProps {
   candidateName: string
   isStatusPending: boolean
   onOpenStatusDialog: (target: ApplicationStatusKey) => void
+  onAssignTest: () => void
   onScheduleInterview: () => void
   onRequestInformation: () => void
 }
@@ -46,6 +47,7 @@ export default function OverviewSection({
   candidateName,
   isStatusPending,
   onOpenStatusDialog,
+  onAssignTest,
   onScheduleInterview,
   onRequestInformation,
 }: OverviewSectionProps) {
@@ -286,6 +288,12 @@ function ActionPanel({
               {t(`statuses.${status}`)}
             </Button>
           ))}
+          {allowedActions.flows.includes("assign_test") && (
+            <Button variant="outline" size="sm" disabled={isStatusPending} onClick={onAssignTest}>
+              <FileText className="h-4 w-4" />
+              {t("actions.assignTest")}
+            </Button>
+          )}
           {allowedActions.flows.includes("schedule_interview") && (
             <Button variant="outline" size="sm" disabled={isStatusPending} onClick={onScheduleInterview}>
               <CalendarPlus className="h-4 w-4" />

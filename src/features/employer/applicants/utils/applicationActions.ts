@@ -2,7 +2,7 @@ import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerA
 import { filterDirectTransitionTargets, getApplicationStatusActions } from "./statusActions"
 
 /** Dedicated (non status-change) flows an employer can trigger on an application. */
-export type ApplicationFlowAction = "schedule_interview" | "request_information"
+export type ApplicationFlowAction = "assign_test" | "schedule_interview" | "request_information"
 
 export interface AllowedApplicationActions {
   /** Direct status-change targets, each rendered as its own action + confirm flow. */
@@ -31,8 +31,19 @@ const STATUS_KEY_SET: ReadonlySet<string> = new Set<ApplicationStatusKey>([
 ])
 
 const FLOW_ALIASES: Record<ApplicationFlowAction, readonly string[]> = {
+  assign_test: ["assign_test", "assign_test_assignment", "test_assign", "tests"],
   schedule_interview: ["schedule_interview", "create_interview", "interview_schedule", "interviews"],
   request_information: ["request_information", "information_request", "need_more_information"],
+}
+
+const BACKEND_STATUS_ACTION_TARGETS: Readonly<Record<string, ApplicationStatusKey>> = {
+  start_review: "under_review",
+  shortlist: "shortlisted",
+  move_to_interview: "interview_pending",
+  move_to_final_review: "final_review",
+  accept: "accepted",
+  reject: "rejected",
+  hold: "on_hold",
 }
 
 function normalizeAction(value: unknown): string {
@@ -56,26 +67,24 @@ export function getAllowedApplicationActions(
     | undefined,
 ): AllowedApplicationActions {
   const derived = getApplicationStatusActions(application)
-  const fallbackFlows: ApplicationFlowAction[] = derived.isTerminal
-    ? []
-    : ["schedule_interview", "request_information"]
+  const fallbackFlows: ApplicationFlowAction[] = []
 
+  const hasBackendActions = Array.isArray(application?.allowed_actions)
   const raw = (application?.allowed_actions ?? []).map(normalizeAction).filter(Boolean)
   if (raw.length === 0) {
+    if (hasBackendActions) return { statusTargets: [], flows: [], source: "allowed_actions" }
     return { statusTargets: derived.targets, flows: fallbackFlows, source: "fallback" }
   }
 
   const statusTargets = filterDirectTransitionTargets(
     derived.currentStatusKey,
-    raw.filter((value): value is ApplicationStatusKey => STATUS_KEY_SET.has(value)),
+    raw
+      .map((value) => BACKEND_STATUS_ACTION_TARGETS[value] ?? value)
+      .filter((value): value is ApplicationStatusKey => STATUS_KEY_SET.has(value)),
   )
   const flows = (Object.keys(FLOW_ALIASES) as ApplicationFlowAction[]).filter((flow) =>
     FLOW_ALIASES[flow].some((alias) => raw.includes(alias)),
   )
-
-  if (statusTargets.length === 0 && flows.length === 0 && !derived.isTerminal) {
-    return { statusTargets: derived.targets, flows: fallbackFlows, source: "fallback" }
-  }
 
   return { statusTargets, flows, source: "allowed_actions" }
 }

@@ -34,6 +34,7 @@
     "changeStatus": "تغيير الحالة",
     "changeStatusFor": "تغيير حالة {{name}}",
     "scheduleInterview": "جدولة مقابلة",
+    "assignTest": "تعيين اختبار",
     "requestInformation": "طلب معلومات",
     "viewDetails": "عرض التفاصيل",
     "downloadCv": "تحميل السيرة الذاتية",
