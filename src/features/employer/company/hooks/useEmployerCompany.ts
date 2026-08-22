@@ -22,8 +22,7 @@ export function useEmployerCompany() {
       showSuccessToast(t("toasts.updated"))
     },
     onError: (error) => {
-      showErrorToast(t("toasts.updateError"))
-      console.error("Company update error:", error)
+      showErrorToast(error, t("toasts.updateError"))
     },
   })
 
@@ -35,8 +34,7 @@ export function useEmployerCompany() {
       showSuccessToast(t("toasts.logoUpdated"))
     },
     onError: (error) => {
-      showErrorToast(t("toasts.logoError"))
-      console.error("Logo update error:", error)
+      showErrorToast(error, t("toasts.logoError"))
     },
   })
 
@@ -48,8 +46,7 @@ export function useEmployerCompany() {
       showSuccessToast(t("toasts.coverUpdated"))
     },
     onError: (error) => {
-      showErrorToast(t("toasts.coverError"))
-      console.error("Cover update error:", error)
+      showErrorToast(error, t("toasts.coverError"))
     },
   })
 
@@ -61,8 +58,7 @@ export function useEmployerCompany() {
       showSuccessToast(t("toasts.coverRemoved"))
     },
     onError: (error) => {
-      showErrorToast(t("toasts.coverRemoveError"))
-      console.error("Cover remove error:", error)
+      showErrorToast(error, t("toasts.coverRemoveError"))
     },
   })
 

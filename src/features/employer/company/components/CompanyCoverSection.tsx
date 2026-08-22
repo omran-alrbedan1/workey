@@ -10,7 +10,7 @@ interface CompanyCoverSectionProps {
   onRemove: () => void
 }
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
+const MAX_FILE_SIZE = 2 * 1024 * 1024
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
 
 export default function CompanyCoverSection({
@@ -24,32 +24,23 @@ export default function CompanyCoverSection({
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Log coverUrl on mount and when it changes
-  console.log("Cover URL from props:", coverUrl)
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {
       setError(t("media.invalidType"))
       return
     }
 
-    // Validate file size
     if (file.size > MAX_FILE_SIZE) {
       setError(t("media.fileTooLarge"))
       return
     }
 
     setError(null)
-
-    // Create preview
     const objectUrl = URL.createObjectURL(file)
     setPreview(objectUrl)
-
-    // Upload file
     onUpload(file)
   }
 
@@ -71,22 +62,15 @@ export default function CompanyCoverSection({
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-text-primary">{t("media.cover")}</h3>
 
-      {/* Cover Display */}
       <div className="relative h-48 w-full overflow-hidden rounded-lg border-2 border-border bg-background-secondary">
         {displayCover ? (
           <img
             src={displayCover}
             alt={t("media.cover")}
             className="h-full w-full object-cover"
-            onError={(e) => {
-              console.error("Failed to load cover:", displayCover)
-              // If proxy URL fails, try the original URL
-              if (displayCover !== coverUrl && coverUrl) {
-                e.currentTarget.src = coverUrl
-              } else {
-                setError(t("media.loadError"))
-                setPreview(null)
-              }
+            onError={() => {
+              setError(t("media.loadError"))
+              setPreview(null)
             }}
           />
         ) : (
@@ -101,7 +85,6 @@ export default function CompanyCoverSection({
         )}
       </div>
 
-      {/* Actions */}
       <div className="flex gap-2">
         <input
           ref={fileInputRef}
@@ -138,7 +121,7 @@ export default function CompanyCoverSection({
           </Button>
         )}
 
-        <p className="text-xs text-text-muted ml-auto">{t("media.coverRequirements")}</p>
+        <p className="ml-auto text-xs text-text-muted">{t("media.coverRequirements")}</p>
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}

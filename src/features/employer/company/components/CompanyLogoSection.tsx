@@ -10,7 +10,7 @@ interface CompanyLogoSectionProps {
   onRemove: () => void
 }
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
+const MAX_FILE_SIZE = 2 * 1024 * 1024
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
 
 export default function CompanyLogoSection({
@@ -24,32 +24,23 @@ export default function CompanyLogoSection({
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Log logoUrl on mount and when it changes
-  console.log("Logo URL from props:", logoUrl)
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {
       setError(t("media.invalidType"))
       return
     }
 
-    // Validate file size
     if (file.size > MAX_FILE_SIZE) {
       setError(t("media.fileTooLarge"))
       return
     }
 
     setError(null)
-
-    // Create preview
     const objectUrl = URL.createObjectURL(file)
     setPreview(objectUrl)
-
-    // Upload file
     onUpload(file)
   }
 
@@ -72,17 +63,13 @@ export default function CompanyLogoSection({
       <h3 className="text-lg font-semibold text-text-primary">{t("media.logo")}</h3>
 
       <div className="flex items-start gap-4">
-        {/* Logo Display */}
         <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-lg border-2 border-border bg-background-secondary">
           {displayLogo ? (
             <img
               src={displayLogo}
               alt={t("media.logo")}
               className="h-full w-full object-contain"
-              onError={(e) => {
-                console.error("Failed to load logo:", displayLogo)
-                console.error("Image error event:", e)
-                console.error("Current src:", e.currentTarget.src)
+              onError={() => {
                 setError(t("media.loadError"))
                 setPreview(null)
               }}
@@ -99,7 +86,6 @@ export default function CompanyLogoSection({
           )}
         </div>
 
-        {/* Actions */}
         <div className="flex flex-col gap-2">
           <input
             ref={fileInputRef}
