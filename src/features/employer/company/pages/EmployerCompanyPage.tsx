@@ -4,6 +4,7 @@ import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { StatusBadge } from "@/components/shared/badges"
 import { keyOf } from "@/lib/keyValue"
+import CompanyVisualHeader from "../components/CompanyVisualHeader"
 import EmployerCompanyForm from "../components/EmployerCompanyForm"
 import TeamManagementSection from "../components/TeamManagementSection"
 import { useEmployerCompany } from "../hooks/useEmployerCompany"
@@ -67,6 +68,7 @@ export default function EmployerCompanyPage() {
         <div className="h-96 animate-pulse rounded-lg bg-background-secondary" />
       ) : (
         <>
+          <CompanyVisualHeader company={company.data} />
           <EmployerCompanyForm
             company={company.data}
             isPending={company.updateMutation.isPending}

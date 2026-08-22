@@ -8,6 +8,13 @@
     "location": "Location",
     "description": "Description"
   },
+  "visualHeader": {
+    "coverAlt": "{{name}} cover image",
+    "logoAlt": "{{name}} logo",
+    "industryFallback": "Industry not set",
+    "locationFallback": "Location not set",
+    "verification": "Verification"
+  },
   "media": {
     "logo": "Company logo",
     "cover": "Cover image",

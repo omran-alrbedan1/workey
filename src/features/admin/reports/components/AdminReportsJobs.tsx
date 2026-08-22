@@ -26,11 +26,13 @@ export default function AdminReportsJobs({
 
   const statusCounts = data?.status_counts
   const avgApplications = data?.average_applications_per_job
+  const hasStatusCounts = Boolean(statusCounts && Object.keys(statusCounts).length > 0)
+  const hasAvgApplications = typeof avgApplications === "number"
 
   return (
     <SectionCard icon={() => null} title={t("jobs.title")}>
       <div className="space-y-6">
-        {typeof avgApplications === "number" && (
+        {hasAvgApplications && (
           <div className="flex items-center gap-4 rounded-lg border border-border/60 bg-background-card/50 px-5 py-4">
             <span className="text-sm font-medium text-text-secondary">
               {t("jobs.avgApplications")}
@@ -41,7 +43,7 @@ export default function AdminReportsJobs({
           </div>
         )}
 
-        {statusCounts && Object.keys(statusCounts).length > 0 && (
+        {hasStatusCounts && (
           <div>
             <h3 className="mb-3 text-sm font-semibold text-text-secondary">
               {t("jobs.statusCounts")}
@@ -64,7 +66,7 @@ export default function AdminReportsJobs({
           </div>
         )}
 
-        {(!statusCounts || Object.keys(statusCounts).length === 0) && (
+        {!hasStatusCounts && !hasAvgApplications && (
           <p className="text-sm text-text-muted">{t("jobs.empty")}</p>
         )}
       </div>

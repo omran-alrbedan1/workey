@@ -3,11 +3,23 @@ import { useTranslation } from "react-i18next"
 
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
-import { valueOf } from "@/lib/keyValue"
+import { keyOf, valueOf } from "@/lib/keyValue"
 import type { AdminAuditLogRecord } from "../types/adminAuditLogs.types"
 
 function entityName(value: unknown) {
   return valueOf(value).split("\\").pop() || "-"
+}
+
+function readableAction(action: string) {
+  return action
+    .replace(/[._-]+/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase())
+}
+
+function translatedAction(t: (key: string, options?: { defaultValue?: string }) => string, action: unknown) {
+  const actionKey = keyOf(action, valueOf(action))
+  if (!actionKey) return "-"
+  return t(`audit.actions.${actionKey}`, { defaultValue: readableAction(actionKey) })
 }
 
 interface AdminAuditLogMobileCardProps {
@@ -25,7 +37,9 @@ const AdminAuditLogMobileCard = ({ log }: AdminAuditLogMobileCardProps) => {
           <Activity className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate font-semibold text-text-primary">{valueOf(log.action, "-")}</h3>
+          <h3 className="truncate font-semibold text-text-primary">
+            {translatedAction(t, log.action)}
+          </h3>
           {log.description && (
             <p className="truncate text-xs text-text-muted">{valueOf(log.description)}</p>
           )}
@@ -75,7 +89,7 @@ export default function AdminAuditLogsTable({
       headerIcon: Activity,
       cell: (log) => (
         <div>
-          <p className="font-semibold text-text-primary">{valueOf(log.action, "-")}</p>
+          <p className="font-semibold text-text-primary">{translatedAction(t, log.action)}</p>
           {log.description && (
             <p className="mt-1 max-w-sm text-xs text-text-muted">
               {valueOf(log.description)}

@@ -40,26 +40,19 @@ function numericValue(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null
 }
 
-function extractValue(value: unknown): number {
-  if (value == null) return 0
+function extractValue(value: unknown): number | null {
+  if (value == null) return null
   if (typeof value === "number") return value
-  if (typeof value === "string") return numericValue(value) ?? 0
-  if (Array.isArray(value)) return value.length
-  if (typeof value !== "object") return 0
+  if (typeof value === "string") return numericValue(value)
+  if (Array.isArray(value) || typeof value !== "object") return null
 
   const record = value as Record<string, unknown>
-  const directTotal =
+  return (
     numericValue(record.total) ??
     numericValue(record.count) ??
     numericValue(record.total_count) ??
     numericValue(record.value)
-
-  if (directTotal !== null) return directTotal
-
-  return Object.values(record).reduce((sum, entry) => {
-    const parsed = numericValue(entry)
-    return parsed === null ? sum : sum + parsed
-  }, 0)
+  )
 }
 
 export default function AdminReportsOverview({
@@ -84,16 +77,22 @@ export default function AdminReportsOverview({
     )
   }
 
+  const fieldsWithData = overviewFields
+    .map((field) => ({ ...field, total: extractValue(data?.[field.key]) }))
+    .filter((field) => field.total !== null)
+
+  if (fieldsWithData.length === 0) {
+    return <p className="text-sm text-text-muted">{t("overview.empty")}</p>
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {overviewFields.map((field) => {
-        const raw = data?.[field.key]
-        const total = extractValue(raw)
+      {fieldsWithData.map((field) => {
         return (
           <MetricStatusCard
             key={field.key}
             title={t(field.translationKey)}
-            value={total.toLocaleString()}
+            value={field.total!.toLocaleString()}
             icon={field.icon}
           />
         )

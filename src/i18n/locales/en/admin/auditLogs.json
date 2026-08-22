@@ -14,6 +14,88 @@
     "apply": "Apply filters",
     "reset": "Reset filters"
   },
+  "audit": {
+    "actions": {
+      "user_created": "User created",
+      "user_updated": "User updated",
+      "user_deleted": "User deleted",
+      "user_suspended": "User suspended",
+      "user_activated": "User activated",
+      "company_created": "Company created",
+      "company_updated": "Company updated",
+      "company_approved": "Company approved",
+      "company_rejected": "Company rejected",
+      "company_suspended": "Company suspended",
+      "job_created": "Job created",
+      "job_updated": "Job updated",
+      "job_published": "Job published",
+      "job_closed": "Job closed",
+      "job_deleted": "Job deleted",
+      "application_submitted": "Application submitted",
+      "application_status_changed": "Application status changed",
+      "interview_scheduled": "Interview scheduled",
+      "interview_completed": "Interview completed",
+      "test_created": "Test created",
+      "test_updated": "Test updated",
+      "test_deleted": "Test deleted",
+      "test_assigned": "Test assigned",
+      "test_completed": "Test completed",
+      "invitation_sent": "Invitation sent",
+      "invitation_accepted": "Invitation accepted",
+      "member_added": "Member added",
+      "member_removed": "Member removed",
+      "member_role_updated": "Member role updated",
+      "member_status_updated": "Member status updated",
+      "login": "Login",
+      "logout": "Logout",
+      "job": {
+        "published": "Job published",
+        "created": "Job created",
+        "updated": "Job updated",
+        "closed": "Job closed",
+        "deleted": "Job deleted"
+      },
+      "company": {
+        "created": "Company created",
+        "updated": "Company updated",
+        "approved": "Company approved",
+        "rejected": "Company rejected",
+        "suspended": "Company suspended"
+      },
+      "user": {
+        "created": "User created",
+        "updated": "User updated",
+        "deleted": "User deleted",
+        "suspended": "User suspended",
+        "activated": "User activated"
+      },
+      "application": {
+        "submitted": "Application submitted",
+        "status_changed": "Application status changed"
+      },
+      "interview": {
+        "scheduled": "Interview scheduled",
+        "completed": "Interview completed"
+      },
+      "test": {
+        "created": "Test created",
+        "updated": "Test updated",
+        "deleted": "Test deleted",
+        "assigned": "Test assigned",
+        "completed": "Test completed"
+      },
+      "invitation": {
+        "sent": "Invitation sent",
+        "accepted": "Invitation accepted"
+      },
+      "member": {
+        "added": "Member added",
+        "removed": "Member removed",
+        "role_updated": "Member role updated",
+        "status_updated": "Member status updated"
+      }
+    }
+  },
   "unknownActor": "System or unknown user",
   "empty": "No audit logs found",
   "emptyDescription": "Try changing the filters or check back after platform activity occurs."

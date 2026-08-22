@@ -24,7 +24,8 @@
     "interviews": "Interviews",
     "notifications": "Notifications",
     "cvs": "CVs",
-    "auditLogs": "Audit Logs"
+    "auditLogs": "Audit Logs",
+    "empty": "No overview metrics available."
   },
   "applications": {
     "title": "Applications Report",

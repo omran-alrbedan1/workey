@@ -1,12 +1,19 @@
 {
   "title": "ملف الشركة",
-  "description": "راجع وحدّث المعلومات العامة لشركتك.",
+  "description": "راجع وحدث المعلومات العامة لشركتك.",
   "fields": {
     "name": "اسم الشركة",
     "industry": "المجال",
     "website": "الموقع الإلكتروني",
     "location": "الموقع",
     "description": "الوصف"
+  },
+  "visualHeader": {
+    "coverAlt": "صورة غلاف {{name}}",
+    "logoAlt": "شعار {{name}}",
+    "industryFallback": "لم يتم تحديد المجال",
+    "locationFallback": "لم يتم تحديد الموقع",
+    "verification": "التحقق"
   },
   "media": {
     "logo": "شعار الشركة",
@@ -15,15 +22,18 @@
     "replace": "استبدال",
     "remove": "حذف",
     "invalidType": "نوع الملف غير مدعوم. يرجى استخدام JPG أو PNG أو WebP.",
-    "fileTooLarge": "حجم الملف كبير جداً. الحد الأقصى 2 ميجابايت.",
+    "fileTooLarge": "حجم الملف كبير جدا. الحد الأقصى 2 ميجابايت.",
     "loadError": "فشل تحميل الصورة.",
     "logoRequirements": "JPG, PNG, WebP - حد أقصى 2MB",
     "coverRequirements": "JPG, PNG, WebP - حد أقصى 2MB"
   },
-  "actions": { "save": "حفظ الشركة", "saving": "جارٍ الحفظ..." },
+  "actions": {
+    "save": "حفظ الشركة",
+    "saving": "جار الحفظ..."
+  },
   "team": {
     "title": "إدارة الفريق",
-    "description": "قم بدعوة زملاء العمل وإدارة الأدوار والصلاحيات ونقل الملكية.",
+    "description": "ادع زملاء العمل، وأدر الأدوار والصلاحيات، وانقل الملكية.",
     "inviteButton": "دعوة عضو",
     "member": "عضو",
     "currentUser": "(أنت)",
@@ -31,12 +41,15 @@
     "invitationsEmpty": "لا توجد دعوات معلقة.",
     "roleLabel": "الدور: {role}",
     "cancel": "إلغاء",
-    "submitting": "جارٍ الحفظ...",
-    "tabs": { "members": "الأعضاء", "invitations": "الدعوات" },
+    "submitting": "جار الحفظ...",
+    "tabs": {
+      "members": "الأعضاء",
+      "invitations": "الدعوات"
+    },
     "roles": {
       "admin": "مدير",
       "recruiter": "مسؤول توظيف",
-      "interviewer": "مقابِل",
+      "interviewer": "مقابل",
       "member": "عضو"
     },
     "statusOptions": {
@@ -52,13 +65,13 @@
     },
     "roleDialog": {
       "title": "تغيير دور العضو",
-      "description": "قم بتحديث دور {name}.",
+      "description": "حدث دور {name}.",
       "label": "الدور",
       "submit": "تحديث الدور"
     },
     "statusDialog": {
       "title": "تغيير حالة العضو",
-      "description": "قم بتحديث حالة {name}.",
+      "description": "حدث حالة {name}.",
       "label": "الحالة",
       "submit": "تحديث الحالة"
     },
@@ -71,16 +84,16 @@
     },
     "transferDialog": {
       "title": "نقل الملكية",
-      "description": "اختر عضواً ليصبح المالك الجديد للشركة.",
+      "description": "اختر عضوا ليصبح المالك الجديد للشركة.",
       "member": "المالك الجديد",
       "submit": "نقل الملكية"
     },
     "toasts": {
       "roleUpdated": "تم تحديث دور العضو",
       "statusUpdated": "تم تحديث حالة العضو",
-      "memberRemoved": "تم إزالة العضو",
+      "memberRemoved": "تمت إزالة العضو",
       "invitationSent": "تم إرسال الدعوة",
-      "invitationResent": "تم إعادة إرسال الدعوة",
+      "invitationResent": "تمت إعادة إرسال الدعوة",
       "invitationRevoked": "تم إلغاء الدعوة",
       "ownershipTransferred": "تم نقل الملكية",
       "error": "حدث خطأ. يرجى المحاولة مرة أخرى."
@@ -98,6 +111,6 @@
   },
   "errors": {
     "title": "تعذر تحميل ملف الشركة",
-    "description": "تحقق من صلاحية صاحب العمل وحاول مجدداً."
+    "description": "تحقق من صلاحية صاحب العمل وحاول مجددا."
   }
 }

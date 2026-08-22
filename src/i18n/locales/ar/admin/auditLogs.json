@@ -10,11 +10,93 @@
   "filters": {
     "actionPlaceholder": "الإجراء، مثال: job.published",
     "entityPlaceholder": "فئة الكيان، مثال: App\\Models\\JobPosting",
-    "actorPlaceholder": "معرّف المستخدم المنفّذ",
+    "actorPlaceholder": "معرف المستخدم المنفذ",
     "apply": "تطبيق عوامل التصفية",
     "reset": "إعادة تعيين عوامل التصفية"
   },
+  "audit": {
+    "actions": {
+      "user_created": "تم إنشاء مستخدم",
+      "user_updated": "تم تحديث مستخدم",
+      "user_deleted": "تم حذف مستخدم",
+      "user_suspended": "تم تعليق مستخدم",
+      "user_activated": "تم تفعيل مستخدم",
+      "company_created": "تم إنشاء شركة",
+      "company_updated": "تم تحديث شركة",
+      "company_approved": "تمت الموافقة على شركة",
+      "company_rejected": "تم رفض شركة",
+      "company_suspended": "تم تعليق شركة",
+      "job_created": "تم إنشاء وظيفة",
+      "job_updated": "تم تحديث وظيفة",
+      "job_published": "تم نشر وظيفة",
+      "job_closed": "تم إغلاق وظيفة",
+      "job_deleted": "تم حذف وظيفة",
+      "application_submitted": "تم تقديم طلب",
+      "application_status_changed": "تم تغيير حالة طلب",
+      "interview_scheduled": "تمت جدولة مقابلة",
+      "interview_completed": "اكتملت مقابلة",
+      "test_created": "تم إنشاء اختبار",
+      "test_updated": "تم تحديث اختبار",
+      "test_deleted": "تم حذف اختبار",
+      "test_assigned": "تم إسناد اختبار",
+      "test_completed": "اكتمل اختبار",
+      "invitation_sent": "تم إرسال دعوة",
+      "invitation_accepted": "تم قبول دعوة",
+      "member_added": "تمت إضافة عضو",
+      "member_removed": "تمت إزالة عضو",
+      "member_role_updated": "تم تحديث دور عضو",
+      "member_status_updated": "تم تحديث حالة عضو",
+      "login": "تسجيل الدخول",
+      "logout": "تسجيل الخروج",
+      "job": {
+        "published": "تم نشر وظيفة",
+        "created": "تم إنشاء وظيفة",
+        "updated": "تم تحديث وظيفة",
+        "closed": "تم إغلاق وظيفة",
+        "deleted": "تم حذف وظيفة"
+      },
+      "company": {
+        "created": "تم إنشاء شركة",
+        "updated": "تم تحديث شركة",
+        "approved": "تمت الموافقة على شركة",
+        "rejected": "تم رفض شركة",
+        "suspended": "تم تعليق شركة"
+      },
+      "user": {
+        "created": "تم إنشاء مستخدم",
+        "updated": "تم تحديث مستخدم",
+        "deleted": "تم حذف مستخدم",
+        "suspended": "تم تعليق مستخدم",
+        "activated": "تم تفعيل مستخدم"
+      },
+      "application": {
+        "submitted": "تم تقديم طلب",
+        "status_changed": "تم تغيير حالة طلب"
+      },
+      "interview": {
+        "scheduled": "تمت جدولة مقابلة",
+        "completed": "اكتملت مقابلة"
+      },
+      "test": {
+        "created": "تم إنشاء اختبار",
+        "updated": "تم تحديث اختبار",
+        "deleted": "تم حذف اختبار",
+        "assigned": "تم إسناد اختبار",
+        "completed": "اكتمل اختبار"
+      },
+      "invitation": {
+        "sent": "تم إرسال دعوة",
+        "accepted": "تم قبول دعوة"
+      },
+      "member": {
+        "added": "تمت إضافة عضو",
+        "removed": "تمت إزالة عضو",
+        "role_updated": "تم تحديث دور عضو",
+        "status_updated": "تم تحديث حالة عضو"
+      }
+    }
+  },
   "unknownActor": "النظام أو مستخدم غير معروف",
   "empty": "لم يتم العثور على سجلات تدقيق",
-  "emptyDescription": "جرّب تغيير عوامل التصفية أو تحقق لاحقاً بعد حدوث نشاط على المنصة."
+  "emptyDescription": "جرب تغيير عوامل التصفية أو تحقق لاحقا بعد حدوث نشاط على المنصة."
 }

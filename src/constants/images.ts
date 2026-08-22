@@ -1,5 +1,5 @@
 import logo from "@/assets/images/workey-logo.jpg"
-import workeyLoginHero from "@/assets/images/workey-login-hero.jpg"
+import workeyLoginHero from "@/assets/images/workey-login-hero-v2.png"
 import emptyProducts from "@/assets/images/emptyProducts.svg"
 import usersManagement from "@/assets/images/usersManagement.svg"
 import jobs from "@/assets/images/jobs.svg"
