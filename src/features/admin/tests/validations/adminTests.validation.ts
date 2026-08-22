@@ -54,8 +54,7 @@ export function createAdminTestWizardSchema(t: TFunction) {
       },
     )
     .refine(
-      (data) =>
-        !data.is_active || (data.questions?.reduce((sum, q) => sum + q.points, 0) ?? 0) > 0,
+      (data) => !data.is_active || (data.questions?.reduce((sum, q) => sum + q.points, 0) ?? 0) > 0,
       {
         message: t("validation.activeRequiresScore"),
         path: ["is_active"],

@@ -54,9 +54,7 @@ export default function ApplicationStatusHistory({ history }: ApplicationStatusH
               <div className="flex flex-wrap items-center gap-3 text-xs text-text-muted">
                 <div className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  <span>
-                    {new Date(entry.changed_at).toLocaleString()}
-                  </span>
+                  <span>{new Date(entry.changed_at).toLocaleString()}</span>
                 </div>
                 {entry.changed_by && (
                   <div className="flex items-center gap-1">

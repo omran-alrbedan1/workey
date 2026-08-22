@@ -21,7 +21,6 @@ export const ROUTES = Object.freeze({
     jobDetails: (id: string | number) => `/admin/jobs/${id}`,
     applications: "/admin/applications",
     applicationDetails: (id: string | number) => `/admin/applications/${id}`,
-    interviews: "/admin/interviews",
     skills: "/admin/skills",
     tests: "/admin/tests",
     testsCreate: "/admin/tests/create",

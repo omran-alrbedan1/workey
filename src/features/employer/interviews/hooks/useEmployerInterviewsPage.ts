@@ -27,12 +27,11 @@ export function useEmployerInterviewsPage(unknownCandidateLabel: string) {
   }, [jobItems, selectedJob, selectedJobId])
 
   const applicants = useEmployerApplicants(selectedJobId || undefined)
-  const applicationItems = useMemo(
-    () => applicants.data?.items ?? [],
-    [applicants.data?.items],
-  )
+  const applicationItems = useMemo(() => applicants.data?.items ?? [], [applicants.data?.items])
   const preferredApplication = useMemo(
-    () => applicationItems.find((application) => (application.interviews_count ?? 0) > 0) ?? applicationItems[0],
+    () =>
+      applicationItems.find((application) => (application.interviews_count ?? 0) > 0) ??
+      applicationItems[0],
     [applicationItems],
   )
   const selectedApplication = useMemo(
@@ -69,9 +68,8 @@ export function useEmployerInterviewsPage(unknownCandidateLabel: string) {
   )
   const selectedApplicationCandidateName = useMemo(
     () =>
-      applicationOptions.find(
-        ({ application }) => String(application.id) === selectedApplicationId,
-      )?.candidateName,
+      applicationOptions.find(({ application }) => String(application.id) === selectedApplicationId)
+        ?.candidateName,
     [applicationOptions, selectedApplicationId],
   )
 

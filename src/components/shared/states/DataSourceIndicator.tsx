@@ -16,10 +16,7 @@ interface DataSourceIndicatorProps {
   className?: string
 }
 
-const statusConfig: Record<
-  DataSourceStatus,
-  { color: string; labelKey: string }
-> = {
+const statusConfig: Record<DataSourceStatus, { color: string; labelKey: string }> = {
   live: {
     color: "text-emerald-500",
     labelKey: "live",
@@ -39,11 +36,7 @@ const statusConfig: Record<
 }
 
 function StatusDot({ status }: { status: DataSourceStatus }) {
-  return (
-    <Circle
-      className={cn("h-2 w-2 fill-current", statusConfig[status].color)}
-    />
-  )
+  return <Circle className={cn("h-2 w-2 fill-current", statusConfig[status].color)} />
 }
 
 export default function DataSourceIndicator({
@@ -63,9 +56,7 @@ export default function DataSourceIndicator({
         className,
       )}
     >
-      <span className="font-medium text-text-muted">
-        {t("dataSource.title", "Data sources:")}
-      </span>
+      <span className="font-medium text-text-muted">{t("dataSource.title", "Data sources:")}</span>
       {sources.map((source) => (
         <span key={source.label} className="inline-flex items-center gap-1.5">
           <StatusDot status={source.status} />

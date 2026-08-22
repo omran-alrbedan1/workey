@@ -55,9 +55,7 @@ export interface ApplicationStatusActions {
 
 function transitionKeys(transitions?: ApplicationStatus[]): ApplicationStatusKey[] {
   if (!transitions?.length) return []
-  return transitions
-    .map((status) => keyOf(status) as ApplicationStatusKey)
-    .filter(Boolean)
+  return transitions.map((status) => keyOf(status) as ApplicationStatusKey).filter(Boolean)
 }
 
 /**
@@ -70,9 +68,7 @@ export function filterDirectTransitionTargets(
   candidates: readonly ApplicationStatusKey[],
 ): ApplicationStatusKey[] {
   return Array.from(new Set(candidates)).filter(
-    (status) =>
-      status !== currentKey &&
-      !WORKFLOW_ONLY_STATUSES.has(status),
+    (status) => status !== currentKey && !WORKFLOW_ONLY_STATUSES.has(status),
   )
 }
 
@@ -100,9 +96,7 @@ export function getApplicationStatusActions(
 
   const fromBackend = transitionKeys(application?.allowed_status_transitions)
   const rawTargets =
-    fromBackend.length > 0
-      ? fromBackend
-      : (FALLBACK_TRANSITIONS[currentStatusKey] ?? [])
+    fromBackend.length > 0 ? fromBackend : (FALLBACK_TRANSITIONS[currentStatusKey] ?? [])
 
   const targets = filterDirectTransitionTargets(currentStatusKey, rawTargets)
 

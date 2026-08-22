@@ -27,6 +27,13 @@ export default function AdminUsersPage() {
   const [activeRole, setActiveRole] = useState<AdminUserRole>("admin")
   const [filters, setFilters] = useState<AdminUsersPageFilters>({ search: "", status: "all" })
 
+  const applyFilters = (values: Partial<AdminUserFilterForm>) => {
+    setFilters({
+      search: values.search ?? "",
+      status: values.status ?? "all",
+    })
+  }
+
   const roleFilters: AdminUserFilterForm = {
     search: filters.search,
     status: filters.status,
@@ -58,7 +65,7 @@ export default function AdminUsersPage() {
       </>
     )
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-visible relative">
       <PageHeader
         title={t("list.title")}
         description={t("list.description")}
@@ -81,7 +88,7 @@ export default function AdminUsersPage() {
       <AdminUsersFilter
         initialFilters={filters}
         isLoading={users.isFetching}
-        onApplyFilters={setFilters}
+        onApplyFilters={applyFilters}
         onResetFilters={() => setFilters({ search: "", status: "all" })}
       />
       <AdminUsersTable
@@ -90,9 +97,7 @@ export default function AdminUsersPage() {
         pagination={users.data?.pagination}
         onPageChange={users.setPage}
         isUpdating={users.statusMutation.isPending}
-        onStatusChange={(id, status, reason) =>
-          users.statusMutation.mutateAsync({ id, status, reason })
-        }
+        onStatusChange={(id, status) => users.statusMutation.mutateAsync({ id, status })}
       />
     </div>
   )

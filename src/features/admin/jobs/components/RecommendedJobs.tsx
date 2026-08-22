@@ -1,4 +1,12 @@
-import { MapPin, Clock, DollarSign, Briefcase, TrendingUp, ArrowUpRight, Building2 } from "lucide-react"
+import {
+  MapPin,
+  Clock,
+  DollarSign,
+  Briefcase,
+  TrendingUp,
+  ArrowUpRight,
+  Building2,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
@@ -16,7 +24,8 @@ export default function RecommendedJobs({ candidateId, limit = 10 }: Recommended
   const { t } = useTranslation("adminJobs")
   const { data, isLoading, isError } = useQuery({
     queryKey: ["recommended-jobs", candidateId, limit],
-    queryFn: () => jobRecommendationsService.getRecommendedJobs({ candidateId: candidateId!, per_page: limit }),
+    queryFn: () =>
+      jobRecommendationsService.getRecommendedJobs({ candidateId: candidateId!, per_page: limit }),
     enabled: !!candidateId,
   })
 
@@ -58,11 +67,13 @@ export default function RecommendedJobs({ candidateId, limit = 10 }: Recommended
                 {job.match_score !== undefined && (
                   <div className="flex shrink-0 items-center gap-2 rounded-lg bg-primary/5 px-3 py-1.5">
                     <TrendingUp className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-semibold text-primary">{Math.round(job.match_score * 100)}%</span>
+                    <span className="text-sm font-semibold text-primary">
+                      {Math.round(job.match_score * 100)}%
+                    </span>
                   </div>
                 )}
               </div>
-              
+
               <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-text-muted">
                 {job.location && (
                   <div className="flex items-center gap-1.5">
@@ -86,7 +97,8 @@ export default function RecommendedJobs({ candidateId, limit = 10 }: Recommended
                   <div className="flex items-center gap-1.5">
                     <DollarSign className="h-3.5 w-3.5" />
                     <span>
-                      {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} {job.salary_currency}
+                      {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()}{" "}
+                      {job.salary_currency}
                     </span>
                   </div>
                 )}

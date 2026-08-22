@@ -17,14 +17,20 @@ export const employerJobSchema = z
     salary_min: z.coerce.number().nonnegative().nullable().optional(),
     salary_max: z.coerce.number().nonnegative().nullable().optional(),
   })
-  .refine((values) => values.work_mode !== "remote" || !values.location || values.location.trim() === "", {
-    path: ["location"],
-    message: "validation.locationOptionalForRemote",
-  })
-  .refine((values) => values.work_mode === "remote" || (values.location && values.location.trim() !== ""), {
-    path: ["location"],
-    message: "validation.locationRequiredForNonRemote",
-  })
+  .refine(
+    (values) => values.work_mode !== "remote" || !values.location || values.location.trim() === "",
+    {
+      path: ["location"],
+      message: "validation.locationOptionalForRemote",
+    },
+  )
+  .refine(
+    (values) => values.work_mode === "remote" || (values.location && values.location.trim() !== ""),
+    {
+      path: ["location"],
+      message: "validation.locationRequiredForNonRemote",
+    },
+  )
   .refine(
     (values) =>
       values.salary_min === null ||
@@ -34,16 +40,19 @@ export const employerJobSchema = z
       values.salary_max >= values.salary_min,
     { path: ["salary_max"], message: "validation.salaryMaxMustBeAtLeastMin" },
   )
-  .refine((values) => {
-    if (!values.application_deadline) return true
-    const deadline = new Date(values.application_deadline)
-    const now = new Date()
-    now.setHours(0, 0, 0, 0)
-    deadline.setHours(0, 0, 0, 0)
-    return deadline >= now
-  }, {
-    path: ["application_deadline"],
-    message: "validation.deadlineMustBeFuture",
-  })
+  .refine(
+    (values) => {
+      if (!values.application_deadline) return true
+      const deadline = new Date(values.application_deadline)
+      const now = new Date()
+      now.setHours(0, 0, 0, 0)
+      deadline.setHours(0, 0, 0, 0)
+      return deadline >= now
+    },
+    {
+      path: ["application_deadline"],
+      message: "validation.deadlineMustBeFuture",
+    },
+  )
 
 export type EmployerJobFormValues = z.infer<typeof employerJobSchema>

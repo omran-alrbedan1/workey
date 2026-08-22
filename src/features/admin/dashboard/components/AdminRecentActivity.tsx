@@ -1,10 +1,4 @@
-import {
-  BriefcaseBusiness,
-  Building2,
-  ClipboardList,
-  FlaskConical,
-  UserRound,
-} from "lucide-react"
+import { BriefcaseBusiness, Building2, ClipboardList, FlaskConical, UserRound } from "lucide-react"
 
 import type { ActivityItem } from "../types/adminDashboard.types"
 import DashboardPanel from "./DashboardPanel"
@@ -23,10 +17,7 @@ function formatDate(value: string | undefined, locale: string, fallback: string)
 export default function AdminRecentActivity({ items }: { items: ActivityItem[] }) {
   const { t, i18n } = useTranslation("adminDashboard")
   return (
-    <DashboardPanel
-      title={t("recentTitle")}
-      subtitle={t("recentSubtitle")}
-    >
+    <DashboardPanel title={t("recentTitle")} subtitle={t("recentSubtitle")}>
       {items.length === 0 ? (
         <div className="flex min-h-52 items-center justify-center text-sm text-text-muted">
           {t("noRecent")}

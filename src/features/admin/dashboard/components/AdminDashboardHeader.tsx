@@ -29,9 +29,7 @@ export default function AdminDashboardHeader({ isFetching, onRefresh }: AdminDas
             {t("eyebrow")}
           </div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h1>
-          <p className="mt-2 max-w-2xl text-sm text-white/75">
-            {t("description")}
-          </p>
+          <p className="mt-2 max-w-2xl text-sm text-white/75">{t("description")}</p>
           <div className="mt-4 flex items-center gap-2 text-xs text-white/70">
             <CalendarDays className="h-4 w-4" />
             {currentDate}

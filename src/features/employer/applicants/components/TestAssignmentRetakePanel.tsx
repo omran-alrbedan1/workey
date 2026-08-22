@@ -82,7 +82,12 @@ export default function TestAssignmentRetakePanel({
 
   const updatePolicy = async () => {
     const parsedMaxAttempts = Number(maxAttempts)
-    if (!Number.isInteger(parsedMaxAttempts) || parsedMaxAttempts < 1 || parsedMaxAttempts > 5 || !policyReason.trim()) {
+    if (
+      !Number.isInteger(parsedMaxAttempts) ||
+      parsedMaxAttempts < 1 ||
+      parsedMaxAttempts > 5 ||
+      !policyReason.trim()
+    ) {
       showErrorToast(t("tests.retakePolicyValidation"))
       return
     }
@@ -181,7 +186,11 @@ export default function TestAssignmentRetakePanel({
               disabled={savingPolicy || !maxAttempts || !policyReason.trim()}
               onClick={() => void updatePolicy()}
             >
-              {savingPolicy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              {savingPolicy ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
               {t("tests.saveRetakePolicy")}
             </Button>
           </div>
@@ -265,7 +274,8 @@ export default function TestAssignmentRetakePanel({
               <span className="mx-2 text-text-muted">|</span>
               <span className="font-medium">{t("tests.attemptsUsed")}:</span> {series.attempts_used}
               <span className="mx-2 text-text-muted">|</span>
-              <span className="font-medium">{t("tests.attemptsRemaining")}:</span> {series.attempts_remaining}
+              <span className="font-medium">{t("tests.attemptsRemaining")}:</span>{" "}
+              {series.attempts_remaining}
             </div>
             {series.assignments.map((item, index) => {
               const score = attemptScore(item)
@@ -289,8 +299,16 @@ export default function TestAssignmentRetakePanel({
                       </p>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <StatusBadge status={item.is_latest ? "active" : "inactive"} variant="soft" size="sm" />
-                      <StatusBadge status={String(valueOf(item.grading_status, "pending"))} variant="soft" size="sm" />
+                      <StatusBadge
+                        status={item.is_latest ? "active" : "inactive"}
+                        variant="soft"
+                        size="sm"
+                      />
+                      <StatusBadge
+                        status={String(valueOf(item.grading_status, "pending"))}
+                        variant="soft"
+                        size="sm"
+                      />
                       <span className="text-sm font-medium">
                         {score == null
                           ? t("tests.noAttemptScore")

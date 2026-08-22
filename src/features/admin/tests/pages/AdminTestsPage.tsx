@@ -29,10 +29,7 @@ export default function AdminTestsPage() {
         icon={FlaskConical}
         count={tests.data?.pagination.total}
         rightContent={
-          <Button
-            className="text-white"
-            onClick={() => navigate(ROUTES.admin.testsCreate)}
-          >
+          <Button className="text-white" onClick={() => navigate(ROUTES.admin.testsCreate)}>
             <Plus className="h-4 w-4" />
             {t("form.add")}
           </Button>

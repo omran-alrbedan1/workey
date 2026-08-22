@@ -36,8 +36,7 @@ export default function EmailVerificationForm({
       <form onSubmit={form.handleSubmit(onVerify)} className="space-y-4">
         <div className="bg-muted/50 p-4 rounded-lg">
           <p className="text-sm text-muted-foreground">
-            {t("emailVerification.otpSentTo")}{" "}
-            <span className="font-semibold">{email}</span>
+            {t("emailVerification.otpSentTo")} <span className="font-semibold">{email}</span>
           </p>
         </div>
 
@@ -67,9 +66,7 @@ export default function EmailVerificationForm({
             className="px-4 py-2 border border-input rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             <RefreshCw className={`h-4 w-4 ${isResending ? "animate-spin" : ""}`} />
-            <span className="text-sm">
-              {t("emailVerification.resend")}
-            </span>
+            <span className="text-sm">{t("emailVerification.resend")}</span>
           </button>
         </div>
       </form>

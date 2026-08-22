@@ -2,10 +2,7 @@ import { Search, ShieldCheck } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { CustomFilter, type FilterField } from "@/components/shared/custom/CustomFilter"
-import {
-  ADMIN_USER_FILTER_DEFAULTS,
-  type AdminUserFilterForm,
-} from "../types/adminUsers.types"
+import { ADMIN_USER_FILTER_DEFAULTS, type AdminUserFilterForm } from "../types/adminUsers.types"
 
 interface AdminUsersFilterProps {
   onApplyFilters: (values: Partial<AdminUserFilterForm>) => void

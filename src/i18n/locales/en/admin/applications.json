@@ -1,7 +1,16 @@
 {
-  "title": "Applications", "description": "Monitor candidate progress across recruitment workflows.",
-  "columns": { "candidate": "Candidate", "job": "Job", "company": "Company", "status": "Status", "match": "Match", "applied": "Applied" },
-  "unknownCandidate": "Unknown candidate", "empty": "No applications were returned.",
+  "title": "Applications",
+  "description": "Monitor candidate progress across recruitment workflows.",
+  "columns": {
+    "candidate": "Candidate",
+    "job": "Job",
+    "company": "Company",
+    "status": "Status",
+    "match": "Match",
+    "applied": "Applied"
+  },
+  "unknownCandidate": "Unknown candidate",
+  "empty": "No applications were returned.",
   "emptyDescription": "No candidate applications are available in this view.",
   "unknownJob": "Unknown job",
   "unknownCompany": "Unknown company",

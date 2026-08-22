@@ -55,9 +55,7 @@ export default function AdminNotificationsPage() {
             onClick={() => notifications.markAllReadMutation.mutate()}
           >
             <CheckCheck />
-            {notifications.markAllReadMutation.isPending
-              ? t("markingAllRead")
-              : t("markAllRead")}
+            {notifications.markAllReadMutation.isPending ? t("markingAllRead") : t("markAllRead")}
           </Button>
         }
       />

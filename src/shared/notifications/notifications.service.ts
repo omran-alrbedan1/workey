@@ -1,9 +1,6 @@
 import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
-import {
-  isRecord,
-  unwrapEntity,
-} from "@/features/admin/shared/services/adminResponse.utils"
+import { isRecord, unwrapEntity } from "@/features/admin/shared/services/adminResponse.utils"
 import type { UnreadCountResponse } from "./types"
 
 export const notificationsService = {

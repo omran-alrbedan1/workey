@@ -75,18 +75,22 @@ export const employerTeamService = {
   },
 
   async updateMemberRole(userId: string | number, input: MemberRoleInput): Promise<CompanyMember> {
-    return normalizeMember(unwrapEmployerEntity<CompanyMember>(
-      await api.patch(API_ENDPOINTS.companyTeam.memberRole(userId), input),
-    ))
+    return normalizeMember(
+      unwrapEmployerEntity<CompanyMember>(
+        await api.patch(API_ENDPOINTS.companyTeam.memberRole(userId), input),
+      ),
+    )
   },
 
   async updateMemberStatus(
     userId: string | number,
     input: MemberStatusInput,
   ): Promise<CompanyMember> {
-    return normalizeMember(unwrapEmployerEntity<CompanyMember>(
-      await api.patch(API_ENDPOINTS.companyTeam.memberStatus(userId), input),
-    ))
+    return normalizeMember(
+      unwrapEmployerEntity<CompanyMember>(
+        await api.patch(API_ENDPOINTS.companyTeam.memberStatus(userId), input),
+      ),
+    )
   },
 
   async removeMember(userId: string | number): Promise<void> {
@@ -100,9 +104,7 @@ export const employerTeamService = {
   },
 
   async createInvitation(input: CompanyInvitationInput): Promise<CompanyInvitationResponse> {
-    return unwrapInvitationResult(
-      await api.post(API_ENDPOINTS.companyTeam.invitations, input),
-    )
+    return unwrapInvitationResult(await api.post(API_ENDPOINTS.companyTeam.invitations, input))
   },
 
   async resendInvitation(invitationId: string | number): Promise<CompanyInvitationResponse> {

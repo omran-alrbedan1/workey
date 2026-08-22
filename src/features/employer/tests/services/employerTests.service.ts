@@ -55,7 +55,7 @@ export const employerTestsService = {
     applicationId: string | number,
     testId: string | number,
     note?: string,
-    options: { deadline_at?: string | null; max_attempts?: number } = {},
+    options: { deadline_at?: string | null; max_attempts?: number; instructions?: string } = {},
   ): Promise<void> {
     await api.post(API_ENDPOINTS.applications.assignTest(applicationId), {
       test_id: testId,
@@ -64,7 +64,10 @@ export const employerTestsService = {
     })
   },
 
-  async createQuestion(testId: string | number, input: TestQuestionInput): Promise<TestQuestionResponse> {
+  async createQuestion(
+    testId: string | number,
+    input: TestQuestionInput,
+  ): Promise<TestQuestionResponse> {
     return unwrapEmployerEntity<TestQuestionResponse>(
       await api.post(API_ENDPOINTS.tests.questions.create(testId), input),
     )
@@ -135,7 +138,10 @@ export const employerTestsService = {
     input: Partial<TestQuestionOptionInput>,
   ): Promise<TestQuestionOption> {
     return unwrapEmployerEntity<TestQuestionOption>(
-      await api.patch(API_ENDPOINTS.tests.questions.optionById(testId, questionId, optionId), input),
+      await api.patch(
+        API_ENDPOINTS.tests.questions.optionById(testId, questionId, optionId),
+        input,
+      ),
     )
   },
 
@@ -170,9 +176,12 @@ export const employerTestsService = {
   },
 
   async downloadAnswerFile(attemptId: string | number, questionId: string | number): Promise<Blob> {
-    const response = await rawApi.get(API_ENDPOINTS.testAttempts.answerFile(attemptId, questionId), {
-      responseType: "blob",
-    })
+    const response = await rawApi.get(
+      API_ENDPOINTS.testAttempts.answerFile(attemptId, questionId),
+      {
+        responseType: "blob",
+      },
+    )
     return response.data
   },
 
@@ -224,10 +233,7 @@ export const employerTestsService = {
     )
   },
 
-  async updateRetakePolicy(
-    assignmentId: string | number,
-    input: RetakePolicyInput,
-  ): Promise<void> {
+  async updateRetakePolicy(assignmentId: string | number, input: RetakePolicyInput): Promise<void> {
     await api.patch(API_ENDPOINTS.testAssignments.retakePolicy(assignmentId), input)
   },
 

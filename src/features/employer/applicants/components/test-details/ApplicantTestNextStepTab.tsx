@@ -3,7 +3,13 @@ import { useTranslation } from "react-i18next"
 import { EmptyState } from "@/components/shared/states"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface ApplicantTestNextStepTabProps {
   hasAnyResult: boolean
@@ -30,7 +36,9 @@ export default function ApplicantTestNextStepTab({
     return (
       <EmptyState
         title={t("tests.notSubmittedHint")}
-        description={t("tests.nextStepEmptyDescription", { defaultValue: "Grade the test first to unlock next step actions." })}
+        description={t("tests.nextStepEmptyDescription", {
+          defaultValue: "Grade the test first to unlock next step actions.",
+        })}
         icon={Send}
         className="py-8 bg-transparent"
       />
@@ -41,7 +49,10 @@ export default function ApplicantTestNextStepTab({
     return (
       <EmptyState
         title={t("errors.terminalState")}
-        description={t("tests.terminalStatusHint", { defaultValue: "This application is in a final state. No further status changes are allowed." })}
+        description={t("tests.terminalStatusHint", {
+          defaultValue:
+            "This application is in a final state. No further status changes are allowed.",
+        })}
         icon={AlertCircle}
         className="py-8 bg-transparent"
       />

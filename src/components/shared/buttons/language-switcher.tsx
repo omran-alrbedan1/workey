@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button"
 
 const LanguageSwitcher: React.FC = () => {
-  const { i18n} = useTranslation()
+  const { i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
   const languages = [
@@ -30,7 +30,7 @@ const LanguageSwitcher: React.FC = () => {
     setIsOpen(false)
   }
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0]
+  const currentLanguage = languages.find((lang) => lang.code === i18n.language) || languages[0]
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -44,12 +44,14 @@ const LanguageSwitcher: React.FC = () => {
           <span className="hidden sm:inline-block text-sm font-medium text-text">
             {currentLanguage.nativeName}
           </span>
-          <ChevronDown className={`h-3 w-3 text-text-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`h-3 w-3 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          />
         </Button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        align="end" 
+
+      <DropdownMenuContent
+        align="end"
         className="w-48 bg-background-card border-border shadow-lg rounded-lg p-1"
       >
         {languages.map((lang) => (
@@ -59,9 +61,10 @@ const LanguageSwitcher: React.FC = () => {
             className={`
               flex items-center justify-between gap-3 px-3 py-2.5 cursor-pointer rounded-md
               transition-all duration-200
-              ${i18n.language === lang.code 
-                ? 'bg-primary/10 text-primary font-medium' 
-                : 'text-text hover:bg-background-secondary hover:text-text-primary'
+              ${
+                i18n.language === lang.code
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-text hover:bg-background-secondary hover:text-text-primary"
               }
             `}
           >
@@ -72,9 +75,7 @@ const LanguageSwitcher: React.FC = () => {
                 <span className="text-xs text-text-muted">{lang.nativeName}</span>
               </div>
             </div>
-            {i18n.language === lang.code && (
-              <Check className="h-4 w-4 text-primary shrink-0" />
-            )}
+            {i18n.language === lang.code && <Check className="h-4 w-4 text-primary shrink-0" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

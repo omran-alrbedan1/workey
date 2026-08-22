@@ -35,7 +35,10 @@ export default function EmployerLoginForm() {
           iconPosition="left"
         />
         <div className="text-end">
-          <Link className="text-sm font-semibold text-primary hover:underline" to={ROUTES.employer.forgotPassword}>
+          <Link
+            className="text-sm font-semibold text-primary hover:underline"
+            to={ROUTES.employer.forgotPassword}
+          >
             {t("actions.forgotPassword")}
           </Link>
         </div>

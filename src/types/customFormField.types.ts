@@ -6,7 +6,7 @@ export interface Option {
   value: string
   label: string
   disabled?: boolean
-   icon?: LucideIcon | string;
+  icon?: LucideIcon | string
 }
 
 export interface DateRange {
@@ -20,6 +20,7 @@ export interface FileUploadOption {
   accept?: string
   multiple?: boolean
   showPreview?: boolean
+  hint?: string
 }
 
 export interface AutocompleteOption {
@@ -62,75 +63,75 @@ export interface CustomFormFieldProps<T extends FieldValues = FieldValues> {
   labelClassName?: string
   descriptionClassName?: string
   errorClassName?: string
-  
+
   // Icon props
   leftIcon?: LucideIcon
   rightIcon?: LucideIcon
   iconPosition?: "left" | "right" | "both"
   iconClassName?: string
-  
+
   // Options for select/multi-select/combobox
   options?: Option[]
-  
+
   // Number input props
   min?: number
   max?: number
   step?: number
-  
+
   // Textarea props
   rows?: number
   maxLength?: number
-  
+
   // Date picker props
   dateOptions?: DateOption
-  
+
   // Time picker props
   timeOptions?: TimeOption
-  
+
   // Date & time picker props
   dateTimeOptions?: DateTimeOption
-  
+
   // Slider props
   sliderMarks?: Array<{ value: number; label: string }>
-  
+
   // File upload props
   fileUploadOptions?: FileUploadOption
-  
+
   // Rating props
   maxRating?: number
-  
+
   // Autocomplete props
   autocompleteOptions?: AutocompleteOption
-  
+
   // Color picker props
   colorPickerOptions?: {
     showPresets?: boolean
     allowAlpha?: boolean
   }
-  
+
   // OTP props
   otpLength?: number
-  
+
   // Tag input props
   tagInputOptions?: {
     maxTags?: number
     allowDuplicates?: boolean
   }
-  
+
   // Accessibility
   ariaLabel?: string
   ariaDescribedBy?: string
-  
+
   // Direction
   dir?: "ltr" | "rtl"
-  
+
   // Currency props
   currency?: string
   locale?: string
-  
+
   // Tooltip
   tooltip?: string
-  
+
   // Container styling
   className?: string
   containerClassName?: string

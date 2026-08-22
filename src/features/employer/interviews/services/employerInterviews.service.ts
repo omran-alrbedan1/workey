@@ -18,9 +18,7 @@ import type {
   EmployerInterviewCompleteInput,
   EmployerInterviewEvaluateInput,
 } from "../types/employerInterviews.types"
-import type {
-  VideoSessionResponse,
-} from "../types/videoInterview.types"
+import type { VideoSessionResponse } from "../types/videoInterview.types"
 
 function normalizeVideoSession(response: unknown): VideoSessionResponse {
   const session = unwrapEmployerEntity<VideoSessionResponse>(response)
@@ -36,7 +34,9 @@ function normalizeVideoSession(response: unknown): VideoSessionResponse {
 }
 
 export const employerInterviewsService = {
-  async listForApplication(applicationId: string | number): Promise<EmployerCollection<EmployerInterview>> {
+  async listForApplication(
+    applicationId: string | number,
+  ): Promise<EmployerCollection<EmployerInterview>> {
     return unwrapEmployerCollection<EmployerInterview>(
       await api.get(API_ENDPOINTS.interviews.forApplication(applicationId)),
     )
@@ -48,13 +48,19 @@ export const employerInterviewsService = {
     )
   },
 
-  async create(applicationId: string | number, input: EmployerInterviewInput): Promise<EmployerInterview> {
+  async create(
+    applicationId: string | number,
+    input: EmployerInterviewInput,
+  ): Promise<EmployerInterview> {
     return unwrapEmployerEntity<EmployerInterview>(
       await api.post(API_ENDPOINTS.interviews.forApplication(applicationId), input),
     )
   },
 
-  async update(interviewId: string | number, input: EmployerInterviewUpdateInput): Promise<EmployerInterview> {
+  async update(
+    interviewId: string | number,
+    input: EmployerInterviewUpdateInput,
+  ): Promise<EmployerInterview> {
     return unwrapEmployerEntity<EmployerInterview>(
       await api.put(API_ENDPOINTS.interviews.byId(interviewId), input),
     )
@@ -122,23 +128,25 @@ export const employerInterviewsService = {
     await api.delete(API_ENDPOINTS.interviews.byId(interviewId))
   },
 
-  async complete(interviewId: string | number, input: EmployerInterviewCompleteInput): Promise<EmployerInterview> {
+  async complete(
+    interviewId: string | number,
+    input: EmployerInterviewCompleteInput,
+  ): Promise<EmployerInterview> {
     return unwrapEmployerEntity<EmployerInterview>(
       await api.post(API_ENDPOINTS.interviews.complete(interviewId), input),
     )
   },
 
-  async evaluate(interviewId: string | number, input: EmployerInterviewEvaluateInput): Promise<EmployerInterview> {
+  async evaluate(
+    interviewId: string | number,
+    input: EmployerInterviewEvaluateInput,
+  ): Promise<EmployerInterview> {
     return unwrapEmployerEntity<EmployerInterview>(
       await api.post(API_ENDPOINTS.interviews.evaluate(interviewId), input),
     )
   },
 
-  async createVideoSession(
-    interviewId: string | number,
-  ): Promise<VideoSessionResponse> {
-    return normalizeVideoSession(
-      await api.post(API_ENDPOINTS.interviews.videoSession(interviewId)),
-    )
+  async createVideoSession(interviewId: string | number): Promise<VideoSessionResponse> {
+    return normalizeVideoSession(await api.post(API_ENDPOINTS.interviews.videoSession(interviewId)))
   },
 }

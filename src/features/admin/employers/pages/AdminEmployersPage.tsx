@@ -33,8 +33,8 @@ export default function AdminEmployersPage() {
         pagination={employers.data?.pagination}
         onPageChange={employers.setPage}
         isUpdating={employers.statusMutation.isPending}
-        onStatusChange={(id, status, reason) =>
-          employers.statusMutation.mutateAsync({ id, status, reason })
+        onStatusChange={(id, status) =>
+          employers.statusMutation.mutateAsync({ id, status })
         }
       />
     </div>

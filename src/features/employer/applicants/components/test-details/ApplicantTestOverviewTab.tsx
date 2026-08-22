@@ -32,7 +32,9 @@ export default function ApplicantTestOverviewTab({
         <Card>
           <CardContent className="space-y-1 p-4">
             <p className="text-xs text-text-muted">{t("tests.deadlineTitle")}</p>
-            <p className="font-semibold text-text-primary">{formatDate(assignmentDeadline(assignment))}</p>
+            <p className="font-semibold text-text-primary">
+              {formatDate(assignmentDeadline(assignment))}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -41,9 +43,7 @@ export default function ApplicantTestOverviewTab({
             <p className="font-semibold text-text-primary">
               {score == null ? "-" : `${score} / ${maxScore}`}
             </p>
-            {scorePercent != null && (
-              <Progress value={scorePercent} className="h-1.5" />
-            )}
+            {scorePercent != null && <Progress value={scorePercent} className="h-1.5" />}
           </CardContent>
         </Card>
         <Card>

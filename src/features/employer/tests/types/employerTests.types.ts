@@ -1,5 +1,5 @@
 // LocalizedValue type for backend responses with key/value structure
-export interface xLocalizedValue<T extends string = string> {
+export interface LocalizedValue<T extends string = string> {
   key: T
   value: string
 }
@@ -14,11 +14,7 @@ export type TestQuestionType =
   | "file_upload"
 
 // Assignment States - Backend enum values
-export type TestAssignmentState =
-  | "not_started"
-  | "in_progress"
-  | "submitted"
-  | "evaluated"
+export type TestAssignmentState = "not_started" | "in_progress" | "submitted" | "evaluated"
 
 // Grading Status - Backend enum values
 export type TestGradingStatus =
@@ -28,9 +24,7 @@ export type TestGradingStatus =
   | "fully_graded"
 
 // Grading Type - Backend enum values
-export type TestGradingType =
-  | "automatic"
-  | "manual"
+export type TestGradingType = "automatic" | "manual"
 
 // ============ RESPONSE TYPES (from Backend Resources) ============
 
@@ -113,6 +107,8 @@ export interface ApplicationTestAssignmentResponse {
   latest_extension_at: string | null
 
   state: LocalizedValue<TestAssignmentState>
+  status?: LocalizedValue<string> | string | null
+  feedback?: string | null
 
   test: TestResponse | null
   attempt: TestAttemptResponse | null
@@ -372,10 +368,17 @@ export interface EmployerTest {
   questions?: TestQuestionResponse[]
 }
 
-export type TestQuestion = TestQuestionInput & {
+export type TestQuestion = Omit<TestQuestionInput, "order_index" | "options"> & {
   id?: string | number
   test_id?: string | number
+  order_index?: number
   image_url?: string | null
+  options?: Array<{
+    id?: string | number
+    option_text: string
+    order_index?: number
+    is_correct: boolean
+  }>
 }
 
 export interface TestQuestionOption {
@@ -383,7 +386,7 @@ export interface TestQuestionOption {
   test_question_id?: string | number
   option_text: string
   is_correct: boolean
-  order_index: number
+  order_index?: number
 }
 
 // @deprecated - Use TestInput instead
@@ -426,6 +429,9 @@ export interface TestAttemptAnswer {
 // @deprecated - Use TestAttemptResponse instead
 export interface TestAttemptResult {
   attempt_id: string | number
+  status?: LocalizedValue<string> | string | null
+  awarded_points?: number | null
+  total_points?: number | null
   attempt_number?: number | null
   deadline_at?: string | null
   effective_deadline_at?: string | null

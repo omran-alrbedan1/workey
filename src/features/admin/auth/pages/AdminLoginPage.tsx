@@ -2,6 +2,7 @@ import { ShieldCheck } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import Logo from "@/components/shared/logo/Logo"
+import { images } from "@/constants/images"
 import AdminLoginForm from "../components/AdminLoginForm"
 
 export default function AdminLoginPage() {
@@ -16,9 +17,7 @@ export default function AdminLoginPage() {
               <ShieldCheck className="h-3.5 w-3.5" /> {t("securePortal")}
             </div>
             <h1 className="text-3xl font-bold text-text-primary">{t("welcome")}</h1>
-            <p className="mt-2 text-sm text-text-secondary">
-              {t("description")}
-            </p>
+            <p className="mt-2 text-sm text-text-secondary">{t("description")}</p>
           </div>
           <AdminLoginForm />
         </div>

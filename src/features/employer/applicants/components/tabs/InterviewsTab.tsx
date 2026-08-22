@@ -31,14 +31,22 @@ export default function InterviewsTab({ interviews, onSchedule }: InterviewsTabP
             <Video className="h-5 w-5 text-primary" />
             {t("interview.title")}
           </CardTitle>
-          <Button type="button" variant="outline" size="sm" onClick={onSchedule} className="shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onSchedule}
+            className="shrink-0"
+          >
             <Calendar className="h-4 w-4 mr-2" /> {t("interview.schedule")}
           </Button>
         </CardHeader>
         <CardContent>
           <EmptyState
             title={t("interview.empty")}
-            description={t("interview.emptyDescription", { defaultValue: "No interviews are scheduled for this application." })}
+            description={t("interview.emptyDescription", {
+              defaultValue: "No interviews are scheduled for this application.",
+            })}
             icon={Video}
             primaryAction={{
               label: t("interview.schedule"),
@@ -67,7 +75,10 @@ export default function InterviewsTab({ interviews, onSchedule }: InterviewsTabP
           const scheduledDate = interview.scheduled_at ? new Date(interview.scheduled_at) : null
 
           return (
-            <div key={interview.id} className="flex items-center justify-between rounded-lg border border-border bg-background/50 p-4">
+            <div
+              key={interview.id}
+              className="flex items-center justify-between rounded-lg border border-border bg-background/50 p-4"
+            >
               <div className="flex-1">
                 <p className="text-sm font-medium text-text-primary">
                   {String(interview.type || "Interview")}
@@ -79,14 +90,10 @@ export default function InterviewsTab({ interviews, onSchedule }: InterviewsTabP
                       {scheduledDate.toLocaleString()}
                     </span>
                   )}
-                  {interview.duration_minutes && (
-                    <span>{interview.duration_minutes} min</span>
-                  )}
+                  {interview.duration_minutes && <span>{interview.duration_minutes} min</span>}
                 </div>
               </div>
-              <Badge variant="secondary">
-                {String(valueOf(interview.status) || "scheduled")}
-              </Badge>
+              <Badge variant="secondary">{String(valueOf(interview.status) || "scheduled")}</Badge>
             </div>
           )
         })}

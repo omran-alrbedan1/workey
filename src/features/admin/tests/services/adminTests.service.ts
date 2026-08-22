@@ -50,10 +50,7 @@ export const adminTestsService = {
       await api.put(API_ENDPOINTS.tests.questions.byId(testId, questionId), input),
     )
   },
-  async reorderQuestions(
-    testId: string | number,
-    input: ReorderQuestionsInput,
-  ): Promise<void> {
+  async reorderQuestions(testId: string | number, input: ReorderQuestionsInput): Promise<void> {
     await api.post(API_ENDPOINTS.tests.questions.reorder(testId), input)
   },
   async deleteQuestion(testId: string | number, questionId: string | number): Promise<void> {

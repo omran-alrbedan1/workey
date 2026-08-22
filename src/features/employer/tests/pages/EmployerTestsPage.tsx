@@ -90,7 +90,10 @@ export default function EmployerTestsPage() {
               onPageChange={tests.setPage}
               onEdit={(test) => navigate(ROUTES.employer.editTest(test.id))}
               onToggle={async (test) =>
-                await tests.patchMutation.mutateAsync({ id: test.id, input: { is_active: !test.is_active } })
+                await tests.patchMutation.mutateAsync({
+                  id: test.id,
+                  input: { is_active: !test.is_active },
+                })
               }
               onDelete={tests.deleteMutation.mutateAsync}
               onAssign={(test) => setAssigning(test)}

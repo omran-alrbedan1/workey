@@ -23,8 +23,14 @@ export default function InternalNotes({ applicationId }: { applicationId: string
   } = useInternalNotes(applicationId)
 
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [editingNote, setEditingNote] = useState<{ id: string | number; body: string; version: number } | null>(null)
-  const [deleteNoteId, setDeleteNoteId] = useState<{ id: string | number; version: number } | null>(null)
+  const [editingNote, setEditingNote] = useState<{
+    id: string | number
+    body: string
+    version: number
+  } | null>(null)
+  const [deleteNoteId, setDeleteNoteId] = useState<{ id: string | number; version: number } | null>(
+    null,
+  )
 
   const handleCreate = () => {
     setEditingNote(null)
@@ -102,13 +108,17 @@ export default function InternalNotes({ applicationId }: { applicationId: string
                 className="rounded-lg border border-border bg-background p-4 space-y-3"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <p className="flex-1 whitespace-pre-wrap text-sm text-text-primary">{note.body}</p>
+                  <p className="flex-1 whitespace-pre-wrap text-sm text-text-primary">
+                    {note.body}
+                  </p>
                   <div className="flex gap-1">
                     <Button
                       size="icon"
                       variant="ghost"
                       className="h-7 w-7"
-                      onClick={() => handleEdit({ id: note.id, body: note.body || "", version: note.version })}
+                      onClick={() =>
+                        handleEdit({ id: note.id, body: note.body || "", version: note.version })
+                      }
                       disabled={isUpdating || note.can_edit === false}
                     >
                       <Edit2 className="h-3.5 w-3.5" />
@@ -131,11 +141,7 @@ export default function InternalNotes({ applicationId }: { applicationId: string
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    <span>
-                      {note.created_at
-                        ? new Date(note.created_at).toLocaleString()
-                        : ""}
-                    </span>
+                    <span>{note.created_at ? new Date(note.created_at).toLocaleString() : ""}</span>
                   </div>
                   <span>v{note.version}</span>
                 </div>

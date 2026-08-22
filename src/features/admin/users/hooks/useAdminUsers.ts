@@ -4,10 +4,7 @@ import { useTranslation } from "react-i18next"
 
 import { adminUsersService } from "../services/adminUsers.service"
 import { showSuccessToast } from "@/lib/toast"
-import {
-  ADMIN_USER_FILTER_DEFAULTS,
-  type AdminUserFilterForm,
-} from "../types/adminUsers.types"
+import { ADMIN_USER_FILTER_DEFAULTS, type AdminUserFilterForm } from "../types/adminUsers.types"
 
 const adminUsersPageSize = 10
 
@@ -27,9 +24,7 @@ export function useAdminUsers(filters: AdminUserFilterForm | string = ADMIN_USER
   const [page, setPage] = useState(1)
   const queryClient = useQueryClient()
   const filterValues =
-    typeof filters === "string"
-      ? { ...ADMIN_USER_FILTER_DEFAULTS, role: filters }
-      : filters
+    typeof filters === "string" ? { ...ADMIN_USER_FILTER_DEFAULTS, role: filters } : filters
   const normalizedFilters = useMemo(
     () => ({
       search: typeof filterValues.search === "string" ? filterValues.search.trim() : "",
@@ -64,10 +59,10 @@ export function useAdminUsers(filters: AdminUserFilterForm | string = ADMIN_USER
       }),
     ])
   const statusMutation = useMutation({
-    mutationFn: (input: { id: string | number; status: "active" | "suspended"; reason?: string }) =>
+    mutationFn: (input: { id: string | number; status: "active" | "suspended" }) =>
       input.status === "active"
         ? adminUsersService.activate(input.id)
-        : adminUsersService.suspend(input.id, input.reason),
+        : adminUsersService.suspend(input.id),
     onSuccess: async (_, input) => {
       await refreshUsers()
       showSuccessToast(t(input.status === "active" ? "toasts.activated" : "toasts.suspended"))

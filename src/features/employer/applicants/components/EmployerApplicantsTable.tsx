@@ -1,7 +1,17 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { CalendarPlus, Download, Eye, FileText, MailQuestion, MoreHorizontal, User, Calendar, Target } from "lucide-react"
+import {
+  CalendarPlus,
+  Download,
+  Eye,
+  FileText,
+  MailQuestion,
+  MoreHorizontal,
+  User,
+  Calendar,
+  Target,
+} from "lucide-react"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"
 import { Button } from "@/components/ui/button"
@@ -54,6 +64,7 @@ function EmployerApplicantMobileCard({
   onRequestInformation,
 }: EmployerApplicantMobileCardProps) {
   const { t, i18n } = useTranslation("employerApplicants")
+  const navigate = useNavigate()
   const statusKey = getKey(application.status)
   const statusValue = getValue(application.status)
   const allowedActions = getAllowedApplicationActions(application)
@@ -69,7 +80,9 @@ function EmployerApplicantMobileCard({
           <h3 className="truncate font-semibold text-text-primary">
             {candidateDisplayName(application, t("unknownCandidate"))}
           </h3>
-          <p className="truncate text-xs text-text-muted">{candidateSecondaryText(application, "-")}</p>
+          <p className="truncate text-xs text-text-muted">
+            {candidateSecondaryText(application, "-")}
+          </p>
         </div>
         <StatusBadge
           status={statusKey}
@@ -97,7 +110,8 @@ function EmployerApplicantMobileCard({
           {t("columns.assessments")}:{" "}
           {(() => {
             const hasTests = application.tests_count != null && application.tests_count > 0
-            const hasInterviews = application.interviews_count != null && application.interviews_count > 0
+            const hasInterviews =
+              application.interviews_count != null && application.interviews_count > 0
             const hasData = hasTests || hasInterviews
             return hasData
               ? t("assessmentCounts", {
@@ -219,7 +233,9 @@ export default function EmployerApplicantsTable({
   const navigate = useNavigate()
   const { downloadingId, handleDownload } = useHandleDownload()
   const [statusDialogOpen, setStatusDialogOpen] = useState(false)
-  const [statusDialogApplication, setStatusDialogApplication] = useState<EmployerApplicant | null>(null)
+  const [statusDialogApplication, setStatusDialogApplication] = useState<EmployerApplicant | null>(
+    null,
+  )
   const [targetStatus, setTargetStatus] = useState<ApplicationStatusKey | null>(null)
 
   const handleStatusClick = (application: EmployerApplicant, status: ApplicationStatusKey) => {
@@ -237,7 +253,8 @@ export default function EmployerApplicantsTable({
     }
   }
 
-  const handleViewDetails = (application: EmployerApplicant) => navigate(ROUTES.employer.applicantDetails(application.id))
+  const handleViewDetails = (application: EmployerApplicant) =>
+    navigate(ROUTES.employer.applicantDetails(application.id))
   const handleRequestInformation = (application: EmployerApplicant) => {
     navigate(ROUTES.employer.applicantDetails(application.id), {
       state: { openInformationRequest: true },
@@ -296,7 +313,8 @@ export default function EmployerApplicantsTable({
       header: t("columns.assessments"),
       cell: (application) => {
         const hasTests = application.tests_count != null && application.tests_count > 0
-        const hasInterviews = application.interviews_count != null && application.interviews_count > 0
+        const hasInterviews =
+          application.interviews_count != null && application.interviews_count > 0
         const hasData = hasTests || hasInterviews
 
         return (
@@ -351,7 +369,9 @@ export default function EmployerApplicantsTable({
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuLabel>{t("actions.label")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={() => navigate(ROUTES.employer.applicantDetails(application.id))}>
+              <DropdownMenuItem
+                onSelect={() => navigate(ROUTES.employer.applicantDetails(application.id))}
+              >
                 <Eye /> {t("actions.viewDetails")}
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -365,14 +385,17 @@ export default function EmployerApplicantsTable({
               </DropdownMenuItem>
               {(() => {
                 const allowedActions = getAllowedApplicationActions(application)
-                if (allowedActions.statusTargets.length === 0 && allowedActions.flows.length === 0) return null
+                if (allowedActions.statusTargets.length === 0 && allowedActions.flows.length === 0)
+                  return null
                 return (
                   <>
                     <DropdownMenuSeparator />
                     {allowedActions.statusTargets.map((status) => (
                       <DropdownMenuItem
                         key={status}
-                        onSelect={() => handleStatusClick(application, status as ApplicationStatusKey)}
+                        onSelect={() =>
+                          handleStatusClick(application, status as ApplicationStatusKey)
+                        }
                       >
                         {t(`statuses.${status}`)}
                       </DropdownMenuItem>

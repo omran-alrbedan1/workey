@@ -96,7 +96,9 @@ export default function InterviewEvaluationForm({
                       <FormControl>
                         <Input
                           {...field}
-                          value={t(`common:interviewCriteria.${field.value}`, { defaultValue: field.value })}
+                          value={t(`common:interviewCriteria.${field.value}`, {
+                            defaultValue: field.value,
+                          })}
                           readOnly
                         />
                       </FormControl>

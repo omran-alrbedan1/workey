@@ -47,13 +47,18 @@ export interface EmployerApplicantDetailsModel {
   goBack: () => void
   handlePreviewCv: () => Promise<void>
   handleDownloadCv: () => Promise<void>
-  handleScheduleInterview: (applicationId: string | number, input: EmployerInterviewInput) => Promise<void>
+  handleScheduleInterview: (
+    applicationId: string | number,
+    input: EmployerInterviewInput,
+  ) => Promise<void>
   goToTests: () => void
   openFirstTest: () => void
   openTest: (assignment: EmployerTestAttempt) => void
 }
 
-export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): EmployerApplicantDetailsModel {
+export function useEmployerApplicantDetailsPage(
+  unknownCandidateLabel: string,
+): EmployerApplicantDetailsModel {
   const navigate = useNavigate()
   const location = useLocation()
   const { id } = useParams()
@@ -142,7 +147,10 @@ export function useEmployerApplicantDetailsPage(unknownCandidateLabel: string): 
     setInformationRequestDialogOpen(true)
   }
 
-  const handleScheduleInterview = async (applicationId: string | number, input: EmployerInterviewInput) => {
+  const handleScheduleInterview = async (
+    applicationId: string | number,
+    input: EmployerInterviewInput,
+  ) => {
     await createInterview.mutateAsync({ applicationId, input })
     await Promise.all([interviews.refetch(), applicant.refetch()])
     setShowScheduleDialog(false)

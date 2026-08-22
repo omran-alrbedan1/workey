@@ -125,7 +125,8 @@ export default function EmployerTestsTable({
   const [activating, setActivating] = useState<EmployerTest | null>(null)
   const [deactivating, setDeactivating] = useState<EmployerTest | null>(null)
 
-  const handleToggle = (test: EmployerTest) => (test.is_active ? setDeactivating(test) : setActivating(test))
+  const handleToggle = (test: EmployerTest) =>
+    test.is_active ? setDeactivating(test) : setActivating(test)
   const handleDelete = (test: EmployerTest) => setDeleting(test)
 
   const columns: Column<EmployerTest>[] = [
@@ -164,7 +165,9 @@ export default function EmployerTestsTable({
       key: "status",
       header: t("columns.status"),
       headerIcon: Activity,
-      cell: (test) => <StatusBadge status={test.is_active ? "active" : "inactive"} variant="soft" />,
+      cell: (test) => (
+        <StatusBadge status={test.is_active ? "active" : "inactive"} variant="soft" />
+      ),
     },
     {
       key: "actions",

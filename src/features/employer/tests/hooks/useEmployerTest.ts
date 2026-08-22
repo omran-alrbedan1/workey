@@ -22,9 +22,13 @@ export function useEmployerTest(id?: string | number) {
     retry: false,
   })
 
-  const hasFetchedQuestions = questionsQuery.isSuccess && questionsQuery.data && questionsQuery.data.length > 0
+  const hasFetchedQuestions =
+    questionsQuery.isSuccess && questionsQuery.data && questionsQuery.data.length > 0
   const data: EmployerTest | undefined = testQuery.data
-    ? { ...testQuery.data, questions: hasFetchedQuestions ? questionsQuery.data : testQuery.data.questions }
+    ? {
+        ...testQuery.data,
+        questions: hasFetchedQuestions ? questionsQuery.data : testQuery.data.questions,
+      }
     : undefined
 
   const updateMutation = useMutation({
@@ -39,7 +43,10 @@ export function useEmployerTest(id?: string | number) {
     ...testQuery,
     data,
     isPending: testQuery.isPending || questionsQuery.isPending,
-    refetch: () => { testQuery.refetch(); questionsQuery.refetch() },
+    refetch: () => {
+      testQuery.refetch()
+      questionsQuery.refetch()
+    },
     updateMutation,
   }
 }

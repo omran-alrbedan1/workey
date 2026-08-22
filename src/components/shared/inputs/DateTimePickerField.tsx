@@ -48,7 +48,7 @@ export const DateTimePickerField: React.FC<DateTimePickerFieldProps> = ({
           <LeftIcon
             className={cn(
               "h-5 w-5 text-muted-foreground group-focus-within:text-primary",
-              iconClassName
+              iconClassName,
             )}
           />
         </div>
@@ -58,7 +58,7 @@ export const DateTimePickerField: React.FC<DateTimePickerFieldProps> = ({
           <RightIcon
             className={cn(
               "h-5 w-5 text-muted-foreground group-focus-within:text-primary",
-              iconClassName
+              iconClassName,
             )}
           />
         </div>
@@ -74,7 +74,7 @@ export const DateTimePickerField: React.FC<DateTimePickerFieldProps> = ({
           inputClassName,
           "px-6 py-4 text-base",
           hasLeftIcon && "ltr:pl-14 rtl:pr-14",
-          hasRightIcon && "ltr:pr-14 rtl:pl-14"
+          hasRightIcon && "ltr:pr-14 rtl:pl-14",
         )}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}

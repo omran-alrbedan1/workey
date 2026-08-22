@@ -25,10 +25,7 @@ export default function AdminReportsApplicationsPage() {
         onApply={query.applyFilters}
         onReset={query.resetFilters}
       />
-      <AdminReportsApplications
-        data={query.data}
-        isLoading={query.isPending}
-      />
+      <AdminReportsApplications data={query.data} isLoading={query.isPending} />
     </div>
   )
 }

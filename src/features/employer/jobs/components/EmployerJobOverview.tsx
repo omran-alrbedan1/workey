@@ -117,11 +117,7 @@ export default function EmployerJobOverview({ job, showSkills = true }: Employer
               label={t("fields.workMode")}
               value={getValue(job.work_mode) || "-"}
             />
-            <InfoRow
-              icon={MapPin}
-              label={t("fields.location")}
-              value={job.location || "-"}
-            />
+            <InfoRow icon={MapPin} label={t("fields.location")} value={job.location || "-"} />
           </div>
 
           {(job.salary_min != null || job.salary_max != null) && (
@@ -157,7 +153,8 @@ export default function EmployerJobOverview({ job, showSkills = true }: Employer
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-primary" />
                 <span>
-                  {t("fields.applicationDeadline")}: {new Date(job.application_deadline).toLocaleDateString()}
+                  {t("fields.applicationDeadline")}:{" "}
+                  {new Date(job.application_deadline).toLocaleDateString()}
                 </span>
               </div>
             )}

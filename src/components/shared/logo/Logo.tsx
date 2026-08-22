@@ -20,13 +20,7 @@ interface LogoProps {
   height?: number
 }
 
-export default function Logo({
-  size = "md",
-  className,
-  alt = "Workey",
-  width,
-  height,
-}: LogoProps) {
+export default function Logo({ size = "md", className, alt = "Workey", width, height }: LogoProps) {
   const { theme } = useTheme()
 
   const isDark =

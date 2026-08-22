@@ -31,10 +31,7 @@ import AdminCompanyVerificationCard from "../components/AdminCompanyVerification
 import AdminCompanyFormDialog from "../components/AdminCompanyFormDialog"
 import CompanyMemberList from "../components/CompanyMemberList"
 import { useAdminCompanyDetails } from "../hooks/useAdminCompanyDetails"
-import {
-  getCompanyApprovalActions,
-  type CompanyApprovalAction,
-} from "../utils/approvalActions"
+import { getCompanyApprovalActions, type CompanyApprovalAction } from "../utils/approvalActions"
 
 export default function AdminCompanyDetailsPage() {
   const { id } = useParams<{ id: string }>()
@@ -191,7 +188,9 @@ export default function AdminCompanyDetailsPage() {
           </div>
         </div>
         <div className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
-          <p className="text-xs uppercase tracking-wide text-text-muted">{t("overview.industry")}</p>
+          <p className="text-xs uppercase tracking-wide text-text-muted">
+            {t("overview.industry")}
+          </p>
           <p className="mt-3 text-lg font-semibold text-text-primary">
             {company.industry || t("fallbacks.industryMissing")}
           </p>

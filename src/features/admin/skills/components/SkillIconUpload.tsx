@@ -1,7 +1,13 @@
 import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
 import { useState, useRef } from "react"
 import { adminSkillsService } from "../services/adminSkills.service"
 
@@ -86,7 +92,11 @@ export default function SkillIconUpload({
           <div className="flex justify-center">
             <div className="relative h-32 w-32 overflow-hidden rounded-lg border-2 border-dashed border-border">
               {preview ? (
-                <img src={preview} alt={`${skillName} icon`} className="h-full w-full object-cover" />
+                <img
+                  src={preview}
+                  alt={`${skillName} icon`}
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-muted">
                   <ImageIcon className="h-8 w-8 text-text-muted" />
@@ -145,11 +155,7 @@ export default function SkillIconUpload({
             <Button type="button" variant="outline" onClick={handleClose} disabled={isUploading}>
               {t("cancel")}
             </Button>
-            <Button
-              type="button"
-              onClick={handleUpload}
-              disabled={!file || isUploading}
-            >
+            <Button type="button" onClick={handleUpload} disabled={!file || isUploading}>
               {isUploading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

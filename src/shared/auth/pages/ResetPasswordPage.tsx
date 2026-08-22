@@ -11,9 +11,7 @@ export default function ResetPasswordPage({ loginPath }: { loginPath: string }) 
       <div className="w-full max-w-md">
         <Logo size="xl" alt={t("logoAlt")} className="mb-8" />
         <h1 className="text-3xl font-bold text-text-primary">{t("reset.title")}</h1>
-        <p className="mt-2 text-sm text-text-secondary">
-          {t("reset.description")}
-        </p>
+        <p className="mt-2 text-sm text-text-secondary">{t("reset.description")}</p>
         <ResetPasswordForm loginPath={loginPath} />
       </div>
     </main>

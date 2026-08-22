@@ -2,7 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { employerApplicantsService } from "../services/employerApplicants.service"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
-import type { ApplicationStatusChangeInput, EmployerApplicant } from "../types/employerApplicants.types"
+import type {
+  ApplicationStatusChangeInput,
+  EmployerApplicant,
+} from "../types/employerApplicants.types"
 import { canDownloadCv, canPreviewCv, getApplicationCvDocument } from "../utils/cv"
 
 export function useEmployerApplicantDetail(applicationId?: string | number) {
@@ -26,7 +29,7 @@ export function useDownloadCv() {
     a.href = url
     a.download =
       typeof application === "object"
-        ? getApplicationCvDocument(application)?.name ?? `cv-${applicationId}.pdf`
+        ? (getApplicationCvDocument(application)?.name ?? `cv-${applicationId}.pdf`)
         : `cv-${applicationId}.pdf`
     document.body.appendChild(a)
     a.click()
@@ -70,7 +73,9 @@ export function useApplicationStatusMutation(applicationId?: string | number) {
       } else {
         showErrorToast(error.message || t("errors.description"))
       }
-      void client.invalidateQueries({ queryKey: ["employer", "applicants", "detail", String(applicationId ?? "")] })
+      void client.invalidateQueries({
+        queryKey: ["employer", "applicants", "detail", String(applicationId ?? "")],
+      })
     },
   })
 }

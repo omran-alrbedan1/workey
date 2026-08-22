@@ -2,10 +2,7 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
 import { APP_CONFIG } from "@/config"
 import { adminJobsService } from "../services/adminJobs.service"
-import {
-  ADMIN_JOB_FILTER_DEFAULTS,
-  type AdminJobFilterForm,
-} from "../types/adminJobs.types"
+import { ADMIN_JOB_FILTER_DEFAULTS, type AdminJobFilterForm } from "../types/adminJobs.types"
 
 const asApiValue = (value?: string) => {
   const normalized = value?.trim()

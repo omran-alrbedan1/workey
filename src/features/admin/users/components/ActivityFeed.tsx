@@ -1,4 +1,17 @@
-import { Building2, FileText, Briefcase, Users, Calendar, CheckCircle, XCircle, Clock, UserPlus, UserMinus, Mail, Shield } from "lucide-react"
+import {
+  Building2,
+  FileText,
+  Briefcase,
+  Users,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  Clock,
+  UserPlus,
+  UserMinus,
+  Mail,
+  Shield,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
 import { activityService } from "@/shared/activity/services/activity.service"
@@ -125,9 +138,7 @@ export default function ActivityFeed({ limit = 10 }: ActivityFeedProps) {
               <p className="text-sm font-medium text-text-primary">{activity.title}</p>
               <p className="mt-0.5 text-xs text-text-muted">{activity.description}</p>
               {activity.actor && (
-                <p className="mt-1 text-xs text-text-muted">
-                  by {activity.actor.name}
-                </p>
+                <p className="mt-1 text-xs text-text-muted">by {activity.actor.name}</p>
               )}
             </div>
             <time className="shrink-0 text-xs text-text-muted">

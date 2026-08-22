@@ -1,4 +1,13 @@
-import { MoreHorizontal, ShieldCheck, ShieldOff, User, Shield, Clock, Mail, Briefcase } from "lucide-react"
+import {
+  MoreHorizontal,
+  ShieldCheck,
+  ShieldOff,
+  User,
+  Shield,
+  Clock,
+  Mail,
+  Briefcase,
+} from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
@@ -28,11 +37,7 @@ interface AdminUsersTableProps {
   isLoading: boolean
   pagination?: AdminPagination
   onPageChange: (page: number) => void
-  onStatusChange: (
-    id: string | number,
-    status: AdminUserStatus,
-    reason?: string,
-  ) => void | Promise<unknown>
+  onStatusChange: (id: string | number, status: AdminUserStatus) => void | Promise<unknown>
   isUpdating: boolean
 }
 
@@ -42,16 +47,24 @@ interface AdminUserMobileCardProps {
   onAction: (user: AdminUserRecord, action: UserStatusAction) => void
 }
 
-const AdminUserMobileCard = ({
-  user,
-  isUpdating,
-  onAction,
-}: AdminUserMobileCardProps) => {
-  const { t } = useTranslation("adminUsers")
-  const roleLabel = useRoleLabel()
-  const statusKey = keyOf(user.status)
+interface UserActionsDropdownProps {
+  user: AdminUserRecord
+  statusKey: string
+  isUpdating: boolean
+  fullWidth?: boolean
+  onAction: (user: AdminUserRecord, action: UserStatusAction) => void
+}
 
-  const UserActionsDropdown = ({ fullWidth }: { fullWidth?: boolean }) => (
+const UserActionsDropdown = ({
+  user,
+  statusKey,
+  isUpdating,
+  fullWidth,
+  onAction,
+}: UserActionsDropdownProps) => {
+  const { t } = useTranslation("adminUsers")
+
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
@@ -87,6 +100,11 @@ const AdminUserMobileCard = ({
       </DropdownMenuContent>
     </DropdownMenu>
   )
+}
+
+const AdminUserMobileCard = ({ user, isUpdating, onAction }: AdminUserMobileCardProps) => {
+  const roleLabel = useRoleLabel()
+  const statusKey = keyOf(user.status)
 
   return (
     <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
@@ -115,14 +133,20 @@ const AdminUserMobileCard = ({
       </div>
 
       <div className="mt-4">
-        <UserActionsDropdown fullWidth />
+        <UserActionsDropdown
+          user={user}
+          statusKey={statusKey}
+          isUpdating={isUpdating}
+          onAction={onAction}
+          fullWidth
+        />
       </div>
     </article>
   )
 }
 
 function getRoleDisplay(role: string | any) {
-  if (typeof role === 'object' && role !== null) {
+  if (typeof role === "object" && role !== null) {
     return role.value || role.key || String(role)
   }
   return role || ""
@@ -169,9 +193,10 @@ export default function AdminUsersTable({
     setSelectedUser(null)
   }
 
-  const confirmSuspend = async (reason?: string) => {
+  const confirmSuspend = async () => {
     if (!selectedUser) return
-    await onStatusChange(selectedUser.id, "suspended", reason)
+    // Backend suspend endpoint accepts no body; a reason cannot be stored.
+    await onStatusChange(selectedUser.id, "suspended")
     setSelectedAction(null)
     setSelectedUser(null)
   }
@@ -254,11 +279,7 @@ export default function AdminUsersTable({
   ]
 
   const MobileUserCard = ({ item }: { item: AdminUserRecord }) => (
-    <AdminUserMobileCard
-      user={item}
-      isUpdating={isUpdating}
-      onAction={openAction}
-    />
+    <AdminUserMobileCard user={item} isUpdating={isUpdating} onAction={openAction} />
   )
 
   return (

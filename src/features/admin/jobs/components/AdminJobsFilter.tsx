@@ -2,10 +2,7 @@ import { ArrowDownUp, BriefcaseBusiness, CheckCircle2, MapPin } from "lucide-rea
 import { useTranslation } from "react-i18next"
 
 import { CustomFilter, type FilterField } from "@/components/shared/custom/CustomFilter"
-import {
-  ADMIN_JOB_FILTER_DEFAULTS,
-  type AdminJobFilterForm,
-} from "../types/adminJobs.types"
+import { ADMIN_JOB_FILTER_DEFAULTS, type AdminJobFilterForm } from "../types/adminJobs.types"
 
 interface AdminJobsFilterProps {
   onApplyFilters: (values: AdminJobFilterForm) => void

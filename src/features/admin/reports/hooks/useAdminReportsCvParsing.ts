@@ -6,7 +6,8 @@ import type { AdminReportFilters } from "../types/adminReports.types"
 const emptyFilters: Pick<AdminReportFilters, "date_from" | "date_to"> = {}
 
 export function useAdminReportsCvParsing() {
-  const [filters, setFilters] = useState<Pick<AdminReportFilters, "date_from" | "date_to">>(emptyFilters)
+  const [filters, setFilters] =
+    useState<Pick<AdminReportFilters, "date_from" | "date_to">>(emptyFilters)
 
   const query = useQuery({
     queryKey: ["admin", "reports", "cv-parsing", filters.date_from, filters.date_to],

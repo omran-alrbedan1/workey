@@ -56,9 +56,7 @@ export default function TransferOwnershipDialog({
     <Dialog open={open} onOpenChange={isPending ? undefined : onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => onSubmit(values.new_owner_user_id))}
-          >
+          <form onSubmit={form.handleSubmit((values) => onSubmit(values.new_owner_user_id))}>
             <DialogHeader className="text-center">
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10">
                 <Crown className="h-6 w-6 text-amber-600" />

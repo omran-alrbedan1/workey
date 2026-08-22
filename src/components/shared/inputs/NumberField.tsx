@@ -34,7 +34,8 @@ export const NumberField: React.FC<NumberFieldProps> = ({
   iconPosition,
   iconClassName,
 }) => {
-  const hasLeftIcon = leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
+  const hasLeftIcon =
+    leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
   const hasRightIcon = rightIcon && (iconPosition === "right" || iconPosition === "both")
 
   return (
@@ -54,7 +55,7 @@ export const NumberField: React.FC<NumberFieldProps> = ({
           inputClassName,
           "px-6 py-5 text-base",
           hasLeftIcon && "ltr:pl-14 rtl:pr-14",
-          hasRightIcon && "ltr:pr-14 rtl:pl-14"
+          hasRightIcon && "ltr:pr-14 rtl:pl-14",
         )}
         min={min}
         max={max}

@@ -71,7 +71,9 @@ export const employerApplicantsService = {
     )
   },
 
-  async listTests(applicationId: string | number): Promise<EmployerCollection<EmployerTestAttempt>> {
+  async listTests(
+    applicationId: string | number,
+  ): Promise<EmployerCollection<EmployerTestAttempt>> {
     return unwrapEmployerCollection<EmployerTestAttempt>(
       await api.get(API_ENDPOINTS.applications.tests(applicationId)),
     )
@@ -227,9 +229,12 @@ export const employerApplicantsService = {
   },
 
   async downloadInformationResponseAttachment(id: string | number): Promise<Blob> {
-    const response = await rawApi.get(API_ENDPOINTS.informationRequests.responseAttachmentDownload(id), {
-      responseType: "blob",
-    })
+    const response = await rawApi.get(
+      API_ENDPOINTS.informationRequests.responseAttachmentDownload(id),
+      {
+        responseType: "blob",
+      },
+    )
     return response.data
   },
 }

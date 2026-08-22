@@ -45,7 +45,11 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       )}
     >
       {imageUrl ? (
-        <img src={imageUrl} alt={resolvedImageAlt} className="mb-6 h-40 w-52 object-contain sm:h-48" />
+        <img
+          src={imageUrl}
+          alt={resolvedImageAlt}
+          className="mb-6 h-40 w-52 object-contain sm:h-48"
+        />
       ) : (
         <div className="mb-6 rounded-full bg-primary/10 p-4">
           <Icon className="h-16 w-16 text-primary/60" />

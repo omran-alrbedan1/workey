@@ -1,24 +1,33 @@
-"use client";
+"use client"
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from "react-hook-form"
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form"
 
 import { cn } from "@/lib/utils"
-import { Label } from "./label";
+import { Label } from "./label"
 
 const Form = FormProvider
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   name: TName
 }
 
 const FormFieldContext = React.createContext<FormFieldContextValue | null>(null)
 
-interface FormFieldProps<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>
-  extends ControllerProps<TFieldValues, TName> {}
+interface FormFieldProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> extends ControllerProps<TFieldValues, TName> {}
 
 const FormField = <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
   ...props
@@ -65,17 +74,15 @@ const FormItemContext = React.createContext<FormItemContextValue | null>(null)
 
 interface FormItemProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
-  ({ className, ...props }, ref) => {
-    const id = React.useId()
+const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(({ className, ...props }, ref) => {
+  const id = React.useId()
 
-    return (
-      <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn("space-y-2", className)} {...props} />
-      </FormItemContext.Provider>
-    )
-  }
-)
+  return (
+    <FormItemContext.Provider value={{ id }}>
+      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+    </FormItemContext.Provider>
+  )
+})
 FormItem.displayName = "FormItem"
 
 interface FormLabelProps extends React.ComponentPropsWithoutRef<typeof Label> {}
@@ -92,7 +99,7 @@ const FormLabel = React.forwardRef<React.ElementRef<typeof Label>, FormLabelProp
         {...props}
       />
     )
-  }
+  },
 )
 FormLabel.displayName = "FormLabel"
 
@@ -106,16 +113,12 @@ const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, FormControlP
       <Slot
         ref={ref}
         id={formItemId}
-        aria-describedby={
-          !error
-            ? `${formDescriptionId}`
-            : `${formDescriptionId} ${formMessageId}`
-        }
+        aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
         aria-invalid={!!error}
         {...props}
       />
     )
-  }
+  },
 )
 FormControl.displayName = "FormControl"
 
@@ -133,7 +136,7 @@ const FormDescription = React.forwardRef<HTMLParagraphElement, FormDescriptionPr
         {...props}
       />
     )
-  }
+  },
 )
 FormDescription.displayName = "FormDescription"
 
@@ -160,7 +163,7 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, FormMessageProps>(
         {body}
       </p>
     )
-  }
+  },
 )
 FormMessage.displayName = "FormMessage"
 

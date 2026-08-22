@@ -63,7 +63,9 @@ export default function EmployerNotificationsPage() {
         <EmployerNotificationsTable
           collection={data}
           isLoading={false}
-          isMarking={markReadMutation.isPending || markAllReadMutation.isPending || deleteMutation.isPending}
+          isMarking={
+            markReadMutation.isPending || markAllReadMutation.isPending || deleteMutation.isPending
+          }
           onMarkRead={(id) => markReadMutation.mutate(id)}
           onMarkAllRead={() => markAllReadMutation.mutate()}
           onDelete={(id) => deleteMutation.mutate(id)}

@@ -14,7 +14,10 @@ interface WidgetErrorBoundaryState {
   error?: Error
 }
 
-export default class WidgetErrorBoundary extends Component<WidgetErrorBoundaryProps, WidgetErrorBoundaryState> {
+export default class WidgetErrorBoundary extends Component<
+  WidgetErrorBoundaryProps,
+  WidgetErrorBoundaryState
+> {
   constructor(props: WidgetErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false }
@@ -39,12 +42,7 @@ export default class WidgetErrorBoundary extends Component<WidgetErrorBoundaryPr
         return this.props.fallback
       }
 
-      return (
-        <WidgetErrorFallback 
-          error={this.state.error} 
-          onRetry={this.handleRetry} 
-        />
-      )
+      return <WidgetErrorFallback error={this.state.error} onRetry={this.handleRetry} />
     }
 
     return this.props.children
@@ -63,12 +61,7 @@ function WidgetErrorFallback({ error, onRetry }: { error?: Error; onRetry: () =>
       <p className="mt-1 text-xs text-text-muted">
         {error?.message || t("errors.defaultErrorDesc")}
       </p>
-      <Button
-        onClick={onRetry}
-        variant="outline"
-        size="sm"
-        className="mt-3 gap-2"
-      >
+      <Button onClick={onRetry} variant="outline" size="sm" className="mt-3 gap-2">
         <RefreshCw className="h-3 w-3" />
         {t("retry")}
       </Button>

@@ -2,9 +2,10 @@ import { BriefcaseBusiness, CalendarCheck, ClipboardList, FileCheck2 } from "luc
 import { useTranslation } from "react-i18next"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
+import { LoadingState } from "@/components/shared/states"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 
-import type { AdminUserDetails, AdminUserRelatedItem } from "../types/adminUsers.types"
+import type { AdminUserRelatedItemView } from "../utils/adminUserRelated"
 
 export type AdminUserRelatedSectionKey = "applications" | "jobs" | "interviews" | "tests"
 
@@ -16,14 +17,18 @@ const SECTION_ICONS = {
 } as const
 
 interface AdminUserRelatedSectionProps {
-  user: AdminUserDetails
   section: AdminUserRelatedSectionKey
+  items?: AdminUserRelatedItemView[]
+  isLoading?: boolean
 }
 
-export default function AdminUserRelatedSection({ user, section }: AdminUserRelatedSectionProps) {
+export default function AdminUserRelatedSection({
+  section,
+  items,
+  isLoading = false,
+}: AdminUserRelatedSectionProps) {
   const { t, i18n } = useTranslation("adminUsers")
   const icon = SECTION_ICONS[section]
-  const items: AdminUserRelatedItem[] | undefined = user[section]
   const date = (input?: string | null) => {
     if (!input) return t("fallbacks.noDate")
     const parsed = new Date(input)
@@ -34,9 +39,9 @@ export default function AdminUserRelatedSection({ user, section }: AdminUserRela
 
   return (
     <SectionCard icon={icon} title={t(`related.${section}`)}>
-      {items === undefined ? (
-        <UnavailableNotice />
-      ) : items.length ? (
+      {isLoading ? (
+        <LoadingState />
+      ) : items?.length ? (
         <div className="space-y-3">
           {items.map((item) => (
             <article
@@ -52,9 +57,9 @@ export default function AdminUserRelatedSection({ user, section }: AdminUserRela
                 </div>
                 {item.status ? <StatusBadge status={item.status} variant="soft" /> : null}
               </div>
-              {item.created_at ? (
+              {item.date ? (
                 <p className="mt-2 text-xs text-text-muted">
-                  {t("related.itemDate", { date: date(item.created_at) })}
+                  {t("related.itemDate", { date: date(item.date) })}
                 </p>
               ) : null}
             </article>
@@ -66,14 +71,5 @@ export default function AdminUserRelatedSection({ user, section }: AdminUserRela
         </p>
       )}
     </SectionCard>
-  )
-}
-
-function UnavailableNotice() {
-  const { t } = useTranslation("adminUsers")
-  return (
-    <p className="rounded-lg border border-dashed border-amber-500/30 bg-amber-500/5 p-4 text-sm text-text-secondary">
-      {t("details.backendCoverageWarning")}
-    </p>
   )
 }

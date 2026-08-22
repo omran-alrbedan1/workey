@@ -64,7 +64,8 @@ export default function PublicCompanyJobs({ jobs, isLoading }: PublicCompanyJobs
                   <div className="flex items-center gap-1.5">
                     <DollarSign className="h-3.5 w-3.5" />
                     <span>
-                      {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} {job.salary_currency}
+                      {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()}{" "}
+                      {job.salary_currency}
                     </span>
                   </div>
                 )}

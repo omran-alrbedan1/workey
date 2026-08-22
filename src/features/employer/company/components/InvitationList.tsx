@@ -37,7 +37,9 @@ export default function InvitationList({
   return (
     <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
       {invitations.length === 0 ? (
-        <p className="px-6 py-8 text-center text-sm text-text-muted">{t("team.invitationsEmpty")}</p>
+        <p className="px-6 py-8 text-center text-sm text-text-muted">
+          {t("team.invitationsEmpty")}
+        </p>
       ) : (
         invitations.map((invitation) => {
           const status = keyOf(invitation.status, "pending")
@@ -47,9 +49,13 @@ export default function InvitationList({
                 <Mail className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-text-primary">{invitation.email}</p>
+                <p className="truncate text-sm font-semibold text-text-primary">
+                  {invitation.email}
+                </p>
                 <p className="truncate text-xs text-text-muted">
-                  {t("team.roleLabel", { role: keyOf(invitation.company_role ?? invitation.role, "") })}
+                  {t("team.roleLabel", {
+                    role: keyOf(invitation.company_role ?? invitation.role, ""),
+                  })}
                 </p>
               </div>
               <StatusBadge status={invitation.status} variant="soft" size="sm" />

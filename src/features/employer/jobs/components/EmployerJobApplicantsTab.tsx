@@ -16,8 +16,15 @@ import { cn } from "@/lib/utils"
 import { valueOf } from "@/lib/keyValue"
 import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
 import type { EmployerApplicantDetail } from "@/features/employer/applicants/types/employerApplicants.types"
-import { candidateDisplayName, candidateSecondaryText } from "@/features/employer/applicants/utils/candidateDisplay"
-import { matchScorePercent, type JobApplicantRow, type JobApplicantSortKey } from "../hooks/useJobApplicants"
+import {
+  candidateDisplayName,
+  candidateSecondaryText,
+} from "@/features/employer/applicants/utils/candidateDisplay"
+import {
+  matchScorePercent,
+  type JobApplicantRow,
+  type JobApplicantSortKey,
+} from "../hooks/useJobApplicants"
 
 const MAX_SKILL_BADGES = 3
 
@@ -133,7 +140,10 @@ export default function EmployerJobApplicantsTab({
         const score = matchScorePercent(row)
         if (score == null) return <span className="text-text-muted">-</span>
         return (
-          <span className={cn("font-semibold", scoreColorClass(score))} title={t("applicantsTab.matchHelperHint")}>
+          <span
+            className={cn("font-semibold", scoreColorClass(score))}
+            title={t("applicantsTab.matchHelperHint")}
+          >
             {score}%
           </span>
         )
@@ -192,7 +202,10 @@ export default function EmployerJobApplicantsTab({
           <label htmlFor="job-applicants-sort" className="shrink-0 text-sm text-text-muted">
             {t("applicantsTab.sort.label")}
           </label>
-          <Select value={sortBy} onValueChange={(value) => onSortChange(value as JobApplicantSortKey)}>
+          <Select
+            value={sortBy}
+            onValueChange={(value) => onSortChange(value as JobApplicantSortKey)}
+          >
             <SelectTrigger id="job-applicants-sort" className="w-[220px] bg-background">
               <SelectValue />
             </SelectTrigger>
@@ -210,7 +223,11 @@ export default function EmployerJobApplicantsTab({
       {isError ? (
         <div className="flex flex-col items-center gap-2 py-8 text-center">
           <p className="text-sm text-red-600">{t("applicantsTab.loadError")}</p>
-          <button type="button" className="text-sm font-medium text-primary hover:underline" onClick={onRetry}>
+          <button
+            type="button"
+            className="text-sm font-medium text-primary hover:underline"
+            onClick={onRetry}
+          >
             {t("applicantsTab.retry")}
           </button>
         </div>

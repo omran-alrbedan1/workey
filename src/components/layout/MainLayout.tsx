@@ -40,17 +40,13 @@ const MainLayout: React.FC = () => {
       </div>
 
       {/* Mobile Sidebar */}
-      <Sidebar 
-        isOpen={isMobileMenuOpen} 
-        isMobile={true} 
-        onClose={handleCloseMobileMenu}
-      />
+      <Sidebar isOpen={isMobileMenuOpen} isMobile={true} onClose={handleCloseMobileMenu} />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {/* Header */}
-        <Header 
-          onLogout={handleLogoutClick} 
+        <Header
+          onLogout={handleLogoutClick}
           onMenuToggle={handleMenuToggle}
           isMobileMenuOpen={isMobileMenuOpen}
         />

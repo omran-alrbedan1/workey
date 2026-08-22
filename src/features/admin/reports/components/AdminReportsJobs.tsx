@@ -7,10 +7,7 @@ interface AdminReportsJobsProps {
   isLoading: boolean
 }
 
-export default function AdminReportsJobs({
-  data,
-  isLoading,
-}: AdminReportsJobsProps) {
+export default function AdminReportsJobs({ data, isLoading }: AdminReportsJobsProps) {
   const { t } = useTranslation("adminReports")
 
   if (isLoading) {
@@ -24,7 +21,7 @@ export default function AdminReportsJobs({
     )
   }
 
-  const statusCounts = data?.status_counts
+  const statusCounts = data?.status_counts ?? {}
   const avgApplications = data?.average_applications_per_job
   const hasStatusCounts = Boolean(statusCounts && Object.keys(statusCounts).length > 0)
   const hasAvgApplications = typeof avgApplications === "number"

@@ -38,14 +38,14 @@ export const DatePickerField: React.FC<DatePickerFieldProps> = ({
 
   const getDisabled = () => {
     const disabledOptions: any = {}
-    
+
     if (dateOptions?.minDate) {
       disabledOptions.before = dateOptions.minDate
     }
     if (dateOptions?.maxDate) {
       disabledOptions.after = dateOptions.maxDate
     }
-    
+
     const disabledDays = dateOptions?.disabledDays
     if (disabledDays && disabledDays.length > 0) {
       if (Object.keys(disabledOptions).length > 0) {
@@ -53,7 +53,7 @@ export const DatePickerField: React.FC<DatePickerFieldProps> = ({
       }
       return disabledDays
     }
-    
+
     return Object.keys(disabledOptions).length > 0 ? disabledOptions : undefined
   }
 
@@ -65,17 +65,15 @@ export const DatePickerField: React.FC<DatePickerFieldProps> = ({
         className={cn(
           "w-full justify-start text-start font-normal",
           !field.value && "text-muted-foreground",
-          inputClassName
+          inputClassName,
         )}
         disabled={disabled}
         onClick={() => setOpen(!open)}
       >
         <CalendarIcon className="me-2 h-4 w-4" />
-        {field.value ? (
-          format(new Date(field.value), dateOptions?.format || "PPP")
-        ) : (
-          dateOptions?.placeholder || t("datePicker.placeholder")
-        )}
+        {field.value
+          ? format(new Date(field.value), dateOptions?.format || "PPP")
+          : dateOptions?.placeholder || t("datePicker.placeholder")}
       </Button>
       {open && (
         <div className="absolute top-full z-50 mt-1 bg-white border rounded-md shadow-lg min-w-[280px]">

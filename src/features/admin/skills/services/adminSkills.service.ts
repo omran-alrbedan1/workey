@@ -17,9 +17,7 @@ export const adminSkillsService = {
     id,
     ...input
   }: AdminSkillInput & { id: string | number }): Promise<AdminSkillRecord> {
-    return unwrapEntity<AdminSkillRecord>(
-      await api.patch(API_ENDPOINTS.admin.skillById(id), input),
-    )
+    return unwrapEntity<AdminSkillRecord>(await api.patch(API_ENDPOINTS.admin.skillById(id), input))
   },
   async remove(id: string | number): Promise<void> {
     await api.delete(API_ENDPOINTS.admin.skillById(id))

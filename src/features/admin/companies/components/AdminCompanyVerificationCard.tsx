@@ -30,11 +30,11 @@ export default function AdminCompanyVerificationCard({
     latestDecision?.actor?.email ??
     latestDecision?.actor_name ??
     (statusKey === "approved"
-      ? company.approved_by?.name ?? company.approved_by?.email
+      ? (company.approved_by?.name ?? company.approved_by?.email)
       : statusKey === "rejected"
-        ? company.rejected_by?.name ?? company.rejected_by?.email
+        ? (company.rejected_by?.name ?? company.rejected_by?.email)
         : statusKey === "suspended"
-          ? company.suspended_by?.name ?? company.suspended_by?.email
+          ? (company.suspended_by?.name ?? company.suspended_by?.email)
           : null)
   const latestDecisionReason =
     latestDecision?.reason ??
@@ -61,7 +61,10 @@ export default function AdminCompanyVerificationCard({
             {t("verification.currentStatus")}
           </p>
           <div className="mt-3">
-            <StatusBadge status={company.approval_status ?? company.status ?? "pending"} variant="soft" />
+            <StatusBadge
+              status={company.approval_status ?? company.status ?? "pending"}
+              variant="soft"
+            />
           </div>
         </div>
 
@@ -96,18 +99,26 @@ export default function AdminCompanyVerificationCard({
           </div>
           <div className="mt-3 grid gap-3 text-sm text-text-secondary md:grid-cols-3">
             <div>
-              <p className="text-xs font-medium text-text-muted">{t("verification.decisionActor")}</p>
-              <p className="mt-1 text-text-primary">{latestDecisionActor || t("fallbacks.notAvailable")}</p>
+              <p className="text-xs font-medium text-text-muted">
+                {t("verification.decisionActor")}
+              </p>
+              <p className="mt-1 text-text-primary">
+                {latestDecisionActor || t("fallbacks.notAvailable")}
+              </p>
             </div>
             <div>
-              <p className="text-xs font-medium text-text-muted">{t("verification.decisionDate")}</p>
+              <p className="text-xs font-medium text-text-muted">
+                {t("verification.decisionDate")}
+              </p>
               <p className="mt-1 text-text-primary">
                 {formatDate(latestDecisionDate) || t("fallbacks.notAvailable")}
               </p>
             </div>
             <div>
               <p className="text-xs font-medium text-text-muted">{t("verification.reason")}</p>
-              <p className="mt-1 text-text-primary">{latestDecisionReason || t("fallbacks.notAvailable")}</p>
+              <p className="mt-1 text-text-primary">
+                {latestDecisionReason || t("fallbacks.notAvailable")}
+              </p>
             </div>
           </div>
         </div>

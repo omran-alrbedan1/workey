@@ -24,10 +24,7 @@ export default function AdminCompanyOwnershipCard({ company }: { company: AdminC
   const membersQuery = useAdminCompanyMembers(String(company.id))
   const text = (value?: string | null) => value || t("fallbacks.notAvailable")
 
-  const owner = useMemo(
-    () => membersQuery.members.find(isOwner) ?? null,
-    [membersQuery.members],
-  )
+  const owner = useMemo(() => membersQuery.members.find(isOwner) ?? null, [membersQuery.members])
   const transferCandidates = membersQuery.members.filter((member) => !isOwner(member))
 
   const transferOwnership = async () => {

@@ -14,10 +14,9 @@ export function useEmployerRegister() {
     mutationFn: employerAuthService.register,
     onSuccess: (_data, variables: EmployerRegisterInput) => {
       showSuccessToast(t("toasts.accountCreated"), t("toasts.verifyEmailNext"))
-      navigate(
-        `${ROUTES.auth.emailVerification}?email=${encodeURIComponent(variables.email)}`,
-        { replace: true },
-      )
+      navigate(`${ROUTES.auth.emailVerification}?email=${encodeURIComponent(variables.email)}`, {
+        replace: true,
+      })
     },
   })
 }

@@ -16,7 +16,7 @@ export const RatingField: React.FC<RatingFieldProps> = ({
   maxRating = 5,
 }) => {
   const [hoveredRating, setHoveredRating] = useState(0)
-  
+
   return (
     <div className={cn("flex gap-1", inputClassName)}>
       {Array.from({ length: maxRating }, (_, i) => i + 1).map((rating) => (
@@ -34,7 +34,7 @@ export const RatingField: React.FC<RatingFieldProps> = ({
               "h-6 w-6",
               rating <= (hoveredRating || field.value || 0)
                 ? "fill-primary text-primary"
-                : "text-muted-foreground"
+                : "text-muted-foreground",
             )}
           />
         </button>

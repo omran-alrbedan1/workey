@@ -6,8 +6,6 @@ export default function EmployerApplicantDetailsPage() {
   const { t } = useTranslation("employerApplicants")
 
   return (
-    <EmployerApplicantDetailsView
-      model={useEmployerApplicantDetailsPage(t("unknownCandidate"))}
-    />
+    <EmployerApplicantDetailsView model={useEmployerApplicantDetailsPage(t("unknownCandidate"))} />
   )
 }

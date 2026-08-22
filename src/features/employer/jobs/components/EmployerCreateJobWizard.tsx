@@ -85,9 +85,21 @@ const educationLevelOptions: { value: string; label: string }[] = [
 
 type WizardStepId = "basic" | "description" | "skills" | "additional" | "review"
 
-const WIZARD_STEPS: { id: WizardStepId; labelKey: string; fields: (keyof EmployerJobFormValues)[] }[] = [
-  { id: "basic", labelKey: "wizard.steps.basic", fields: ["title", "employment_type", "work_mode", "location"] },
-  { id: "description", labelKey: "wizard.steps.description", fields: ["description", "requirements"] },
+const WIZARD_STEPS: {
+  id: WizardStepId
+  labelKey: string
+  fields: (keyof EmployerJobFormValues)[]
+}[] = [
+  {
+    id: "basic",
+    labelKey: "wizard.steps.basic",
+    fields: ["title", "employment_type", "work_mode", "location"],
+  },
+  {
+    id: "description",
+    labelKey: "wizard.steps.description",
+    fields: ["description", "requirements"],
+  },
   { id: "skills", labelKey: "wizard.steps.skills", fields: [] },
   { id: "additional", labelKey: "wizard.steps.additional", fields: [] },
   { id: "review", labelKey: "wizard.steps.review", fields: [] },
@@ -136,7 +148,11 @@ function WizardSkillPicker({
           <CommandInput placeholder={t("skills.searchPlaceholder")} disabled={isLoading} />
           <CommandList>
             <CommandEmpty>
-              {isLoading ? t("skills.loading") : loadFailed ? t("skills.loadError") : t("skills.noResults")}
+              {isLoading
+                ? t("skills.loading")
+                : loadFailed
+                  ? t("skills.loadError")
+                  : t("skills.noResults")}
             </CommandEmpty>
             <CommandGroup>
               {available.map((skill) => (
@@ -154,7 +170,9 @@ function WizardSkillPicker({
         </Command>
       </div>
       {selected.length === 0 ? (
-        <p className="text-sm text-text-muted">{t("wizard.selectedEmpty", { group: t(groupLabel) })}</p>
+        <p className="text-sm text-text-muted">
+          {t("wizard.selectedEmpty", { group: t(groupLabel) })}
+        </p>
       ) : (
         <ul className="space-y-2">
           {selected.map((item) => {
@@ -283,13 +301,17 @@ export default function EmployerCreateJobWizard() {
     weight: number,
   ) => {
     setter((current) =>
-      current.map((item) => (String(item.skill_id) === String(skillId) ? { ...item, weight } : item)),
+      current.map((item) =>
+        String(item.skill_id) === String(skillId) ? { ...item, weight } : item,
+      ),
     )
   }
 
   const buildInput = (raw: EmployerJobFormValues): EmployerJobInput => {
-    const salaryMin = typeof raw.salary_min === "number" && Number.isFinite(raw.salary_min) ? raw.salary_min : null
-    const salaryMax = typeof raw.salary_max === "number" && Number.isFinite(raw.salary_max) ? raw.salary_max : null
+    const salaryMin =
+      typeof raw.salary_min === "number" && Number.isFinite(raw.salary_min) ? raw.salary_min : null
+    const salaryMax =
+      typeof raw.salary_max === "number" && Number.isFinite(raw.salary_max) ? raw.salary_max : null
     return {
       title: raw.title.trim(),
       description: raw.description.trim(),
@@ -513,7 +535,9 @@ export default function EmployerCreateJobWizard() {
 
   return (
     <div className="space-y-6">
-      <nav aria-label={t("wizard.stepOf", { current: currentStep + 1, total: WIZARD_STEPS.length })}>
+      <nav
+        aria-label={t("wizard.stepOf", { current: currentStep + 1, total: WIZARD_STEPS.length })}
+      >
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-3 rounded-lg border border-border bg-background-card p-4 shadow-card">
           {WIZARD_STEPS.map((step, index) => (
             <li key={step.id} className="flex items-center gap-2">
@@ -542,7 +566,9 @@ export default function EmployerCreateJobWizard() {
                   {t(step.labelKey)}
                 </span>
               </button>
-              {index < WIZARD_STEPS.length - 1 && <span className="hidden h-px w-8 bg-border sm:block" />}
+              {index < WIZARD_STEPS.length - 1 && (
+                <span className="hidden h-px w-8 bg-border sm:block" />
+              )}
             </li>
           ))}
         </ol>
@@ -644,7 +670,9 @@ export default function EmployerCreateJobWizard() {
                   isPending={createJob.isPending}
                   onAdd={(skill) => addSkill(setRequiredSkills, skill)}
                   onRemove={(skillId) => removeSkill(setRequiredSkills, skillId)}
-                  onWeightChange={(skillId, weight) => changeSkillWeight(setRequiredSkills, skillId, weight)}
+                  onWeightChange={(skillId, weight) =>
+                    changeSkillWeight(setRequiredSkills, skillId, weight)
+                  }
                 />
                 <WizardSkillPicker
                   titleKey="wizard.sections.niceToHaveTitle"
@@ -657,7 +685,9 @@ export default function EmployerCreateJobWizard() {
                   isPending={createJob.isPending}
                   onAdd={(skill) => addSkill(setNiceToHaveSkills, skill)}
                   onRemove={(skillId) => removeSkill(setNiceToHaveSkills, skillId)}
-                  onWeightChange={(skillId, weight) => changeSkillWeight(setNiceToHaveSkills, skillId, weight)}
+                  onWeightChange={(skillId, weight) =>
+                    changeSkillWeight(setNiceToHaveSkills, skillId, weight)
+                  }
                 />
               </div>
             </section>
@@ -680,7 +710,10 @@ export default function EmployerCreateJobWizard() {
                 name="education_level"
                 label={t("fields.educationLevel")}
                 placeholder={t("fields.educationLevel")}
-                options={educationLevelOptions.map((opt) => ({ value: opt.value, label: t(opt.label) }))}
+                options={educationLevelOptions.map((opt) => ({
+                  value: opt.value,
+                  label: t(opt.label),
+                }))}
                 leftIcon={GraduationCap}
               />
               <CustomFormField
@@ -717,7 +750,9 @@ export default function EmployerCreateJobWizard() {
           {WIZARD_STEPS[currentStep].id === "review" && (
             <section className="space-y-6">
               <div className="rounded-lg border border-border p-4">
-                <h3 className="mb-3 font-semibold text-text-primary">{t("wizard.readiness.title")}</h3>
+                <h3 className="mb-3 font-semibold text-text-primary">
+                  {t("wizard.readiness.title")}
+                </h3>
                 <p className="mb-3 text-sm text-text-muted">{t("wizard.readiness.subtitle")}</p>
                 <ul className="space-y-2">
                   {readinessChecks.map((check) => (
@@ -731,7 +766,9 @@ export default function EmployerCreateJobWizard() {
                         >
                           {check.ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
                         </span>
-                        <span className="text-text-primary">{t(`wizard.readiness.items.${check.key}`)}</span>
+                        <span className="text-text-primary">
+                          {t(`wizard.readiness.items.${check.key}`)}
+                        </span>
                       </span>
                       <Badge variant="secondary" className="shrink-0 text-white">
                         {check.required
@@ -774,7 +811,9 @@ export default function EmployerCreateJobWizard() {
                               <dd
                                 className={cn(
                                   "break-words text-xs text-text-primary sm:text-sm",
-                                  row.multiline ? "whitespace-pre-line" : "line-clamp-2 sm:line-clamp-none sm:truncate",
+                                  row.multiline
+                                    ? "whitespace-pre-line"
+                                    : "line-clamp-2 sm:line-clamp-none sm:truncate",
                                 )}
                                 title={row.multiline ? undefined : row.value}
                               >
@@ -813,7 +852,12 @@ export default function EmployerCreateJobWizard() {
                     {createJob.isPending ? <Loader2 className="animate-spin" /> : null}
                     {createJob.isPending ? t("wizard.savingDraft") : t("wizard.saveDraft")}
                   </Button>
-                  <Button type="button" disabled={createJob.isPending} onClick={goNext} className="text-white">
+                  <Button
+                    type="button"
+                    disabled={createJob.isPending}
+                    onClick={goNext}
+                    className="text-white"
+                  >
                     {t("wizard.next")} <ChevronRight className="rtl:rotate-180" />
                   </Button>
                 </>
@@ -830,8 +874,17 @@ export default function EmployerCreateJobWizard() {
                     {createJob.isPending ? <Loader2 className="animate-spin" /> : null}
                     {createJob.isPending ? t("wizard.savingDraft") : t("wizard.saveDraft")}
                   </Button>
-                  <Button type="button" disabled={!canPublish} onClick={() => void publish()} className="text-white">
-                    {createJob.isPending ? <Loader2 className="animate-spin" /> : <Send className="rtl:rotate-180" />}
+                  <Button
+                    type="button"
+                    disabled={!canPublish}
+                    onClick={() => void publish()}
+                    className="text-white"
+                  >
+                    {createJob.isPending ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <Send className="rtl:rotate-180" />
+                    )}
                     {createJob.isPending ? t("wizard.publishing") : t("wizard.publish")}
                   </Button>
                 </>

@@ -31,9 +31,7 @@ export default function EmployerJobsPage() {
   }
 
   const isUpdating =
-    jobs.publishMutation.isPending ||
-    jobs.closeMutation.isPending ||
-    jobs.deleteMutation.isPending
+    jobs.publishMutation.isPending || jobs.closeMutation.isPending || jobs.deleteMutation.isPending
 
   return (
     <div className="space-y-6">

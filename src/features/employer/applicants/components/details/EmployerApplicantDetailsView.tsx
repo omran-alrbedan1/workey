@@ -184,7 +184,10 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
       </TabsContent>
 
       <TabsContent value="interviews">
-        <InterviewsTab interviews={model.interviews} onSchedule={() => model.setShowScheduleDialog(true)} />
+        <InterviewsTab
+          interviews={model.interviews}
+          onSchedule={() => model.setShowScheduleDialog(true)}
+        />
       </TabsContent>
 
       <TabsContent value="informationRequests">

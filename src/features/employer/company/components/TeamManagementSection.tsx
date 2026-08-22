@@ -36,7 +36,9 @@ export default function TeamManagementSection() {
           <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold text-text-primary">{t("common:teamManagement.invitationLinkCreated")}</p>
+                <p className="text-sm font-semibold text-text-primary">
+                  {t("common:teamManagement.invitationLinkCreated")}
+                </p>
                 <p className="break-all text-sm text-text-secondary">
                   {window.location.origin}
                   {ROUTES.public.companyInvitation(team.lastInvitationToken)}

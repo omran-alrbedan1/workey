@@ -25,10 +25,7 @@ export default function AdminReportsJobsPage() {
         onApply={query.applyFilters}
         onReset={query.resetFilters}
       />
-      <AdminReportsJobs
-        data={query.data}
-        isLoading={query.isPending}
-      />
+      <AdminReportsJobs data={query.data} isLoading={query.isPending} />
     </div>
   )
 }

@@ -45,7 +45,8 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
     queryKey: [...rootKey, "list", page, normalizedFilters],
     queryFn: () => {
       const acceptingRaw = asApiValue(normalizedFilters.accepting_applications)
-      const accepting = acceptingRaw === "true" ? true : acceptingRaw === "false" ? false : undefined
+      const accepting =
+        acceptingRaw === "true" ? true : acceptingRaw === "false" ? false : undefined
       return employerJobsService.list(page, {
         work_mode: asApiValue(normalizedFilters.work_mode),
         employment_type: asApiValue(normalizedFilters.employment_type),
@@ -71,7 +72,10 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       showSuccessToast(t("toasts.published"))
     },
     onError: (error) => {
-      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
+      showErrorToast(
+        t("errors.title"),
+        error instanceof Error ? error.message : t("errors.description"),
+      )
     },
   })
   const closeMutation = useMutation({
@@ -81,7 +85,10 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       showSuccessToast(t("toasts.closed"))
     },
     onError: (error) => {
-      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
+      showErrorToast(
+        t("errors.title"),
+        error instanceof Error ? error.message : t("errors.description"),
+      )
     },
   })
   const deleteMutation = useMutation({
@@ -91,7 +98,10 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       showSuccessToast(t("toasts.deleted"))
     },
     onError: (error) => {
-      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
+      showErrorToast(
+        t("errors.title"),
+        error instanceof Error ? error.message : t("errors.description"),
+      )
     },
   })
 

@@ -3,14 +3,11 @@ import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
 
-interface DrawerProps  {
+interface DrawerProps {
   shouldScaleBackground?: boolean
 }
 
-const Drawer = ({
-  shouldScaleBackground = true,
-  ...props
-}: DrawerProps) => (
+const Drawer = ({ shouldScaleBackground = true, ...props }: DrawerProps) => (
   <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
 )
 Drawer.displayName = "Drawer"
@@ -21,7 +18,9 @@ const DrawerPortal = DrawerPrimitive.Portal
 
 const DrawerClose = DrawerPrimitive.Close
 
-interface DrawerOverlayProps extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay> {}
+interface DrawerOverlayProps extends React.ComponentPropsWithoutRef<
+  typeof DrawerPrimitive.Overlay
+> {}
 
 const DrawerOverlay = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Overlay>,
@@ -35,7 +34,9 @@ const DrawerOverlay = React.forwardRef<
 ))
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
-interface DrawerContentProps extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
+interface DrawerContentProps extends React.ComponentPropsWithoutRef<
+  typeof DrawerPrimitive.Content
+> {
   direction?: "bottom" | "left" | "right" | "top"
 }
 
@@ -53,7 +54,7 @@ const DrawerContent = React.forwardRef<
         direction === "left" && "inset-y-0 left-0 w-64 rounded-r-[10px]",
         direction === "right" && "inset-y-0 right-0 w-64 rounded-l-[10px]",
         direction === "top" && "inset-x-0 top-0 rounded-b-[10px]",
-        className
+        className,
       )}
       {...props}
     >
@@ -68,23 +69,14 @@ DrawerContent.displayName = "DrawerContent"
 
 interface DrawerHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const DrawerHeader = ({
-  className,
-  ...props
-}: DrawerHeaderProps) => (
-  <div
-    className={cn("grid gap-1.5 p-4 text-center sm:text-start", className)}
-    {...props}
-  />
+const DrawerHeader = ({ className, ...props }: DrawerHeaderProps) => (
+  <div className={cn("grid gap-1.5 p-4 text-center sm:text-start", className)} {...props} />
 )
 DrawerHeader.displayName = "DrawerHeader"
 
 interface DrawerFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const DrawerFooter = ({
-  className,
-  ...props
-}: DrawerFooterProps) => (
+const DrawerFooter = ({ className, ...props }: DrawerFooterProps) => (
   <div className={cn("mt-auto flex flex-col gap-2 p-4", className)} {...props} />
 )
 DrawerFooter.displayName = "DrawerFooter"
@@ -103,7 +95,9 @@ const DrawerTitle = React.forwardRef<
 ))
 DrawerTitle.displayName = DrawerPrimitive.Title.displayName
 
-interface DrawerDescriptionProps extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description> {}
+interface DrawerDescriptionProps extends React.ComponentPropsWithoutRef<
+  typeof DrawerPrimitive.Description
+> {}
 
 const DrawerDescription = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Description>,

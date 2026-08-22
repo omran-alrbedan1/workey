@@ -29,12 +29,8 @@ export default function AdminSectionPage({
           <Icon className="h-8 w-8" />
         </div>
         <Construction className="mt-6 h-5 w-5 text-text-muted" />
-        <h2 className="mt-3 font-semibold text-text-primary">
-          {t("section.ready")}
-        </h2>
-        <p className="mt-1 max-w-md text-sm text-text-muted">
-          {t("section.description")}
-        </p>
+        <h2 className="mt-3 font-semibold text-text-primary">{t("section.ready")}</h2>
+        <p className="mt-1 max-w-md text-sm text-text-muted">{t("section.description")}</p>
         <Link
           to={ROUTES.admin.root}
           className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"

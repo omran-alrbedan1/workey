@@ -41,7 +41,9 @@ function EmployerNotificationMobileCard({
           {unread ? <Bell className="h-5 w-5" /> : <MailOpen className="h-5 w-5" />}
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className={`truncate font-semibold ${unread ? "text-text-primary" : "text-text-muted"}`}>
+          <h3
+            className={`truncate font-semibold ${unread ? "text-text-primary" : "text-text-muted"}`}
+          >
             {title || t("fallback")}
           </h3>
           {message && (
@@ -141,12 +143,12 @@ export default function EmployerNotificationsTable({
 
         return (
           <div>
-            <p className={`text-sm ${isNotificationUnread(item) ? "font-medium text-text-primary" : "text-text-muted"}`}>
+            <p
+              className={`text-sm ${isNotificationUnread(item) ? "font-medium text-text-primary" : "text-text-muted"}`}
+            >
               {notificationTitle(item, t) || t("fallback")}
             </p>
-            {message && (
-              <p className="mt-0.5 text-xs text-text-muted line-clamp-2">{message}</p>
-            )}
+            {message && <p className="mt-0.5 text-xs text-text-muted line-clamp-2">{message}</p>}
           </div>
         )
       },
@@ -155,9 +157,7 @@ export default function EmployerNotificationsTable({
       key: "type",
       header: t("columns.type"),
       cell: (item) => (
-        <span className="text-sm capitalize text-text-muted">
-          {notificationTypeLabel(item, t)}
-        </span>
+        <span className="text-sm capitalize text-text-muted">{notificationTypeLabel(item, t)}</span>
       ),
     },
     {

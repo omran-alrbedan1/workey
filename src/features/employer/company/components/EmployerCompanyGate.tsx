@@ -11,7 +11,8 @@ export default function EmployerCompanyGate({ children }: { children: React.Reac
   const { t } = useTranslation("common")
   const company = useEmployerCompany()
 
-  if (company.isPending) return <div className="h-96 animate-pulse rounded-lg bg-background-secondary" />
+  if (company.isPending)
+    return <div className="h-96 animate-pulse rounded-lg bg-background-secondary" />
 
   if (company.isError || !company.data) {
     return (

@@ -1,6 +1,6 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { Card, CardContent } from '@/components/ui/card'
+import React from "react"
+import { useTranslation } from "react-i18next"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface SectionCardProps {
   icon: React.ElementType
@@ -29,7 +29,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({ icon: Icon, title, chi
 interface DetailItemProps {
   icon: React.ReactNode
   label: string
-  value: string
+  value: React.ReactNode
 }
 
 export const DetailItem: React.FC<DetailItemProps> = ({ icon, label, value }) => {

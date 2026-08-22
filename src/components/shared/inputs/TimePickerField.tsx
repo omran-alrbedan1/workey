@@ -22,7 +22,7 @@ export const TimePickerField: React.FC<TimePickerFieldProps> = ({
   const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
   const interval = timeOptions?.interval || 30
-  
+
   const generateTimeSlots = () => {
     const slots = []
     for (let hour = 0; hour < 24; hour++) {
@@ -33,9 +33,9 @@ export const TimePickerField: React.FC<TimePickerFieldProps> = ({
     }
     return slots
   }
-  
+
   const timeSlots = generateTimeSlots()
-  
+
   return (
     <div className="relative">
       <Button
@@ -43,17 +43,15 @@ export const TimePickerField: React.FC<TimePickerFieldProps> = ({
         className={cn(
           "w-full justify-start text-start font-normal",
           !field.value && "text-muted-foreground",
-          inputClassName
+          inputClassName,
         )}
         disabled={disabled}
         onClick={() => setOpen(!open)}
       >
         <Clock className="me-2 h-4 w-4" />
-        {field.value ? (
-          format(new Date(field.value), timeOptions?.format || "p")
-        ) : (
-          timeOptions?.placeholder || t("datePicker.timePlaceholder")
-        )}
+        {field.value
+          ? format(new Date(field.value), timeOptions?.format || "p")
+          : timeOptions?.placeholder || t("datePicker.timePlaceholder")}
       </Button>
       {open && (
         <div className="absolute top-full z-50 mt-1 bg-white border rounded-md shadow-lg">

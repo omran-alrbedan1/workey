@@ -1,11 +1,27 @@
 {
-  "header": { "adminUser": "Admin User", "administrator": "Administrator", "logout": "Logout", "notifications": "Notifications", "menu": "Open menu" },
-  "errors": { "unableToLoad": "Unable to load {{resource}}", "description": "Check the backend endpoint and your Admin authentication, then try again." },
+  "header": {
+    "adminUser": "Admin User",
+    "administrator": "Administrator",
+    "logout": "Logout",
+    "notifications": "Notifications",
+    "menu": "Open menu"
+  },
+  "errors": {
+    "unableToLoad": "Unable to load {{resource}}",
+    "description": "Check the backend endpoint and your Admin authentication, then try again."
+  },
   "section": {
-    "workspace": "Admin workspace", "ready": "This section is ready for implementation",
+    "workspace": "Admin workspace",
+    "ready": "This section is ready for implementation",
     "description": "The route and navigation are in place. Its tables, filters, and API workflow will be built in the next phase.",
     "back": "Back to dashboard"
   },
-  "candidates": { "title": "Job Seekers", "description": "Review candidate accounts and access status." },
-  "employers": { "title": "Employers", "description": "Manage employer accounts and company access." }
+  "candidates": {
+    "title": "Job Seekers",
+    "description": "Review candidate accounts and access status."
+  },
+  "employers": {
+    "title": "Employers",
+    "description": "Manage employer accounts and company access."
+  }
 }

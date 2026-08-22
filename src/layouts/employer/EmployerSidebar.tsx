@@ -87,9 +87,10 @@ export default function EmployerSidebar({ onNavigate }: EmployerSidebarProps) {
             </p>
             <nav className="space-y-1">
               {section.items.map(({ label, path, icon: Icon, end }) => {
-                const isActive = 
+                const isActive =
                   (path === ROUTES.employer.applicants && isJobApplicantsPage) ||
-                  (path === ROUTES.employer.applicants && location.pathname === ROUTES.employer.applicants)
+                  (path === ROUTES.employer.applicants &&
+                    location.pathname === ROUTES.employer.applicants)
 
                 return (
                   <NavLink

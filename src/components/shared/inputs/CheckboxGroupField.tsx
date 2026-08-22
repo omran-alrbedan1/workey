@@ -24,7 +24,7 @@ export const CheckboxGroupField: React.FC<CheckboxGroupFieldProps> = ({
       field.onChange([...currentValues, value])
     }
   }
-  
+
   return (
     <div className={cn("space-y-2", inputClassName)}>
       {options.map((option) => (

@@ -112,7 +112,12 @@ export default function InterviewHistoryPanel({ interviewId }: { interviewId: st
             <History className="h-4 w-4 text-primary" />
             {t("history.statusTitle")}
           </CardTitle>
-          <Button type="button" variant="ghost" size="sm" onClick={() => void statusHistory.refetch()}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => void statusHistory.refetch()}
+          >
             <RotateCcw className="h-4 w-4" />
             {t("history.refresh")}
           </Button>
@@ -137,7 +142,12 @@ export default function InterviewHistoryPanel({ interviewId }: { interviewId: st
             <CalendarClock className="h-4 w-4 text-primary" />
             {t("history.scheduleTitle")}
           </CardTitle>
-          <Button type="button" variant="ghost" size="sm" onClick={() => void scheduleHistory.refetch()}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => void scheduleHistory.refetch()}
+          >
             <RotateCcw className="h-4 w-4" />
             {t("history.refresh")}
           </Button>

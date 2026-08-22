@@ -109,7 +109,7 @@ export default function CompanyLogoSection({
             className="hidden"
             disabled={isUploading}
           />
-          
+
           <Button
             type="button"
             variant="outline"
@@ -136,15 +136,11 @@ export default function CompanyLogoSection({
             </Button>
           )}
 
-          <p className="text-xs text-text-muted">
-            {t("media.logoRequirements")}
-          </p>
+          <p className="text-xs text-text-muted">{t("media.logoRequirements")}</p>
         </div>
       </div>
 
-      {error && (
-        <p className="text-sm text-red-600">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   )
 }

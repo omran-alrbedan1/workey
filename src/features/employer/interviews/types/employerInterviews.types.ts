@@ -1,5 +1,8 @@
 import type { KeyValueField } from "@/lib/keyValue"
-import type { ApplicationSnapshot, ApplicationStatus } from "@/features/employer/applicants/types/employerApplicants.types"
+import type {
+  ApplicationSnapshot,
+  ApplicationStatus,
+} from "@/features/employer/applicants/types/employerApplicants.types"
 
 export type InterviewType = "hr" | "technical" | "final"
 export type InterviewMode = "online" | "on_site"
@@ -120,7 +123,9 @@ export interface EmployerInterview {
   schedule_history?: EmployerInterviewScheduleHistoryItem[]
   job_application?: InterviewApplicationReference
   allowed_actions?: EmployerInterviewAllowedActions | string[] | null
-  permissions?: Partial<Record<"VIEW_INTERVIEWS" | "MANAGE_INTERVIEWS" | "EVALUATE_INTERVIEWS", boolean>>
+  permissions?: Partial<
+    Record<"VIEW_INTERVIEWS" | "MANAGE_INTERVIEWS" | "EVALUATE_INTERVIEWS", boolean>
+  >
 }
 
 export interface EmployerInterviewInput {

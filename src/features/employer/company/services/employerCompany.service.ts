@@ -24,7 +24,7 @@ export const employerCompanyService = {
       await api.post(API_ENDPOINTS.employer.company, formData, {
         timeout: UPLOAD_TIMEOUT,
         headers: {
-          'Content-Type': undefined,
+          "Content-Type": undefined,
         },
       }),
     )
@@ -37,7 +37,7 @@ export const employerCompanyService = {
       await api.post(API_ENDPOINTS.employer.coverImage, formData, {
         timeout: UPLOAD_TIMEOUT,
         headers: {
-          'Content-Type': undefined,
+          "Content-Type": undefined,
         },
       }),
     )

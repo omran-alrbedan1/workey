@@ -7,7 +7,6 @@ import arAdminApplications from "./locales/ar/admin/applications.json"
 import arAdminAuditLogs from "./locales/ar/admin/auditLogs.json"
 import arAdminAuth from "./locales/ar/admin/auth.json"
 import arAdminDashboard from "./locales/ar/admin/dashboard.json"
-import arAdminInterviews from "./locales/ar/admin/interviews.json"
 import arAdminJobs from "./locales/ar/admin/jobs.json"
 import arAdminNotifications from "./locales/ar/admin/notifications.json"
 import arAdminReports from "./locales/ar/admin/reports.json"
@@ -37,7 +36,6 @@ import enAdminApplications from "./locales/en/admin/applications.json"
 import enAdminAuditLogs from "./locales/en/admin/auditLogs.json"
 import enAdminAuth from "./locales/en/admin/auth.json"
 import enAdminDashboard from "./locales/en/admin/dashboard.json"
-import enAdminInterviews from "./locales/en/admin/interviews.json"
 import enAdminJobs from "./locales/en/admin/jobs.json"
 import enAdminNotifications from "./locales/en/admin/notifications.json"
 import enAdminReports from "./locales/en/admin/reports.json"
@@ -73,7 +71,6 @@ export const resources = {
     adminAuditLogs: enAdminAuditLogs,
     adminAuth: enAdminAuth,
     adminDashboard: enAdminDashboard,
-    adminInterviews: enAdminInterviews,
     adminJobs: enAdminJobs,
     adminNotifications: enAdminNotifications,
     adminReports: enAdminReports,
@@ -105,7 +102,6 @@ export const resources = {
     adminAuditLogs: arAdminAuditLogs,
     adminAuth: arAdminAuth,
     adminDashboard: arAdminDashboard,
-    adminInterviews: arAdminInterviews,
     adminJobs: arAdminJobs,
     adminNotifications: arAdminNotifications,
     adminReports: arAdminReports,

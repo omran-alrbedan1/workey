@@ -50,7 +50,8 @@ export default function ApplicationStatusChangeDialog({
 
   const statusesRequiringNote: ApplicationStatusKey[] = ["rejected", "on_hold", "accepted"]
 
-  const shouldRequireNote = requireNote || Boolean(targetStatus && statusesRequiringNote.includes(targetStatus))
+  const shouldRequireNote =
+    requireNote || Boolean(targetStatus && statusesRequiringNote.includes(targetStatus))
 
   return (
     <Dialog open={open} onOpenChange={() => !isSubmitting && handleClose()}>
@@ -60,9 +61,7 @@ export default function ApplicationStatusChangeDialog({
             <RefreshCw className="h-5 w-5 text-primary" />
             {t("statusChange.title")}
           </DialogTitle>
-          <DialogDescription>
-            {t("statusChange.description")}
-          </DialogDescription>
+          <DialogDescription>{t("statusChange.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="py-4 space-y-4">
@@ -102,11 +101,7 @@ export default function ApplicationStatusChangeDialog({
         </div>
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={handleClose}
-            disabled={isSubmitting}
-          >
+          <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
             {t("actions.cancel")}
           </Button>
           <SubmitButton

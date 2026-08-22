@@ -85,21 +85,13 @@ export default function AdminDistributionCharts({
     <div className="grid gap-3 lg:grid-cols-2">
       <DashboardPanel
         title={t("usersByRole")}
-        subtitle={
-          sampledUsers
-            ? t("loadedSample")
-            : t("platformDistribution")
-        }
+        subtitle={sampledUsers ? t("loadedSample") : t("platformDistribution")}
       >
         <DistributionChart data={roles} centerLabel={t("usersLoaded")} />
       </DashboardPanel>
       <DashboardPanel
         title={t("companyApprovals")}
-        subtitle={
-          sampledCompanies
-            ? t("statusSample")
-            : t("companyOutcomes")
-        }
+        subtitle={sampledCompanies ? t("statusSample") : t("companyOutcomes")}
       >
         <DistributionChart data={companies} centerLabel={t("companiesLoaded")} />
       </DashboardPanel>

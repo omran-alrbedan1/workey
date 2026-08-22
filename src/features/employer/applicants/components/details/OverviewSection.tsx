@@ -23,14 +23,11 @@ import { cn } from "@/lib/utils"
 import { valueOf } from "@/lib/keyValue"
 import { candidateHeadline } from "../../utils/candidateDisplay"
 import { getAllowedApplicationActions } from "../../utils/applicationActions"
-import type { ApplicationStatusKey, EmployerApplicantDetail } from "../../types/employerApplicants.types"
-import {
-  InfoItem,
-  SectionCard,
-  SkillGroup,
-  formatDate,
-  formatSalary,
-} from "./section-ui"
+import type {
+  ApplicationStatusKey,
+  EmployerApplicantDetail,
+} from "../../types/employerApplicants.types"
+import { InfoItem, SectionCard, SkillGroup, formatDate, formatSalary } from "./section-ui"
 
 interface OverviewSectionProps {
   application: EmployerApplicantDetail
@@ -69,7 +66,9 @@ export default function OverviewSection({
               </div>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="text-2xl font-bold leading-tight text-text-primary">{candidateName}</h2>
+                  <h2 className="text-2xl font-bold leading-tight text-text-primary">
+                    {candidateName}
+                  </h2>
                   <Badge variant="secondary" className="text-xs text-white">
                     {String(valueOf(application.status, "applied"))}
                   </Badge>
@@ -110,13 +109,22 @@ export default function OverviewSection({
                   profile?.professional?.portfolio_url) && (
                   <div className="mt-3 flex items-center gap-2">
                     {profile?.professional?.linkedin_url && (
-                      <OverviewLinkChip href={profile.professional.linkedin_url} label={t("common:profileLinks.linkedin")} />
+                      <OverviewLinkChip
+                        href={profile.professional.linkedin_url}
+                        label={t("common:profileLinks.linkedin")}
+                      />
                     )}
                     {profile?.professional?.github_url && (
-                      <OverviewLinkChip href={profile.professional.github_url} label={t("common:profileLinks.github")} />
+                      <OverviewLinkChip
+                        href={profile.professional.github_url}
+                        label={t("common:profileLinks.github")}
+                      />
                     )}
                     {profile?.professional?.portfolio_url && (
-                      <OverviewLinkChip href={profile.professional.portfolio_url} label={t("common:profileLinks.portfolio")} />
+                      <OverviewLinkChip
+                        href={profile.professional.portfolio_url}
+                        label={t("common:profileLinks.portfolio")}
+                      />
                     )}
                   </div>
                 )}
@@ -130,8 +138,16 @@ export default function OverviewSection({
         </div>
 
         <div className="grid gap-3 px-6 py-5 sm:grid-cols-2 xl:grid-cols-4">
-          <SummaryTile icon={IdCard} label={t("candidate.applicationId")} value={`#${application.id}`} />
-          <SummaryTile icon={Briefcase} label={t("candidate.position")} value={application.job_posting?.title ?? "-"} />
+          <SummaryTile
+            icon={IdCard}
+            label={t("candidate.applicationId")}
+            value={`#${application.id}`}
+          />
+          <SummaryTile
+            icon={Briefcase}
+            label={t("candidate.position")}
+            value={application.job_posting?.title ?? "-"}
+          />
           <SummaryTile
             icon={Calendar}
             label={t("columns.applied")}
@@ -150,6 +166,7 @@ export default function OverviewSection({
         allowedActions={allowedActions}
         isStatusPending={isStatusPending}
         onOpenStatusDialog={onOpenStatusDialog}
+        onAssignTest={onAssignTest}
         onScheduleInterview={onScheduleInterview}
         onRequestInformation={onRequestInformation}
       />
@@ -157,9 +174,18 @@ export default function OverviewSection({
       <div className="grid gap-4 lg:grid-cols-2">
         <SectionCard title={t("candidate.applicationTitle")} icon={FileText}>
           <div className="grid gap-3 sm:grid-cols-2">
-            <InfoItem label={t("columns.status")} value={String(valueOf(application.status, "-"))} />
-            <InfoItem label={t("candidate.lastUpdated")} value={formatDate(application.created_at)} />
-            <InfoItem label={t("candidate.snapshotStatus")} value={String(valueOf(application.snapshot_status, "-"))} />
+            <InfoItem
+              label={t("columns.status")}
+              value={String(valueOf(application.status, "-"))}
+            />
+            <InfoItem
+              label={t("candidate.lastUpdated")}
+              value={formatDate(application.created_at)}
+            />
+            <InfoItem
+              label={t("candidate.snapshotStatus")}
+              value={String(valueOf(application.snapshot_status, "-"))}
+            />
             <InfoItem
               label={t("candidate.profileConsent")}
               value={application.consent_to_share_profile ? t("answers.yes") : t("answers.no")}
@@ -173,8 +199,14 @@ export default function OverviewSection({
               label={t("candidate.latestStatus")}
               value={String(valueOf(latestStatus?.to_status, valueOf(application.status, "-")))}
             />
-            <InfoItem label={t("candidate.changedBy")} value={latestStatus?.changed_by?.name ?? "-"} />
-            <InfoItem label={t("candidate.changedAt")} value={formatDate(latestStatus?.changed_at)} />
+            <InfoItem
+              label={t("candidate.changedBy")}
+              value={latestStatus?.changed_by?.name ?? "-"}
+            />
+            <InfoItem
+              label={t("candidate.changedAt")}
+              value={formatDate(latestStatus?.changed_at)}
+            />
           </div>
           {latestStatus?.note && (
             <div className="rounded-lg border border-border bg-muted/30 p-3">
@@ -189,18 +221,31 @@ export default function OverviewSection({
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <InfoItem label={t("candidate.position")} value={job?.title ?? "-"} />
           <InfoItem label={t("candidate.department")} value={job?.department ?? "-"} />
-          <InfoItem label={t("candidate.employmentType")} value={String(valueOf(job?.employment_type, "-"))} />
-          <InfoItem label={t("candidate.experienceLevel")} value={String(valueOf(job?.experience_level, "-"))} />
-          <InfoItem label={t("candidate.educationLevel")} value={String(valueOf(job?.education_level, "-"))} />
+          <InfoItem
+            label={t("candidate.employmentType")}
+            value={String(valueOf(job?.employment_type, "-"))}
+          />
+          <InfoItem
+            label={t("candidate.experienceLevel")}
+            value={String(valueOf(job?.experience_level, "-"))}
+          />
+          <InfoItem
+            label={t("candidate.educationLevel")}
+            value={String(valueOf(job?.education_level, "-"))}
+          />
           <InfoItem label={t("candidate.workMode")} value={String(valueOf(job?.work_mode, "-"))} />
           <InfoItem
             label={t("candidate.location")}
             value={valueOf(job?.city) || job?.location || "-"}
           />
-          <InfoItem label={t("candidate.salary")} value={formatSalary(job?.salary_min, job?.salary_max)} />
+          <InfoItem
+            label={t("candidate.salary")}
+            value={formatSalary(job?.salary_min, job?.salary_max)}
+          />
         </div>
 
-        {((job?.required_skills?.length ?? 0) > 0 || (job?.nice_to_have_skills?.length ?? 0) > 0) && (
+        {((job?.required_skills?.length ?? 0) > 0 ||
+          (job?.nice_to_have_skills?.length ?? 0) > 0) && (
           <div className="mt-4 grid gap-4 border-t border-border pt-4 sm:grid-cols-2">
             <SkillGroup title={t("candidate.requiredSkills")} skills={job?.required_skills ?? []} />
             <SkillGroup title={t("candidate.niceSkills")} skills={job?.nice_to_have_skills ?? []} />
@@ -216,7 +261,9 @@ function ApplicationScoreChip({ matchScore }: { matchScore: number | null | unde
 
   if (matchScore == null) {
     return (
-      <p className="px-3 py-2 text-center text-xs text-text-muted">{t("matching.unavailableShort")}</p>
+      <p className="px-3 py-2 text-center text-xs text-text-muted">
+        {t("matching.unavailableShort")}
+      </p>
     )
   }
 
@@ -243,6 +290,7 @@ function ActionPanel({
   allowedActions,
   isStatusPending,
   onOpenStatusDialog,
+  onAssignTest,
   onScheduleInterview,
   onRequestInformation,
 }: {
@@ -250,6 +298,7 @@ function ActionPanel({
   allowedActions: ReturnType<typeof getAllowedApplicationActions>
   isStatusPending: boolean
   onOpenStatusDialog: (target: ApplicationStatusKey) => void
+  onAssignTest: () => void
   onScheduleInterview: () => void
   onRequestInformation: () => void
 }) {
@@ -284,7 +333,9 @@ function ActionPanel({
               disabled={isStatusPending}
               onClick={() => onOpenStatusDialog(status)}
             >
-              {status === "accepted" || status === "rejected" ? null : <ArrowRight className="h-4 w-4" />}
+              {status === "accepted" || status === "rejected" ? null : (
+                <ArrowRight className="h-4 w-4" />
+              )}
               {t(`statuses.${status}`)}
             </Button>
           ))}
@@ -295,13 +346,23 @@ function ActionPanel({
             </Button>
           )}
           {allowedActions.flows.includes("schedule_interview") && (
-            <Button variant="outline" size="sm" disabled={isStatusPending} onClick={onScheduleInterview}>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isStatusPending}
+              onClick={onScheduleInterview}
+            >
               <CalendarPlus className="h-4 w-4" />
               {t("actions.scheduleInterview")}
             </Button>
           )}
           {allowedActions.flows.includes("request_information") && (
-            <Button variant="outline" size="sm" disabled={isStatusPending} onClick={onRequestInformation}>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isStatusPending}
+              onClick={onRequestInformation}
+            >
               <MailQuestion className="h-4 w-4" />
               {t("actions.requestInformation")}
             </Button>
@@ -316,7 +377,9 @@ function ActionPanel({
   )
 }
 
-function statusActionButtonVariant(status: ApplicationStatusKey): "default" | "destructive" | "outline" {
+function statusActionButtonVariant(
+  status: ApplicationStatusKey,
+): "default" | "destructive" | "outline" {
   if (status === "rejected") return "destructive"
   if (status === "accepted" || status === "shortlisted") return "default"
   return "outline"

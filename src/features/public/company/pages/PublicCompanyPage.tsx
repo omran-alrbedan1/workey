@@ -10,7 +10,11 @@ export default function PublicCompanyPage() {
   const { slug } = useParams<{ slug: string }>()
   const { t } = useTranslation("publicCompany")
 
-  const { data: company, isLoading: companyLoading, isError: companyError } = useQuery({
+  const {
+    data: company,
+    isLoading: companyLoading,
+    isError: companyError,
+  } = useQuery({
     queryKey: ["public-company", slug],
     queryFn: () => publicCompanyService.getCompanyBySlug(slug!),
     enabled: !!slug,

@@ -72,40 +72,40 @@ export default function AssignTestDialog({
     }
   }, [form, open])
 
-useEffect(() => {
-  if (!selectedJobId) {
-    setApplicants([])
-    form.setValue("application_id", "")
-    return
-  }
-
-  form.setValue("application_id", "")
-  setLoadingApplicants(true)
-
-  employerApplicantsService
-    .list(selectedJobId, 1)
-    .then((data) => {
-      setApplicants(
-        data.items.map((application) => {
-          const userName = application.job_seeker_profile?.user?.name
-          const userEmail = application.job_seeker_profile?.user?.email
-
-          return {
-            value: String(application.id),
-            label: userName || userEmail || `#${application.id}`,
-          }
-        }),
-      )
-    })
-    .catch((error) => {
-      console.error(error)
-
+  useEffect(() => {
+    if (!selectedJobId) {
       setApplicants([])
-    })
-    .finally(() => {
-      setLoadingApplicants(false)
-    })
-}, [selectedJobId])
+      form.setValue("application_id", "")
+      return
+    }
+
+    form.setValue("application_id", "")
+    setLoadingApplicants(true)
+
+    employerApplicantsService
+      .list(selectedJobId, 1)
+      .then((data) => {
+        setApplicants(
+          data.items.map((application) => {
+            const userName = application.job_seeker_profile?.user?.name
+            const userEmail = application.job_seeker_profile?.user?.email
+
+            return {
+              value: String(application.id),
+              label: userName || userEmail || `#${application.id}`,
+            }
+          }),
+        )
+      })
+      .catch((error) => {
+        console.error(error)
+
+        setApplicants([])
+      })
+      .finally(() => {
+        setLoadingApplicants(false)
+      })
+  }, [selectedJobId])
 
   const submit = async (values: AssignTestFormValues) => {
     if (!test) return

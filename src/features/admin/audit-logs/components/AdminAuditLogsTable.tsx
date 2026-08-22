@@ -11,22 +11,23 @@ function entityName(value: unknown) {
 }
 
 function readableAction(action: string) {
-  return action
-    .replace(/[._-]+/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase())
+  return action.replace(/[._-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
 }
 
-function translatedAction(t: (key: string, options?: { defaultValue?: string }) => string, action: unknown) {
+function translatedAction(
+  t: (key: string, options?: { defaultValue?: string }) => string,
+  action: unknown,
+) {
   const actionKey = keyOf(action, valueOf(action))
   if (!actionKey) return "-"
   return t(`audit.actions.${actionKey}`, { defaultValue: readableAction(actionKey) })
 }
 
 interface AdminAuditLogMobileCardProps {
-  log: AdminAuditLogRecord
+  item: AdminAuditLogRecord
 }
 
-const AdminAuditLogMobileCard = ({ log }: AdminAuditLogMobileCardProps) => {
+const AdminAuditLogMobileCard = ({ item: log }: AdminAuditLogMobileCardProps) => {
   const { t, i18n } = useTranslation("adminAuditLogs")
   const actor = log.actor ?? log.user
 
@@ -62,7 +63,10 @@ const AdminAuditLogMobileCard = ({ log }: AdminAuditLogMobileCardProps) => {
         {log.created_at && (
           <p className="flex items-center gap-2">
             <CalendarClock className="h-3.5 w-3.5 text-primary" />
-            {new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" }).format(new Date(log.created_at))}
+            {new Intl.DateTimeFormat(i18n.language, {
+              dateStyle: "medium",
+              timeStyle: "short",
+            }).format(new Date(log.created_at))}
           </p>
         )}
       </div>
@@ -91,9 +95,7 @@ export default function AdminAuditLogsTable({
         <div>
           <p className="font-semibold text-text-primary">{translatedAction(t, log.action)}</p>
           {log.description && (
-            <p className="mt-1 max-w-sm text-xs text-text-muted">
-              {valueOf(log.description)}
-            </p>
+            <p className="mt-1 max-w-sm text-xs text-text-muted">{valueOf(log.description)}</p>
           )}
         </div>
       ),
@@ -133,7 +135,10 @@ export default function AdminAuditLogsTable({
       headerIcon: CalendarClock,
       cell: (log) =>
         log.created_at
-          ? new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" }).format(new Date(log.created_at))
+          ? new Intl.DateTimeFormat(i18n.language, {
+              dateStyle: "medium",
+              timeStyle: "short",
+            }).format(new Date(log.created_at))
           : "-",
     },
   ]

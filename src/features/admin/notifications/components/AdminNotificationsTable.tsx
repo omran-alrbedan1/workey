@@ -56,9 +56,7 @@ const AdminNotificationMobileCard = ({
           <h3 className="truncate font-semibold text-text-primary">
             {title || t("platformNotification")}
           </h3>
-          <p className="truncate text-xs text-text-muted">
-            {message || t("details")}
-          </p>
+          <p className="truncate text-xs text-text-muted">{message || t("details")}</p>
         </div>
         <StatusBadge status={unread ? "unread" : "read"} variant="soft" />
       </div>
@@ -106,7 +104,14 @@ const AdminNotificationMobileCard = ({
 }
 
 export default function AdminNotificationsTable({
-  notifications, isLoading, isUpdating, pagination, onPageChange, onRead, onDelete, onOpen,
+  notifications,
+  isLoading,
+  isUpdating,
+  pagination,
+  onPageChange,
+  onRead,
+  onDelete,
+  onOpen,
 }: AdminNotificationsTableProps) {
   const { t, i18n } = useTranslation("adminNotifications")
   const columns: Column<AdminNotificationRecord>[] = [
@@ -116,8 +121,12 @@ export default function AdminNotificationsTable({
       headerIcon: Bell,
       cell: (item) => (
         <div>
-          <p className="font-semibold text-text-primary">{notificationTitle(item, t) || t("platformNotification")}</p>
-          <p className="max-w-lg truncate text-xs text-text-muted">{notificationMessage(item, t) || t("details")}</p>
+          <p className="font-semibold text-text-primary">
+            {notificationTitle(item, t) || t("platformNotification")}
+          </p>
+          <p className="max-w-lg truncate text-xs text-text-muted">
+            {notificationMessage(item, t) || t("details")}
+          </p>
         </div>
       ),
     },
@@ -125,7 +134,9 @@ export default function AdminNotificationsTable({
       key: "status",
       header: t("columns.status"),
       headerIcon: ShieldCheck,
-      cell: (item) => <StatusBadge status={isNotificationUnread(item) ? "unread" : "read"} variant="soft" />,
+      cell: (item) => (
+        <StatusBadge status={isNotificationUnread(item) ? "unread" : "read"} variant="soft" />
+      ),
     },
     {
       key: "type",
@@ -136,7 +147,8 @@ export default function AdminNotificationsTable({
       key: "date",
       header: t("columns.received"),
       headerIcon: Calendar,
-      cell: (item) => item.created_at ? new Date(item.created_at).toLocaleString(i18n.language) : "-",
+      cell: (item) =>
+        item.created_at ? new Date(item.created_at).toLocaleString(i18n.language) : "-",
     },
     {
       key: "action",
@@ -186,13 +198,24 @@ export default function AdminNotificationsTable({
 
   return (
     <DataTable
-      data={notifications} columns={columns} getRowId={(item) => item.id} loading={isLoading}
+      data={notifications}
+      columns={columns}
+      getRowId={(item) => item.id}
+      loading={isLoading}
       onRowClick={onOpen}
-      pagination={{ total: pagination?.total ?? notifications.length, page: pagination?.currentPage ?? 1, lastPage: pagination?.lastPage ?? 1, perPage: pagination?.perPage }}
+      pagination={{
+        total: pagination?.total ?? notifications.length,
+        page: pagination?.currentPage ?? 1,
+        lastPage: pagination?.lastPage ?? 1,
+        perPage: pagination?.perPage,
+      }}
       onPageChange={onPageChange}
       mobileCardComponent={MobileNotificationCard}
-      emptyMessage={t("empty")} emptyDescription={t("emptyDescription")}
-      emptyImage={images.notifications} emptyImageAlt={t("empty")} className="rounded-2xl bg-background-card shadow-card"
+      emptyMessage={t("empty")}
+      emptyDescription={t("emptyDescription")}
+      emptyImage={images.notifications}
+      emptyImageAlt={t("empty")}
+      className="rounded-2xl bg-background-card shadow-card"
     />
   )
 }

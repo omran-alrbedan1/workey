@@ -70,9 +70,7 @@ export default function EmployerJobDetailsPage() {
               availableSkills={skills.data?.items ?? []}
               isLoadingSkills={skills.isPending}
               skillsError={skills.isError}
-              isPending={
-                job.attachSkillsMutation.isPending || job.detachSkillMutation.isPending
-              }
+              isPending={job.attachSkillsMutation.isPending || job.detachSkillMutation.isPending}
               onAttach={job.attachSkillsMutation.mutateAsync}
               onDetach={(skillId) => job.detachSkillMutation.mutate(skillId)}
             />
@@ -104,7 +102,9 @@ export default function EmployerJobDetailsPage() {
                 job.deleteScreeningQuestionMutation.isPending
               }
               onCreate={job.createScreeningQuestionMutation.mutateAsync}
-              onUpdate={(questionId, input) => job.updateScreeningQuestionMutation.mutateAsync({ questionId, input })}
+              onUpdate={(questionId, input) =>
+                job.updateScreeningQuestionMutation.mutateAsync({ questionId, input })
+              }
               onDelete={job.deleteScreeningQuestionMutation.mutateAsync}
             />
           </TabsContent>

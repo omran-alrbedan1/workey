@@ -49,7 +49,8 @@ export default function MemberStatusDialog({
   })
 
   useEffect(() => {
-    if (open) form.setValue("membership_status", currentStatus === "suspended" ? "suspended" : "active")
+    if (open)
+      form.setValue("membership_status", currentStatus === "suspended" ? "suspended" : "active")
   }, [form, open, currentStatus])
 
   return (

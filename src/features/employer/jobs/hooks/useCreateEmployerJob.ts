@@ -35,7 +35,10 @@ export function useCreateEmployerJob() {
       }
     },
     onError: (error) => {
-      showErrorToast(t("errors.title"), error instanceof Error ? error.message : t("errors.description"))
+      showErrorToast(
+        t("errors.title"),
+        error instanceof Error ? error.message : t("errors.description"),
+      )
     },
   })
 }

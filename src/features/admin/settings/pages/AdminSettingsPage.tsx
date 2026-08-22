@@ -11,13 +11,12 @@ export default function AdminSettingsPage() {
   const settings = useAdminSettings()
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t("title")}
-        description={t("description")}
-        icon={Settings}
-      />
+      <PageHeader title={t("title")} description={t("description")} icon={Settings} />
       <AdminSettingsDetails settings={settings} />
-      <SecuritySettings clearSession={adminAuthService.clearSession} loginPath={ROUTES.auth.login} />
+      <SecuritySettings
+        clearSession={adminAuthService.clearSession}
+        loginPath={ROUTES.auth.login}
+      />
     </div>
   )
 }

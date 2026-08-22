@@ -13,7 +13,8 @@ export default function ParticipantTile({ participant }: { participant: Particip
   const micPub = participant.getTrackPublication(Track.Source.Microphone)
 
   // Prefer screen share when present, otherwise the camera track.
-  const displayTrack = screenPub?.videoTrack ?? screenPub?.track ?? cameraPub?.videoTrack ?? cameraPub?.track
+  const displayTrack =
+    screenPub?.videoTrack ?? screenPub?.track ?? cameraPub?.videoTrack ?? cameraPub?.track
   const micTrack = micPub?.audioTrack ?? micPub?.track
 
   useEffect(() => {
@@ -45,7 +46,13 @@ export default function ParticipantTile({ participant }: { participant: Particip
 
   return (
     <div className="relative aspect-video overflow-hidden rounded-xl border border-border bg-black">
-      <video ref={videoRef} autoPlay playsInline className="h-full w-full object-cover" muted={participant.isLocal} />
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        className="h-full w-full object-cover"
+        muted={participant.isLocal}
+      />
       <audio ref={audioRef} autoPlay />
       {!displayTrack && (
         <div className="flex h-full w-full items-center justify-center text-sm text-white/60">
@@ -53,7 +60,9 @@ export default function ParticipantTile({ participant }: { participant: Particip
         </div>
       )}
       <div className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white">
-        {participant.isSpeaking && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />}
+        {participant.isSpeaking && (
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+        )}
         {name}
       </div>
       {screenPub?.track && (

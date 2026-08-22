@@ -174,7 +174,8 @@ export default function TestAssignmentDeadlinePanel({
               <div key={item.id} className="rounded-md border border-border bg-background p-3">
                 <div className="flex flex-wrap justify-between gap-2 text-sm">
                   <span className="font-medium">
-                    {formatDateTime(item.previous_deadline_at)} {"->"} {formatDateTime(item.new_deadline_at)}
+                    {formatDateTime(item.previous_deadline_at)} {"->"}{" "}
+                    {formatDateTime(item.new_deadline_at)}
                   </span>
                   <span className="text-xs text-text-muted">{formatDateTime(item.changed_at)}</span>
                 </div>

@@ -20,16 +20,12 @@ export const employerInformationRequestsService = {
   },
 
   async list(jobApplicationId: string | number): Promise<InformationRequest[]> {
-    const response = await api.get(
-      API_ENDPOINTS.applications.informationRequests(jobApplicationId),
-    )
+    const response = await api.get(API_ENDPOINTS.applications.informationRequests(jobApplicationId))
     return unwrapEmployerEntity<InformationRequest[]>(response)
   },
 
   async getById(informationRequestId: string | number): Promise<InformationRequest> {
-    const response = await api.get(
-      API_ENDPOINTS.informationRequests.byId(informationRequestId),
-    )
+    const response = await api.get(API_ENDPOINTS.informationRequests.byId(informationRequestId))
     return unwrapEmployerEntity<InformationRequest>(response)
   },
 

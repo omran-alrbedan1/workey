@@ -33,9 +33,7 @@ export default function LoadingState({
       )}
     >
       <Icon className={cn("animate-spin text-primary", styles.icon)} />
-      <p className={cn("font-medium", styles.text)}>
-        {message || t("loading")}
-      </p>
+      <p className={cn("font-medium", styles.text)}>{message || t("loading")}</p>
     </div>
   )
 }

@@ -22,9 +22,7 @@ export const DateRangeField: React.FC<DateRangeFieldProps> = ({
 }) => {
   const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
-  const [range, setRange] = useState<DateRange>(
-    field.value || { from: undefined, to: undefined }
-  )
+  const [range, setRange] = useState<DateRange>(field.value || { from: undefined, to: undefined })
   const containerRef = useRef<HTMLDivElement>(null)
 
   const getDisabledDays = () => {
@@ -57,21 +55,17 @@ export const DateRangeField: React.FC<DateRangeFieldProps> = ({
         className={cn(
           "w-full justify-start text-start font-normal",
           !range.from && "text-muted-foreground",
-          inputClassName
+          inputClassName,
         )}
         disabled={disabled}
         onClick={() => setOpen(!open)}
       >
         <CalendarIcon className="me-2 h-4 w-4" />
-        {range.from ? (
-          range.to ? (
-            `${format(range.from, "LLL dd, y")} - ${format(range.to, "LLL dd, y")}`
-          ) : (
-            format(range.from, "LLL dd, y")
-          )
-        ) : (
-          dateOptions?.placeholder || t("datePicker.rangePlaceholder")
-        )}
+        {range.from
+          ? range.to
+            ? `${format(range.from, "LLL dd, y")} - ${format(range.to, "LLL dd, y")}`
+            : format(range.from, "LLL dd, y")
+          : dateOptions?.placeholder || t("datePicker.rangePlaceholder")}
       </Button>
       {open && (
         <div className="absolute top-full z-50 mt-1 bg-white border rounded-md shadow-lg">

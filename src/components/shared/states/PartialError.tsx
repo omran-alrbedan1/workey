@@ -20,7 +20,9 @@ export default function PartialError({ message, retry, className }: PartialError
       )}
     >
       <AlertTriangle className="h-4 w-4 shrink-0" />
-      <p className="flex-1">{message || t("errors.partialLoadError", "Some data could not be loaded.")}</p>
+      <p className="flex-1">
+        {message || t("errors.partialLoadError", "Some data could not be loaded.")}
+      </p>
       {retry && (
         <Button
           type="button"

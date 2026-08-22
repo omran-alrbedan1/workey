@@ -40,7 +40,9 @@ export const adminCompaniesService = {
   },
   async update(id: string | number, input: AdminCompanyInput): Promise<AdminCompanyDetails> {
     return normalizeCompany(
-      unwrapEntity<AdminCompanyDetails>(await api.patch(API_ENDPOINTS.admin.companyById(id), input)),
+      unwrapEntity<AdminCompanyDetails>(
+        await api.patch(API_ENDPOINTS.admin.companyById(id), input),
+      ),
     )
   },
   async approve(id: string | number): Promise<AdminCompanyRecord> {
@@ -76,7 +78,9 @@ export const adminCompaniesService = {
       await api.get(API_ENDPOINTS.adminCompanyMembers.list(companyId)),
     )
   },
-  async listInvitations(companyId: string | number): Promise<AdminCollection<AdminCompanyInvitation>> {
+  async listInvitations(
+    companyId: string | number,
+  ): Promise<AdminCollection<AdminCompanyInvitation>> {
     return unwrapCollection<AdminCompanyInvitation>(
       await api.get(API_ENDPOINTS.adminCompanyMembers.invitation(companyId)),
     )

@@ -70,28 +70,44 @@ export default function CompanyInvitationPage() {
     (!name.trim() || password.length < 8 || password !== passwordConfirmation)
 
   if (!token) {
-    return <InvitationShell title={t("invitation.missingTitle")} description={t("invitation.missingDescription")} />
+    return (
+      <InvitationShell
+        title={t("invitation.missingTitle")}
+        description={t("invitation.missingDescription")}
+      />
+    )
   }
 
   if (invitationQuery.isLoading) {
-    return <InvitationShell title={t("invitation.checkingTitle")} description={t("invitation.checkingDescription")} />
+    return (
+      <InvitationShell
+        title={t("invitation.checkingTitle")}
+        description={t("invitation.checkingDescription")}
+      />
+    )
   }
 
   if (invitationQuery.isError) {
     return (
       <InvitationShell
         title={t("invitation.unavailableTitle")}
-        description={getErrorMessage(
-          invitationQuery.error,
-          t("invitation.invalidFallback"),
-        )}
-        action={<Button asChild><Link to={ROUTES.auth.login}>{t("invitation.backToLogin")}</Link></Button>}
+        description={getErrorMessage(invitationQuery.error, t("invitation.invalidFallback"))}
+        action={
+          <Button asChild>
+            <Link to={ROUTES.auth.login}>{t("invitation.backToLogin")}</Link>
+          </Button>
+        }
       />
     )
   }
 
   if (!invitation) {
-    return <InvitationShell title={t("invitation.unavailableTitle")} description={t("invitation.unavailableDescription")} />
+    return (
+      <InvitationShell
+        title={t("invitation.unavailableTitle")}
+        description={t("invitation.unavailableDescription")}
+      />
+    )
   }
 
   if (completed) {
@@ -99,9 +115,7 @@ export default function CompanyInvitationPage() {
       <InvitationShell
         title={completed === "accepted" ? t("invitation.accepted") : t("invitation.rejected")}
         description={
-          completed === "accepted"
-            ? t("invitation.acceptedDesc")
-            : t("invitation.rejectedDesc")
+          completed === "accepted" ? t("invitation.acceptedDesc") : t("invitation.rejectedDesc")
         }
         action={
           completed === "accepted" ? (
@@ -132,15 +146,23 @@ export default function CompanyInvitationPage() {
             <h1 className="text-2xl font-semibold text-text-primary sm:text-3xl">
               {t("invitation.joinTitle", { company: invitation.company.name })}
             </h1>
-            <p className="mt-2 text-sm text-text-secondary">
-              {t("invitation.subtitle")}
-            </p>
+            <p className="mt-2 text-sm text-text-secondary">{t("invitation.subtitle")}</p>
 
             <div className="mt-6 grid gap-3 text-sm">
-              <InfoRow icon={Building2} label={t("invitation.company")} value={invitation.company.name} />
+              <InfoRow
+                icon={Building2}
+                label={t("invitation.company")}
+                value={invitation.company.name}
+              />
               <InfoRow icon={Mail} label={t("invitation.invitedEmail")} value={invitation.email} />
-              <InfoRow icon={ShieldCheck} label={t("invitation.role")} value={invitation.company_role.value} />
-              {expiresAt && <InfoRow icon={Clock} label={t("invitation.expires")} value={expiresAt} />}
+              <InfoRow
+                icon={ShieldCheck}
+                label={t("invitation.role")}
+                value={invitation.company_role.value}
+              />
+              {expiresAt && (
+                <InfoRow icon={Clock} label={t("invitation.expires")} value={expiresAt} />
+              )}
             </div>
 
             {invitation.requires_registration && (
@@ -168,7 +190,9 @@ export default function CompanyInvitationPage() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="invitation-password-confirmation">{t("invitation.confirmPassword")}</Label>
+                    <Label htmlFor="invitation-password-confirmation">
+                      {t("invitation.confirmPassword")}
+                    </Label>
                     <Input
                       id="invitation-password-confirmation"
                       type="password"
@@ -188,7 +212,11 @@ export default function CompanyInvitationPage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button
                 onClick={() => acceptMutation.mutate()}
-                disabled={Boolean(registrationInvalid) || acceptMutation.isPending || rejectMutation.isPending}
+                disabled={
+                  Boolean(registrationInvalid) ||
+                  acceptMutation.isPending ||
+                  rejectMutation.isPending
+                }
               >
                 <CheckCircle2 className="h-4 w-4" />
                 {acceptMutation.isPending ? t("invitation.accepting") : t("invitation.accept")}

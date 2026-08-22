@@ -3,7 +3,14 @@ import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { ChevronDown, Check } from "lucide-react"
 import { Option } from "@/types/customFormField.types"
 interface MultiSelectFieldProps {
@@ -23,7 +30,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
 }) => {
   const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
-  
+
   const handleToggle = (value: string) => {
     const currentValues = field.value || []
     if (currentValues.includes(value)) {
@@ -32,7 +39,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
       field.onChange([...currentValues, value])
     }
   }
-  
+
   return (
     <div className="relative">
       <Button
@@ -40,7 +47,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
         className={cn(
           "w-full justify-start text-start font-normal",
           !field.value?.length && "text-muted-foreground",
-          inputClassName
+          inputClassName,
         )}
         disabled={disabled}
         onClick={() => setOpen(!open)}
@@ -74,7 +81,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        field.value?.includes(option.value) ? "opacity-100" : "opacity-0"
+                        field.value?.includes(option.value) ? "opacity-100" : "opacity-0",
                       )}
                     />
                     {option.label}

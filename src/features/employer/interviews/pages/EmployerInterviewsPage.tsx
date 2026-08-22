@@ -3,12 +3,7 @@ import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { StatusBadge } from "@/components/shared/badges"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import EmployerInterviewsTable from "../components/EmployerInterviewsTable"
 import { useEmployerInterviewsPage } from "../hooks/useEmployerInterviewsPage"
 import type { EmployerInterviewsPageModel } from "../hooks/useEmployerInterviewsPage"
@@ -69,7 +64,8 @@ function InterviewScopeSelector({ model }: { model: EmployerInterviewsPageModel 
                 ? t("scope.selectedApplication", {
                     name:
                       model.applicationOptions.find(
-                        (option) => String(option.application.id) === String(selectedApplication.id),
+                        (option) =>
+                          String(option.application.id) === String(selectedApplication.id),
                       )?.candidateName ?? t("unknownCandidate"),
                   })
                 : t("scope.noApplications")}

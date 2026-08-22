@@ -1,24 +1,22 @@
 import {
   Building2,
   CalendarDays,
-  Clock3,
   Globe2,
   Hash,
-  Languages,
   Mail,
+  MailCheck,
   MapPin,
-  Phone,
   ShieldCheck,
   UserRound,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { DetailItem, SectionCard } from "@/components/shared/cards/SectionCard"
-import { valueOf, type KeyValueField } from "@/lib/keyValue"
+import { keyOf, valueOf, type KeyValueField } from "@/lib/keyValue"
 
-import type { AdminUserDetails } from "../types/adminUsers.types"
+import type { AdminUserRecord } from "../types/adminUsers.types"
 
-export default function AdminUserOverview({ user }: { user: AdminUserDetails }) {
+export default function AdminUserOverview({ user }: { user: AdminUserRecord }) {
   const { t, i18n } = useTranslation("adminUsers")
   const value = (input?: KeyValueField) =>
     input === undefined || input === null || input === ""
@@ -31,10 +29,16 @@ export default function AdminUserOverview({ user }: { user: AdminUserDetails }) 
       ? input
       : new Intl.DateTimeFormat(i18n.resolvedLanguage, {
           dateStyle: "medium",
-          timeStyle: "short",
         }).format(parsed)
   }
-  const location = [user.city, user.country].filter(Boolean).join(", ")
+
+  const seeker = user.job_seeker_profile ?? null
+  const employer = user.employer_profile ?? null
+  const phone = seeker?.phone || employer?.phone || null
+  const location =
+    [seeker?.location, seeker?.city?.name].filter(Boolean).join(", ") || null
+  const bio = seeker?.summary || employer?.bio || null
+  const headline = seeker?.headline || employer?.job_title || null
 
   return (
     <div className="grid gap-6 xl:grid-cols-2">
@@ -51,49 +55,29 @@ export default function AdminUserOverview({ user }: { user: AdminUserDetails }) 
             value={value(user.email)}
           />
           <DetailItem
-            icon={<Phone className="h-4 w-4" />}
+            icon={<MapPin className="h-4 w-4" />}
             label={t("overview.phone")}
-            value={value(user.phone)}
-          />
-          <DetailItem
-            icon={<CalendarDays className="h-4 w-4" />}
-            label={t("overview.dateOfBirth")}
-            value={value(user.date_of_birth)}
+            value={value(phone)}
           />
           <DetailItem
             icon={<UserRound className="h-4 w-4" />}
-            label={t("overview.gender")}
-            value={value(user.gender)}
+            label={t("overview.headline")}
+            value={value(headline)}
           />
           <DetailItem
-            icon={<MapPin className="h-4 w-4" />}
+            icon={<Globe2 className="h-4 w-4" />}
             label={t("overview.location")}
             value={value(location)}
           />
           <DetailItem
-            icon={<Globe2 className="h-4 w-4" />}
-            label={t("overview.address")}
-            value={value(user.address)}
-          />
-          <DetailItem
-            icon={<Languages className="h-4 w-4" />}
-            label={t("overview.locale")}
-            value={value(user.locale)}
-          />
-          <DetailItem
-            icon={<Clock3 className="h-4 w-4" />}
-            label={t("overview.timezone")}
-            value={value(user.timezone)}
-          />
-          <DetailItem
-            icon={<ShieldCheck className="h-4 w-4" />}
-            label={t("overview.profileCompletion")}
-            value={user.profile_completion == null ? value(null) : `${user.profile_completion}%`}
+            icon={<CalendarDays className="h-4 w-4" />}
+            label={t("overview.createdAt")}
+            value={date(user.created_at)}
           />
         </div>
         <div className="mt-6 rounded-lg border border-dashed border-border bg-background-secondary/60 p-4">
           <p className="text-xs font-medium uppercase text-text-muted">{t("overview.bio")}</p>
-          <p className="mt-2 text-sm leading-6 text-text-secondary">{value(user.bio)}</p>
+          <p className="mt-2 text-sm leading-6 text-text-secondary">{value(bio)}</p>
         </div>
       </SectionCard>
 
@@ -107,7 +91,7 @@ export default function AdminUserOverview({ user }: { user: AdminUserDetails }) 
           <DetailItem
             icon={<ShieldCheck className="h-4 w-4" />}
             label={t("overview.role")}
-            value={t(`roles.${user.role}`, { defaultValue: user.role })}
+            value={t(`roles.${keyOf(user.role)}`, { defaultValue: keyOf(user.role) })}
           />
           <DetailItem
             icon={<ShieldCheck className="h-4 w-4" />}
@@ -115,37 +99,39 @@ export default function AdminUserOverview({ user }: { user: AdminUserDetails }) 
             value={value(user.status)}
           />
           <DetailItem
+            icon={<MailCheck className="h-4 w-4" />}
+            label={t("security.emailVerified")}
+            value={t(
+              user.is_email_verified || user.email_verified_at
+                ? "security.verified"
+                : "security.unverified",
+            )}
+          />
+          <DetailItem
             icon={<Building2 className="h-4 w-4" />}
             label={t("overview.company")}
-            value={value(user.company?.name)}
+            value={value(employer?.company?.name)}
           />
-          <DetailItem
-            icon={<CalendarDays className="h-4 w-4" />}
-            label={t("overview.createdAt")}
-            value={date(user.created_at)}
-          />
-          <DetailItem
-            icon={<Clock3 className="h-4 w-4" />}
-            label={t("overview.updatedAt")}
-            value={date(user.updated_at)}
-          />
-          <DetailItem
-            icon={<Clock3 className="h-4 w-4" />}
-            label={t("overview.lastActive")}
-            value={date(user.last_active_at)}
-          />
-          <DetailItem
-            icon={<CalendarDays className="h-4 w-4" />}
-            label={t("overview.deletedAt")}
-            value={date(user.deleted_at)}
-          />
+          {employer ? (
+            <>
+              <DetailItem
+                icon={<ShieldCheck className="h-4 w-4" />}
+                label={t("overview.membershipStatus")}
+                value={value(employer.membership_status)}
+              />
+              <DetailItem
+                icon={<ShieldCheck className="h-4 w-4" />}
+                label={t("overview.companyRole")}
+                value={value(employer.company_role)}
+              />
+              <DetailItem
+                icon={<CalendarDays className="h-4 w-4" />}
+                label={t("details.memberSince")}
+                value={date(employer.joined_at)}
+              />
+            </>
+          ) : null}
         </div>
-        {user.suspension_reason ? (
-          <div className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/30 dark:text-red-200">
-            <p className="font-semibold">{t("overview.suspensionReason")}</p>
-            <p className="mt-1">{user.suspension_reason}</p>
-          </div>
-        ) : null}
       </SectionCard>
     </div>
   )

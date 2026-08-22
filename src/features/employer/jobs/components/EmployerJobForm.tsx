@@ -19,7 +19,13 @@ import { useTranslation } from "react-i18next"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import { SubmitButton } from "@/components/shared/buttons"
 import { Form } from "@/components/ui/form"
-import type { EmployerJobInput, EmploymentType, ExperienceLevel, EducationLevel, JobWorkMode } from "../types/employerJobs.types"
+import type {
+  EmployerJobInput,
+  EmploymentType,
+  ExperienceLevel,
+  EducationLevel,
+  JobWorkMode,
+} from "../types/employerJobs.types"
 import {
   employerJobSchema,
   type EmployerJobFormValues,

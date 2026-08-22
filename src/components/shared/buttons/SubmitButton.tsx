@@ -21,17 +21,14 @@ export const SubmitButton = ({
   return (
     <Button
       type="submit"
-      className={cn(
-        "w-full bg-primary hover:bg-primary-dark text-text-on-primary",
-        className
-      )}
+      className={cn("w-full bg-primary hover:bg-primary-dark text-text-on-primary", className)}
       disabled={isLoading || disabled}
       {...props}
     >
       {isLoading ? (
         <>
           <Loader2 className="ms-2 h-4 w-4 animate-spin" />
-          {loadingText || text }
+          {loadingText || text}
         </>
       ) : (
         <>

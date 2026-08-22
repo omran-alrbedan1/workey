@@ -11,7 +11,7 @@ interface ValidationErrorsProps {
 export default function ValidationErrors({ error, className }: ValidationErrorsProps) {
   const { t } = useTranslation("common")
 
-  if (!error?.errors || typeof error.errors !== 'object') {
+  if (!error?.errors || typeof error.errors !== "object") {
     return null
   }
 

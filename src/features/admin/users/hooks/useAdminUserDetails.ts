@@ -8,19 +8,12 @@ import { showSuccessToast } from "@/lib/toast"
 import { adminUsersKeys } from "./useAdminUsers"
 import { adminUsersService } from "../services/adminUsers.service"
 import type {
-  AdminUserDetails,
   AdminUserRecord,
   UpdateUserRoleInput,
   UpdateUserStatusInput,
 } from "../types/adminUsers.types"
 
 const detailsKey = (id: string | number) => ["admin", "users", "details", String(id)] as const
-
-function mapRecordToDetails(user: AdminUserRecord): AdminUserDetails {
-  return {
-    ...user,
-  }
-}
 
 export function useAdminUserDetails(id?: string) {
   const { t } = useTranslation("adminUsers")
@@ -34,7 +27,7 @@ export function useAdminUserDetails(id?: string) {
 
     for (const [, data] of queries) {
       const found = data?.items?.find((user) => String(user.id) === String(id))
-      if (found) return mapRecordToDetails(found)
+      if (found) return found
     }
     return null
   }, [client, id])
@@ -57,7 +50,7 @@ export function useAdminUserDetails(id?: string) {
     mutationFn: (input: UpdateUserStatusInput) =>
       input.status === "active"
         ? adminUsersService.activate(input.id)
-        : adminUsersService.suspend(input.id, input.reason),
+        : adminUsersService.suspend(input.id),
     onSuccess: async (_, input) => {
       await refresh()
       showSuccessToast(t(input.status === "active" ? "toasts.activated" : "toasts.suspended"))
@@ -75,25 +68,10 @@ export function useAdminUserDetails(id?: string) {
     },
   })
 
-  const hasOperationalCoverage = Boolean(
-    query.data &&
-    (query.data.activity_logs !== undefined ||
-      query.data.audit_logs !== undefined ||
-      query.data.login_history !== undefined ||
-      query.data.active_sessions !== undefined ||
-      query.data.applications !== undefined ||
-      query.data.jobs !== undefined ||
-      query.data.interviews !== undefined ||
-      query.data.tests !== undefined ||
-      query.data.counts !== undefined),
-  )
-
   return {
     ...query,
     user: query.data ?? fallbackUser,
     hasFallbackData: Boolean(fallbackUser),
-    isBackendCoverageMissing:
-      (query.isError && Boolean(fallbackUser)) || (Boolean(query.data) && !hasOperationalCoverage),
     statusMutation,
     roleMutation,
   }

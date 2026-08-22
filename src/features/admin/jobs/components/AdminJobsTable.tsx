@@ -18,10 +18,10 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 interface AdminJobMobileCardProps {
-  job: AdminJobRecord
+  item: AdminJobRecord
 }
 
-const AdminJobMobileCard = ({ job }: AdminJobMobileCardProps) => {
+const AdminJobMobileCard = ({ item: job }: AdminJobMobileCardProps) => {
   const { t } = useTranslation("adminJobs")
   const navigate = useNavigate()
   const accepting = job.is_accepting_applications ?? job.accepting_applications

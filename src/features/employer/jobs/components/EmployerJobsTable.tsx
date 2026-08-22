@@ -1,5 +1,16 @@
 import { useState } from "react"
-import { Eye, MoreHorizontal, Pencil, Send, Square, Trash2, UsersRound, MapPin, Calendar, Briefcase } from "lucide-react"
+import {
+  Eye,
+  MoreHorizontal,
+  Pencil,
+  Send,
+  Square,
+  Trash2,
+  UsersRound,
+  MapPin,
+  Calendar,
+  Briefcase,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
@@ -104,7 +115,10 @@ function EmployerJobMobileCard({
                 <Square /> {t("actions.close")}
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem className="text-red-600 focus:text-red-700" onSelect={() => onDelete(job)}>
+            <DropdownMenuItem
+              className="text-red-600 focus:text-red-700"
+              onSelect={() => onDelete(job)}
+            >
               <Trash2 /> {t("actions.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -195,7 +209,8 @@ export default function EmployerJobsTable({
     {
       key: "created",
       header: t("columns.created"),
-      cell: (job) => job.created_at ? new Date(job.created_at).toLocaleDateString(i18n.language) : "-",
+      cell: (job) =>
+        job.created_at ? new Date(job.created_at).toLocaleDateString(i18n.language) : "-",
     },
     {
       key: "actions",
@@ -205,7 +220,13 @@ export default function EmployerJobsTable({
         <div className="flex justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="ghost" className="h-8 w-8" disabled={isUpdating} aria-label={t("actions.menuFor", { title: job.title })}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                disabled={isUpdating}
+                aria-label={t("actions.menuFor", { title: job.title })}
+              >
                 <MoreHorizontal />
               </Button>
             </DropdownMenuTrigger>

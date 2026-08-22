@@ -48,9 +48,9 @@ export default function AdminCompanyFormDialog({
       location: company?.location ?? "",
       description: company?.description ?? "",
       approvalStatus:
-        typeof company?.approval_status === "object"
+        company?.approval_status && typeof company.approval_status === "object"
           ? company.approval_status.key
-          : typeof company?.status === "object"
+          : company?.status && typeof company.status === "object"
             ? company.status.key
             : "",
       ownerName: "",
@@ -67,9 +67,7 @@ export default function AdminCompanyFormDialog({
 
   const title = mode === "create" ? t("companyForm.createTitle") : t("companyForm.editTitle")
   const description =
-    mode === "create"
-      ? t("companyForm.createDescription")
-      : t("companyForm.editDescription")
+    mode === "create" ? t("companyForm.createDescription") : t("companyForm.editDescription")
 
   const canSubmit = values.name.trim().length > 0 && !isSubmitting
 
@@ -82,7 +80,7 @@ export default function AdminCompanyFormDialog({
       website: nullable(values.website),
       location: nullable(values.location),
       description: nullable(values.description),
-      approval_status: values.approvalStatus || undefined,
+      approval_status: values.approvalStatus ? String(values.approvalStatus) : undefined,
     }
 
     if (mode === "create" && values.ownerEmail.trim()) {
@@ -113,7 +111,9 @@ export default function AdminCompanyFormDialog({
               <Input
                 id="company-name"
                 value={values.name}
-                onChange={(event) => setValues((current) => ({ ...current, name: event.target.value }))}
+                onChange={(event) =>
+                  setValues((current) => ({ ...current, name: event.target.value }))
+                }
                 disabled={isSubmitting}
                 required
               />
@@ -158,7 +158,7 @@ export default function AdminCompanyFormDialog({
               <select
                 id="company-status"
                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                value={values.approvalStatus}
+                value={values.approvalStatus ?? ""}
                 onChange={(event) =>
                   setValues((current) => ({ ...current, approvalStatus: event.target.value }))
                 }
@@ -187,7 +187,9 @@ export default function AdminCompanyFormDialog({
 
           {mode === "create" && (
             <div className="rounded-lg border border-border p-4">
-              <p className="mb-3 text-sm font-semibold text-text-primary">{t("companyForm.optionalOwner")}</p>
+              <p className="mb-3 text-sm font-semibold text-text-primary">
+                {t("companyForm.optionalOwner")}
+              </p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="owner-name">{t("companyForm.ownerName")}</Label>
@@ -217,7 +219,12 @@ export default function AdminCompanyFormDialog({
           )}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isSubmitting}
+            >
               {t("cancel")}
             </Button>
             <Button type="submit" disabled={!canSubmit}>

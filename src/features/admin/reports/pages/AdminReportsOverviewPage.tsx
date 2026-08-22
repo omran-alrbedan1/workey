@@ -17,10 +17,5 @@ export default function AdminReportsOverviewPage() {
     )
   }
 
-  return (
-    <AdminReportsOverview
-      data={query.data}
-      isLoading={query.isPending}
-    />
-  )
+  return <AdminReportsOverview data={query.data} isLoading={query.isPending} />
 }

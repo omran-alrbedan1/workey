@@ -20,7 +20,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
   inputClassName,
   fileUploadOptions,
 }) => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation("common")
   const [dragActive, setDragActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -70,19 +70,21 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
   }
 
   const getFileUrl = (file: File | string): string => {
-    return typeof file === 'string' ? file : URL.createObjectURL(file)
+    return typeof file === "string" ? file : URL.createObjectURL(file)
   }
 
   const getFileName = (file: File | string): string => {
-    return typeof file === 'string' ? file.split('/').pop() || t('fileUpload.imageFallback') : file.name
+    return typeof file === "string"
+      ? file.split("/").pop() || t("fileUpload.imageFallback")
+      : file.name
   }
 
   const getFileSize = (file: File | string): string => {
-    return typeof file === 'string' ? '' : `${(file.size / 1024).toFixed(1)} KB`
+    return typeof file === "string" ? "" : `${(file.size / 1024).toFixed(1)} KB`
   }
 
   const isImageFile = (file: File | string): boolean => {
-    return typeof file === 'string'
+    return typeof file === "string"
       ? /\.(jpg|jpeg|png|webp|gif|svg|avif|bmp)$/i.test(file)
       : file.type.startsWith("image/")
   }
@@ -91,7 +93,10 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
     const isImage = isImageFile(file)
 
     return (
-      <div key={index} className="relative group overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm transition-all hover:shadow-md">
+      <div
+        key={index}
+        className="relative group overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm transition-all hover:shadow-md"
+      >
         {isImage && fileUploadOptions?.showPreview ? (
           <div className="relative w-full aspect-video max-h-48 overflow-hidden">
             <img
@@ -120,7 +125,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
           size="sm"
           className="absolute top-2 right-2 h-8 w-8 rounded-full p-0 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-destructive-foreground"
           onClick={() => handleRemoveFile(index)}
-          aria-label={t('fileUpload.removeFile')}
+          aria-label={t("fileUpload.removeFile")}
         >
           <Trash2 className="h-4 w-4" />
         </Button>
@@ -137,7 +142,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
             ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
             : "border-border hover:border-muted-foreground/40 hover:bg-muted/30",
           disabled && "opacity-50 cursor-not-allowed",
-          inputClassName
+          inputClassName,
         )}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -146,23 +151,29 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
         onClick={() => !disabled && fileInputRef.current?.click()}
       >
         <div className="flex flex-col items-center justify-center py-8 px-6">
-          <div className={cn(
-            "flex items-center justify-center w-14 h-14 rounded-full mb-4 transition-colors",
-            dragActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-          )}>
-            <Upload className={cn("h-6 w-6 transition-transform", dragActive && "translate-y-0.5")} />
+          <div
+            className={cn(
+              "flex items-center justify-center w-14 h-14 rounded-full mb-4 transition-colors",
+              dragActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground",
+            )}
+          >
+            <Upload
+              className={cn("h-6 w-6 transition-transform", dragActive && "translate-y-0.5")}
+            />
           </div>
           <p className="text-sm font-medium">
             {placeholder || (
               <>
-                <span className="text-primary">{t('fileUpload.clickToUpload')}</span> {t('fileUpload.dragAndDrop')}
+                <span className="text-primary">{t("fileUpload.clickToUpload")}</span>{" "}
+                {t("fileUpload.dragAndDrop")}
               </>
             )}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            {fileUploadOptions?.hint || (fileUploadOptions?.accept === "image/*"
-              ? t('fileUpload.imageHint')
-              : t('fileUpload.fileHint'))}
+            {fileUploadOptions?.hint ||
+              (fileUploadOptions?.accept === "image/*"
+                ? t("fileUpload.imageHint")
+                : t("fileUpload.fileHint"))}
           </p>
         </div>
         <input
@@ -178,11 +189,9 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
 
       {field.value && (
         <div className="grid gap-3">
-          {fileUploadOptions?.multiple ? (
-            field.value.map((file: File, index: number) => renderFilePreview(file, index))
-          ) : (
-            renderFilePreview(field.value, 0)
-          )}
+          {fileUploadOptions?.multiple
+            ? field.value.map((file: File, index: number) => renderFilePreview(file, index))
+            : renderFilePreview(field.value, 0)}
         </div>
       )}
     </div>

@@ -1,6 +1,15 @@
 {
-  "title": "Jobs", "description": "Monitor job listings published by companies across Workey.",
-  "columns": { "job": "Job", "status": "Status", "employment": "Employment", "location": "Location", "workMode": "Work mode", "accepting": "Accepting", "applications": "Applications" },
+  "title": "Jobs",
+  "description": "Monitor job listings published by companies across Workey.",
+  "columns": {
+    "job": "Job",
+    "status": "Status",
+    "employment": "Employment",
+    "location": "Location",
+    "workMode": "Work mode",
+    "accepting": "Accepting",
+    "applications": "Applications"
+  },
   "filters": {
     "title": "Filter jobs",
     "workMode": "Work mode",
@@ -15,8 +24,20 @@
     "sortDirection": "Direction"
   },
   "workModes": { "remote": "Remote", "on_site": "On-site", "hybrid": "Hybrid" },
-  "employmentTypes": { "full_time": "Full time", "part_time": "Part time", "contract": "Contract", "freelance": "Freelance" },
-  "sort": { "createdAt": "Created date", "publishedAt": "Published date", "applicationDeadline": "Application deadline", "title": "Title", "asc": "Ascending", "desc": "Descending" },
+  "employmentTypes": {
+    "full_time": "Full time",
+    "part_time": "Part time",
+    "contract": "Contract",
+    "freelance": "Freelance"
+  },
+  "sort": {
+    "createdAt": "Created date",
+    "publishedAt": "Published date",
+    "applicationDeadline": "Application deadline",
+    "title": "Title",
+    "asc": "Ascending",
+    "desc": "Descending"
+  },
   "details": {
     "back": "Back to jobs",
     "errorTitle": "Unable to load this job",
@@ -50,6 +71,8 @@
     "benefitsTitle": "Benefits",
     "skills": "Skills"
   },
-  "unknownCompany": "Unknown company", "empty": "No jobs were returned.",
-  "emptyDescription": "No job listings are available in this view.", "imageAlt": "Jobs"
+  "unknownCompany": "Unknown company",
+  "empty": "No jobs were returned.",
+  "emptyDescription": "No job listings are available in this view.",
+  "imageAlt": "Jobs"
 }

@@ -13,11 +13,12 @@ export default function ForgotPasswordPage({ loginPath }: { loginPath: string })
       <div className="w-full max-w-md">
         <Logo size="xl" alt={t("logoAlt")} className="mb-8" />
         <h1 className="text-3xl font-bold text-text-primary">{t("forgot.title")}</h1>
-        <p className="mt-2 text-sm text-text-secondary">
-          {t("forgot.description")}
-        </p>
+        <p className="mt-2 text-sm text-text-secondary">{t("forgot.description")}</p>
         <ForgotPasswordForm />
-        <Link className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary" to={loginPath}>
+        <Link
+          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary"
+          to={loginPath}
+        >
           <ArrowLeft className="h-4 w-4" /> {t("forgot.back")}
         </Link>
       </div>

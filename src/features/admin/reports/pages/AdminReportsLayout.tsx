@@ -19,17 +19,15 @@ export default function AdminReportsLayout() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t("title")}
-        description={t("description")}
-        icon={BarChart3}
-      />
+      <PageHeader title={t("title")} description={t("description")} icon={BarChart3} />
 
       <div className="flex items-center gap-6 border-b border-border">
         {tabs.map((tab) => {
           const Icon = tab.icon
-          const isActive = location.pathname === tab.path ||
-            (tab.path === ROUTES.admin.reports.overview && location.pathname === ROUTES.admin.reports.root)
+          const isActive =
+            location.pathname === tab.path ||
+            (tab.path === ROUTES.admin.reports.overview &&
+              location.pathname === ROUTES.admin.reports.root)
           return (
             <button
               key={tab.path}

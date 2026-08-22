@@ -56,7 +56,9 @@ const AdminApplicationMobileCard = ({
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-semibold text-text-primary">
-            {candidateNameFor(application) || candidateEmailFor(application) || t("unknownCandidate")}
+            {candidateNameFor(application) ||
+              candidateEmailFor(application) ||
+              t("unknownCandidate")}
           </h3>
           <p className="truncate text-xs text-text-muted">
             {candidateEmailFor(application) || "-"}

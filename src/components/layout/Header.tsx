@@ -34,7 +34,11 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onMenuToggle, isMobileMenuOpe
 
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Notifications */}
-          <button aria-label={t("header.notifications")} onClick={() => navigate(ROUTES.admin.notifications)} className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary">
+          <button
+            aria-label={t("header.notifications")}
+            onClick={() => navigate(ROUTES.admin.notifications)}
+            className="relative rounded-full p-2 text-text-secondary transition-colors hover:bg-background-secondary"
+          >
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (
               <span className="absolute -end-1 -top-1 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-[10px] font-semibold leading-none text-white">

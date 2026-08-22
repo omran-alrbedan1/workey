@@ -1,4 +1,13 @@
-import { Award, Building2, Download, Eye, GraduationCap, Paperclip, Sparkles, UserRound } from "lucide-react"
+import {
+  Award,
+  Building2,
+  Download,
+  Eye,
+  GraduationCap,
+  Paperclip,
+  Sparkles,
+  UserRound,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { valueOf } from "@/lib/keyValue"
 import { Badge } from "@/components/ui/badge"
@@ -51,10 +60,17 @@ export default function CandidateProfileSection({
             </SectionCard>
 
             {(profile.skills?.length ?? 0) > 0 && (
-              <SectionCard title={t("candidate.skillsTitle")} icon={Award} className="lg:col-span-2">
+              <SectionCard
+                title={t("candidate.skillsTitle")}
+                icon={Award}
+                className="lg:col-span-2"
+              >
                 <div className="flex flex-wrap gap-2">
                   {profile.skills!.map((skill, index) => (
-                    <Badge key={`${skill.slug ?? skill.name ?? index}-${index}`} variant="secondary">
+                    <Badge
+                      key={`${skill.slug ?? skill.name ?? index}-${index}`}
+                      variant="secondary"
+                    >
                       {skill.name || skill.slug || "-"}
                     </Badge>
                   ))}
@@ -93,7 +109,9 @@ export default function CandidateProfileSection({
                     key={`${education.degree ?? "education"}-${index}`}
                     title={education.degree || "-"}
                     subtitle={
-                      [education.institution, education.field_of_study].filter(Boolean).join(" · ") || undefined
+                      [education.institution, education.field_of_study]
+                        .filter(Boolean)
+                        .join(" · ") || undefined
                     }
                     meta={formatPeriod(
                       education.start_date,
@@ -117,7 +135,9 @@ export default function CandidateProfileSection({
               <Paperclip className="h-4 w-4" />
             </span>
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-text-primary">{t("candidate.documentsTitle")}</h3>
+              <h3 className="text-sm font-semibold text-text-primary">
+                {t("candidate.documentsTitle")}
+              </h3>
               <p className="truncate text-xs text-text-muted" title={cvDocument.name}>
                 {cvDocument.name}
               </p>

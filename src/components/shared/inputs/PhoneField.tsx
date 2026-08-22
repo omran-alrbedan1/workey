@@ -30,9 +30,10 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
   iconClassName,
 }) => {
   const [formattedValue, setFormattedValue] = useState("")
-  const hasLeftIcon = leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
+  const hasLeftIcon =
+    leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
   const hasRightIcon = rightIcon && (iconPosition === "right" || iconPosition === "both")
-  
+
   useEffect(() => {
     if (field.value) {
       const formatted = formatPhoneNumber(field.value)
@@ -41,7 +42,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
       setFormattedValue("")
     }
   }, [field.value])
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 10)
     const formatted = formatPhoneNumber(value)
@@ -66,7 +67,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
           inputClassName,
           "px-6 py-5 text-base",
           hasLeftIcon && "ltr:pl-14 rtl:pr-14",
-          hasRightIcon && "ltr:pr-14 rtl:pl-14"
+          hasRightIcon && "ltr:pr-14 rtl:pl-14",
         )}
         value={formattedValue}
         onChange={handleChange}

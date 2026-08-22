@@ -32,14 +32,22 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
             <ListChecks className="h-5 w-5 text-primary" />
             {t("tests.title")}
           </CardTitle>
-          <Button type="button" variant="outline" size="sm" onClick={onViewAll} className="shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onViewAll}
+            className="shrink-0"
+          >
             <FileText className="h-4 w-4 mr-2" /> {t("tests.viewAll")}
           </Button>
         </CardHeader>
         <CardContent>
           <EmptyState
             title={t("tests.empty")}
-            description={t("tests.emptyDescription", { defaultValue: "No tests are assigned to this application." })}
+            description={t("tests.emptyDescription", {
+              defaultValue: "No tests are assigned to this application.",
+            })}
             icon={ListChecks}
           />
         </CardContent>
@@ -64,7 +72,10 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
           const max = attempt.attempt?.max_score ?? attempt.test?.max_score ?? 0
           const passed = attempt.attempt?.is_passing_score_met
           const attemptStatusKey = keyOf(attempt.state)
-          const submitted = Boolean(attempt.attempt?.submitted_at) || attemptStatusKey === "submitted" || attemptStatusKey === "evaluated"
+          const submitted =
+            Boolean(attempt.attempt?.submitted_at) ||
+            attemptStatusKey === "submitted" ||
+            attemptStatusKey === "evaluated"
           return (
             <button
               key={attempt.id}
@@ -83,9 +94,7 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
                       {new Date(attempt.deadline_at).toLocaleDateString()}
                     </span>
                   )}
-                  {submitted && score != null && (
-                    <span>{t("tests.result", { score, max })}</span>
-                  )}
+                  {submitted && score != null && <span>{t("tests.result", { score, max })}</span>}
                 </div>
               </div>
               <Badge

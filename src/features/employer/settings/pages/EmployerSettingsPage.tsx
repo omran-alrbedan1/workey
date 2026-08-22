@@ -10,7 +10,10 @@ export default function EmployerSettingsPage() {
   return (
     <div className="space-y-6">
       <PageHeader title={t("title")} description={t("description")} icon={Settings} />
-      <SecuritySettings clearSession={employerAuthService.clearSession} loginPath={ROUTES.employer.login} />
+      <SecuritySettings
+        clearSession={employerAuthService.clearSession}
+        loginPath={ROUTES.employer.login}
+      />
     </div>
   )
 }

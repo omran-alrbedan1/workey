@@ -9,12 +9,7 @@ interface CheckboxFieldProps {
   disabled?: boolean
 }
 
-export const CheckboxField: React.FC<CheckboxFieldProps> = ({
-  field,
-  name,
-  label,
-  disabled,
-}) => {
+export const CheckboxField: React.FC<CheckboxFieldProps> = ({ field, name, label, disabled }) => {
   return (
     <div className="flex items-center space-x-2">
       <Checkbox

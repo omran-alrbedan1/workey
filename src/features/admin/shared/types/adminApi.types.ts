@@ -15,6 +15,7 @@ export interface AdminListParams {
   per_page?: number
   search?: string
   status?: string
+  approval_status?: string
   role?: string
   company?: string
   job?: string

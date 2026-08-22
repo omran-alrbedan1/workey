@@ -22,7 +22,8 @@ type GradeDraft = Record<string, { awarded_points: string; reviewer_note: string
 
 function answerText(answer: TestAttemptResultBreakdownItem): string {
   if (answer.answer_text) return answer.answer_text
-  if (answer.selected_options.length) return answer.selected_options.map((option) => option.option_text).join(", ")
+  if (answer.selected_options.length)
+    return answer.selected_options.map((option) => option.option_text).join(", ")
   if (answer.file?.original_name) return answer.file.original_name
   return "-"
 }
@@ -37,7 +38,14 @@ export default function EmployerTestAttemptGradingPage() {
   const client = useQueryClient()
   const { id, attemptId } = useParams()
   const [drafts, setDrafts] = useState<GradeDraft>({})
-  const queryKey = ["employer", "tests", String(id ?? ""), "attempts", String(attemptId ?? ""), "grading"]
+  const queryKey = [
+    "employer",
+    "tests",
+    String(id ?? ""),
+    "attempts",
+    String(attemptId ?? ""),
+    "grading",
+  ]
 
   const result = useQuery({
     queryKey: [...queryKey, "result"],
@@ -46,8 +54,7 @@ export default function EmployerTestAttemptGradingPage() {
   })
 
   const manualAnswers = useMemo(
-    () =>
-      (result.data?.breakdown ?? []).filter(isManualBreakdownItem),
+    () => (result.data?.breakdown ?? []).filter(isManualBreakdownItem),
     [result.data?.breakdown],
   )
 
@@ -66,9 +73,7 @@ export default function EmployerTestAttemptGradingPage() {
   }, [manualAnswers])
 
   const invalidate = async () => {
-    await Promise.all([
-      client.invalidateQueries({ queryKey: [...queryKey, "result"] }),
-    ])
+    await Promise.all([client.invalidateQueries({ queryKey: [...queryKey, "result"] })])
   }
 
   const gradeMutation = useMutation({
@@ -156,7 +161,8 @@ export default function EmployerTestAttemptGradingPage() {
     )
   }
 
-  const isPending = gradeMutation.isPending || deleteGradeMutation.isPending || bulkGradeMutation.isPending
+  const isPending =
+    gradeMutation.isPending || deleteGradeMutation.isPending || bulkGradeMutation.isPending
 
   return (
     <div className="space-y-6">
@@ -173,7 +179,9 @@ export default function EmployerTestAttemptGradingPage() {
         <CardContent className="grid gap-4 p-5 sm:grid-cols-3">
           <div>
             <p className="text-xs text-text-muted">{t("tests.gradingStatus")}</p>
-            <p className="font-medium">{String(valueOf(result.data?.grading_status ?? result.data?.status, "-"))}</p>
+            <p className="font-medium">
+              {String(valueOf(result.data?.grading_status ?? result.data?.status, "-"))}
+            </p>
           </div>
           <div>
             <p className="text-xs text-text-muted">{t("tests.currentScore")}</p>
@@ -201,7 +209,10 @@ export default function EmployerTestAttemptGradingPage() {
       ) : manualAnswers.length === 0 ? (
         <EmptyState
           title={t("tests.noAnswers")}
-          description={t("tests.noAnswersDescription", "There are no manually-gradable answers in this attempt.")}
+          description={t(
+            "tests.noAnswersDescription",
+            "There are no manually-gradable answers in this attempt.",
+          )}
           icon={CheckCircle2}
           className="py-8 bg-transparent"
         />
@@ -225,7 +236,9 @@ export default function EmployerTestAttemptGradingPage() {
                   </div>
 
                   <div className="rounded-lg border border-border bg-background p-3 text-sm">
-                    <p className="mb-1 text-xs font-medium text-text-muted">{t("tests.candidateAnswer")}</p>
+                    <p className="mb-1 text-xs font-medium text-text-muted">
+                      {t("tests.candidateAnswer")}
+                    </p>
                     <p className="whitespace-pre-wrap text-text-secondary">{answerText(answer)}</p>
                     {answer.file?.download_available && (
                       <Button
@@ -233,7 +246,9 @@ export default function EmployerTestAttemptGradingPage() {
                         variant="outline"
                         size="sm"
                         className="mt-3"
-                        onClick={() => void downloadFile(questionId, answer.file?.original_name ?? undefined)}
+                        onClick={() =>
+                          void downloadFile(questionId, answer.file?.original_name ?? undefined)
+                        }
                       >
                         <Download className="h-4 w-4" />
                         {answer.file.original_name ?? t("tests.downloadFile")}

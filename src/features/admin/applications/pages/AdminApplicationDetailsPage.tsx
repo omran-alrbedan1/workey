@@ -76,11 +76,7 @@ function FactRow({ label, value }: { label: string; value?: React.ReactNode }) {
   )
 }
 
-function StatusHistoryEntry({
-  entry,
-}: {
-  entry: AdminApplicationStatusHistoryEntry
-}) {
+function StatusHistoryEntry({ entry }: { entry: AdminApplicationStatusHistoryEntry }) {
   const { t } = useTranslation("adminApplications")
   const roleLabel = valueOf(entry.changed_by?.role)
   const actor = entry.changed_by?.name
@@ -289,9 +285,21 @@ export default function AdminApplicationDetailsPage() {
           label={t("columns.status")}
           value={<StatusBadge status={data.status} variant="soft" />}
         />
-        <DetailItem icon={Target} label={t("columns.match")} value={matchScore != null ? `${matchScore}%` : "-"} />
-        <DetailItem icon={CalendarClock} label={t("details.appliedAt")} value={formatDate(appliedAtFor(data))} />
-        <DetailItem icon={CalendarClock} label={t("details.updatedAt")} value={formatDate(data.updated_at)} />
+        <DetailItem
+          icon={Target}
+          label={t("columns.match")}
+          value={matchScore != null ? `${matchScore}%` : "-"}
+        />
+        <DetailItem
+          icon={CalendarClock}
+          label={t("details.appliedAt")}
+          value={formatDate(appliedAtFor(data))}
+        />
+        <DetailItem
+          icon={CalendarClock}
+          label={t("details.updatedAt")}
+          value={formatDate(data.updated_at)}
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -329,10 +337,7 @@ export default function AdminApplicationDetailsPage() {
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-2">
             <FactRow label={t("details.job")} value={job?.title || t("unknownJob")} />
-            <FactRow
-              label={t("details.company")}
-              value={company?.name || t("unknownCompany")}
-            />
+            <FactRow label={t("details.company")} value={company?.name || t("unknownCompany")} />
             <FactRow
               label={t("details.applicationId")}
               value={

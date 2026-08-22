@@ -12,13 +12,19 @@ import {
   canManuallyGrade,
   type GradeDraft,
 } from "../components/test-details/testDetails.helpers"
-import { useApplicationStatusMutation, useEmployerApplicantDetail } from "./useEmployerApplicantDetail"
+import {
+  useApplicationStatusMutation,
+  useEmployerApplicantDetail,
+} from "./useEmployerApplicantDetail"
 import { useApplicationTests } from "./useApplicationTests"
 import { isTerminalApplicationStatus } from "../utils/statusActions"
 import { getAllowedApplicationActions } from "../utils/applicationActions"
 import { nextSteps } from "../components/test-details/testDetails.helpers"
 import type { ApplicationStatusKey, EmployerTestAttempt } from "../types/employerApplicants.types"
-import type { TestAttemptResult, TestAttemptResultBreakdownItem } from "@/features/employer/tests/types/employerTests.types"
+import type {
+  TestAttemptResult,
+  TestAttemptResultBreakdownItem,
+} from "@/features/employer/tests/types/employerTests.types"
 
 export type ApplicantTestDetailsState = "loading" | "error" | "not-found" | "ready"
 
@@ -40,7 +46,7 @@ export interface ApplicantTestDetailsModel {
   isBulkSaving: boolean
   isStatusPending: boolean
   isTerminalStatus: boolean
-  allowedNextSteps: typeof nextSteps
+  allowedNextSteps: ReadonlyArray<(typeof nextSteps)[number]>
   manualAnswersCount: number
   gradedCount: number
   nextStep: string
@@ -75,12 +81,16 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   const [activeTab, setActiveTab] = useState("overview")
   const [answerToDelete, setAnswerToDelete] = useState<TestAttemptResultBreakdownItem | null>(null)
 
-  const assignment = tests.data?.items.find((item) => String(item.id) === String(assignmentId)) ?? null
+  const assignment =
+    tests.data?.items.find((item) => String(item.id) === String(assignmentId)) ?? null
   const activeAttemptId = attemptId(assignment)
   const score = result?.total_score ?? attemptScore(assignment)
   const maxScore = result?.max_score ?? attemptMaxScore(assignment)
   const manualAnswers = useMemo(() => answers.filter(canManuallyGrade), [answers])
-  const gradedCount = useMemo(() => manualAnswers.filter((a) => a.awarded_points != null).length, [manualAnswers])
+  const gradedCount = useMemo(
+    () => manualAnswers.filter((a) => a.awarded_points != null).length,
+    [manualAnswers],
+  )
   const state = getState(tests.isPending, tests.isError, assignment)
   const assignmentStatusKey = keyOf(assignment?.state)
   const submitted =
@@ -96,7 +106,10 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   const isTerminalStatus = useMemo(() => {
     const app = applicant.data
     if (!app) return false
-    return isTerminalApplicationStatus(keyOf(app.status)) || getAllowedApplicationActions(app).statusTargets.length === 0
+    return (
+      isTerminalApplicationStatus(keyOf(app.status)) ||
+      getAllowedApplicationActions(app).statusTargets.length === 0
+    )
   }, [applicant.data])
 
   const allowedNextSteps = useMemo(() => {
@@ -204,7 +217,10 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
 
     setDownloadingQuestionId(answer.question_id)
     try {
-      const blob = await employerTestsService.downloadAnswerFile(activeAttemptId, answer.question_id)
+      const blob = await employerTestsService.downloadAnswerFile(
+        activeAttemptId,
+        answer.question_id,
+      )
       downloadBlob(blob, answer.file?.original_name ?? `answer-${answer.question_id}`)
       showSuccessToast(t("tests.toasts.fileDownloaded"))
     } catch (error) {

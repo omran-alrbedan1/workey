@@ -60,19 +60,58 @@ export default function SecuritySettings({
   return (
     <SectionCard icon={KeyRound} title={t("security.title")}>
       <Form {...form}>
-        <form className="grid gap-4 md:grid-cols-2" onSubmit={form.handleSubmit((values) => changePassword.mutate(values))}>
+        <form
+          className="grid gap-4 md:grid-cols-2"
+          onSubmit={form.handleSubmit((values) => changePassword.mutate(values))}
+        >
           <div className="md:col-span-2">
-            <CustomFormField fieldType={FormFieldType.PASSWORD} control={form.control} name="current_password" label={t("security.currentPassword")} disabled={changePassword.isPending} leftIcon={Lock} iconPosition="left" />
+            <CustomFormField
+              fieldType={FormFieldType.PASSWORD}
+              control={form.control}
+              name="current_password"
+              label={t("security.currentPassword")}
+              disabled={changePassword.isPending}
+              leftIcon={Lock}
+              iconPosition="left"
+            />
           </div>
-          <CustomFormField fieldType={FormFieldType.PASSWORD} control={form.control} name="password" label={t("security.newPassword")} disabled={changePassword.isPending} leftIcon={Lock} iconPosition="left" />
-          <CustomFormField fieldType={FormFieldType.PASSWORD} control={form.control} name="password_confirmation" label={t("security.confirmPassword")} disabled={changePassword.isPending} leftIcon={Lock} iconPosition="left" />
-          <SubmitButton className="md:col-span-2 md:w-auto md:justify-self-start" isLoading={changePassword.isPending} text={t("security.change")} loadingText={t("security.changing")} icon={<KeyRound />} />
+          <CustomFormField
+            fieldType={FormFieldType.PASSWORD}
+            control={form.control}
+            name="password"
+            label={t("security.newPassword")}
+            disabled={changePassword.isPending}
+            leftIcon={Lock}
+            iconPosition="left"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.PASSWORD}
+            control={form.control}
+            name="password_confirmation"
+            label={t("security.confirmPassword")}
+            disabled={changePassword.isPending}
+            leftIcon={Lock}
+            iconPosition="left"
+          />
+          <SubmitButton
+            className="md:col-span-2 md:w-auto md:justify-self-start"
+            isLoading={changePassword.isPending}
+            text={t("security.change")}
+            loadingText={t("security.changing")}
+            icon={<KeyRound />}
+          />
         </form>
       </Form>
       <div className="mt-8 border-t border-border/60 pt-6">
         <h3 className="font-semibold text-text-primary">{t("security.sessions")}</h3>
         <p className="mt-1 text-sm text-text-secondary">{t("security.sessionsDescription")}</p>
-        <Button className="mt-4" type="button" variant="destructive" disabled={logoutAll.isPending} onClick={() => setLogoutAllOpen(true)}>
+        <Button
+          className="mt-4"
+          type="button"
+          variant="destructive"
+          disabled={logoutAll.isPending}
+          onClick={() => setLogoutAllOpen(true)}
+        >
           <LogOut /> {logoutAll.isPending ? t("security.loggingOut") : t("security.logoutAll")}
         </Button>
       </div>

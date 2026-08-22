@@ -14,7 +14,7 @@ import {
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
 import { MetricStatusCard } from "@/components/shared/cards/MetricCard"
@@ -37,7 +37,19 @@ import AdminUserRelatedSection, {
 } from "../components/AdminUserRelatedSection"
 import AdminUserSecurityPanel from "../components/AdminUserSecurityPanel"
 import { useAdminUserDetails } from "../hooks/useAdminUserDetails"
+import {
+  useAdminUserApplications,
+  useAdminUserInterviews,
+  useAdminUserJobs,
+  useAdminUserTestAssignments,
+} from "../hooks/useAdminUserRelated"
 import type { AdminUserRole } from "../types/adminUsers.types"
+import {
+  mapApplicationItem,
+  mapInterviewItem,
+  mapJobItem,
+  mapTestAssignmentItem,
+} from "../utils/adminUserRelated"
 
 type UserDetailsTabValue =
   | "overview"
@@ -88,7 +100,10 @@ const USER_DETAILS_TABS: Record<AdminUserRole | "default", UserDetailsTabConfig[
   ],
 }
 
-const ROLE_METRICS: Record<AdminUserRole | "default", Array<"applications" | "jobs" | "interviews" | "tests">> = {
+const ROLE_METRICS: Record<
+  AdminUserRole | "default",
+  Array<"applications" | "jobs" | "interviews" | "tests">
+> = {
   admin: [],
   job_seeker: ["applications", "interviews", "tests"],
   employer: ["jobs", "applications", "interviews", "tests"],
@@ -106,8 +121,20 @@ export default function AdminUserDetailsPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation("adminUsers")
-  const query = useAdminUserDetails(id)
   const [statusAction, setStatusAction] = useState<"activate" | "suspend" | null>(null)
+
+  const query = useAdminUserDetails(id)
+  const roleKey = keyOf(query.user?.role)
+  const role: AdminUserRole | "default" =
+    roleKey === "admin" || roleKey === "job_seeker" || roleKey === "employer" ? roleKey : "default"
+
+  // Related collections come from dedicated backend endpoints; totals feed
+  // the metric cards and mapped items feed the matching tabs.
+  const hasCandidateCoverage = role === "job_seeker" || role === "employer"
+  const applicationsQuery = useAdminUserApplications(id, { enabled: Boolean(id) && hasCandidateCoverage })
+  const jobsQuery = useAdminUserJobs(id, { enabled: Boolean(id) && role === "employer" })
+  const interviewsQuery = useAdminUserInterviews(id, { enabled: Boolean(id) && hasCandidateCoverage })
+  const testsQuery = useAdminUserTestAssignments(id, { enabled: Boolean(id) && hasCandidateCoverage })
 
   if (!id) {
     return (
@@ -131,15 +158,55 @@ export default function AdminUserDetailsPage() {
 
   const user = query.user
   if (!user) return null
+
   const updating = query.statusMutation.isPending || query.roleMutation.isPending
   const isSuspended = keyOf(user.status) === "suspended"
-  const roleKey = keyOf(user.role)
-  const role: AdminUserRole | "default" =
-    roleKey === "admin" || roleKey === "job_seeker" || roleKey === "employer"
-      ? roleKey
-      : "default"
   const tabs = USER_DETAILS_TABS[role]
-  const metrics = ROLE_METRICS[role]
+  const metricKeys = ROLE_METRICS[role]
+
+  const metricValues: Record<"applications" | "jobs" | "interviews" | "tests", number> = {
+    applications: applicationsQuery.data?.pagination.total ?? 0,
+    jobs: jobsQuery.data?.pagination.total ?? 0,
+    interviews: interviewsQuery.data?.pagination.total ?? 0,
+    tests: testsQuery.data?.pagination.total ?? 0,
+  }
+
+  const fallbackTitle = t("related.fallbackTitle")
+  const relatedSections: Record<AdminUserRelatedSectionKey, ReactNode> = {
+    applications: (
+      <AdminUserRelatedSection
+        section="applications"
+        isLoading={applicationsQuery.isPending}
+        items={applicationsQuery.data?.items.map((item) =>
+          mapApplicationItem(item, fallbackTitle),
+        )}
+      />
+    ),
+    jobs: (
+      <AdminUserRelatedSection
+        section="jobs"
+        isLoading={jobsQuery.isPending}
+        items={jobsQuery.data?.items.map((item) => mapJobItem(item, fallbackTitle))}
+      />
+    ),
+    interviews: (
+      <AdminUserRelatedSection
+        section="interviews"
+        isLoading={interviewsQuery.isPending}
+        items={interviewsQuery.data?.items.map((item) => mapInterviewItem(item))}
+      />
+    ),
+    tests: (
+      <AdminUserRelatedSection
+        section="tests"
+        isLoading={testsQuery.isPending}
+        items={testsQuery.data?.items.map((item) =>
+          mapTestAssignmentItem(item, fallbackTitle),
+        )}
+      />
+    ),
+  }
+
   const closeStatusModal = () => {
     if (!query.statusMutation.isPending) setStatusAction(null)
   }
@@ -147,8 +214,9 @@ export default function AdminUserDetailsPage() {
     await query.statusMutation.mutateAsync({ id: user.id, status: "active" })
     setStatusAction(null)
   }
-  const confirmSuspend = async (reason?: string) => {
-    await query.statusMutation.mutateAsync({ id: user.id, status: "suspended", reason })
+  const confirmSuspend = async () => {
+    // The backend suspend endpoint accepts no body; a reason cannot be stored.
+    await query.statusMutation.mutateAsync({ id: user.id, status: "suspended" })
     setStatusAction(null)
   }
   const renderTabContent = (value: UserDetailsTabValue) => {
@@ -156,22 +224,22 @@ export default function AdminUserDetailsPage() {
       case "overview":
         return <AdminUserOverview user={user} />
       case "activity":
-        return <AdminUserActivityPanel user={user} logs={role === "admin" ? "activity" : "both"} />
+        return <AdminUserActivityPanel userId={id} logs="both" />
       case "audit":
-        return <AdminUserActivityPanel user={user} logs="audit" />
+        return <AdminUserActivityPanel userId={id} logs="audit" />
       case "logins":
-        return <AdminUserLoginHistoryPanel user={user} />
+        return <AdminUserLoginHistoryPanel userId={id} />
       case "sessions":
-        return <AdminUserActiveSessionsPanel user={user} />
+        return <AdminUserActiveSessionsPanel userId={id} />
       case "company":
         return <AdminUserCompanyPanel user={user} />
       case "security":
-        return <AdminUserSecurityPanel user={user} />
+        return <AdminUserSecurityPanel user={user} userId={id} />
       case "applications":
       case "jobs":
       case "interviews":
       case "tests":
-        return <AdminUserRelatedSection user={user} section={value} />
+        return relatedSections[value]
       default:
         return null
     }
@@ -210,29 +278,21 @@ export default function AdminUserDetailsPage() {
         }
       />
 
-      {metrics.length ? (
+      {metricKeys.length ? (
         <div
           className={
-            metrics.length >= 4
+            metricKeys.length >= 4
               ? "grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
               : "grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
           }
         >
-          {metrics.map((metric) => {
+          {metricKeys.map((metric) => {
             const Icon = METRIC_ICONS[metric]
-            const count =
-              metric === "applications"
-                ? user.counts?.applications ?? user.applications?.length ?? 0
-                : metric === "jobs"
-                  ? user.counts?.jobs ?? user.jobs?.length ?? 0
-                  : metric === "interviews"
-                    ? user.counts?.interviews ?? user.interviews?.length ?? 0
-                    : user.counts?.tests ?? user.tests?.length ?? 0
             return (
               <MetricStatusCard
                 key={metric}
                 title={t(`details.metrics.${metric}`)}
-                value={count}
+                value={metricValues[metric]}
                 icon={Icon}
               />
             )

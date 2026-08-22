@@ -50,9 +50,7 @@ export function useAdminCompanyMembers(companyId?: string) {
     onSuccess: (result) => {
       setLastInvitationToken(result.token)
       invalidate()
-      showSuccessToast(
-        t("members.toasts.invitationSent", { defaultValue: "Invitation sent" }),
-      )
+      showSuccessToast(t("members.toasts.invitationSent", { defaultValue: "Invitation sent" }))
     },
     onError: (error) => showErrorToast(error),
   })
@@ -67,9 +65,7 @@ export function useAdminCompanyMembers(companyId?: string) {
     }) => adminCompaniesService.updateMemberRole(companyId as string, userId, input),
     onSuccess: () => {
       invalidate()
-      showSuccessToast(
-        t("members.toasts.roleUpdated", { defaultValue: "Member role updated" }),
-      )
+      showSuccessToast(t("members.toasts.roleUpdated", { defaultValue: "Member role updated" }))
     },
     onError: (error) => showErrorToast(error),
   })

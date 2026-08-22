@@ -2,7 +2,14 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { ChevronDown, Check } from "lucide-react"
 import { Option } from "@/types/customFormField.types"
 
@@ -24,9 +31,9 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
   const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState("")
-  
+
   const selectedOption = options.find((option) => option.value === field.value)
-  
+
   return (
     <div className="relative">
       <Button
@@ -34,7 +41,7 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
         className={cn(
           "w-full justify-between text-start font-normal",
           !field.value && "text-muted-foreground",
-          inputClassName
+          inputClassName,
         )}
         disabled={disabled}
         onClick={() => setOpen(!open)}
@@ -65,7 +72,7 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        field.value === option.value ? "opacity-100" : "opacity-0"
+                        field.value === option.value ? "opacity-100" : "opacity-0",
                       )}
                     />
                     {option.label}

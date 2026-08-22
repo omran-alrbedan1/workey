@@ -5,7 +5,10 @@ import {
   unwrapEmployerEntity,
   type EmployerCollection,
 } from "@/features/employer/shared/services/employerResponse.utils"
-import type { EmployerNotification, EmployerUnreadCount } from "../types/employerNotifications.types"
+import type {
+  EmployerNotification,
+  EmployerUnreadCount,
+} from "../types/employerNotifications.types"
 
 export const employerNotificationsService = {
   async list(page = 1): Promise<EmployerCollection<EmployerNotification>> {

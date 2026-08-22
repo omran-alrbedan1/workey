@@ -91,7 +91,11 @@ function OverviewTab({ data }: { data: AdminJobRecord }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <DetailItem icon={ClipboardList} label={t("columns.status")} value={<StatusBadge status={data.status} variant="soft" />} />
+        <DetailItem
+          icon={ClipboardList}
+          label={t("columns.status")}
+          value={<StatusBadge status={data.status} variant="soft" />}
+        />
         <DetailItem
           icon={MapPin}
           label={t("columns.workMode")}
@@ -103,15 +107,33 @@ function OverviewTab({ data }: { data: AdminJobRecord }) {
               : "-"
           }
         />
-        <DetailItem icon={BriefcaseBusiness} label={t("columns.employment")} value={valueOf(data.employment_type, "-")} />
-        <DetailItem icon={UsersRound} label={t("columns.applications")} value={display(data.applications_count)} />
+        <DetailItem
+          icon={BriefcaseBusiness}
+          label={t("columns.employment")}
+          value={valueOf(data.employment_type, "-")}
+        />
+        <DetailItem
+          icon={UsersRound}
+          label={t("columns.applications")}
+          value={display(data.applications_count)}
+        />
         <DetailItem icon={MapPin} label={t("columns.location")} value={display(data.location)} />
-        <DetailItem icon={CalendarClock} label={t("details.deadline")} value={formatDate(data.application_deadline)} />
+        <DetailItem
+          icon={CalendarClock}
+          label={t("details.deadline")}
+          value={formatDate(data.application_deadline)}
+        />
         <DetailItem icon={DollarSign} label={t("details.salary")} value={salary} />
         <DetailItem
           icon={CalendarClock}
           label={t("columns.accepting")}
-          value={accepting === undefined ? "-" : accepting ? t("filters.accepting") : t("filters.notAccepting")}
+          value={
+            accepting === undefined
+              ? "-"
+              : accepting
+                ? t("filters.accepting")
+                : t("filters.notAccepting")
+          }
         />
       </div>
 
@@ -120,10 +142,26 @@ function OverviewTab({ data }: { data: AdminJobRecord }) {
           <CardTitle className="text-base">{t("details.overview")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <DetailItem icon={BriefcaseBusiness} label={t("details.department")} value={display(data.department)} />
-          <DetailItem icon={ClipboardList} label={t("details.experienceLevel")} value={valueOf(data.experience_level, "-")} />
-          <DetailItem icon={CalendarClock} label={t("details.createdAt")} value={formatDate(data.created_at)} />
-          <DetailItem icon={CalendarClock} label={t("details.publishedAt")} value={formatDate(data.published_at)} />
+          <DetailItem
+            icon={BriefcaseBusiness}
+            label={t("details.department")}
+            value={display(data.department)}
+          />
+          <DetailItem
+            icon={ClipboardList}
+            label={t("details.experienceLevel")}
+            value={valueOf(data.experience_level, "-")}
+          />
+          <DetailItem
+            icon={CalendarClock}
+            label={t("details.createdAt")}
+            value={formatDate(data.created_at)}
+          />
+          <DetailItem
+            icon={CalendarClock}
+            label={t("details.publishedAt")}
+            value={formatDate(data.published_at)}
+          />
         </CardContent>
       </Card>
 
@@ -184,14 +222,26 @@ function CompanyTab({ data }: { data: AdminJobRecord }) {
         )}
       </CardHeader>
       <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        <DetailItem icon={Building2} label={t("details.companyName")} value={display(company?.name)} />
+        <DetailItem
+          icon={Building2}
+          label={t("details.companyName")}
+          value={display(company?.name)}
+        />
         <DetailItem
           icon={ClipboardList}
           label={t("details.companyStatus")}
           value={displayKeyValue(company?.approval_status ?? company?.status)}
         />
-        <DetailItem icon={UsersRound} label={t("details.employer")} value={display(company?.employer?.name)} />
-        <DetailItem icon={UsersRound} label={t("details.employerEmail")} value={display(company?.employer?.email)} />
+        <DetailItem
+          icon={UsersRound}
+          label={t("details.employer")}
+          value={display(company?.employer?.name)}
+        />
+        <DetailItem
+          icon={UsersRound}
+          label={t("details.employerEmail")}
+          value={display(company?.employer?.email)}
+        />
       </CardContent>
     </Card>
   )

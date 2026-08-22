@@ -1,18 +1,18 @@
-import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import React from "react"
+import { LucideIcon } from "lucide-react"
 
 interface MetricStatusCardProps {
-  title: string;
-  value: string | number;
-  icon: LucideIcon;
-  suffix?: string;
+  title: string
+  value: string | number
+  icon: LucideIcon
+  suffix?: string
 }
 
 export const MetricStatusCard: React.FC<MetricStatusCardProps> = ({
   title,
   value,
   icon: Icon,
-  suffix = '',
+  suffix = "",
 }) => {
   return (
     <div className="group relative rounded-2xl border border-border bg-background-card p-5 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden">
@@ -25,9 +25,10 @@ export const MetricStatusCard: React.FC<MetricStatusCardProps> = ({
           </div>
         </div>
         <div className="text-3xl font-bold text-text-primary">
-          {value}{suffix}
+          {value}
+          {suffix}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -168,10 +168,7 @@ export default function AdminTestWizard({
   const questions = (form.watch("questions") ?? []) as unknown as TestQuestion[]
 
   // Total points across all questions (used for max score + passing score cap).
-  const calculatedMaxScore = questions.reduce(
-    (sum, q) => sum + (Number(q.points) || 0),
-    0,
-  )
+  const calculatedMaxScore = questions.reduce((sum, q) => sum + (Number(q.points) || 0), 0)
 
   useEffect(() => {
     if (calculatedMaxScore > 0) {
@@ -186,7 +183,9 @@ export default function AdminTestWizard({
     const savedQuestions: TestQuestion[] = []
     const orderedQuestions = normalizedQuestions(nextQuestions)
     const serverQuestions = (await adminTestsService.getQuestions(testId)).sort(byOrderIndex)
-    const serverQuestionById = new Map(serverQuestions.map((question) => [String(question.id), question]))
+    const serverQuestionById = new Map(
+      serverQuestions.map((question) => [String(question.id), question]),
+    )
     const usedServerQuestionIds = new Set<string>()
     const highestServerOrder = serverQuestions.reduce(
       (highest, question) => Math.max(highest, Number(question.order_index) || 0),
@@ -225,27 +224,23 @@ export default function AdminTestWizard({
         savedQuestions.push(toQuestionFormValue(savedQuestion))
       }
 
-      form.setValue(
-        "questions",
-        [
-          ...savedQuestions,
-          ...orderedQuestions.slice(i + 1),
-        ] as never,
-        { shouldValidate: false },
-      )
+      form.setValue("questions", [...savedQuestions, ...orderedQuestions.slice(i + 1)] as never, {
+        shouldValidate: false,
+      })
     }
 
-    if (savedQuestions.length > 1 && savedQuestions.every((question) => question.id) && needsReorder(savedQuestions)) {
+    if (
+      savedQuestions.length > 1 &&
+      savedQuestions.every((question) => question.id) &&
+      needsReorder(savedQuestions)
+    ) {
       try {
-        await adminTestsService.reorderQuestions(
-          testId,
-          {
-            questions: savedQuestions.map((question, index) => ({
-              question_id: question.id!,
-              order_index: index,
-            })),
-          },
-        )
+        await adminTestsService.reorderQuestions(testId, {
+          questions: savedQuestions.map((question, index) => ({
+            question_id: question.id!,
+            order_index: index,
+          })),
+        })
       } catch (error) {
         console.warn("Question reorder failed after questions were saved.", error)
       }
@@ -282,7 +277,9 @@ export default function AdminTestWizard({
     }
 
     if (currentStep === 2) {
-      const currentQuestions = normalizedQuestions(form.getValues("questions") as unknown as TestQuestion[])
+      const currentQuestions = normalizedQuestions(
+        form.getValues("questions") as unknown as TestQuestion[],
+      )
       form.setValue("questions", currentQuestions as never, {
         shouldDirty: true,
         shouldTouch: true,
@@ -417,9 +414,7 @@ export default function AdminTestWizard({
                     name="company_id"
                     label={t("form.company")}
                     placeholder={
-                      isLoadingCompanies
-                        ? t("form.loadingCompanies")
-                        : t("form.companyPlaceholder")
+                      isLoadingCompanies ? t("form.loadingCompanies") : t("form.companyPlaceholder")
                     }
                     leftIcon={Building2}
                     iconPosition="left"
@@ -462,11 +457,11 @@ export default function AdminTestWizard({
                   questions={questions}
                   onChange={(updated) => {
                     form.clearErrors("questions" as never)
-                    form.setValue(
-                      "questions",
-                      normalizedQuestions(updated) as never,
-                      { shouldDirty: true, shouldTouch: true, shouldValidate: false },
-                    )
+                    form.setValue("questions", normalizedQuestions(updated) as never, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: false,
+                    })
                   }}
                   testId={createdTestId}
                   namespace="adminTests"
@@ -501,9 +496,7 @@ export default function AdminTestWizard({
                       : undefined
                   }
                 />
-                <p className="text-xs text-text-muted sm:col-span-2">
-                  {t("form.maxScoreManaged")}
-                </p>
+                <p className="text-xs text-text-muted sm:col-span-2">{t("form.maxScoreManaged")}</p>
                 <div className="sm:col-span-2">
                   <CustomFormField
                     fieldType={FormFieldType.SWITCH}
@@ -665,13 +658,7 @@ function ReviewStep({
   )
 }
 
-function ReviewItem({
-  label,
-  value,
-}: {
-  label: string
-  value: string
-}) {
+function ReviewItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="text-xs font-medium text-text-muted">{label}</dt>

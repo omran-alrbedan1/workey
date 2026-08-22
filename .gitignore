@@ -37,6 +37,7 @@ tasks.txt
 !docs/
 docs/*
 !docs/API_ADMIN_MISSING.md
+!docs/CLEAN_CODE_BASELINE.md
 
 # Allow admin/employer gap analysis and tasks
 !ADMIN_EMPLOYER_GAP_ANALYSIS.md

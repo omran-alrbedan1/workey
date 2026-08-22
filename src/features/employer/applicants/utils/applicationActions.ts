@@ -32,7 +32,12 @@ const STATUS_KEY_SET: ReadonlySet<string> = new Set<ApplicationStatusKey>([
 
 const FLOW_ALIASES: Record<ApplicationFlowAction, readonly string[]> = {
   assign_test: ["assign_test", "assign_test_assignment", "test_assign", "tests"],
-  schedule_interview: ["schedule_interview", "create_interview", "interview_schedule", "interviews"],
+  schedule_interview: [
+    "schedule_interview",
+    "create_interview",
+    "interview_schedule",
+    "interviews",
+  ],
   request_information: ["request_information", "information_request", "need_more_information"],
 }
 

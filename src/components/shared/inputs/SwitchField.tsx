@@ -9,12 +9,7 @@ interface SwitchFieldProps {
   disabled?: boolean
 }
 
-export const SwitchField: React.FC<SwitchFieldProps> = ({
-  field,
-  name,
-  label,
-  disabled,
-}) => {
+export const SwitchField: React.FC<SwitchFieldProps> = ({ field, name, label, disabled }) => {
   return (
     <div className="flex items-center gap-2">
       <Switch

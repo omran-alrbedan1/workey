@@ -25,7 +25,8 @@ import type {
 function withApplicationsCount(job: EmployerJob): EmployerJob {
   const source = job as unknown as Record<string, unknown>
 
-  const direct = source.applications_count ?? source.applicants_count ?? source.job_applications_count
+  const direct =
+    source.applications_count ?? source.applicants_count ?? source.job_applications_count
   if (direct !== undefined && direct !== null) {
     return { ...job, applications_count: Number(direct) }
   }
@@ -97,9 +98,7 @@ export const employerJobsService = {
     skills: Array<string | number> | EmployerJobSkillsInput,
   ): Promise<EmployerJob> {
     const payload = Array.isArray(skills) ? { skill_ids: skills } : skills
-    return unwrapEmployerEntity<EmployerJob>(
-      await api.post(API_ENDPOINTS.jobs.skills(id), payload),
-    )
+    return unwrapEmployerEntity<EmployerJob>(await api.post(API_ENDPOINTS.jobs.skills(id), payload))
   },
 
   async detachSkill(id: string | number, skillId: string | number): Promise<void> {
@@ -139,7 +138,10 @@ export const employerJobsService = {
     )
   },
 
-  async deleteScreeningQuestion(jobId: string | number, questionId: string | number): Promise<void> {
+  async deleteScreeningQuestion(
+    jobId: string | number,
+    questionId: string | number,
+  ): Promise<void> {
     await api.delete(API_ENDPOINTS.jobs.screeningQuestionById(jobId, questionId))
   },
 

@@ -111,7 +111,7 @@ export default function CompanyCoverSection({
           className="hidden"
           disabled={isUploading}
         />
-        
+
         <Button
           type="button"
           variant="outline"
@@ -138,14 +138,10 @@ export default function CompanyCoverSection({
           </Button>
         )}
 
-        <p className="text-xs text-text-muted ml-auto">
-          {t("media.coverRequirements")}
-        </p>
+        <p className="text-xs text-text-muted ml-auto">{t("media.coverRequirements")}</p>
       </div>
 
-      {error && (
-        <p className="text-sm text-red-600">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   )
 }

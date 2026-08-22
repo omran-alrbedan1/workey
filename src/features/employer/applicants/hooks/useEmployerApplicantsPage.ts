@@ -26,7 +26,10 @@ export interface EmployerApplicantsPageModel {
   selectJob: (jobId: string) => void
   changeStatus: (applicationId: string | number, status: string, note?: string) => void
   moveToNextStep: (applicationId: string | number, status: string) => Promise<unknown>
-  scheduleInterview: (applicationId: string | number, input: EmployerInterviewInput) => Promise<unknown>
+  scheduleInterview: (
+    applicationId: string | number,
+    input: EmployerInterviewInput,
+  ) => Promise<unknown>
 }
 
 export function useEmployerApplicantsPage(): EmployerApplicantsPageModel {
@@ -75,7 +78,8 @@ export function useEmployerApplicantsPage(): EmployerApplicantsPageModel {
     interviewApplication,
     isError: jobs.isError || applicants.isError,
     isLoading: jobs.isPending || applicants.isPending,
-    isUpdating: applicants.statusMutation.isPending || applicants.scheduleInterviewMutation.isPending,
+    isUpdating:
+      applicants.statusMutation.isPending || applicants.scheduleInterviewMutation.isPending,
     setTestApplication,
     setInterviewApplication,
     retry: () => void (jobs.isError ? jobs.refetch() : applicants.refetch()),

@@ -16,7 +16,6 @@ function normalizeSession(response: unknown): EmployerAuthSession {
   const token = payload.access_token ?? payload.token
   const user = payload.user
 
-
   if (typeof token !== "string" || !isRecord(user)) {
     throw new Error("The login response does not contain a valid token and user.")
   }

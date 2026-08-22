@@ -192,12 +192,15 @@ export default function QuestionsManager({
         testId && question.id
           ? await employerTestsService.addQuestionOption(testId, question.id, {
               option_text: draftOption.option_text,
-              order_index: draftOption.order_index,
+              order_index: draftOption.order_index ?? options.length,
               is_correct: draftOption.is_correct,
             })
           : draftOption
 
-      replaceQuestion(questionIndex, { ...question, options: [...options, normalizeOption(option, options.length)] })
+      replaceQuestion(questionIndex, {
+        ...question,
+        options: [...options, normalizeOption(option, options.length)],
+      })
     },
     [questions, replaceQuestion, testId],
   )
@@ -231,7 +234,11 @@ export default function QuestionsManager({
 
       const nextOptions = options.map((option, index) => ({
         ...option,
-        is_correct: isSingleCorrect ? index === optionIndex && checked : index === optionIndex ? checked : option.is_correct,
+        is_correct: isSingleCorrect
+          ? index === optionIndex && checked
+          : index === optionIndex
+            ? checked
+            : option.is_correct,
       }))
 
       if (testId && question.id) {
@@ -317,11 +324,12 @@ export default function QuestionsManager({
       replaceQuestion(index, {
         ...question,
         question_type: questionType,
-        options: questionType === "true_false"
-          ? trueFalseOptions()
-          : keepsOptions
-            ? normalizeOptions(question.options)
-            : [],
+        options:
+          questionType === "true_false"
+            ? trueFalseOptions()
+            : keepsOptions
+              ? normalizeOptions(question.options)
+              : [],
       })
     },
     [questions, replaceQuestion],
@@ -424,7 +432,9 @@ export default function QuestionsManager({
                       <Textarea
                         id={`q-text-${index}`}
                         value={question.question_text}
-                        onChange={(event) => updateQuestion(index, "question_text", event.target.value)}
+                        onChange={(event) =>
+                          updateQuestion(index, "question_text", event.target.value)
+                        }
                         placeholder={t("questions.questionTextPlaceholder")}
                         rows={2}
                         className="resize-none"
@@ -448,8 +458,12 @@ export default function QuestionsManager({
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="single_choice">{t("questions.singleChoice")}</SelectItem>
-                            <SelectItem value="multiple_choice">{t("questions.multipleChoice")}</SelectItem>
+                            <SelectItem value="single_choice">
+                              {t("questions.singleChoice")}
+                            </SelectItem>
+                            <SelectItem value="multiple_choice">
+                              {t("questions.multipleChoice")}
+                            </SelectItem>
                             <SelectItem value="true_false">{t("questions.trueFalse")}</SelectItem>
                             <SelectItem value="short_text">{t("questions.shortText")}</SelectItem>
                             <SelectItem value="long_text">{t("questions.longText")}</SelectItem>
@@ -458,7 +472,10 @@ export default function QuestionsManager({
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor={`q-points-${index}`} className="mb-2 flex items-center gap-1">
+                        <Label
+                          htmlFor={`q-points-${index}`}
+                          className="mb-2 flex items-center gap-1"
+                        >
                           <Award className="h-3 w-3" />
                           {t("questions.points")}
                         </Label>
@@ -482,7 +499,11 @@ export default function QuestionsManager({
                         </Label>
                         {question.question_type === "true_false" ? (
                           <div className="space-y-2">
-                            {normalizeOptions(question.options?.length === 2 ? question.options : trueFalseOptions()).map((option, optionIndex) => (
+                            {normalizeOptions(
+                              question.options?.length === 2
+                                ? question.options
+                                : trueFalseOptions(),
+                            ).map((option, optionIndex) => (
                               <div key={option.option_text} className="flex items-center gap-2">
                                 <Checkbox
                                   id={`tf-${option.option_text}-${index}`}
@@ -492,7 +513,9 @@ export default function QuestionsManager({
                                   }
                                 />
                                 <Label htmlFor={`tf-${option.option_text}-${index}`}>
-                                  {option.option_text.toLowerCase() === "true" ? t("questions.true") : t("questions.false")}
+                                  {option.option_text.toLowerCase() === "true"
+                                    ? t("questions.true")
+                                    : t("questions.false")}
                                 </Label>
                               </div>
                             ))}
@@ -546,8 +569,12 @@ export default function QuestionsManager({
                                   </span>
                                   <Input
                                     value={option.option_text}
-                                    onChange={(event) => updateOptionText(index, optionIndex, event.target.value)}
-                                    placeholder={t("questions.optionPlaceholder", { n: optionIndex + 1 })}
+                                    onChange={(event) =>
+                                      updateOptionText(index, optionIndex, event.target.value)
+                                    }
+                                    placeholder={t("questions.optionPlaceholder", {
+                                      n: optionIndex + 1,
+                                    })}
                                   />
                                   <Button
                                     type="button"
@@ -561,15 +588,22 @@ export default function QuestionsManager({
                                 </div>
                                 <FieldError
                                   message={errorMessage(
-                                    errorAt(errorAt(errorAt(questionError, "options"), optionIndex), "option_text"),
+                                    errorAt(
+                                      errorAt(errorAt(questionError, "options"), optionIndex),
+                                      "option_text",
+                                    ),
                                   )}
                                 />
                               </div>
                             ))}
-                            <Button type="button" size="sm" variant="ghost" onClick={() => addOption(index)}>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => addOption(index)}
+                            >
                               <Plus className="mr-2 h-3.5 w-3.5" /> {t("questions.addOption")}
                             </Button>
-
                           </>
                         )}
                       </div>

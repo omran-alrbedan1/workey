@@ -1,6 +1,6 @@
 //@ts-nocheck
 
-"use client";
+"use client"
 import * as React from "react"
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group"
 
@@ -17,7 +17,9 @@ const ToggleGroupContext = React.createContext<ToggleGroupContextType>({
   variant: "default",
 })
 
-interface ToggleGroupProps extends React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> {
+interface ToggleGroupProps extends React.ComponentPropsWithoutRef<
+  typeof ToggleGroupPrimitive.Root
+> {
   variant?: "default" | "outline"
   size?: "default" | "sm" | "lg"
 }
@@ -31,15 +33,15 @@ const ToggleGroup = React.forwardRef<
     className={cn("flex items-center justify-center gap-1", className)}
     {...props}
   >
-    <ToggleGroupContext.Provider value={{ variant, size }}>
-      {children}
-    </ToggleGroupContext.Provider>
+    <ToggleGroupContext.Provider value={{ variant, size }}>{children}</ToggleGroupContext.Provider>
   </ToggleGroupPrimitive.Root>
 ))
 
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
 
-interface ToggleGroupItemProps extends React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> {
+interface ToggleGroupItemProps extends React.ComponentPropsWithoutRef<
+  typeof ToggleGroupPrimitive.Item
+> {
   variant?: "default" | "outline"
   size?: "default" | "sm" | "lg"
 }
@@ -58,7 +60,7 @@ const ToggleGroupItem = React.forwardRef<
           variant: context.variant || variant,
           size: context.size || size,
         }),
-        className
+        className,
       )}
       {...props}
     >

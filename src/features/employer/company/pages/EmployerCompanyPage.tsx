@@ -58,11 +58,7 @@ export default function EmployerCompanyPage() {
         title={t("title")}
         description={t("description")}
         icon={Building2}
-        rightContent={
-          company.data ? (
-            <StatusBadge status={status} variant="soft" />
-          ) : null
-        }
+        rightContent={company.data ? <StatusBadge status={status} variant="soft" /> : null}
       />
       {company.isPending || !company.data ? (
         <div className="h-96 animate-pulse rounded-lg bg-background-secondary" />

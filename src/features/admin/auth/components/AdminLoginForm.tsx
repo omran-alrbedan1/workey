@@ -35,7 +35,10 @@ export default function AdminLoginForm() {
           iconPosition="left"
         />
         <div className="text-end">
-          <Link className="text-sm font-semibold text-primary hover:underline" to={ROUTES.auth.forgotPassword}>
+          <Link
+            className="text-sm font-semibold text-primary hover:underline"
+            to={ROUTES.auth.forgotPassword}
+          >
             {t("forgotPassword")}
           </Link>
         </div>

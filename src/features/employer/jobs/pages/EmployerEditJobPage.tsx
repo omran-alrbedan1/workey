@@ -11,7 +11,12 @@ import EmployerJobSkills from "../components/EmployerJobSkills"
 import { useEmployerJob } from "../hooks/useEmployerJob"
 import { useEmployerSkills } from "../hooks/useEmployerSkills"
 import { keyOf } from "@/lib/keyValue"
-import type { EmployerJobInput, EmploymentType, ExperienceLevel, JobWorkMode } from "../types/employerJobs.types"
+import type {
+  EmployerJobInput,
+  EmploymentType,
+  ExperienceLevel,
+  JobWorkMode,
+} from "../types/employerJobs.types"
 
 export default function EmployerEditJobPage() {
   const { t } = useTranslation("employerJobs")
@@ -45,7 +50,7 @@ export default function EmployerEditJobPage() {
         employment_type: toFormValue(job.data.employment_type) as EmploymentType,
         experience_level: toFormValue(job.data.experience_level) as ExperienceLevel,
         education_level: toFormValue(job.data.education_level) || null,
-        work_mode: toFormValue(job.data.work_mode) as JobWorkMode || "remote",
+        work_mode: (toFormValue(job.data.work_mode) as JobWorkMode) || "remote",
         location: job.data.location ?? null,
         city_id: job.data.city?.id ?? null,
         application_deadline: job.data.application_deadline ?? null,
@@ -81,9 +86,7 @@ export default function EmployerEditJobPage() {
           availableSkills={skills.data?.items ?? []}
           isLoadingSkills={skills.isPending}
           skillsError={skills.isError}
-          isPending={
-            job.attachSkillsMutation.isPending || job.detachSkillMutation.isPending
-          }
+          isPending={job.attachSkillsMutation.isPending || job.detachSkillMutation.isPending}
           onAttach={job.attachSkillsMutation.mutateAsync}
           onDetach={(skillId) => job.detachSkillMutation.mutate(skillId)}
         />
@@ -98,7 +101,9 @@ export default function EmployerEditJobPage() {
             job.deleteScreeningQuestionMutation.isPending
           }
           onCreate={job.createScreeningQuestionMutation.mutateAsync}
-          onUpdate={(questionId, input) => job.updateScreeningQuestionMutation.mutateAsync({ questionId, input })}
+          onUpdate={(questionId, input) =>
+            job.updateScreeningQuestionMutation.mutateAsync({ questionId, input })
+          }
           onDelete={job.deleteScreeningQuestionMutation.mutateAsync}
         />
       )}

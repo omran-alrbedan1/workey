@@ -30,7 +30,8 @@ export const InputField: React.FC<InputFieldProps> = ({
   iconPosition,
   iconClassName,
 }) => {
-  const hasLeftIcon = leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
+  const hasLeftIcon =
+    leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
   const hasRightIcon = rightIcon && (iconPosition === "right" || iconPosition === "both")
 
   return (
@@ -50,7 +51,7 @@ export const InputField: React.FC<InputFieldProps> = ({
           inputClassName,
           "px-6 py-4 text-base",
           hasLeftIcon && "ltr:pl-14 rtl:pr-14",
-          hasRightIcon && "ltr:pr-14 rtl:pl-14"
+          hasRightIcon && "ltr:pr-14 rtl:pl-14",
         )}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}

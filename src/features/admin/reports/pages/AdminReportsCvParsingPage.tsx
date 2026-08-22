@@ -25,10 +25,7 @@ export default function AdminReportsCvParsingPage() {
         onApply={query.applyFilters}
         onReset={query.resetFilters}
       />
-      <AdminReportsCvParsing
-        data={query.data}
-        isLoading={query.isPending}
-      />
+      <AdminReportsCvParsing data={query.data} isLoading={query.isPending} />
     </div>
   )
 }

@@ -28,7 +28,8 @@ export const EmailField: React.FC<EmailFieldProps> = ({
   iconPosition,
   iconClassName,
 }) => {
-  const hasLeftIcon = leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
+  const hasLeftIcon =
+    leftIcon && (!iconPosition || iconPosition === "left" || iconPosition === "both")
   const hasRightIcon = rightIcon && (iconPosition === "right" || iconPosition === "both")
 
   return (
@@ -48,7 +49,7 @@ export const EmailField: React.FC<EmailFieldProps> = ({
           inputClassName,
           "px-6 py-5 text-base",
           hasLeftIcon && "ltr:pl-14 rtl:pr-14",
-          hasRightIcon && "ltr:pr-14 rtl:pl-14"
+          hasRightIcon && "ltr:pr-14 rtl:pl-14",
         )}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}

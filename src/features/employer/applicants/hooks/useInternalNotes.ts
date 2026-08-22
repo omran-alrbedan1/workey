@@ -1,6 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { employerApplicantsService } from "../services/employerApplicants.service"
-import type { ApplicationInternalNoteInput, ApplicationInternalNoteUpdateInput } from "../types/employerApplicants.types"
+import type {
+  ApplicationInternalNoteInput,
+  ApplicationInternalNoteUpdateInput,
+} from "../types/employerApplicants.types"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 
 function apiErrorCode(error: any) {
@@ -43,8 +46,13 @@ export function useInternalNotes(applicationId: string | number | undefined) {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ noteId, input }: { noteId: string | number; input: ApplicationInternalNoteUpdateInput }) =>
-      employerApplicantsService.updateInternalNote(noteId, input),
+    mutationFn: ({
+      noteId,
+      input,
+    }: {
+      noteId: string | number
+      input: ApplicationInternalNoteUpdateInput
+    }) => employerApplicantsService.updateInternalNote(noteId, input),
     onSuccess: () => {
       refreshNotes()
       showSuccessToast("Internal note updated")
@@ -56,7 +64,9 @@ export function useInternalNotes(applicationId: string | number | undefined) {
         showErrorToast("Edit window has expired (15 minutes)")
       } else if (code === "APPLICATION_INTERNAL_NOTE_VERSION_CONFLICT") {
         refreshNotes()
-        showErrorToast("This note changed elsewhere. I refreshed the notes; reopen it and try again.")
+        showErrorToast(
+          "This note changed elsewhere. I refreshed the notes; reopen it and try again.",
+        )
       } else {
         showErrorToast(message)
       }
@@ -73,7 +83,9 @@ export function useInternalNotes(applicationId: string | number | undefined) {
     onError: (error: any) => {
       if (apiErrorCode(error) === "APPLICATION_INTERNAL_NOTE_VERSION_CONFLICT") {
         refreshNotes()
-        showErrorToast("This note changed elsewhere. I refreshed the notes; check the latest version before deleting.")
+        showErrorToast(
+          "This note changed elsewhere. I refreshed the notes; check the latest version before deleting.",
+        )
         return
       }
       showErrorToast(apiErrorMessage(error, "Failed to delete note"))

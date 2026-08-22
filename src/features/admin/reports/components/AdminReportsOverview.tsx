@@ -10,6 +10,7 @@ import {
   FileText,
   ScrollText,
 } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
 import { MetricStatusCard } from "@/components/shared/cards/MetricCard"
 import type { AdminOverviewReport } from "../types/adminReports.types"
@@ -21,7 +22,7 @@ interface AdminReportsOverviewProps {
 
 const overviewFields: Array<{
   key: keyof AdminOverviewReport
-  icon: React.ElementType
+  icon: LucideIcon
   translationKey: string
 }> = [
   { key: "users", icon: Users, translationKey: "overview.users" },
@@ -55,10 +56,7 @@ function extractValue(value: unknown): number | null {
   )
 }
 
-export default function AdminReportsOverview({
-  data,
-  isLoading,
-}: AdminReportsOverviewProps) {
+export default function AdminReportsOverview({ data, isLoading }: AdminReportsOverviewProps) {
   const { t } = useTranslation("adminReports")
 
   if (isLoading) {

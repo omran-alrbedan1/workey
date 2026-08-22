@@ -24,7 +24,9 @@ function useRefreshAfterRequestChange(applicationId: string | number | undefined
   const queryClient = useQueryClient()
   return () => {
     queryClient.invalidateQueries({ queryKey: ["informationRequests", applicationId] })
-    queryClient.invalidateQueries({ queryKey: ["employer", "applicants", "detail", String(applicationId ?? "")] })
+    queryClient.invalidateQueries({
+      queryKey: ["employer", "applicants", "detail", String(applicationId ?? "")],
+    })
   }
 }
 
@@ -56,8 +58,13 @@ export function useInformationRequests(applicationId: string | number | undefine
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ requestId, input }: { requestId: string | number; input: InformationRequestUpdateInput }) =>
-      employerApplicantsService.updateInformationRequest(requestId, input),
+    mutationFn: ({
+      requestId,
+      input,
+    }: {
+      requestId: string | number
+      input: InformationRequestUpdateInput
+    }) => employerApplicantsService.updateInformationRequest(requestId, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["informationRequests", applicationId] })
       showSuccessToast("Information request updated")
@@ -68,8 +75,13 @@ export function useInformationRequests(applicationId: string | number | undefine
   })
 
   const cancelMutation = useMutation({
-    mutationFn: ({ requestId, input }: { requestId: string | number; input: CancelInformationRequestInput }) =>
-      employerApplicantsService.cancelInformationRequest(requestId, input),
+    mutationFn: ({
+      requestId,
+      input,
+    }: {
+      requestId: string | number
+      input: CancelInformationRequestInput
+    }) => employerApplicantsService.cancelInformationRequest(requestId, input),
     onSuccess: () => {
       refreshAfterChange()
       showSuccessToast("Information request cancelled")
@@ -105,7 +117,8 @@ export function useDownloadAttachment() {
   return {
     downloadAttachment: async (attachmentId: string | number, fileName: string) => {
       try {
-        const blob = await employerApplicantsService.downloadInformationResponseAttachment(attachmentId)
+        const blob =
+          await employerApplicantsService.downloadInformationResponseAttachment(attachmentId)
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url

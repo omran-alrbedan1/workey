@@ -1,10 +1,6 @@
 import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
-import type {
-  Activity,
-  ActivityListParams,
-  ActivityListResponse,
-} from "@/types/activity.types"
+import type { Activity, ActivityListParams, ActivityListResponse } from "@/types/activity.types"
 
 export const activityService = {
   async getActivity(params?: ActivityListParams): Promise<ActivityListResponse> {

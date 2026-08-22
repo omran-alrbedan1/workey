@@ -11,7 +11,9 @@ import type {
 
 function cleanFilters<T extends AdminReportFilters>(filters: T): Partial<T> {
   return Object.fromEntries(
-    Object.entries(filters).filter(([, value]) => value !== "" && value !== undefined && value !== null),
+    Object.entries(filters).filter(
+      ([, value]) => value !== "" && value !== undefined && value !== null,
+    ),
   ) as Partial<T>
 }
 
@@ -32,7 +34,9 @@ export const adminReportsService = {
     )
   },
 
-  async cvParsing(filters: Pick<AdminReportFilters, "date_from" | "date_to"> = {}): Promise<AdminCvParsingReport> {
+  async cvParsing(
+    filters: Pick<AdminReportFilters, "date_from" | "date_to"> = {},
+  ): Promise<AdminCvParsingReport> {
     return unwrapEntity<AdminCvParsingReport>(
       await api.get(API_ENDPOINTS.admin.reports.cvParsing, { params: cleanFilters(filters) }),
     )

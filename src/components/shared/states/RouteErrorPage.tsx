@@ -11,7 +11,8 @@ export default function RouteErrorPage() {
   const navigate = useNavigate()
 
   const errorMessage = (): string => {
-    if (isRouteErrorResponse(error)) return error.statusText || error.data?.message || `Request failed with status ${error.status}`
+    if (isRouteErrorResponse(error))
+      return error.statusText || error.data?.message || `Request failed with status ${error.status}`
     if (error instanceof Error) return error.message
     return t("errors.unexpectedPageError")
   }
@@ -26,8 +27,12 @@ export default function RouteErrorPage() {
         <h1 className="mt-2 text-2xl font-bold text-text-primary">{t("routeError.title")}</h1>
         <p className="mt-3 text-sm text-text-secondary">{errorMessage()}</p>
         <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-          <Button onClick={() => window.location.reload()}><RefreshCw /> {t("routeError.reload")}</Button>
-          <Button variant="outline" onClick={() => navigate(ROUTES.admin.root, { replace: true })}><Home /> {t("routeError.adminDashboard")}</Button>
+          <Button onClick={() => window.location.reload()}>
+            <RefreshCw /> {t("routeError.reload")}
+          </Button>
+          <Button variant="outline" onClick={() => navigate(ROUTES.admin.root, { replace: true })}>
+            <Home /> {t("routeError.adminDashboard")}
+          </Button>
         </div>
       </section>
     </main>

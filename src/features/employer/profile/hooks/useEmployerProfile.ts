@@ -8,7 +8,11 @@ export const employerProfileKey = ["employer", "profile"] as const
 export function useEmployerProfile() {
   const { t } = useTranslation("employerProfile")
   const client = useQueryClient()
-  const query = useQuery({ queryKey: employerProfileKey, queryFn: employerProfileService.get, staleTime: 5 * 60_000 })
+  const query = useQuery({
+    queryKey: employerProfileKey,
+    queryFn: employerProfileService.get,
+    staleTime: 5 * 60_000,
+  })
   const updateMutation = useMutation({
     mutationFn: employerProfileService.update,
     onSuccess: (profile) => {

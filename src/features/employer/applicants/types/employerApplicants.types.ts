@@ -52,7 +52,9 @@ export interface ApplicationSnapshotCv {
 
 export interface ApplicationSnapshotDocument {
   source?: string | null
+  original_name?: string | null
   mime_type?: string | null
+  extension?: string | null
   allowed_actions?: string[]
   preview_url?: string | null
   download_url?: string | null

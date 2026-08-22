@@ -114,7 +114,10 @@ export default function EmployerTestForm({
   const questions = form.watch("questions") ?? []
 
   // Total points across all questions (used for max score + passing score cap).
-  const calculatedMaxScore = questions.reduce((sum: number, q: { points?: number }) => sum + (Number(q.points) || 0), 0)
+  const calculatedMaxScore = questions.reduce(
+    (sum: number, q: { points?: number }) => sum + (Number(q.points) || 0),
+    0,
+  )
 
   // Keep the passing score within the achievable total.
   useEffect(() => {
@@ -136,7 +139,9 @@ export default function EmployerTestForm({
             duration_minutes: test.duration_minutes,
             passing_score: test.passing_score ?? 0,
             is_active: test.is_active,
-            questions: (test.questions ?? []).map((q) => toQuestionFormValue(q)) as EmployerTestFormValues["questions"],
+            questions: (test.questions ?? []).map((q) =>
+              toQuestionFormValue(q),
+            ) as EmployerTestFormValues["questions"],
           }
         : getDefaults(),
     )
@@ -191,7 +196,9 @@ export default function EmployerTestForm({
     const savedQuestions: TestQuestion[] = []
     const orderedQuestions = normalizedQuestions(nextQuestions)
     const serverQuestions = (await employerTestsService.getQuestions(testId)).sort(byOrderIndex)
-    const serverQuestionById = new Map(serverQuestions.map((question) => [String(question.id), question]))
+    const serverQuestionById = new Map(
+      serverQuestions.map((question) => [String(question.id), question]),
+    )
     const usedServerQuestionIds = new Set<string>()
     const highestServerOrder = serverQuestions.reduce(
       (highest, question) => Math.max(highest, Number(question.order_index) || 0),
@@ -216,7 +223,10 @@ export default function EmployerTestForm({
           matchedQuestion.id,
           toQuestionPayload(question, i, matchedQuestion.order_index),
         )
-        savedQuestions.push({ ...question, ...toQuestionFormValue(savedQuestion as TestQuestionResponse) })
+        savedQuestions.push({
+          ...question,
+          ...toQuestionFormValue(savedQuestion as TestQuestionResponse),
+        })
       } else {
         const orderIndex = highestServerOrder + createdCount + 1
         const savedQuestion = await employerTestsService.createQuestion(
@@ -237,7 +247,11 @@ export default function EmployerTestForm({
       )
     }
 
-    if (savedQuestions.length > 1 && savedQuestions.every((question) => question.id) && needsReorder(savedQuestions)) {
+    if (
+      savedQuestions.length > 1 &&
+      savedQuestions.every((question) => question.id) &&
+      needsReorder(savedQuestions)
+    ) {
       try {
         await employerTestsService.reorderQuestions(testId, {
           questions: savedQuestions.map((question, index) => ({
@@ -252,7 +266,10 @@ export default function EmployerTestForm({
 
     form.setValue(
       "questions",
-      savedQuestions.map((q) => ({ ...q, is_required: q.is_required ?? true })) as EmployerTestFormValues["questions"],
+      savedQuestions.map((q) => ({
+        ...q,
+        is_required: q.is_required ?? true,
+      })) as EmployerTestFormValues["questions"],
       { shouldValidate: false },
     )
   }
@@ -487,7 +504,9 @@ export default function EmployerTestForm({
                   name="passing_score"
                   label={t("form.passingScore")}
                   leftIcon={Target}
-                  description={calculatedMaxScore > 0 ? `Max: ${calculatedMaxScore} pts` : undefined}
+                  description={
+                    calculatedMaxScore > 0 ? `Max: ${calculatedMaxScore} pts` : undefined
+                  }
                 />
                 <div className="sm:col-span-2">
                   <CustomFormField
@@ -502,7 +521,9 @@ export default function EmployerTestForm({
             )}
 
             {/* Step 4: Review */}
-            {currentStep === 4 && <ReviewStep values={form.watch()} maxScore={calculatedMaxScore} />}
+            {currentStep === 4 && (
+              <ReviewStep values={form.watch()} maxScore={calculatedMaxScore} />
+            )}
 
             {/* Navigation */}
             <div className="sm:col-span-2 flex items-center justify-between gap-4">
@@ -541,13 +562,7 @@ export default function EmployerTestForm({
   )
 }
 
-function ReviewStep({
-  values,
-  maxScore,
-}: {
-  values: EmployerTestFormValues
-  maxScore: number
-}) {
+function ReviewStep({ values, maxScore }: { values: EmployerTestFormValues; maxScore: number }) {
   const { t } = useTranslation("employerTests")
   const reviewQuestions = values.questions ?? []
 
@@ -560,7 +575,10 @@ function ReviewStep({
         </h3>
         <dl className="grid gap-3 sm:grid-cols-2">
           <ReviewItem label={t("form.title")} value={values.title || "-"} />
-          <ReviewItem label={t("form.description")} value={values.description || t("noDescription")} />
+          <ReviewItem
+            label={t("form.description")}
+            value={values.description || t("noDescription")}
+          />
         </dl>
       </section>
 
@@ -572,7 +590,10 @@ function ReviewStep({
         <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <ReviewItem label={t("review.totalPoints")} value={`${maxScore}`} />
           <ReviewItem label={t("form.passingScore")} value={`${values.passing_score ?? 0}`} />
-          <ReviewItem label={t("form.duration")} value={t("minutes", { count: values.duration_minutes ?? 0 })} />
+          <ReviewItem
+            label={t("form.duration")}
+            value={t("minutes", { count: values.duration_minutes ?? 0 })}
+          />
           <ReviewItem
             label={t("form.active")}
             value={values.is_active ? t("review.active") : t("review.inactive")}
@@ -609,7 +630,9 @@ function ReviewStep({
                     <p className="text-sm font-medium text-text-primary">
                       {index + 1}. {question.question_text}
                     </p>
-                    <span className="text-xs font-medium text-primary">{Number(question.points)} pts</span>
+                    <span className="text-xs font-medium text-primary">
+                      {Number(question.points)} pts
+                    </span>
                   </div>
                   <p className="mt-1 text-xs text-text-muted">
                     {t(questionTypeLabelKeys[question.question_type])}
@@ -640,7 +663,13 @@ function ReviewItem({
   return (
     <div>
       <dt className="text-xs font-medium text-text-muted">{label}</dt>
-      <dd className={cn("mt-0.5 whitespace-pre-line text-sm text-text-primary", !multiline && "truncate")} title={!multiline ? value : undefined}>
+      <dd
+        className={cn(
+          "mt-0.5 whitespace-pre-line text-sm text-text-primary",
+          !multiline && "truncate",
+        )}
+        title={!multiline ? value : undefined}
+      >
         {value}
       </dd>
     </div>

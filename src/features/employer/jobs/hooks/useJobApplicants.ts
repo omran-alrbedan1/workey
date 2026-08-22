@@ -12,7 +12,8 @@ export interface JobApplicantRow extends EmployerApplicantDetail {
 }
 
 export function matchScorePercent(row: JobApplicantRow): number | null {
-  const raw = row.ranked?.score ?? row.ranked?.matching_score ?? row.match_score ?? row.matching_score
+  const raw =
+    row.ranked?.score ?? row.ranked?.matching_score ?? row.match_score ?? row.matching_score
   if (raw == null) return null
   const score = Number(raw)
   if (Number.isNaN(score)) return null

@@ -9,7 +9,7 @@ export interface AdminCompanyRecord {
   status?: AdminKeyValueField
   approval_status?: AdminKeyValueField
   created_at?: string
-  employer?: { name?: string; email?: string; status?: AdminKeyValueField }
+  employer?: AdminCompanyEmployerSummary | null
 }
 
 export interface AdminCompanyContact {

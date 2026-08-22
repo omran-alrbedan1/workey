@@ -180,9 +180,21 @@ export function useAdminDashboard() {
     ]
 
     const companyDistribution: DistributionItem[] = [
-      { name: t("statuses.approved"), value: approvedCompanies, color: "var(--chart-company-approved)" },
-      { name: t("statuses.pending"), value: pendingCompanies, color: "var(--chart-company-pending)" },
-      { name: t("statuses.rejected"), value: rejectedCompanies, color: "var(--chart-company-rejected)" },
+      {
+        name: t("statuses.approved"),
+        value: approvedCompanies,
+        color: "var(--chart-company-approved)",
+      },
+      {
+        name: t("statuses.pending"),
+        value: pendingCompanies,
+        color: "var(--chart-company-pending)",
+      },
+      {
+        name: t("statuses.rejected"),
+        value: rejectedCompanies,
+        color: "var(--chart-company-rejected)",
+      },
     ]
 
     return {

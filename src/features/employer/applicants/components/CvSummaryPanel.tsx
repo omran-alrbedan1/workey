@@ -8,7 +8,8 @@ import { useApplicationCvSummary } from "../hooks/useApplicationCvSummary"
 
 export default function CvSummaryPanel({ applicationId }: { applicationId: string | number }) {
   const { t } = useTranslation("common")
-  const { summary, isLoading, isGenerating, generate, refetch } = useApplicationCvSummary(applicationId)
+  const { summary, isLoading, isGenerating, generate, refetch } =
+    useApplicationCvSummary(applicationId)
 
   if (isLoading) {
     return (
@@ -35,13 +36,20 @@ export default function CvSummaryPanel({ applicationId }: { applicationId: strin
           </CardTitle>
           {summary?.generation?.generated_at ? (
             <p className="mt-1 text-xs text-text-muted">
-              {t("cvSummary.generatedAt", { date: new Date(summary.generation.generated_at).toLocaleString() })}
+              {t("cvSummary.generatedAt", {
+                date: new Date(summary.generation.generated_at).toLocaleString(),
+              })}
             </p>
           ) : null}
         </div>
         <div className="flex gap-2">
           {summary ? (
-            <Button variant="outline" size="sm" onClick={() => void refetch()} disabled={isGenerating}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void refetch()}
+              disabled={isGenerating}
+            >
               <RefreshCw className="h-4 w-4" />
               {t("cvSummary.refresh")}
             </Button>
@@ -51,37 +59,52 @@ export default function CvSummaryPanel({ applicationId }: { applicationId: strin
             onClick={() => generate({ force: Boolean(summary) })}
             disabled={isGenerating}
           >
-            {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {isGenerating ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="h-4 w-4" />
+            )}
             {summary ? t("cvSummary.regenerate") : t("cvSummary.generate")}
           </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {!summary ? (
-          <p className="text-sm text-text-muted">
-            {t("cvSummary.emptyDescription")}
-          </p>
+          <p className="text-sm text-text-muted">{t("cvSummary.emptyDescription")}</p>
         ) : (
           <>
-            {summary.headline ? <p className="font-medium text-text-primary">{summary.headline}</p> : null}
-            {summary.summary ? <p className="whitespace-pre-wrap text-sm text-text-secondary">{summary.summary}</p> : null}
+            {summary.headline ? (
+              <p className="font-medium text-text-primary">{summary.headline}</p>
+            ) : null}
+            {summary.summary ? (
+              <p className="whitespace-pre-wrap text-sm text-text-secondary">{summary.summary}</p>
+            ) : null}
             <SummaryList title={t("cvSummary.strengths")} items={summary.strengths} />
             <SummaryList title={t("cvSummary.gaps")} items={summary.gaps} />
             {summary.evidence && summary.evidence.length > 0 ? (
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-text-primary">{t("cvSummary.evidence")}</h4>
+                <h4 className="text-sm font-semibold text-text-primary">
+                  {t("cvSummary.evidence")}
+                </h4>
                 <div className="space-y-2">
                   {summary.evidence.map((item, index) => (
-                    <div key={`${item.statement}-${index}`} className="rounded-md border border-border p-3 text-sm">
+                    <div
+                      key={`${item.statement}-${index}`}
+                      className="rounded-md border border-border p-3 text-sm"
+                    >
                       <p className="text-text-primary">{item.statement || "-"}</p>
-                      {item.source ? <p className="mt-1 text-xs text-text-muted">{item.source}</p> : null}
+                      {item.source ? (
+                        <p className="mt-1 text-xs text-text-muted">{item.source}</p>
+                      ) : null}
                     </div>
                   ))}
                 </div>
               </div>
             ) : null}
             {summary.ai_disclaimer ? (
-              <p className="rounded-md bg-muted p-3 text-xs text-text-muted">{summary.ai_disclaimer}</p>
+              <p className="rounded-md bg-muted p-3 text-xs text-text-muted">
+                {summary.ai_disclaimer}
+              </p>
             ) : null}
           </>
         )}

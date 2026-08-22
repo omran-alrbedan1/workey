@@ -12,7 +12,7 @@ function AnswerDisplay({ answer }: { answer: ApplicationScreeningAnswer }) {
   const { t } = useTranslation("employerApplicants")
   const type = keyOf(answer.question_type)
   const Icon = type === "boolean" ? CheckCircle2 : type === "number" ? ChevronDown : MessageSquare
-  
+
   // Extract answer based on new contract
   let answerText = "—"
   if (answer.answer.value != null) {
@@ -22,9 +22,9 @@ function AnswerDisplay({ answer }: { answer: ApplicationScreeningAnswer }) {
       answerText = String(answer.answer.value)
     }
   } else if (answer.answer.selected_options?.length > 0) {
-    answerText = answer.answer.selected_options.map(o => o.option_text).join(", ")
+    answerText = answer.answer.selected_options.map((o) => o.option_text).join(", ")
   }
-  
+
   return (
     <div className="rounded-lg border border-border bg-background p-4">
       <p className="mb-2 text-sm font-medium text-text-primary">{answer.question_text}</p>

@@ -1,6 +1,9 @@
 import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
-import { unwrapCollection, unwrapEntity } from "@/features/admin/shared/services/adminResponse.utils"
+import {
+  unwrapCollection,
+  unwrapEntity,
+} from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminCollection, AdminListParams } from "@/features/admin/shared/types/adminApi.types"
 import type {
   AdminApplicationDetailRecord,

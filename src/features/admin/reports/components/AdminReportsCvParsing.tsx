@@ -16,10 +16,7 @@ interface AdminReportsCvParsingProps {
   isLoading: boolean
 }
 
-export default function AdminReportsCvParsing({
-  data,
-  isLoading,
-}: AdminReportsCvParsingProps) {
+export default function AdminReportsCvParsing({ data, isLoading }: AdminReportsCvParsingProps) {
   const { t, i18n } = useTranslation("adminReports")
 
   if (isLoading) {
@@ -33,7 +30,7 @@ export default function AdminReportsCvParsing({
     )
   }
 
-  const dailyCounts = data?.daily_counts
+  const dailyCounts = data?.daily_counts ?? []
   const summaryCards = [
     {
       key: "success_count",

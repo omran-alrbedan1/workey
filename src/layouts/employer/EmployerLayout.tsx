@@ -57,9 +57,7 @@ export default function EmployerLayout() {
         />
         <div
           className={`relative h-full w-64 transition-transform duration-300 ${
-            isMobileMenuOpen
-              ? "translate-x-0"
-              : "ltr:-translate-x-full rtl:translate-x-full"
+            isMobileMenuOpen ? "translate-x-0" : "ltr:-translate-x-full rtl:translate-x-full"
           }`}
         >
           <EmployerSidebar onNavigate={() => setIsMobileMenuOpen(false)} />

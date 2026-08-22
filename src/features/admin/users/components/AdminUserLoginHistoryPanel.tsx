@@ -2,12 +2,15 @@ import { KeyRound } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
+import { LoadingState } from "@/components/shared/states"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 
-import type { AdminUserDetails } from "../types/adminUsers.types"
+import { useAdminUserLoginHistory } from "../hooks/useAdminUserRelated"
 
-export default function AdminUserLoginHistoryPanel({ user }: { user: AdminUserDetails }) {
+export default function AdminUserLoginHistoryPanel({ userId }: { userId?: string }) {
   const { t, i18n } = useTranslation("adminUsers")
+  const query = useAdminUserLoginHistory(userId)
+  const logins = query.data?.items ?? []
   const date = (input?: string | null) => {
     if (!input) return t("fallbacks.noDate")
     const parsed = new Date(input)
@@ -18,12 +21,11 @@ export default function AdminUserLoginHistoryPanel({ user }: { user: AdminUserDe
           timeStyle: "short",
         }).format(parsed)
   }
-  const logins = user.login_history
 
   return (
     <SectionCard icon={KeyRound} title={t("security.loginHistory")}>
-      {logins === undefined ? (
-        <UnavailableNotice />
+      {query.isPending ? (
+        <LoadingState size="sm" />
       ) : logins.length ? (
         <div className="space-y-3">
           {logins.map((login) => (
@@ -33,15 +35,20 @@ export default function AdminUserLoginHistoryPanel({ user }: { user: AdminUserDe
             >
               <div className="flex items-center justify-between gap-3">
                 <p className="font-medium text-text-primary">
-                  {login.device || login.user_agent || t("fallbacks.unknown")}
+                  {[login.device_name, login.platform].filter(Boolean).join(" · ") ||
+                    login.user_agent ||
+                    t("fallbacks.unknown")}
                 </p>
-                {login.status ? <StatusBadge status={login.status} variant="soft" /> : null}
+                <StatusBadge
+                  status={login.success === false ? "suspended" : "active"}
+                  label={login.success === false ? t("security.loginFailed") : t("statuses.active")}
+                  variant="soft"
+                />
               </div>
               <p className="mt-2 text-sm text-text-secondary">
-                {login.location || t("fallbacks.unknown")} ·{" "}
                 {login.ip_address || t("fallbacks.unknown")}
               </p>
-              <p className="mt-1 text-xs text-text-muted">{date(login.created_at)}</p>
+              <p className="mt-1 text-xs text-text-muted">{date(login.logged_in_at)}</p>
             </article>
           ))}
         </div>
@@ -51,14 +58,5 @@ export default function AdminUserLoginHistoryPanel({ user }: { user: AdminUserDe
         </p>
       )}
     </SectionCard>
-  )
-}
-
-function UnavailableNotice() {
-  const { t } = useTranslation("adminUsers")
-  return (
-    <p className="rounded-lg border border-dashed border-amber-500/30 bg-amber-500/5 p-4 text-sm text-text-secondary">
-      {t("details.backendCoverageWarning")}
-    </p>
   )
 }

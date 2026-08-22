@@ -46,7 +46,10 @@ interface EmployerJobScreeningQuestionsProps {
   isLoading: boolean
   isPending: boolean
   onCreate: (input: JobScreeningQuestionInput) => Promise<unknown>
-  onUpdate: (questionId: string | number, input: Partial<JobScreeningQuestionInput>) => Promise<unknown>
+  onUpdate: (
+    questionId: string | number,
+    input: Partial<JobScreeningQuestionInput>,
+  ) => Promise<unknown>
   onDelete: (questionId: string | number) => Promise<unknown>
 }
 
@@ -105,7 +108,8 @@ export default function EmployerJobScreeningQuestions({
   const [deletingId, setDeletingId] = useState<string | number | null>(null)
   const [form, setForm] = useState<FormState>(INITIAL_FORM)
 
-  const isChoiceType = form.question_type === "single_choice" || form.question_type === "multiple_choice"
+  const isChoiceType =
+    form.question_type === "single_choice" || form.question_type === "multiple_choice"
   const deletingQuestion = questions.find((q) => String(q.id) === String(deletingId))
 
   const resetForm = () => {
@@ -193,7 +197,12 @@ export default function EmployerJobScreeningQuestions({
               <p className="text-sm text-text-muted">{t("screeningQuestions.description")}</p>
             </div>
           </div>
-          <Button type="button" onClick={openAdd} disabled={isPending} className="shrink-0 text-white">
+          <Button
+            type="button"
+            onClick={openAdd}
+            disabled={isPending}
+            className="shrink-0 text-white"
+          >
             <Plus /> {t("screeningQuestions.addButton")}
           </Button>
         </div>
@@ -232,12 +241,17 @@ export default function EmployerJobScreeningQuestions({
                         {questionTypeLabel(q.question_type)}
                       </Badge>
                       {q.is_required ? (
-                        <Badge variant="outline" className="gap-1 text-xs border-primary/30 bg-primary/10 text-primary">
+                        <Badge
+                          variant="outline"
+                          className="gap-1 text-xs border-primary/30 bg-primary/10 text-primary"
+                        >
                           <CheckCircle2 className="h-3 w-3" />
                           {t("screeningQuestions.required")}
                         </Badge>
                       ) : (
-                        <span className="text-xs text-text-muted">{t("screeningQuestions.optional")}</span>
+                        <span className="text-xs text-text-muted">
+                          {t("screeningQuestions.optional")}
+                        </span>
                       )}
                       {q.options && q.options.length > 0 && (
                         <span
@@ -293,7 +307,9 @@ export default function EmployerJobScreeningQuestions({
               </div>
               <div>
                 <DialogTitle>
-                  {editingId !== null ? t("screeningQuestions.edit") : t("screeningQuestions.addButton")}
+                  {editingId !== null
+                    ? t("screeningQuestions.edit")
+                    : t("screeningQuestions.addButton")}
                 </DialogTitle>
                 <DialogDescription>{t("screeningQuestions.description")}</DialogDescription>
               </div>
@@ -364,10 +380,14 @@ export default function EmployerJobScreeningQuestions({
               <div className="space-y-3 rounded-lg border border-border bg-background p-4">
                 <div className="flex items-center gap-2">
                   <ListTodo className="h-4 w-4 text-text-muted" />
-                  <Label className="text-sm font-medium">{t("screeningQuestions.fields.options")}</Label>
+                  <Label className="text-sm font-medium">
+                    {t("screeningQuestions.fields.options")}
+                  </Label>
                 </div>
                 {form.options.length === 0 && (
-                  <p className="text-xs text-text-muted">{t("screeningQuestions.fields.optionPlaceholder")}</p>
+                  <p className="text-xs text-text-muted">
+                    {t("screeningQuestions.fields.optionPlaceholder")}
+                  </p>
                 )}
                 <div className="space-y-2">
                   {form.options.map((opt, idx) => (
@@ -407,7 +427,13 @@ export default function EmployerJobScreeningQuestions({
                   size="sm"
                   className="w-full gap-1"
                   onClick={() =>
-                    setForm({ ...form, options: [...form.options, { option_text: "", sort_order: form.options.length }] })
+                    setForm({
+                      ...form,
+                      options: [
+                        ...form.options,
+                        { option_text: "", sort_order: form.options.length },
+                      ],
+                    })
                   }
                 >
                   <Plus className="h-4 w-4" /> {t("screeningQuestions.fields.addOption")}

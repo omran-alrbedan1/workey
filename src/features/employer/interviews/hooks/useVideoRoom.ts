@@ -35,13 +35,26 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
       const raw = err instanceof Error ? err.message : String(err ?? "")
       const lower = raw.toLowerCase()
 
-      if (lower.includes("token") || lower.includes("jwt") || lower.includes("expired") || lower.includes("grant")) {
+      if (
+        lower.includes("token") ||
+        lower.includes("jwt") ||
+        lower.includes("expired") ||
+        lower.includes("grant")
+      ) {
         return t("video.errors.tokenExpired")
       }
-      if (lower.includes("permission") || lower.includes("denied") || lower.includes("notallowed")) {
+      if (
+        lower.includes("permission") ||
+        lower.includes("denied") ||
+        lower.includes("notallowed")
+      ) {
         return t("video.errors.devicePermission")
       }
-      if (lower.includes("notfound") || lower.includes("404") || lower.includes("room does not exist")) {
+      if (
+        lower.includes("notfound") ||
+        lower.includes("404") ||
+        lower.includes("room does not exist")
+      ) {
         return t("video.errors.roomNotFound")
       }
       if (
@@ -78,10 +91,8 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
   const syncConnectionState = useCallback((state: ConnectionState) => {
     if (state === ConnectionState.Connected) setConnectionState("connected")
     else if (state === ConnectionState.Connecting) setConnectionState("connecting")
-    else if (
-      state === ConnectionState.Reconnecting ||
-      state === ConnectionState.SignalReconnecting
-    ) setConnectionState("reconnecting")
+    else if (state === ConnectionState.Reconnecting || state === ConnectionState.SignalReconnecting)
+      setConnectionState("reconnecting")
     else setConnectionState("disconnected")
   }, [])
 
@@ -89,7 +100,6 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
     if (!url || !token || roomRef.current) return
 
     const room = new Room({
-      autoSubscribe: true,
       adaptiveStream: true,
       dynacast: true,
       publishDefaults: { simulcast: true },
@@ -133,7 +143,7 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
       setConnectionState("connecting")
       setError(null)
       setUnexpectedDisconnect(false)
-      await room.connect(url, token)
+      await room.connect(url, token, { autoSubscribe: true })
       setConnectionState("connected")
 
       // Request permissions and publish local tracks. Handle each device
@@ -147,7 +157,9 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
         await room.localParticipant.setCameraEnabled(true)
       } catch {
         setDeviceWarning((current) =>
-          current ? `${current} ${t("video.errors.cameraUnavailable")}` : t("video.errors.cameraUnavailable"),
+          current
+            ? `${current} ${t("video.errors.cameraUnavailable")}`
+            : t("video.errors.cameraUnavailable"),
         )
       }
 

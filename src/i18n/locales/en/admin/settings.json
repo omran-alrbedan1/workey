@@ -1,4 +1,14 @@
 {
-  "title": "Platform Settings", "description": "Review configuration currently applied to the Workey frontend.",
-  "fields": { "appName": "App name", "description": "Description", "version": "Version", "supportEmail": "Support email", "apiBaseUrl": "API base URL", "defaultLocale": "Default locale", "defaultTheme": "Default theme", "pageSize": "Page size" }
+  "title": "Platform Settings",
+  "description": "Review configuration currently applied to the Workey frontend.",
+  "fields": {
+    "appName": "App name",
+    "description": "Description",
+    "version": "Version",
+    "supportEmail": "Support email",
+    "apiBaseUrl": "API base URL",
+    "defaultLocale": "Default locale",
+    "defaultTheme": "Default theme",
+    "pageSize": "Page size"
+  }
 }

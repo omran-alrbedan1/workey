@@ -204,9 +204,9 @@
   },
   "toasts": {
     "approved": "Company approved",
-    "rejected": "Company rejected"
-    ,"suspended": "Company suspended"
-    ,"updated": "Company updated"
-    ,"updateFailed": "Unable to update company."
+    "rejected": "Company rejected",
+    "suspended": "Company suspended",
+    "updated": "Company updated",
+    "updateFailed": "Unable to update company."
   }
 }

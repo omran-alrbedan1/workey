@@ -49,7 +49,9 @@ function EmployerInterviewMobileCard({
         </div>
         <StatusBadge
           status={statusKey}
-          label={String(valueOf(interview.status) || t(`statuses.${statusKey}`, { defaultValue: statusKey }))}
+          label={String(
+            valueOf(interview.status) || t(`statuses.${statusKey}`, { defaultValue: statusKey }),
+          )}
           variant="soft"
         />
       </div>
@@ -57,7 +59,10 @@ function EmployerInterviewMobileCard({
       <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
         <p className="flex items-center gap-2">
           <Tag className="h-3.5 w-3.5 text-primary" />
-          {t("columns.type")}: <span className="capitalize">{valueOf(interview.type ?? interview.interview_type, "-")}</span>
+          {t("columns.type")}:{" "}
+          <span className="capitalize">
+            {valueOf(interview.type ?? interview.interview_type, "-")}
+          </span>
         </p>
         <p className="flex items-center gap-2">
           <Clock3 className="h-3.5 w-3.5 text-primary" />
@@ -101,7 +106,8 @@ export default function EmployerInterviewsTable({
   const { t, i18n } = useTranslation("employerInterviews")
   const navigate = useNavigate()
 
-  const handleViewDetails = (interview: EmployerInterview) => navigate(ROUTES.employer.interviewDetails(interview.id))
+  const handleViewDetails = (interview: EmployerInterview) =>
+    navigate(ROUTES.employer.interviewDetails(interview.id))
 
   const columns: Column<EmployerInterview>[] = [
     {

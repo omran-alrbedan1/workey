@@ -124,11 +124,7 @@ export default function EmployerDashboard() {
             ))}
           </div>
         ) : dashboard.isError ? (
-          <ErrorState
-            variant="network"
-            size="sm"
-            retry={() => void dashboard.refetch()}
-          />
+          <ErrorState variant="network" size="sm" retry={() => void dashboard.refetch()} />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {metrics.map(({ key, value, icon: Icon, tone }) => (
@@ -143,9 +139,7 @@ export default function EmployerDashboard() {
                 <p className="mt-1 text-sm font-medium text-text-secondary">
                   {t(`stats.${key}.label`)}
                 </p>
-                <p className="mt-1 text-xs text-text-muted">
-                  {t(`stats.${key}.description`)}
-                </p>
+                <p className="mt-1 text-xs text-text-muted">{t(`stats.${key}.description`)}</p>
               </div>
             ))}
           </div>
@@ -219,10 +213,13 @@ export default function EmployerDashboard() {
                 <Skeleton key={index} className="h-9 rounded-lg" />
               ))}
             </div>
-          ) : dashboard.data?.funnel.some((item) => item.value > 0) ? (
+          ) : (dashboard.data?.funnel ?? []).some((item) => item.value > 0) ? (
             <div className="space-y-3">
-              {dashboard.data.funnel.map((item) => {
-                const maxValue = Math.max(...dashboard.data.funnel.map((entry) => entry.value), 1)
+              {(dashboard.data?.funnel ?? []).map((item) => {
+                const maxValue = Math.max(
+                  ...(dashboard.data?.funnel ?? []).map((entry) => entry.value),
+                  1,
+                )
                 return (
                   <div key={item.key} className="space-y-1.5">
                     <div className="flex items-center justify-between gap-3 text-sm">
@@ -233,7 +230,8 @@ export default function EmployerDashboard() {
                       <div
                         className="h-2 rounded-full bg-primary"
                         style={{
-                          width: item.value > 0 ? `${Math.max(6, (item.value / maxValue) * 100)}%` : 0,
+                          width:
+                            item.value > 0 ? `${Math.max(6, (item.value / maxValue) * 100)}%` : 0,
                         }}
                       />
                     </div>

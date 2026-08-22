@@ -1,5 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Edit, MoreHorizontal, Trash2, Badge, Hash, Calendar, Image as ImageIcon, Upload } from "lucide-react"
+import {
+  Edit,
+  MoreHorizontal,
+  Trash2,
+  Badge,
+  Hash,
+  Calendar,
+  Image as ImageIcon,
+  Upload,
+} from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -142,7 +151,11 @@ const AdminSkillMobileCard = ({
     <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
       <div className="flex items-start gap-3">
         {skill.icon ? (
-          <img src={skill.icon} alt={`${skill.name} icon`} className="h-10 w-10 rounded-xl object-cover" />
+          <img
+            src={skill.icon}
+            alt={`${skill.name} icon`}
+            className="h-10 w-10 rounded-xl object-cover"
+          />
         ) : (
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <Badge className="h-5 w-5" />
@@ -238,15 +251,18 @@ export default function AdminSkillsTable({
       key: "icon",
       header: t("columns.icon"),
       headerIcon: ImageIcon,
-      cell: (skill) => (
+      cell: (skill) =>
         skill.icon ? (
-          <img src={skill.icon} alt={`${skill.name} icon`} className="h-8 w-8 rounded object-cover" />
+          <img
+            src={skill.icon}
+            alt={`${skill.name} icon`}
+            className="h-8 w-8 rounded object-cover"
+          />
         ) : (
           <div className="flex h-8 w-8 items-center justify-center rounded bg-muted">
             <ImageIcon className="h-4 w-4 text-text-muted" />
           </div>
-        )
-      ),
+        ),
     },
     {
       key: "name",

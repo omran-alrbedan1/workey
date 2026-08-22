@@ -5,8 +5,10 @@ import type { GenerateCvSummaryInput } from "../types/employerApplicants.types"
 
 function errorMessage(error: any, fallback: string) {
   const code = error?.code ?? error?.response?.data?.code
-  if (code === "CV_SUMMARY_SOURCE_UNAVAILABLE") return "No usable CV source is available for this application."
-  if (code === "CV_SUMMARY_NOT_CONFIGURED") return "CV summary generation is not configured on the backend."
+  if (code === "CV_SUMMARY_SOURCE_UNAVAILABLE")
+    return "No usable CV source is available for this application."
+  if (code === "CV_SUMMARY_NOT_CONFIGURED")
+    return "CV summary generation is not configured on the backend."
   if (code === "CV_SUMMARY_TIMEOUT") return "CV summary generation timed out. Please try again."
   return error?.message ?? error?.response?.data?.message ?? fallback
 }

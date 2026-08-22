@@ -28,7 +28,13 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { ROUTES } from "@/config"
@@ -50,11 +56,7 @@ type GradeDraft = {
   reviewer_note: string
 }
 
-const manualQuestionTypes = new Set([
-  "short_text",
-  "long_text",
-  "file_upload",
-])
+const manualQuestionTypes = new Set(["short_text", "long_text", "file_upload"])
 
 const nextSteps = [
   { value: "interview_pending", labelKey: "statuses.interview_pending" },
@@ -155,12 +157,11 @@ export default function ApplicationTestsDialog({
 
   const gradingAttemptId = gradingAttempt ? attemptId(gradingAttempt) : null
 
-  const manualAnswers = useMemo(
-    () => answers.filter(canManuallyGrade),
-    [answers],
-  )
+  const manualAnswers = useMemo(() => answers.filter(canManuallyGrade), [answers])
 
-  const hasAnyResult = tests.data?.items.some((assignment) => assignment.attempt?.total_score != null) || Boolean(result)
+  const hasAnyResult =
+    tests.data?.items.some((assignment) => assignment.attempt?.total_score != null) ||
+    Boolean(result)
   const activeMaxScore = attemptMaxScore(gradingAttempt)
   const resultScore = getResultScore(result)
   const resultMax = getResultMax(result, activeMaxScore)
@@ -230,7 +231,7 @@ export default function ApplicationTestsDialog({
     }))
   }
 
-  const saveAnswerGrade = async (answer: TestAttemptAnswer) => {
+  const saveAnswerGrade = async (answer: TestAttemptResultBreakdownItem) => {
     if (!gradingAttemptId) return
     const questionId = getQuestionId(answer)
     const draft = drafts[String(questionId)]
@@ -254,7 +255,7 @@ export default function ApplicationTestsDialog({
     await loadAttemptDetails(gradingAttempt!)
   }
 
-  const deleteAnswerGrade = async (answer: TestAttemptAnswer) => {
+  const deleteAnswerGrade = async (answer: TestAttemptResultBreakdownItem) => {
     if (!gradingAttemptId) return
     await tests.deleteGradeMutation.mutateAsync({
       attemptId: gradingAttemptId,
@@ -273,7 +274,12 @@ export default function ApplicationTestsDialog({
         const maxPoints = getQuestionPoints(answer)
         const awardedPoints = Number(draft?.awarded_points)
 
-        if (!draft?.awarded_points || !Number.isFinite(awardedPoints) || awardedPoints < 0 || awardedPoints > maxPoints) {
+        if (
+          !draft?.awarded_points ||
+          !Number.isFinite(awardedPoints) ||
+          awardedPoints < 0 ||
+          awardedPoints > maxPoints
+        ) {
           return null
         }
 
@@ -297,7 +303,7 @@ export default function ApplicationTestsDialog({
     await loadAttemptDetails(gradingAttempt)
   }
 
-  const downloadAnswerFile = async (answer: TestAttemptAnswer) => {
+  const downloadAnswerFile = async (answer: TestAttemptResultBreakdownItem) => {
     if (!gradingAttemptId) return
 
     const questionId = getQuestionId(answer)
@@ -340,7 +346,9 @@ export default function ApplicationTestsDialog({
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-5xl">
         <DialogHeader>
           <DialogTitle>{t("tests.title")}</DialogTitle>
-          <DialogDescription>{candidateDisplayName(application, t("unknownCandidate"))}</DialogDescription>
+          <DialogDescription>
+            {candidateDisplayName(application, t("unknownCandidate"))}
+          </DialogDescription>
         </DialogHeader>
 
         {tests.isPending ? (
@@ -365,7 +373,10 @@ export default function ApplicationTestsDialog({
               const max = attemptMaxScore(attempt)
               const passed = attempt.attempt?.is_passing_score_met
               const attemptStatusKey = keyOf(attempt.state)
-              const submitted = Boolean(attempt.attempt?.submitted_at) || attemptStatusKey === "submitted" || attemptStatusKey === "evaluated"
+              const submitted =
+                Boolean(attempt.attempt?.submitted_at) ||
+                attemptStatusKey === "submitted" ||
+                attemptStatusKey === "evaluated"
               const isOpen = showAnswers[String(id)]
               const deadline = assignmentDeadline(attempt)
               const assignment = assignmentId(attempt)
@@ -397,7 +408,11 @@ export default function ApplicationTestsDialog({
                       />
                       {submitted && (
                         <>
-                          <Button size="sm" variant="outline" onClick={() => setGradingAttempt(attempt)}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setGradingAttempt(attempt)}
+                          >
                             <CheckCircle2 className="h-4 w-4" /> {t("tests.gradeAnswers")}
                           </Button>
                           <Button
@@ -406,8 +421,13 @@ export default function ApplicationTestsDialog({
                             onClick={() => {
                               const currentAttemptId = attemptId(attempt)
                               const currentTestId = attempt.test?.id ?? currentAttemptId
-                              if (currentAttemptId) {
-                                navigate(ROUTES.employer.testAttemptGrading(currentTestId, currentAttemptId))
+                              if (currentAttemptId && currentTestId) {
+                                navigate(
+                                  ROUTES.employer.testAttemptGrading(
+                                    currentTestId,
+                                    currentAttemptId,
+                                  ),
+                                )
                               }
                             }}
                           >
@@ -416,12 +436,20 @@ export default function ApplicationTestsDialog({
                         </>
                       )}
                       {assignment && (
-                        <Button size="sm" variant="outline" onClick={() => setDeadlineAttempt(attempt)}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setDeadlineAttempt(attempt)}
+                        >
                           <CalendarClock className="h-4 w-4" /> {t("tests.manageDeadline")}
                         </Button>
                       )}
                       {assignment && (
-                        <Button size="sm" variant="outline" onClick={() => setRetakeAttempt(attempt)}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setRetakeAttempt(attempt)}
+                        >
                           <History className="h-4 w-4" /> {t("tests.manageRetakes")}
                         </Button>
                       )}
@@ -439,15 +467,17 @@ export default function ApplicationTestsDialog({
                       >
                         <ListChecks className="h-4 w-4" />
                         {isOpen ? t("tests.hideDetails") : t("tests.showDetails")}
-                        {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                        {isOpen ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        )}
                       </Button>
                     </div>
                   </div>
                   {score != null && (
                     <div className="mt-3 space-y-2">
-                      <p className="text-sm font-medium">
-                        {t("tests.result", { score, max })}
-                      </p>
+                      <p className="text-sm font-medium">{t("tests.result", { score, max })}</p>
                       {attempt.feedback && (
                         <p className="text-sm text-text-muted">
                           <span className="font-medium">{t("tests.feedback")}:</span>{" "}
@@ -515,7 +545,9 @@ export default function ApplicationTestsDialog({
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div className="rounded-md border border-border bg-background p-3">
                     <p className="text-xs text-text-muted">{t("tests.gradingStatus")}</p>
-                    <p className="mt-1 font-medium">{valueOf(result?.grading_status ?? gradingAttempt.status, "-")}</p>
+                    <p className="mt-1 font-medium">
+                      {valueOf(result?.grading_status ?? gradingAttempt.status, "-")}
+                    </p>
                   </div>
                   <div className="rounded-md border border-border bg-background p-3">
                     <p className="text-xs text-text-muted">{t("tests.currentScore")}</p>
@@ -541,13 +573,19 @@ export default function ApplicationTestsDialog({
                   <div className="space-y-3">
                     {answers.map((answer, index) => {
                       const questionId = getQuestionId(answer)
-                      const draft = drafts[String(questionId)] ?? { awarded_points: "", reviewer_note: "" }
+                      const draft = drafts[String(questionId)] ?? {
+                        awarded_points: "",
+                        reviewer_note: "",
+                      }
                       const maxPoints = getQuestionPoints(answer)
                       const manual = canManuallyGrade(answer)
                       const questionType = answer.question_type
 
                       return (
-                        <div key={questionId} className="rounded-md border border-border bg-background p-3">
+                        <div
+                          key={questionId}
+                          className="rounded-md border border-border bg-background p-3"
+                        >
                           <div className="flex flex-wrap items-start justify-between gap-3">
                             <div>
                               <p className="text-sm font-medium">
@@ -563,8 +601,12 @@ export default function ApplicationTestsDialog({
                           </div>
 
                           <div className="mt-3 rounded-md bg-muted/40 p-3">
-                            <p className="mb-1 text-xs font-medium text-text-muted">{t("tests.candidateAnswer")}</p>
-                            <p className="whitespace-pre-wrap text-sm">{getSelectedAnswer(answer)}</p>
+                            <p className="mb-1 text-xs font-medium text-text-muted">
+                              {t("tests.candidateAnswer")}
+                            </p>
+                            <p className="whitespace-pre-wrap text-sm">
+                              {getSelectedAnswer(answer)}
+                            </p>
                             {answer.file?.download_available && (
                               <Button
                                 type="button"
@@ -603,7 +645,9 @@ export default function ApplicationTestsDialog({
                                 />
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor={`note-${questionId}`}>{t("tests.reviewerNote")}</Label>
+                                <Label htmlFor={`note-${questionId}`}>
+                                  {t("tests.reviewerNote")}
+                                </Label>
                                 <Textarea
                                   id={`note-${questionId}`}
                                   rows={2}
@@ -655,7 +699,11 @@ export default function ApplicationTestsDialog({
                 )}
 
                 <div className="flex flex-wrap justify-end gap-2">
-                  <Button type="button" variant="outline" onClick={() => void loadAttemptDetails(gradingAttempt)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => void loadAttemptDetails(gradingAttempt)}
+                  >
                     <RotateCcw className="h-4 w-4" /> {t("tests.refreshResult")}
                   </Button>
                   <Button
@@ -694,10 +742,7 @@ export default function ApplicationTestsDialog({
                   </SelectContent>
                 </Select>
               </div>
-              <Button
-                disabled={!nextStep || nextStepLoading}
-                onClick={() => void handleNextStep()}
-              >
+              <Button disabled={!nextStep || nextStepLoading} onClick={() => void handleNextStep()}>
                 <Send className="h-4 w-4" /> {t("tests.applyNextStep")}
               </Button>
             </div>

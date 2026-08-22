@@ -27,8 +27,7 @@ export function useAdminCompanies() {
       adminCompaniesService.list({
         page,
         per_page: APP_CONFIG.pagination.defaultPageSize,
-        approval_status:
-          approvalStatus && approvalStatus !== "all" ? approvalStatus : undefined,
+        approval_status: approvalStatus && approvalStatus !== "all" ? approvalStatus : undefined,
       }),
     placeholderData: keepPreviousData,
   })

@@ -3,7 +3,10 @@ import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import type { ApplicationSkillReference, EmployerApplicantDetail } from "../../types/employerApplicants.types"
+import type {
+  ApplicationSkillReference,
+  EmployerApplicantDetail,
+} from "../../types/employerApplicants.types"
 import CvSummaryPanel from "../CvSummaryPanel"
 import { SectionCard } from "./section-ui"
 
@@ -34,7 +37,8 @@ export default function MatchingScoreSection({ application }: MatchingScoreSecti
   const niceSkills = job?.nice_to_have_skills ?? []
 
   const matchedRequired = useMemo(
-    () => requiredSkills.filter((skill) => skillKeys(skill).some((key) => candidateSkillKeys.has(key))),
+    () =>
+      requiredSkills.filter((skill) => skillKeys(skill).some((key) => candidateSkillKeys.has(key))),
     [requiredSkills, candidateSkillKeys],
   )
   const missingRequired = useMemo(
@@ -84,13 +88,19 @@ export default function MatchingScoreSection({ application }: MatchingScoreSecti
         {requiredSkills.length > 0 ? (
           <div className="grid gap-4 border-t border-border pt-4 sm:grid-cols-2">
             <div>
-              <p className="mb-2 text-xs font-medium text-text-muted">{t("matching.matchedSkills")}</p>
+              <p className="mb-2 text-xs font-medium text-text-muted">
+                {t("matching.matchedSkills")}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {matchedRequired.length === 0 ? (
                   <span className="text-sm text-text-muted">-</span>
                 ) : (
                   matchedRequired.map((skill) => (
-                    <Badge key={skill.id ?? skill.slug ?? skill.name} variant="secondary" className="bg-emerald-500/10 text-emerald-700">
+                    <Badge
+                      key={skill.id ?? skill.slug ?? skill.name}
+                      variant="secondary"
+                      className="bg-emerald-500/10 text-emerald-700"
+                    >
                       <CheckCircle2 className="mr-1 h-3 w-3" />
                       {skill.name}
                     </Badge>
@@ -98,17 +108,25 @@ export default function MatchingScoreSection({ application }: MatchingScoreSecti
                 )}
               </div>
               {matchedRequired.length === requiredSkills.length && (
-                <p className="mt-2 text-xs font-medium text-emerald-700">{t("matching.allRequiredMatched")}</p>
+                <p className="mt-2 text-xs font-medium text-emerald-700">
+                  {t("matching.allRequiredMatched")}
+                </p>
               )}
             </div>
             <div>
-              <p className="mb-2 text-xs font-medium text-text-muted">{t("matching.missingSkills")}</p>
+              <p className="mb-2 text-xs font-medium text-text-muted">
+                {t("matching.missingSkills")}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {missingRequired.length === 0 ? (
                   <span className="text-sm text-text-muted">-</span>
                 ) : (
                   missingRequired.map((skill) => (
-                    <Badge key={skill.id ?? skill.slug ?? skill.name} variant="secondary" className="bg-red-500/10 text-red-700">
+                    <Badge
+                      key={skill.id ?? skill.slug ?? skill.name}
+                      variant="secondary"
+                      className="bg-red-500/10 text-red-700"
+                    >
                       <CircleDashed className="mr-1 h-3 w-3" />
                       {skill.name}
                     </Badge>
@@ -118,7 +136,9 @@ export default function MatchingScoreSection({ application }: MatchingScoreSecti
             </div>
             {(matchedNice.length ?? 0) > 0 && (
               <div className="sm:col-span-2">
-                <p className="mb-2 text-xs font-medium text-text-muted">{t("matching.niceMatched")}</p>
+                <p className="mb-2 text-xs font-medium text-text-muted">
+                  {t("matching.niceMatched")}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {matchedNice.map((skill) => (
                     <Badge key={skill.id ?? skill.slug ?? skill.name} variant="outline">

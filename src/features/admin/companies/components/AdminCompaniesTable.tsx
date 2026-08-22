@@ -32,10 +32,7 @@ import { images } from "@/constants/images"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 
 import type { AdminCompanyRecord } from "../types/adminCompanies.types"
-import {
-  getCompanyApprovalActions,
-  type CompanyApprovalAction,
-} from "../utils/approvalActions"
+import { getCompanyApprovalActions, type CompanyApprovalAction } from "../utils/approvalActions"
 
 type CompanyAction = CompanyApprovalAction
 

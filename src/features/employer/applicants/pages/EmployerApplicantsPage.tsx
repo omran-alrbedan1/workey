@@ -3,12 +3,7 @@ import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { StatusBadge } from "@/components/shared/badges"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import ApplicationTestsDialog from "../components/ApplicationTestsDialog"
 import EmployerApplicantsTable from "../components/EmployerApplicantsTable"
 import ScheduleInterviewDialog from "../components/ScheduleInterviewDialog"
@@ -96,7 +91,11 @@ function JobSelector({ model }: { model: EmployerApplicantsPageModel }) {
   )
 }
 
-function SelectedJobMeta({ job }: { job: NonNullable<EmployerApplicantsPageModel["selectedJob"]> }) {
+function SelectedJobMeta({
+  job,
+}: {
+  job: NonNullable<EmployerApplicantsPageModel["selectedJob"]>
+}) {
   const { t } = useTranslation("employerApplicants")
 
   return (

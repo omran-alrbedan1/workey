@@ -18,11 +18,7 @@ const defaultValues: AdminReportFilters = {
   status: "",
 }
 
-export default function AdminReportsFilter({
-  filters,
-  onApply,
-  onReset,
-}: AdminReportsFilterProps) {
+export default function AdminReportsFilter({ filters, onApply, onReset }: AdminReportsFilterProps) {
   const { t } = useTranslation("adminReports")
 
   const filterFields: FilterField<AdminReportFilters>[] = [

@@ -25,7 +25,7 @@ export const TagInputField: React.FC<TagInputFieldProps> = ({
   const { t } = useTranslation("common")
   const [inputValue, setInputValue] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
-  
+
   const handleAddTag = (tag: string) => {
     const trimmedTag = tag.trim()
     if (trimmedTag && !field.value?.includes(trimmedTag)) {
@@ -33,11 +33,11 @@ export const TagInputField: React.FC<TagInputFieldProps> = ({
     }
     setInputValue("")
   }
-  
+
   const handleRemoveTag = (tagToRemove: string) => {
     field.onChange(field.value?.filter((tag: string) => tag !== tagToRemove))
   }
-  
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault()
@@ -46,16 +46,13 @@ export const TagInputField: React.FC<TagInputFieldProps> = ({
       handleRemoveTag(field.value[field.value.length - 1])
     }
   }
-  
+
   return (
     <div className={cn("flex flex-wrap gap-2 p-2 border rounded-md", inputClassName)}>
       {field.value?.map((tag: string) => (
         <Badge key={tag} variant="secondary" className="flex items-center gap-1">
           {tag}
-          <X
-            className="h-3 w-3 cursor-pointer"
-            onClick={() => handleRemoveTag(tag)}
-          />
+          <X className="h-3 w-3 cursor-pointer" onClick={() => handleRemoveTag(tag)} />
         </Badge>
       ))}
       <input

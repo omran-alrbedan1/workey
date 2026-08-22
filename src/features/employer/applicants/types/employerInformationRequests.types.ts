@@ -3,7 +3,7 @@ export interface InformationRequest {
   job_application_id: string | number
   title: string
   description: string
-  status: 'pending' | 'responded' | 'cancelled'
+  status: "pending" | "responded" | "cancelled"
   due_date?: string
   created_at: string
   updated_at: string

@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     onSuccess: (session) => {
       authService.storeSession(session)
       showSuccessToast(t("loginPage.welcomeToast"), t("loginPage.welcomeToastDesc"))
-      
+
       // Redirect based on role
       const role = keyOf(session.user.role)
       if (role === "admin") {
@@ -64,14 +64,12 @@ const Login: React.FC = () => {
             <div className="mb-4 mx-auto">
               <Logo size="xl" width={250} height={220} alt={t("loginPage.logoAlt")} />
             </div>
-            
+
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
                 {t("login")}
               </h1>
-              <p className="text-sm text-text-secondary">
-                {t("loginPage.subtitle")}
-              </p>
+              <p className="text-sm text-text-secondary">{t("loginPage.subtitle")}</p>
             </div>
 
             <Form {...form}>
@@ -84,7 +82,7 @@ const Login: React.FC = () => {
                     label={t("email")}
                     placeholder="name@example.com"
                     disabled={loginMutation.isPending}
-                    leftIcon={Mail}  
+                    leftIcon={Mail}
                     iconPosition="left"
                   />
                 </div>
@@ -106,11 +104,11 @@ const Login: React.FC = () => {
                     label=""
                     placeholder="************"
                     disabled={loginMutation.isPending}
-                    leftIcon={Lock}  
+                    leftIcon={Lock}
                     iconPosition="left"
                   />
                 </div>
-                <SubmitButton 
+                <SubmitButton
                   isLoading={loginMutation.isPending}
                   text={t("login")}
                   loadingText={t("loginPage.submitting")}
@@ -125,7 +123,7 @@ const Login: React.FC = () => {
       {/* Right Panel: Image */}
       <div className="relative hidden w-1/2 md:block">
         <img
-        src={images.workeyLoginHero}
+          src={images.workeyLoginHero}
           alt={t("loginPage.heroAlt")}
           className="h-screen w-full object-cover "
         />

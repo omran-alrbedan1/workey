@@ -7,10 +7,7 @@ import AdminJobsTable from "../components/AdminJobsTable"
 import { useAdminJobs } from "../hooks/useAdminJobs"
 import { images } from "@/constants/images"
 import { useTranslation } from "react-i18next"
-import {
-  ADMIN_JOB_FILTER_DEFAULTS,
-  type AdminJobFilterForm,
-} from "../types/adminJobs.types"
+import { ADMIN_JOB_FILTER_DEFAULTS, type AdminJobFilterForm } from "../types/adminJobs.types"
 
 export default function AdminJobsPage() {
   const { t } = useTranslation("adminJobs")
@@ -18,27 +15,27 @@ export default function AdminJobsPage() {
   const jobs = useAdminJobs(filters)
   if (jobs.isError)
     return (
-  <>
-  <PageHeader
-    title={t("title")}
-    description={t("description")}
-    icon={BriefcaseBusiness}
-    image={{
-      src:images.jobs,
-      alt:'jobs'
-    }}
-    count={jobs.data?.pagination.total}
-  />
-  <div className="mt-4">
-      <AdminFeatureError
-        title={t("title")}
-        error={jobs.error}
-        retry={() => {
-          void jobs.refetch()
-        }}
+      <>
+        <PageHeader
+          title={t("title")}
+          description={t("description")}
+          icon={BriefcaseBusiness}
+          image={{
+            src: images.jobs,
+            alt: "jobs",
+          }}
+          count={jobs.data?.pagination.total}
         />
+        <div className="mt-4">
+          <AdminFeatureError
+            title={t("title")}
+            error={jobs.error}
+            retry={() => {
+              void jobs.refetch()
+            }}
+          />
         </div>
-        </>
+      </>
     )
   return (
     <div className="space-y-6">
@@ -47,8 +44,8 @@ export default function AdminJobsPage() {
         description={t("description")}
         icon={BriefcaseBusiness}
         image={{
-          src:images.jobs,
-          alt:'jobs'
+          src: images.jobs,
+          alt: "jobs",
         }}
         count={jobs.data?.pagination.total}
       />

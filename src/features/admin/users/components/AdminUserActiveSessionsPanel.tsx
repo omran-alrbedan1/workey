@@ -2,12 +2,15 @@ import { MonitorSmartphone } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
+import { LoadingState } from "@/components/shared/states"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 
-import type { AdminUserDetails } from "../types/adminUsers.types"
+import { useAdminUserSessions } from "../hooks/useAdminUserRelated"
 
-export default function AdminUserActiveSessionsPanel({ user }: { user: AdminUserDetails }) {
+export default function AdminUserActiveSessionsPanel({ userId }: { userId?: string }) {
   const { t, i18n } = useTranslation("adminUsers")
+  const query = useAdminUserSessions(userId)
+  const sessions = query.data?.items ?? []
   const date = (input?: string | null) => {
     if (!input) return t("fallbacks.noDate")
     const parsed = new Date(input)
@@ -18,12 +21,11 @@ export default function AdminUserActiveSessionsPanel({ user }: { user: AdminUser
           timeStyle: "short",
         }).format(parsed)
   }
-  const sessions = user.active_sessions
 
   return (
     <SectionCard icon={MonitorSmartphone} title={t("security.sessions")}>
-      {sessions === undefined ? (
-        <UnavailableNotice />
+      {query.isPending ? (
+        <LoadingState size="sm" />
       ) : sessions.length ? (
         <div className="space-y-3">
           {sessions.map((session) => (
@@ -33,22 +35,24 @@ export default function AdminUserActiveSessionsPanel({ user }: { user: AdminUser
             >
               <div className="flex items-center justify-between gap-3">
                 <p className="font-medium text-text-primary">
-                  {session.device || t("fallbacks.unknown")}
+                  {[session.device_name, session.platform].filter(Boolean).join(" · ") ||
+                    session.name ||
+                    t("fallbacks.unknown")}
                 </p>
-                {session.current ? <StatusBadge status="active" variant="soft" /> : null}
+                {session.is_current ? <StatusBadge status="active" variant="soft" /> : null}
               </div>
-              {session.current ? (
+              {session.is_current ? (
                 <p className="mt-1 text-xs font-medium text-primary">
                   {t("security.currentSession")}
                 </p>
               ) : null}
-              <p className="mt-2 text-sm text-text-secondary">
-                {session.location || t("fallbacks.unknown")}
+              <p className="mt-2 break-all text-sm text-text-secondary">
+                {session.user_agent || session.ip_address || t("fallbacks.unknown")}
               </p>
               <p className="mt-1 text-xs text-text-muted">
                 {t("security.sessionMeta", {
                   ip: session.ip_address || t("fallbacks.unknown"),
-                  date: date(session.last_active_at),
+                  date: date(session.last_used_at),
                 })}
               </p>
             </article>
@@ -60,14 +64,5 @@ export default function AdminUserActiveSessionsPanel({ user }: { user: AdminUser
         </p>
       )}
     </SectionCard>
-  )
-}
-
-function UnavailableNotice() {
-  const { t } = useTranslation("adminUsers")
-  return (
-    <p className="rounded-lg border border-dashed border-amber-500/30 bg-amber-500/5 p-4 text-sm text-text-secondary">
-      {t("details.backendCoverageWarning")}
-    </p>
   )
 }

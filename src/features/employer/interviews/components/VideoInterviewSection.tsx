@@ -64,7 +64,11 @@ export default function VideoInterviewSection({ interviewId }: { interviewId: st
         </h3>
         {!session && (
           <Button onClick={() => void startSession()} disabled={isLoading} size="sm">
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Video className="h-4 w-4" />
+            )}
             {isLoading ? t("video.starting") : t("video.start")}
           </Button>
         )}

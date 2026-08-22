@@ -7,13 +7,16 @@ export interface ApplicationCvDocument {
   canDownload: boolean
 }
 
-type CvDocumentSource = {
-  original_name?: string | null
-  extension?: string | null
-  preview_url?: string | null
-  download_url?: string | null
-  allowed_actions?: string[] | null
-} | null | undefined
+type CvDocumentSource =
+  | {
+      original_name?: string | null
+      extension?: string | null
+      preview_url?: string | null
+      download_url?: string | null
+      allowed_actions?: string[] | null
+    }
+  | null
+  | undefined
 
 function allowedActions(document: CvDocumentSource): Set<string> {
   return new Set(

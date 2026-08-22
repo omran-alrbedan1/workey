@@ -29,21 +29,16 @@ export function isNotificationUnread(notification: NotificationRecordBase): bool
   return !notification.read_at && notification.is_read !== true
 }
 
-export function notificationTypeLabel(
-  notification: NotificationRecordBase,
-  t: TFunction,
-): string {
+export function notificationTypeLabel(notification: NotificationRecordBase, t: TFunction): string {
   return notification.type
     ? t(`types.${notification.type}`, { defaultValue: notification.type })
     : t("types.general", { defaultValue: "General" })
 }
 
-export function notificationTitle(
-  notification: NotificationRecordBase,
-  t: TFunction,
-): string {
+export function notificationTitle(notification: NotificationRecordBase, t: TFunction): string {
   const key = notification.translation_key ?? notification.translationKey
-  const params = notification.translation_params ?? notification.translationParams ?? notification.params
+  const params =
+    notification.translation_params ?? notification.translationParams ?? notification.params
 
   if (key) {
     return t(key, {
@@ -60,10 +55,7 @@ export function notificationTitle(
   return notification.title ?? notificationTypeLabel(notification, t)
 }
 
-export function notificationMessage(
-  notification: NotificationRecordBase,
-  t: TFunction,
-): string {
+export function notificationMessage(notification: NotificationRecordBase, t: TFunction): string {
   if (notification.translation_key || notification.translationKey) {
     return notification.message ?? notification.text ?? notification.body ?? ""
   }
@@ -75,7 +67,9 @@ export function resolveNotificationTarget(
   notification: NotificationRecordBase,
   scope: NotificationScope,
 ): string | undefined {
-  const explicitPath = internalPath(valueFrom(notification, ["url", "path", "link", "target_url", "targetPath"]))
+  const explicitPath = internalPath(
+    valueFrom(notification, ["url", "path", "link", "target_url", "targetPath"]),
+  )
   if (explicitPath) return explicitPath
 
   const applicationId = idFrom(notification, [
@@ -91,10 +85,17 @@ export function resolveNotificationTarget(
     "related_interview_id",
     "relatedInterviewId",
   ])
-  const companyId = idFrom(notification, ["company_id", "companyId", "related_company_id", "relatedCompanyId"])
+  const companyId = idFrom(notification, [
+    "company_id",
+    "companyId",
+    "related_company_id",
+    "relatedCompanyId",
+  ])
   const userId = idFrom(notification, ["user_id", "userId", "related_user_id", "relatedUserId"])
   const testId = idFrom(notification, ["test_id", "testId", "related_test_id", "relatedTestId"])
-  const entityType = String(valueFrom(notification, ["entity_type", "entityType", "related_type"]) ?? "").toLowerCase()
+  const entityType = String(
+    valueFrom(notification, ["entity_type", "entityType", "related_type"]) ?? "",
+  ).toLowerCase()
   const entityId = idFrom(notification, ["entity_id", "entityId", "related_id", "relatedId"])
 
   if (scope === "employer") {
@@ -102,8 +103,10 @@ export function resolveNotificationTarget(
     if (interviewId) return ROUTES.employer.interviewDetails(interviewId)
     if (jobId) return ROUTES.employer.jobDetails(jobId)
     if (testId) return ROUTES.employer.testDetails(testId)
-    if (entityId && entityType.includes("application")) return ROUTES.employer.applicantDetails(entityId)
-    if (entityId && entityType.includes("interview")) return ROUTES.employer.interviewDetails(entityId)
+    if (entityId && entityType.includes("application"))
+      return ROUTES.employer.applicantDetails(entityId)
+    if (entityId && entityType.includes("interview"))
+      return ROUTES.employer.interviewDetails(entityId)
     if (entityId && entityType.includes("job")) return ROUTES.employer.jobDetails(entityId)
     if (entityId && entityType.includes("test")) return ROUTES.employer.testDetails(entityId)
     return undefined
@@ -113,10 +116,16 @@ export function resolveNotificationTarget(
   if (jobId) return ROUTES.admin.jobDetails(jobId)
   if (companyId) return ROUTES.admin.companyDetails(companyId)
   if (userId) return ROUTES.admin.userDetails(userId)
-  if (entityId && entityType.includes("application")) return ROUTES.admin.applicationDetails(entityId)
+  if (entityId && entityType.includes("application"))
+    return ROUTES.admin.applicationDetails(entityId)
   if (entityId && entityType.includes("job")) return ROUTES.admin.jobDetails(entityId)
   if (entityId && entityType.includes("company")) return ROUTES.admin.companyDetails(entityId)
-  if (entityId && (entityType.includes("user") || entityType.includes("candidate") || entityType.includes("employer"))) {
+  if (
+    entityId &&
+    (entityType.includes("user") ||
+      entityType.includes("candidate") ||
+      entityType.includes("employer"))
+  ) {
     return ROUTES.admin.userDetails(entityId)
   }
 

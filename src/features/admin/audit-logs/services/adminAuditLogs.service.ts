@@ -2,10 +2,7 @@ import { API_ENDPOINTS } from "@/config"
 import { api } from "@/lib/api"
 import { unwrapCollection } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminCollection } from "@/features/admin/shared/types/adminApi.types"
-import type {
-  AdminAuditLogFilters,
-  AdminAuditLogRecord,
-} from "../types/adminAuditLogs.types"
+import type { AdminAuditLogFilters, AdminAuditLogRecord } from "../types/adminAuditLogs.types"
 
 const auditLogsPageSize = 15
 const auditLogsFallbackPageSize = 100
@@ -13,9 +10,9 @@ const auditLogsFallbackPageSize = 100
 function isServerError(error: unknown) {
   return Boolean(
     error &&
-      typeof error === "object" &&
-      "statusCode" in error &&
-      (error as { statusCode?: number }).statusCode === 500,
+    typeof error === "object" &&
+    "statusCode" in error &&
+    (error as { statusCode?: number }).statusCode === 500,
   )
 }
 
@@ -33,11 +30,7 @@ function paramsFor(filters: AdminAuditLogFilters, page: number, perPage: number)
   return params
 }
 
-async function fetchAuditLogs(
-  filters: AdminAuditLogFilters,
-  page: number,
-  perPage: number,
-) {
+async function fetchAuditLogs(filters: AdminAuditLogFilters, page: number, perPage: number) {
   return unwrapCollection<AdminAuditLogRecord>(
     await api.get(API_ENDPOINTS.admin.auditLogs, {
       params: paramsFor(filters, page, perPage),
@@ -46,9 +39,7 @@ async function fetchAuditLogs(
 }
 
 async function fetchAuditLogsWithoutParams() {
-  return unwrapCollection<AdminAuditLogRecord>(
-    await api.get(API_ENDPOINTS.admin.auditLogs),
-  )
+  return unwrapCollection<AdminAuditLogRecord>(await api.get(API_ENDPOINTS.admin.auditLogs))
 }
 
 function text(value: unknown) {
@@ -67,7 +58,10 @@ function matchesFilters(log: AdminAuditLogRecord, filters: AdminAuditLogFilters)
 
   if (action && !text(log.action).toLowerCase().includes(action)) return false
   if (entityType && !text(log.entity_type).toLowerCase().includes(entityType)) return false
-  if (actorUserId && String(log.actor_user_id ?? log.actor?.id ?? log.user?.id ?? "") !== actorUserId) {
+  if (
+    actorUserId &&
+    String(log.actor_user_id ?? log.actor?.id ?? log.user?.id ?? "") !== actorUserId
+  ) {
     return false
   }
 

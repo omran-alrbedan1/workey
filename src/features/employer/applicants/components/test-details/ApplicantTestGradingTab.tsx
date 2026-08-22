@@ -13,11 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { valueOf } from "@/lib/keyValue"
 import type { TestAttemptResultBreakdownItem } from "@/features/employer/tests/types/employerTests.types"
-import {
-  canManuallyGrade,
-  selectedAnswer,
-  type GradeDraft,
-} from "./testDetails.helpers"
+import { canManuallyGrade, selectedAnswer, type GradeDraft } from "./testDetails.helpers"
 
 interface ApplicantTestGradingTabProps {
   activeAttemptId: string | number | null
@@ -63,7 +59,8 @@ export default function ApplicantTestGradingTab({
   onCancelDelete,
 }: ApplicantTestGradingTabProps) {
   const { t } = useTranslation("employerApplicants")
-  const progressPercent = manualAnswersCount > 0 ? Math.round((gradedCount / manualAnswersCount) * 100) : 0
+  const progressPercent =
+    manualAnswersCount > 0 ? Math.round((gradedCount / manualAnswersCount) * 100) : 0
 
   return (
     <>
@@ -75,7 +72,13 @@ export default function ApplicantTestGradingTab({
               {t("tests.gradingTitle")}
             </CardTitle>
             <div className="flex flex-wrap gap-2">
-              <Button type="button" variant="outline" size="sm" onClick={onRefresh} disabled={!activeAttemptId}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onRefresh}
+                disabled={!activeAttemptId}
+              >
                 <RotateCcw className="h-4 w-4" />
                 {t("tests.refreshResult")}
               </Button>
@@ -85,7 +88,11 @@ export default function ApplicantTestGradingTab({
                 disabled={!activeAttemptId || manualAnswersCount === 0 || isGradingBusy}
                 onClick={onBulkSave}
               >
-                {isBulkSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                {isBulkSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
                 {t("tests.bulkSave")}
               </Button>
             </div>
@@ -111,7 +118,15 @@ export default function ApplicantTestGradingTab({
           ) : answers.length === 0 ? (
             <EmptyState
               title={submitted ? t("tests.noAnswers") : t("tests.notSubmittedHint")}
-              description={submitted ? t("tests.noAnswersDescription", { defaultValue: "The candidate has not submitted any answers yet." }) : t("tests.notSubmittedDescription", { defaultValue: "This test has not been submitted yet." })}
+              description={
+                submitted
+                  ? t("tests.noAnswersDescription", {
+                      defaultValue: "The candidate has not submitted any answers yet.",
+                    })
+                  : t("tests.notSubmittedDescription", {
+                      defaultValue: "This test has not been submitted yet.",
+                    })
+              }
               icon={CheckCircle2}
               className="py-8 bg-transparent"
             />
@@ -123,7 +138,9 @@ export default function ApplicantTestGradingTab({
                   key={answer.question_id}
                   answer={answer}
                   index={index}
-                  draft={drafts[String(answer.question_id)] ?? { awarded_points: "", reviewer_note: "" }}
+                  draft={
+                    drafts[String(answer.question_id)] ?? { awarded_points: "", reviewer_note: "" }
+                  }
                   downloading={downloadingQuestionId === answer.question_id}
                   isGradingBusy={isGradingBusy}
                   isGraded={isGraded}
@@ -140,7 +157,9 @@ export default function ApplicantTestGradingTab({
 
       <DeleteModal
         open={answerToDelete !== null}
-        name={answerToDelete ? `${t("tests.gradeFor")} Q${answers.indexOf(answerToDelete) + 1}` : ""}
+        name={
+          answerToDelete ? `${t("tests.gradeFor")} Q${answers.indexOf(answerToDelete) + 1}` : ""
+        }
         loading={isGradingBusy}
         onClose={onCancelDelete}
         onConfirm={onConfirmDelete}
@@ -182,9 +201,7 @@ function AnswerGradeCard({
     <div
       className={cn(
         "rounded-lg border p-4 transition-colors",
-        isGraded
-          ? "border-l-4 border-l-green-500 border border-border"
-          : "border-border"
+        isGraded ? "border-l-4 border-l-green-500 border border-border" : "border-border",
       )}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -211,7 +228,11 @@ function AnswerGradeCard({
             disabled={downloading}
             onClick={() => onDownloadFile(answer)}
           >
-            {downloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            {downloading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
             {answer.file.original_name ?? t("tests.downloadFile")}
           </Button>
         )}
@@ -267,7 +288,9 @@ function ManualGradeForm({
   return (
     <div className="mt-3 grid gap-3 lg:grid-cols-[180px_1fr_auto]">
       <div className="space-y-2">
-        <Label htmlFor={`grade-${questionId}`}>{t("tests.awardedPoints", { max: maxPoints })}</Label>
+        <Label htmlFor={`grade-${questionId}`}>
+          {t("tests.awardedPoints", { max: maxPoints })}
+        </Label>
         <Input
           id={`grade-${questionId}`}
           type="number"

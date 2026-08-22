@@ -47,7 +47,10 @@ export default function AdminSkillsPage() {
         onCreate={(input) => skills.createMutation.mutateAsync(input)}
       />
       <div className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
-        <label htmlFor="admin-skills-search" className="mb-2 block text-sm font-medium text-text-primary">
+        <label
+          htmlFor="admin-skills-search"
+          className="mb-2 block text-sm font-medium text-text-primary"
+        >
           {t("search.label")}
         </label>
         <div className="relative max-w-md">

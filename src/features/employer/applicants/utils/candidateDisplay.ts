@@ -1,19 +1,30 @@
 import type { EmployerApplicant } from "../types/employerApplicants.types"
 
 function compact(parts: Array<string | null | undefined>) {
-  return parts.map((part) => part?.trim()).filter(Boolean).join(" ")
+  return parts
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" ")
 }
 
 function candidateFromStatusHistory(application: EmployerApplicant | null | undefined) {
   const history = application?.status_history ?? []
   return history.find((entry) => {
     const role = entry.changed_by?.role
-    const roleKey = typeof role === "string" ? role : role?.key
+    const roleKey =
+      typeof role === "string"
+        ? role
+        : typeof role === "object" && role !== null
+          ? role.key
+          : undefined
     return roleKey === "job_seeker" && entry.changed_by?.name
   })?.changed_by?.name
 }
 
-export function candidateDisplayName(application: EmployerApplicant | null | undefined, fallback: string) {
+export function candidateDisplayName(
+  application: EmployerApplicant | null | undefined,
+  fallback: string,
+) {
   const identity = application?.submitted_snapshot?.profile?.identity
   const profile = application?.job_seeker_profile
   const candidate = (application as any)?.candidate
@@ -43,7 +54,10 @@ export function hasCandidateDisplayData(application: EmployerApplicant | null | 
   return candidateDisplayName(application, "") !== ""
 }
 
-export function candidateSecondaryText(application: EmployerApplicant | null | undefined, fallback = "-") {
+export function candidateSecondaryText(
+  application: EmployerApplicant | null | undefined,
+  fallback = "-",
+) {
   const identity = application?.submitted_snapshot?.profile?.identity
   const professional = application?.submitted_snapshot?.profile?.professional
   const profile = application?.job_seeker_profile

@@ -1,6 +1,16 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Calendar, Clock, Edit2, FileText, Plus, XCircle, Download, MessageCircle, FileText as FileTextIcon } from "lucide-react"
+import {
+  Calendar,
+  Clock,
+  Edit2,
+  FileText,
+  Plus,
+  XCircle,
+  Download,
+  MessageCircle,
+  FileText as FileTextIcon,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -85,7 +95,10 @@ export default function InformationRequests({
   const handleConfirmCancel = async () => {
     if (cancelRequestId && cancelReason.trim()) {
       try {
-        await cancelRequest({ requestId: cancelRequestId.id, input: { reason: cancelReason.trim() } })
+        await cancelRequest({
+          requestId: cancelRequestId.id,
+          input: { reason: cancelReason.trim() },
+        })
         setCancelRequestId(null)
         setCancelReason("")
       } catch (error: any) {
@@ -123,7 +136,12 @@ export default function InformationRequests({
             <FileText className="h-5 w-5 text-primary" />
             {t("informationRequests.title")}
           </CardTitle>
-          <Button size="sm" className="text-white shrink-0" onClick={handleCreate} disabled={isCreating || !canCreate}>
+          <Button
+            size="sm"
+            className="text-white shrink-0"
+            onClick={handleCreate}
+            disabled={isCreating || !canCreate}
+          >
             <Plus className="h-4 w-4 mr-2" />
             {t("informationRequests.addRequest")}
           </Button>
@@ -169,23 +187,26 @@ export default function InformationRequests({
                         {request.response.message && (
                           <p className="text-sm text-text-secondary">{request.response.message}</p>
                         )}
-                            {request.response.attachments && request.response.attachments.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
-                                {request.response.attachments.map((attachment) => (
-                                  <Button
-                                    key={attachment.id}
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => downloadAttachment(attachment.id, attachment.original_name)}
-                                    disabled={attachment.download_available === false}
-                                    className="gap-1"
-                                  >
-                                    <Download className="h-3.5 w-3.5" />
-                                    {attachment.original_name}
-                                  </Button>
-                                ))}
-                              </div>
-                            )}
+                        {request.response.attachments &&
+                          request.response.attachments.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {request.response.attachments.map((attachment) => (
+                                <Button
+                                  key={attachment.id}
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() =>
+                                    downloadAttachment(attachment.id, attachment.original_name)
+                                  }
+                                  disabled={attachment.download_available === false}
+                                  className="gap-1"
+                                >
+                                  <Download className="h-3.5 w-3.5" />
+                                  {attachment.original_name}
+                                </Button>
+                              ))}
+                            </div>
+                          )}
                       </div>
                     )}
                   </div>
@@ -218,17 +239,13 @@ export default function InformationRequests({
                   {request.due_at && (
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      <span>
-                        {new Date(request.due_at).toLocaleString()}
-                      </span>
+                      <span>{new Date(request.due_at).toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     <span>
-                      {request.created_at
-                        ? new Date(request.created_at).toLocaleString()
-                        : ""}
+                      {request.created_at ? new Date(request.created_at).toLocaleString() : ""}
                     </span>
                   </div>
                 </div>
@@ -243,7 +260,8 @@ export default function InformationRequests({
         request={editingRequest}
         onSubmit={handleSubmit}
         isSubmitting={isCreating || isUpdating}
-      />      <Dialog
+      />{" "}
+      <Dialog
         open={cancelRequestId !== null}
         onOpenChange={(open) => {
           if (!open) {
@@ -255,9 +273,7 @@ export default function InformationRequests({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("informationRequests.cancelTitle")}</DialogTitle>
-            <DialogDescription>
-              {t("informationRequests.cancelDescription")}
-            </DialogDescription>
+            <DialogDescription>{t("informationRequests.cancelDescription")}</DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <Textarea

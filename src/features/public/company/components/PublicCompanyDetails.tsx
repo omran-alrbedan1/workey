@@ -53,13 +53,9 @@ export default function PublicCompanyDetails({ company, isLoading }: PublicCompa
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold text-text-primary">{company.name}</h1>
-            {company.is_verified && (
-              <CheckCircle className="h-5 w-5 text-primary" />
-            )}
+            {company.is_verified && <CheckCircle className="h-5 w-5 text-primary" />}
           </div>
-          {company.industry && (
-            <p className="text-sm text-text-muted">{company.industry}</p>
-          )}
+          {company.industry && <p className="text-sm text-text-muted">{company.industry}</p>}
         </div>
       </div>
 
@@ -92,7 +88,9 @@ export default function PublicCompanyDetails({ company, isLoading }: PublicCompa
         {company.founded_year && (
           <div className="flex items-center gap-2 text-sm text-text-muted">
             <Calendar className="h-4 w-4" />
-            <span>{t("founded")} {company.founded_year}</span>
+            <span>
+              {t("founded")} {company.founded_year}
+            </span>
           </div>
         )}
       </div>
