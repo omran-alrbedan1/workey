@@ -4,6 +4,7 @@ import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import TestAssignmentDeadlinePanel from "../TestAssignmentDeadlinePanel"
 import TestAssignmentRetakePanel from "../TestAssignmentRetakePanel"
 import type { ApplicantTestDetailsModel } from "../../hooks/useApplicantTestDetailsPage"
@@ -21,9 +22,9 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
 
   if (model.state === "error") {
     return (
-      <ErrorState
-        title={t("tests.loadError")}
-        description={t("errors.description")}
+      <EmployerFeatureError
+        title={t("tests.title")}
+        error={model.error}
         retry={() => void model.refetchTests()}
       />
     )
@@ -107,6 +108,7 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
             manualAnswersCount={model.manualAnswersCount}
             gradedCount={model.gradedCount}
             answerToDelete={model.answerToDelete}
+            canManage={model.canManage}
             onRefresh={() => void model.loadAttemptDetails()}
             onBulkSave={() => void model.saveBulkGrades()}
             onDownloadFile={(answer) => void model.downloadAnswerFile(answer)}
@@ -125,6 +127,7 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
             assignmentId={model.assignment.id}
             currentDeadline={assignmentDeadline(model.assignment)}
             testTitle={model.assignment.test?.title}
+            canManage={model.canManage}
             onUpdated={async () => {
               await model.refetchTests()
             }}
@@ -136,6 +139,7 @@ export default function ApplicantTestDetailsView({ model }: ApplicantTestDetails
             assignmentId={model.assignment.id}
             currentMaxAttempts={model.assignment.max_attempts}
             testTitle={model.assignment.test?.title}
+            canManage={model.canManage}
             onUpdated={async () => {
               await model.refetchTests()
             }}

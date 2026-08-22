@@ -6,11 +6,16 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { keyOf, valueOf } from "@/lib/keyValue"
 import EmptyState from "@/components/shared/states/EmptyState"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import type { EmployerTestAttempt } from "../../types/employerApplicants.types"
+import { assignmentDeadline } from "../test-details/testDetails.helpers"
 
 interface TestsTabProps {
   tests: {
     isPending: boolean
+    isError: boolean
+    error?: unknown
+    refetch: () => Promise<unknown>
     data?: { items: EmployerTestAttempt[] }
   }
   onViewAll: () => void
@@ -22,6 +27,16 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
 
   if (tests.isPending) {
     return <Skeleton className="h-64 w-full" />
+  }
+
+  if (tests.isError) {
+    return (
+      <EmployerFeatureError
+        title={t("tests.title")}
+        error={tests.error}
+        retry={() => void tests.refetch()}
+      />
+    )
   }
 
   if (!tests.data?.items || tests.data.items.length === 0) {
@@ -76,6 +91,7 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
             Boolean(attempt.attempt?.submitted_at) ||
             attemptStatusKey === "submitted" ||
             attemptStatusKey === "evaluated"
+          const deadline = assignmentDeadline(attempt)
           return (
             <button
               key={attempt.id}
@@ -88,10 +104,10 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
                   {attempt.test?.title || t("tests.untitled")}
                 </p>
                 <div className="mt-1 flex items-center gap-4 text-xs text-text-muted">
-                  {attempt.deadline_at && (
+                  {deadline && (
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      {new Date(attempt.deadline_at).toLocaleDateString()}
+                      {new Date(deadline).toLocaleDateString()}
                     </span>
                   )}
                   {submitted && score != null && <span>{t("tests.result", { score, max })}</span>}
@@ -105,7 +121,7 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
                   ? passed
                     ? t("tests.passed")
                     : t("tests.failed")
-                  : String(valueOf(attempt.state, "pending"))}
+                  : String(valueOf(attempt.state, "-"))}
               </Badge>
             </button>
           )

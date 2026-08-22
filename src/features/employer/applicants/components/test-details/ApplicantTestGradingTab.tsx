@@ -27,6 +27,7 @@ interface ApplicantTestGradingTabProps {
   manualAnswersCount: number
   gradedCount: number
   answerToDelete: TestAttemptResultBreakdownItem | null
+  canManage: boolean
   onRefresh: () => void
   onBulkSave: () => void
   onDownloadFile: (answer: TestAttemptResultBreakdownItem) => void
@@ -49,6 +50,7 @@ export default function ApplicantTestGradingTab({
   manualAnswersCount,
   gradedCount,
   answerToDelete,
+  canManage,
   onRefresh,
   onBulkSave,
   onDownloadFile,
@@ -85,7 +87,7 @@ export default function ApplicantTestGradingTab({
               <Button
                 type="button"
                 size="sm"
-                disabled={!activeAttemptId || manualAnswersCount === 0 || isGradingBusy}
+                disabled={!activeAttemptId || manualAnswersCount === 0 || isGradingBusy || !canManage}
                 onClick={onBulkSave}
               >
                 {isBulkSaving ? (
@@ -144,6 +146,7 @@ export default function ApplicantTestGradingTab({
                   downloading={downloadingQuestionId === answer.question_id}
                   isGradingBusy={isGradingBusy}
                   isGraded={isGraded}
+                  canManage={canManage}
                   onDownloadFile={onDownloadFile}
                   onDraftChange={onDraftChange}
                   onSaveGrade={onSaveGrade}
@@ -175,6 +178,7 @@ interface AnswerGradeCardProps {
   downloading: boolean
   isGradingBusy: boolean
   isGraded: boolean
+  canManage: boolean
   onDownloadFile: (answer: TestAttemptResultBreakdownItem) => void
   onDraftChange: (questionId: string | number, field: keyof GradeDraft, value: string) => void
   onSaveGrade: (answer: TestAttemptResultBreakdownItem) => void
@@ -188,6 +192,7 @@ function AnswerGradeCard({
   downloading,
   isGradingBusy,
   isGraded,
+  canManage,
   onDownloadFile,
   onDraftChange,
   onSaveGrade,
@@ -244,6 +249,7 @@ function AnswerGradeCard({
           draft={draft}
           maxPoints={maxPoints}
           isGradingBusy={isGradingBusy}
+          canManage={canManage}
           onDraftChange={onDraftChange}
           onSaveGrade={onSaveGrade}
           onDeleteGrade={onDeleteGrade}
@@ -268,6 +274,7 @@ interface ManualGradeFormProps {
   draft: GradeDraft
   maxPoints: number
   isGradingBusy: boolean
+  canManage: boolean
   onDraftChange: (questionId: string | number, field: keyof GradeDraft, value: string) => void
   onSaveGrade: (answer: TestAttemptResultBreakdownItem) => void
   onDeleteGrade: (answer: TestAttemptResultBreakdownItem) => void
@@ -278,6 +285,7 @@ function ManualGradeForm({
   draft,
   maxPoints,
   isGradingBusy,
+  canManage,
   onDraftChange,
   onSaveGrade,
   onDeleteGrade,
@@ -298,6 +306,7 @@ function ManualGradeForm({
           max={maxPoints}
           step={0.5}
           value={draft.awarded_points}
+          disabled={!canManage}
           onChange={(event) => onDraftChange(questionId, "awarded_points", event.target.value)}
         />
       </div>
@@ -307,6 +316,7 @@ function ManualGradeForm({
           id={`note-${questionId}`}
           rows={2}
           value={draft.reviewer_note}
+          disabled={!canManage}
           onChange={(event) => onDraftChange(questionId, "reviewer_note", event.target.value)}
         />
       </div>
@@ -315,7 +325,7 @@ function ManualGradeForm({
           type="button"
           size="icon"
           variant="outline"
-          disabled={isGradingBusy}
+          disabled={isGradingBusy || !canManage}
           onClick={() => onSaveGrade(answer)}
           aria-label={t("tests.saveGrade")}
         >
@@ -326,7 +336,7 @@ function ManualGradeForm({
           size="icon"
           variant="ghost"
           className="text-red-500 hover:bg-red-50"
-          disabled={isGradingBusy || answer.awarded_points == null}
+          disabled={isGradingBusy || answer.awarded_points == null || !canManage}
           onClick={() => onDeleteGrade(answer)}
           aria-label={t("tests.deleteGrade")}
         >

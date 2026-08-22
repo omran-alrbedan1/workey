@@ -29,6 +29,7 @@ export type ApplicantTestDetailsState = "loading" | "error" | "not-found" | "rea
 
 export interface ApplicantTestDetailsModel {
   state: ApplicantTestDetailsState
+  error?: unknown
   applicantId?: string
   assignment: EmployerTestAttempt | null
   activeTab: string
@@ -46,6 +47,7 @@ export interface ApplicantTestDetailsModel {
   isStatusPending: boolean
   isTerminalStatus: boolean
   hasExplicitNextSteps: boolean
+  canManage: boolean
   allowedNextSteps: ReadonlyArray<{ value: ApplicationStatusKey; labelKey: string }>
   manualAnswersCount: number
   gradedCount: number
@@ -104,6 +106,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     tests.bulkGradeMutation.isPending
 
   const applicationActions = useMemo(() => getAllowedApplicationActions(applicant.data), [applicant.data])
+  const canManage = applicant.data?.permissions?.can_manage !== false
 
   const isTerminalStatus = useMemo(() => {
     const app = applicant.data
@@ -163,7 +166,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   }
 
   const saveAnswerGrade = async (answer: TestAttemptResultBreakdownItem) => {
-    if (!activeAttemptId) return
+    if (!activeAttemptId || !canManage) return
 
     const draft = drafts[String(answer.question_id)]
     const awardedPoints = Number(draft?.awarded_points)
@@ -187,7 +190,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   }
 
   const deleteAnswerGrade = async (answer: TestAttemptResultBreakdownItem) => {
-    if (!activeAttemptId) return
+    if (!activeAttemptId || !canManage) return
 
     await tests.deleteGradeMutation.mutateAsync({
       attemptId: activeAttemptId,
@@ -197,7 +200,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
   }
 
   const saveBulkGrades = async () => {
-    if (!activeAttemptId) return
+    if (!activeAttemptId || !canManage) return
 
     const gradings = manualAnswers
       .map((answer) => buildBulkGrade(answer, drafts[String(answer.question_id)]))
@@ -242,6 +245,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
 
   return {
     state,
+    error: tests.error,
     applicantId: id,
     assignment,
     activeTab,
@@ -259,6 +263,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     isStatusPending: statusMutation.isPending,
     isTerminalStatus,
     hasExplicitNextSteps: applicationActions.source === "allowed_actions" || allowedNextSteps.length > 0,
+    canManage,
     allowedNextSteps,
     manualAnswersCount: manualAnswers.length,
     gradedCount,

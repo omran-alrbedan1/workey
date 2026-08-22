@@ -14,6 +14,7 @@ interface TestAssignmentDeadlinePanelProps {
   assignmentId: string | number
   currentDeadline?: string | null
   testTitle?: string
+  canManage?: boolean
   onClose?: () => void
   onUpdated?: () => void | Promise<void>
 }
@@ -42,6 +43,7 @@ export default function TestAssignmentDeadlinePanel({
   assignmentId,
   currentDeadline,
   testTitle,
+  canManage = true,
   onClose,
   onUpdated,
 }: TestAssignmentDeadlinePanelProps) {
@@ -71,6 +73,8 @@ export default function TestAssignmentDeadlinePanel({
   }, [assignmentId, currentDeadline])
 
   const saveDeadline = async () => {
+    if (!canManage) return
+
     const nextDeadline = toIsoDeadline(deadline)
     if (!nextDeadline || !reason.trim()) {
       showErrorToast(t("tests.deadlineValidation"))
@@ -124,7 +128,7 @@ export default function TestAssignmentDeadlinePanel({
             type="datetime-local"
             value={deadline}
             onChange={(event) => setDeadline(event.target.value)}
-            disabled={saving}
+            disabled={saving || !canManage}
           />
         </div>
         <div className="space-y-2">
@@ -135,13 +139,13 @@ export default function TestAssignmentDeadlinePanel({
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             placeholder={t("tests.deadlineReasonPlaceholder")}
-            disabled={saving}
+            disabled={saving || !canManage}
           />
         </div>
         <div className="flex items-end">
           <Button
             type="button"
-            disabled={saving || !deadline || !reason.trim()}
+            disabled={saving || !deadline || !reason.trim() || !canManage}
             onClick={() => void saveDeadline()}
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}

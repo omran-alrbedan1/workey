@@ -19,6 +19,7 @@ interface TestAssignmentRetakePanelProps {
   assignmentId: string | number
   currentMaxAttempts?: number | null
   testTitle?: string
+  canManage?: boolean
   onClose?: () => void
   onUpdated?: () => void | Promise<void>
 }
@@ -43,6 +44,7 @@ export default function TestAssignmentRetakePanel({
   assignmentId,
   currentMaxAttempts,
   testTitle,
+  canManage = true,
   onClose,
   onUpdated,
 }: TestAssignmentRetakePanelProps) {
@@ -81,6 +83,8 @@ export default function TestAssignmentRetakePanel({
   }, [assignmentId, currentMaxAttempts])
 
   const updatePolicy = async () => {
+    if (!canManage) return
+
     const parsedMaxAttempts = Number(maxAttempts)
     if (
       !Number.isInteger(parsedMaxAttempts) ||
@@ -110,6 +114,8 @@ export default function TestAssignmentRetakePanel({
   }
 
   const grantRetake = async () => {
+    if (!canManage) return
+
     if (!retakeReason.trim()) {
       showErrorToast(t("tests.retakeReasonValidation"))
       return
@@ -164,7 +170,7 @@ export default function TestAssignmentRetakePanel({
               max={5}
               value={maxAttempts}
               onChange={(event) => setMaxAttempts(event.target.value)}
-              disabled={savingPolicy}
+              disabled={savingPolicy || !canManage}
             />
           </div>
           <div className="space-y-2">
@@ -177,13 +183,13 @@ export default function TestAssignmentRetakePanel({
               value={policyReason}
               onChange={(event) => setPolicyReason(event.target.value)}
               placeholder={t("tests.retakePolicyReasonPlaceholder")}
-              disabled={savingPolicy}
+              disabled={savingPolicy || !canManage}
             />
           </div>
           <div className="flex justify-end">
             <Button
               type="button"
-              disabled={savingPolicy || !maxAttempts || !policyReason.trim()}
+              disabled={savingPolicy || !maxAttempts || !policyReason.trim() || !canManage}
               onClick={() => void updatePolicy()}
             >
               {savingPolicy ? (
@@ -206,7 +212,7 @@ export default function TestAssignmentRetakePanel({
               value={retakeReason}
               onChange={(event) => setRetakeReason(event.target.value)}
               placeholder={t("tests.retakeReasonPlaceholder")}
-              disabled={grantingRetake}
+              disabled={grantingRetake || !canManage}
             />
           </div>
           <div className="space-y-2">
@@ -216,7 +222,7 @@ export default function TestAssignmentRetakePanel({
               type="datetime-local"
               value={deadline}
               onChange={(event) => setDeadline(event.target.value)}
-              disabled={grantingRetake}
+              disabled={grantingRetake || !canManage}
             />
           </div>
           <div className="space-y-2">
@@ -229,13 +235,13 @@ export default function TestAssignmentRetakePanel({
               value={instructions}
               onChange={(event) => setInstructions(event.target.value)}
               placeholder={t("tests.retakeInstructionsPlaceholder")}
-              disabled={grantingRetake}
+              disabled={grantingRetake || !canManage}
             />
           </div>
           <div className="flex justify-end">
             <Button
               type="button"
-              disabled={grantingRetake || !retakeReason.trim()}
+              disabled={grantingRetake || !retakeReason.trim() || !canManage}
               onClick={() => void grantRetake()}
             >
               {grantingRetake ? (
