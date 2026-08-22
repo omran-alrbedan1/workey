@@ -36,26 +36,6 @@ const overviewFields: Array<{
   { key: "audit_logs", icon: ScrollText, translationKey: "overview.auditLogs" },
 ]
 
-function numericValue(value: unknown): number | null {
-  const parsed = Number(value)
-  return Number.isFinite(parsed) ? parsed : null
-}
-
-function extractValue(value: unknown): number | null {
-  if (value == null) return null
-  if (typeof value === "number") return value
-  if (typeof value === "string") return numericValue(value)
-  if (Array.isArray(value) || typeof value !== "object") return null
-
-  const record = value as Record<string, unknown>
-  return (
-    numericValue(record.total) ??
-    numericValue(record.count) ??
-    numericValue(record.total_count) ??
-    numericValue(record.value)
-  )
-}
-
 export default function AdminReportsOverview({ data, isLoading }: AdminReportsOverviewProps) {
   const { t } = useTranslation("adminReports")
 
@@ -75,9 +55,7 @@ export default function AdminReportsOverview({ data, isLoading }: AdminReportsOv
     )
   }
 
-  const fieldsWithData = overviewFields
-    .map((field) => ({ ...field, total: extractValue(data?.[field.key]) }))
-    .filter((field) => field.total !== null)
+  const fieldsWithData = overviewFields.filter((field) => typeof data?.[field.key] === "number")
 
   if (fieldsWithData.length === 0) {
     return <p className="text-sm text-text-muted">{t("overview.empty")}</p>
@@ -85,16 +63,14 @@ export default function AdminReportsOverview({ data, isLoading }: AdminReportsOv
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {fieldsWithData.map((field) => {
-        return (
-          <MetricStatusCard
-            key={field.key}
-            title={t(field.translationKey)}
-            value={field.total!.toLocaleString()}
-            icon={field.icon}
-          />
-        )
-      })}
+      {fieldsWithData.map((field) => (
+        <MetricStatusCard
+          key={field.key}
+          title={t(field.translationKey)}
+          value={data?.[field.key]?.toLocaleString() ?? "0"}
+          icon={field.icon}
+        />
+      ))}
     </div>
   )
 }

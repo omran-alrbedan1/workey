@@ -7,15 +7,15 @@ export interface AdminReportFilters {
 }
 
 export interface AdminOverviewReport {
-  users?: unknown
-  companies?: unknown
-  jobs?: unknown
-  applications?: unknown
-  tests?: unknown
-  interviews?: unknown
-  notifications?: unknown
-  cvs?: unknown
-  audit_logs?: unknown
+  users?: number | null
+  companies?: number | null
+  jobs?: number | null
+  applications?: number | null
+  tests?: number | null
+  interviews?: number | null
+  notifications?: number | null
+  cvs?: number | null
+  audit_logs?: number | null
 }
 
 export interface AdminApplicationsReport {
