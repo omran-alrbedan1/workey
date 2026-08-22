@@ -33,13 +33,14 @@ import EmptyState from "@/components/shared/states/EmptyState"
 
 interface InformationRequestsProps {
   applicationId: string | number
-  /** Controlled open state for the create dialog (used by the request-information action flow). */
+  canCreate?: boolean
   createOpen?: boolean
   onCreateOpenChange?: (open: boolean) => void
 }
 
 export default function InformationRequests({
   applicationId,
+  canCreate = true,
   createOpen,
   onCreateOpenChange,
 }: InformationRequestsProps) {
@@ -68,6 +69,7 @@ export default function InformationRequests({
   }
 
   const handleCreate = () => {
+    if (!canCreate) return
     setEditingRequest(null)
     setDialogOpen(true)
   }
@@ -112,7 +114,7 @@ export default function InformationRequests({
     }
   }
 
-  const canCreate = !requests.some((r) => keyOf(r.status) === "pending")
+  const canCreateRequest = canCreate && !requests.some((r) => keyOf(r.status) === "pending")
 
   if (isLoading) {
     return (
@@ -140,7 +142,7 @@ export default function InformationRequests({
             size="sm"
             className="text-white shrink-0"
             onClick={handleCreate}
-            disabled={isCreating || !canCreate}
+            disabled={isCreating || !canCreateRequest}
           >
             <Plus className="h-4 w-4 mr-2" />
             {t("informationRequests.addRequest")}
@@ -152,11 +154,15 @@ export default function InformationRequests({
               title={t("informationRequests.empty")}
               description={t("informationRequests.emptyDescription")}
               icon={FileTextIcon}
-              primaryAction={{
-                label: t("informationRequests.addRequest"),
-                onClick: handleCreate,
-                icon: Plus,
-              }}
+              primaryAction={
+                canCreate
+                  ? {
+                      label: t("informationRequests.addRequest"),
+                      onClick: handleCreate,
+                      icon: Plus,
+                    }
+                  : undefined
+              }
             />
           ) : (
             requests.map((request) => (
@@ -211,7 +217,7 @@ export default function InformationRequests({
                     )}
                   </div>
                   <div className="flex gap-1">
-                    {keyOf(request.status) === "pending" && (
+                    {keyOf(request.status) === "pending" && canCreate && (
                       <>
                         <Button
                           size="icon"
@@ -235,7 +241,7 @@ export default function InformationRequests({
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-text-muted">
-                  <StatusBadge status={request.status || "pending"} variant="soft" />
+                  <StatusBadge status={request.status ?? undefined} variant="soft" />
                   {request.due_at && (
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
@@ -260,7 +266,7 @@ export default function InformationRequests({
         request={editingRequest}
         onSubmit={handleSubmit}
         isSubmitting={isCreating || isUpdating}
-      />{" "}
+      />
       <Dialog
         open={cancelRequestId !== null}
         onOpenChange={(open) => {

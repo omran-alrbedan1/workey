@@ -1,9 +1,9 @@
 import { BriefcaseBusiness, MapPin, UsersRound } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import { StatusBadge } from "@/components/shared/badges"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import ApplicationTestsDialog from "../components/ApplicationTestsDialog"
 import EmployerApplicantsTable from "../components/EmployerApplicantsTable"
 import ScheduleInterviewDialog from "../components/ScheduleInterviewDialog"
@@ -16,10 +16,9 @@ export default function EmployerApplicantsPage() {
 
   if (model.isError) {
     return (
-      <ErrorState
-        variant="network"
-        title={t("errors.title")}
-        description={t("errors.description")}
+      <EmployerFeatureError
+        title={t("title")}
+        error={model.jobs.error ?? model.applicants.error}
         retry={model.retry}
       />
     )

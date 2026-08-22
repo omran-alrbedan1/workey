@@ -9,7 +9,13 @@ import InternalNoteDialog from "./InternalNoteDialog"
 import { DeleteModal } from "@/components/shared/modals"
 import EmptyState from "@/components/shared/states/EmptyState"
 
-export default function InternalNotes({ applicationId }: { applicationId: string | number }) {
+export default function InternalNotes({
+  applicationId,
+  canCreate = true,
+}: {
+  applicationId: string | number
+  canCreate?: boolean
+}) {
   const { t } = useTranslation("employerApplicants")
   const {
     notes,
@@ -33,6 +39,7 @@ export default function InternalNotes({ applicationId }: { applicationId: string
   )
 
   const handleCreate = () => {
+    if (!canCreate) return
     setEditingNote(null)
     setDialogOpen(true)
   }
@@ -84,7 +91,12 @@ export default function InternalNotes({ applicationId }: { applicationId: string
             <User className="h-5 w-5 text-primary" />
             {t("internalNotes.title")}
           </CardTitle>
-          <Button size="sm" onClick={handleCreate} disabled={isCreating} className="shrink-0">
+          <Button
+            size="sm"
+            onClick={handleCreate}
+            disabled={isCreating || !canCreate}
+            className="shrink-0"
+          >
             <Plus className="h-4 w-4 mr-2" />
             {t("internalNotes.addNote")}
           </Button>
@@ -95,11 +107,15 @@ export default function InternalNotes({ applicationId }: { applicationId: string
               title={t("internalNotes.empty")}
               description={t("internalNotes.emptyDescription")}
               icon={MessageSquare}
-              primaryAction={{
-                label: t("internalNotes.addNote"),
-                onClick: handleCreate,
-                icon: Plus,
-              }}
+              primaryAction={
+                canCreate
+                  ? {
+                      label: t("internalNotes.addNote"),
+                      onClick: handleCreate,
+                      icon: Plus,
+                    }
+                  : undefined
+              }
             />
           ) : (
             notes.map((note) => (

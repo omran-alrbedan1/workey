@@ -26,6 +26,7 @@ export interface EmployerApplicantDetailsModel {
   candidateName: string
   isPending: boolean
   isError: boolean
+  error?: unknown
   activeTab: string
   isCvBusy: boolean
   showScheduleDialog: boolean
@@ -140,8 +141,6 @@ export function useEmployerApplicantDetailsPage(
     )
   }
 
-  // Action-specific flow for the "request information" action: opens the
-  // Information Requests section with its create dialog ready to fill.
   const handleRequestInformation = () => {
     setActiveTab("informationRequests")
     setInformationRequestDialogOpen(true)
@@ -177,6 +176,7 @@ export function useEmployerApplicantDetailsPage(
     candidateName,
     isPending: applicant.isPending,
     isError: applicant.isError,
+    error: applicant.error,
     activeTab,
     isCvBusy,
     showScheduleDialog,

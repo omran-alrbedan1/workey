@@ -11,9 +11,9 @@ import {
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import ScreeningAnswersTab from "../tabs/ScreeningAnswersTab"
 import TestsTab from "../tabs/TestsTab"
 import InterviewsTab from "../tabs/InterviewsTab"
@@ -36,9 +36,9 @@ export default function EmployerApplicantDetailsView({ model }: EmployerApplican
 
   if (model.isError) {
     return (
-      <ErrorState
-        title={t("errors.title")}
-        description={t("errors.description")}
+      <EmployerFeatureError
+        title={t("detailTitle")}
+        error={model.error}
         retry={() => void model.refetch()}
       />
     )
@@ -194,6 +194,7 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
         {model.id && (
           <InformationRequests
             applicationId={model.id}
+            canCreate={application.permissions?.can_request_information !== false}
             createOpen={model.informationRequestDialogOpen}
             onCreateOpenChange={model.setInformationRequestDialogOpen}
           />
@@ -201,7 +202,12 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
       </TabsContent>
 
       <TabsContent value="internalNotes">
-        {model.id && <InternalNotes applicationId={model.id} />}
+        {model.id && (
+          <InternalNotes
+            applicationId={model.id}
+            canCreate={application.permissions?.can_create_internal_notes !== false}
+          />
+        )}
       </TabsContent>
 
       <TabsContent value="statusHistory">
