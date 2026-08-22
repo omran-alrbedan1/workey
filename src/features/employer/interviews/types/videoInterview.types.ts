@@ -11,4 +11,10 @@ export interface VideoSessionInput {
   role?: "interviewer" | "candidate"
 }
 
-export type VideoRoomConnectionState = "idle" | "connecting" | "connected" | "disconnected" | "error"
+export type VideoRoomConnectionState =
+  | "idle"
+  | "connecting"
+  | "connected"
+  | "reconnecting"
+  | "disconnected"
+  | "error"

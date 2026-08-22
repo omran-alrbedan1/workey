@@ -278,6 +278,22 @@
     "record": "Record session",
     "leave": "Leave call",
     "close": "Close",
-    "sessionError": "Could not start the video session. Please try again."
+    "sessionError": "Could not start the video session. Please try again.",
+    "reconnecting": "Connection interrupted — reconnecting...",
+    "you": "You",
+    "participant": "Participant",
+    "startNewSession": "Start a new session",
+    "errors": {
+      "tokenExpired": "The video token expired or is invalid. Start a new video session.",
+      "devicePermission": "Camera or microphone access was denied. Allow browser access, then start a new session.",
+      "roomNotFound": "The video room could not be found. Start a new session.",
+      "network": "Could not reach the video service. Check your connection and try again.",
+      "generic": "Could not join the video room. Please try again.",
+      "microphoneUnavailable": "Microphone is unavailable or blocked — you joined without audio input.",
+      "cameraUnavailable": "Camera is unavailable or blocked — you joined without video.",
+      "screenShareFailed": "Screen sharing failed. Check browser permissions and try again.",
+      "disconnected": "The video call was interrupted unexpectedly.",
+      "retryHint": "Start a new session to rejoin this interview."
+    }
   }
 }
