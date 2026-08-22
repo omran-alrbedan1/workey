@@ -15,6 +15,7 @@ export function createAdminTestSchema(t: TFunction, requireCompany = false) {
     description: z.string().max(2000, t("validation.descriptionMax")).optional(),
     duration_minutes: z.coerce.number().int().min(1, t("validation.durationMin")),
     passing_score: z.coerce.number().min(0, t("validation.passingScoreMin")),
+    is_active: z.boolean().optional(),
   })
 }
 export type AdminTestFormValues = z.infer<ReturnType<typeof createAdminTestSchema>>

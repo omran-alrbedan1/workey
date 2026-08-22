@@ -95,6 +95,7 @@ export default function AdminTestsTable({
   pagination,
   onDelete,
   onUpdate,
+  onPageChange,
 }: {
   tests: AdminTestRecord[]
   isLoading: boolean
@@ -103,6 +104,7 @@ export default function AdminTestsTable({
   pagination?: AdminPagination
   onDelete: (id: string | number) => Promise<unknown>
   onUpdate: (input: AdminTestUpdateInput) => Promise<unknown>
+  onPageChange: (page: number) => void
 }) {
   const { t } = useTranslation("adminTests")
   const [testToDelete, setTestToDelete] = useState<AdminTestRecord | null>(null)
@@ -211,7 +213,7 @@ export default function AdminTestsTable({
           lastPage: pagination?.lastPage ?? 1,
           perPage: pagination?.perPage,
         }}
-        onPageChange={() => {}}
+        onPageChange={onPageChange}
         mobileCardComponent={MobileTestCard}
         emptyMessage={t("empty")}
         emptyDescription={t("emptyDescription")}

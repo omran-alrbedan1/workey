@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Clock, FlaskConical, Pencil, ScrollText, Target, X } from "lucide-react"
+import { Clock, Pencil, ScrollText, Target, ToggleRight, X } from "lucide-react"
 import { useEffect } from "react"
 import { useForm, type Resolver } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -32,6 +32,9 @@ function buildPatch(test: AdminTestRecord, values: AdminTestFormValues): AdminTe
   if (values.passing_score !== test.passing_score) {
     patch.passing_score = values.passing_score
   }
+  if (values.is_active !== test.is_active) {
+    patch.is_active = values.is_active
+  }
   return patch
 }
 
@@ -56,6 +59,7 @@ export default function EditTestDialog({
       description: "",
       duration_minutes: 60,
       passing_score: 70,
+      is_active: true,
     },
   })
 
@@ -66,6 +70,7 @@ export default function EditTestDialog({
       description: test.description || "",
       duration_minutes: test.duration_minutes,
       passing_score: test.passing_score,
+      is_active: test.is_active,
     })
   }, [form, test])
 
@@ -137,6 +142,15 @@ export default function EditTestDialog({
                 disabled={isUpdating}
               />
             </div>
+
+            <CustomFormField
+              fieldType={FormFieldType.SWITCH}
+              control={form.control}
+              name="is_active"
+              label={t("form.active")}
+              leftIcon={ToggleRight}
+              disabled={isUpdating}
+            />
 
             <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <ScrollText className="h-3 w-3" />

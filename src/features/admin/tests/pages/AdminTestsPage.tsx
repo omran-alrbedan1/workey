@@ -7,10 +7,12 @@ import { useAdminTests } from "../hooks/useAdminTests"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { ROUTES } from "@/config"
+
 export default function AdminTestsPage() {
   const { t } = useTranslation("adminTests")
   const navigate = useNavigate()
   const tests = useAdminTests()
+
   if (tests.isError)
     return (
       <AdminFeatureError
@@ -21,6 +23,7 @@ export default function AdminTestsPage() {
         }}
       />
     )
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -43,6 +46,7 @@ export default function AdminTestsPage() {
         isUpdating={tests.updateMutation.isPending}
         onDelete={(id) => tests.deleteMutation.mutateAsync(id)}
         onUpdate={(input) => tests.updateMutation.mutateAsync(input)}
+        onPageChange={tests.setPage}
       />
     </div>
   )

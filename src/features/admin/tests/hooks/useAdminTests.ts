@@ -1,12 +1,28 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
+import { useState } from "react"
 import { adminTestsService } from "../services/adminTests.service"
 import { showSuccessToast } from "@/lib/toast"
 import { useTranslation } from "react-i18next"
+import { APP_CONFIG } from "@/config"
+
 const key = ["admin", "tests"] as const
+
 export function useAdminTests() {
   const { t } = useTranslation("adminTests")
   const client = useQueryClient()
-  const query = useQuery({ queryKey: key, queryFn: adminTestsService.list, staleTime: 10 * 60_000 })
+  const [page, setPage] = useState(1)
+
+  const query = useQuery({
+    queryKey: [...key, page],
+    queryFn: () =>
+      adminTestsService.list({
+        page,
+        per_page: APP_CONFIG.pagination.defaultPageSize,
+      }),
+    placeholderData: keepPreviousData,
+    staleTime: 10 * 60_000,
+  })
+
   const refresh = () =>
     Promise.all([
       client.invalidateQueries({ queryKey: key, refetchType: "active" }),
@@ -15,6 +31,7 @@ export function useAdminTests() {
         refetchType: "active",
       }),
     ])
+
   const createMutation = useMutation({
     mutationFn: adminTestsService.create,
     onSuccess: async () => {
@@ -22,6 +39,7 @@ export function useAdminTests() {
       showSuccessToast(t("created"))
     },
   })
+
   const updateMutation = useMutation({
     mutationFn: adminTestsService.update,
     onSuccess: async () => {
@@ -29,6 +47,7 @@ export function useAdminTests() {
       showSuccessToast(t("updated"))
     },
   })
+
   const deleteMutation = useMutation({
     mutationFn: adminTestsService.remove,
     onSuccess: async () => {
@@ -36,5 +55,6 @@ export function useAdminTests() {
       showSuccessToast(t("deleted"))
     },
   })
-  return { ...query, createMutation, updateMutation, deleteMutation }
+
+  return { ...query, page, setPage, createMutation, updateMutation, deleteMutation }
 }

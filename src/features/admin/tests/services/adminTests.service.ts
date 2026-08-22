@@ -4,7 +4,7 @@ import {
   unwrapCollection,
   unwrapEntity,
 } from "@/features/admin/shared/services/adminResponse.utils"
-import type { AdminCollection } from "@/features/admin/shared/types/adminApi.types"
+import type { AdminCollection, AdminListParams } from "@/features/admin/shared/types/adminApi.types"
 import type {
   ReorderQuestionsInput,
   TestQuestionInput,
@@ -15,9 +15,10 @@ import type {
   AdminTestRecord,
   AdminTestUpdateInput,
 } from "../types/adminTests.types"
+
 export const adminTestsService = {
-  async list(): Promise<AdminCollection<AdminTestRecord>> {
-    return unwrapCollection<AdminTestRecord>(await api.get(API_ENDPOINTS.admin.tests))
+  async list(params: AdminListParams = {}): Promise<AdminCollection<AdminTestRecord>> {
+    return unwrapCollection<AdminTestRecord>(await api.get(API_ENDPOINTS.admin.tests, { params }))
   },
   async create(input: AdminTestInput): Promise<AdminTestRecord> {
     return unwrapEntity<AdminTestRecord>(await api.post(API_ENDPOINTS.admin.tests, input))
