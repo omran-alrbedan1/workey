@@ -28,7 +28,6 @@ import { keyOf, valueOf } from "@/lib/keyValue"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
 import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerApplicants.types"
-import { employerApplicantsService } from "../services/employerApplicants.service"
 import { candidateDisplayName, candidateSecondaryText } from "../utils/candidateDisplay"
 import { canDownloadCv, getApplicationCvDocument } from "../utils/cv"
 import { getAllowedApplicationActions } from "../utils/applicationActions"
@@ -40,6 +39,16 @@ function getKey(v: unknown): string {
 
 function getValue(v: unknown): string {
   return valueOf(v)
+}
+
+function downloadDocument(url: string, filename: string) {
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+  link.rel = "noopener noreferrer"
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 
 interface EmployerApplicantMobileCardProps {
@@ -185,22 +194,20 @@ function useHandleDownload() {
   const [downloadingId, setDownloadingId] = useState<string | number | null>(null)
 
   const handleDownload = async (application: EmployerApplicant) => {
-    if (!canDownloadCv(application)) {
+    const document = getApplicationCvDocument(application)
+    const url =
+      application.submitted_snapshot?.cv?.download_url ||
+      application.submitted_snapshot?.generated_document?.download_url ||
+      application.submitted_cv?.download_url
+
+    if (!document?.canDownload || !url) {
       showErrorToast(t("common:applicantsToasts.noCvAttached"))
       return
     }
 
     setDownloadingId(application.id)
     try {
-      const blob = await employerApplicantsService.downloadCv(application.id)
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = getApplicationCvDocument(application)?.name ?? `cv-${application.id}`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
+      downloadDocument(url, document.name)
       showSuccessToast(t("common:applicantsToasts.cvDownloaded"))
     } catch {
       showErrorToast(t("common:applicantsToasts.cvDownloadFailed"))

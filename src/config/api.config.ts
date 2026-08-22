@@ -54,9 +54,6 @@ export const API_ENDPOINTS = Object.freeze({
     interviews: (id: string | number) => `/applications/${id}/interviews`,
     internalNotes: (id: string | number) => `/applications/${id}/internal-notes`,
     informationRequests: (id: string | number) => `/applications/${id}/information-requests`,
-    cvSummary: (id: string | number) => `/applications/${id}/cv-summary`,
-    cvPreview: (id: string | number) => `/applications/${id}/cv/preview`,
-    cvDownload: (id: string | number) => `/applications/${id}/cv/download`,
   },
   applicationInternalNotes: {
     byId: (id: string | number) => `/application-internal-notes/${id}`,
@@ -206,3 +203,4 @@ export const API_ENDPOINTS = Object.freeze({
     jobFilters: "/reference/job-filters",
   },
 } as const)
+

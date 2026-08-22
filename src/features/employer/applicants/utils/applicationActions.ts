@@ -1,16 +1,12 @@
 import type { ApplicationStatusKey, EmployerApplicant } from "../types/employerApplicants.types"
 import { filterDirectTransitionTargets, getApplicationStatusActions } from "./statusActions"
 
-/** Dedicated (non status-change) flows an employer can trigger on an application. */
 export type ApplicationFlowAction = "assign_test" | "schedule_interview" | "request_information"
 
 export interface AllowedApplicationActions {
-  /** Direct status-change targets, each rendered as its own action + confirm flow. */
   statusTargets: ApplicationStatusKey[]
-  /** Dedicated flows available on this application. */
   flows: ApplicationFlowAction[]
-  /** Whether the list was read from the backend `allowed_actions` contract. */
-  source: "allowed_actions" | "fallback"
+  source: "allowed_actions" | "unavailable"
 }
 
 const STATUS_KEY_SET: ReadonlySet<string> = new Set<ApplicationStatusKey>([
@@ -58,13 +54,6 @@ function normalizeAction(value: unknown): string {
     .replace(/[\s-]+/g, "_")
 }
 
-/**
- * Derives the actions available on an application from the backend
- * `allowed_actions` contract. Each recognized entry maps to a specific
- * action-specific flow — never to a generic status selector. When the
- * backend has not sent usable entries yet, falls back to the derived
- * status transitions plus the standard flows for non-terminal states.
- */
 export function getAllowedApplicationActions(
   application:
     | Pick<EmployerApplicant, "status" | "allowed_status_transitions" | "allowed_actions">
@@ -72,13 +61,16 @@ export function getAllowedApplicationActions(
     | undefined,
 ): AllowedApplicationActions {
   const derived = getApplicationStatusActions(application)
-  const fallbackFlows: ApplicationFlowAction[] = []
-
   const hasBackendActions = Array.isArray(application?.allowed_actions)
   const raw = (application?.allowed_actions ?? []).map(normalizeAction).filter(Boolean)
+
   if (raw.length === 0) {
     if (hasBackendActions) return { statusTargets: [], flows: [], source: "allowed_actions" }
-    return { statusTargets: derived.targets, flows: fallbackFlows, source: "fallback" }
+    return {
+      statusTargets: derived.source === "transitions" ? derived.targets : [],
+      flows: [],
+      source: "unavailable",
+    }
   }
 
   const statusTargets = filterDirectTransitionTargets(

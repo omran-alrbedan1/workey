@@ -4,7 +4,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios"
-import { API_CONFIG, API_ENDPOINTS, ROUTES, STORAGE_KEYS } from "@/config"
+import { API_CONFIG, ROUTES, STORAGE_KEYS } from "@/config"
 
 export interface ApiResponse<T = any> {
   data: T
@@ -56,7 +56,6 @@ function preferredLanguage(): string {
   return normalized === "ar" ? "ar" : "en"
 }
 
-// Create axios instance with default config
 const API: AxiosInstance = axios.create({
   baseURL: API_CONFIG.baseUrl,
   timeout: API_CONFIG.timeout,
@@ -74,7 +73,6 @@ API.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
 
-    // Add Accept-Language header for localization
     if (typeof window !== "undefined") {
       config.headers["Accept-Language"] = preferredLanguage()
     }
@@ -91,48 +89,7 @@ API.interceptors.response.use(
     return response
   },
   async (error) => {
-    const originalRequest = error.config
-
-    // Handle 401 Unauthorized - token refresh
-    if (
-      API_CONFIG.enableTokenRefresh &&
-      error.response?.status === 401 &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true
-
-      try {
-        const refreshToken =
-          typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEYS.refreshToken) : null
-
-        if (refreshToken) {
-          const response = await axios.post(`${API_CONFIG.baseUrl}${API_ENDPOINTS.auth.refresh}`, {
-            refresh_token: refreshToken,
-          })
-
-          const { access_token } = response.data
-          localStorage.setItem(STORAGE_KEYS.accessToken, access_token)
-
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${access_token}`
-          return API(originalRequest)
-        }
-      } catch (refreshError) {
-        // Redirect to login if refresh fails
-        if (typeof window !== "undefined") {
-          localStorage.removeItem(STORAGE_KEYS.accessToken)
-          localStorage.removeItem(STORAGE_KEYS.refreshToken)
-          window.location.href = ROUTES.auth.login
-        }
-        return Promise.reject(refreshError)
-      }
-    }
-
-    if (
-      error.response?.status === 401 &&
-      typeof window !== "undefined" &&
-      !API_CONFIG.enableTokenRefresh
-    ) {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEYS.accessToken)
       localStorage.removeItem(STORAGE_KEYS.refreshToken)
       localStorage.removeItem(STORAGE_KEYS.user)
@@ -141,7 +98,6 @@ API.interceptors.response.use(
       }
     }
 
-    // Initialize apiError with default values
     const apiError: ApiError = {
       message:
         backendErrorMessages[error.response?.data?.code] ||
@@ -153,23 +109,19 @@ API.interceptors.response.use(
       errors: error.response?.data?.errors,
     }
 
-    // Handle 403 Forbidden - permission denied
     if (error.response?.status === 403) {
       const code = error.response?.data?.code
       if (!backendErrorMessages[code]) {
         apiError.message =
           error.response?.data?.message || "You do not have permission to perform this action."
       }
-      // Redirect to Access Denied page
       if (typeof window !== "undefined" && !window.location.pathname.includes("/access-denied")) {
         window.location.href = "/access-denied"
       }
     }
 
-    // Handle 404 Not Found
     if (error.response?.status === 404) {
       apiError.message = error.response?.data?.message || "The requested resource was not found."
-      // Redirect to Not Found page
       const skipNotFoundRedirect = Boolean(
         (error.config as AppAxiosRequestConfig | undefined)?.skipNotFoundRedirect,
       )
@@ -182,7 +134,6 @@ API.interceptors.response.use(
       }
     }
 
-    // Handle 409 Conflict - resource conflict
     if (error.response?.status === 409) {
       const code = error.response?.data?.code
       if (!backendErrorMessages[code]) {
@@ -191,7 +142,6 @@ API.interceptors.response.use(
       }
     }
 
-    // Handle 422 Unprocessable Entity - validation errors
     if (error.response?.status === 422) {
       apiError.message =
         error.response?.data?.message || "Invalid input. Please check your data and try again."
@@ -200,12 +150,10 @@ API.interceptors.response.use(
       }
     }
 
-    // Handle network errors
     if (!error.response && error.code === "ERR_NETWORK") {
       apiError.message = "Network error. Please check your internet connection and try again."
     }
 
-    // Handle timeout errors
     if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
       apiError.message = "Request timeout. The request took too long to complete. Please try again."
     }
@@ -214,7 +162,6 @@ API.interceptors.response.use(
   },
 )
 
-// Generic wrapper methods with types
 const api = {
   get: <T = any>(url: string, config?: AppAxiosRequestConfig): Promise<T> =>
     API.get(url, config).then((response) => response.data),
