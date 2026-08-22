@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
+import { keyOf } from "@/lib/keyValue"
 
 import type { AdminCompanyDetails } from "../types/adminCompanies.types"
 
@@ -22,10 +23,48 @@ export default function AdminCompanyVerificationCard({
           timeStyle: "short",
         }).format(date)
   }
+  const statusKey = keyOf(company.approval_status ?? company.status, "pending")
+  const latestDecision = company.latest_decision ?? company.approval_decision ?? null
+  const latestDecisionActor =
+    latestDecision?.actor?.name ??
+    latestDecision?.actor?.email ??
+    latestDecision?.actor_name ??
+    (statusKey === "approved"
+      ? company.approved_by?.name ?? company.approved_by?.email
+      : statusKey === "rejected"
+        ? company.rejected_by?.name ?? company.rejected_by?.email
+        : statusKey === "suspended"
+          ? company.suspended_by?.name ?? company.suspended_by?.email
+          : null)
+  const latestDecisionReason =
+    latestDecision?.reason ??
+    company.rejection_reason ??
+    company.approval_notes ??
+    company.admin_notes ??
+    null
+  const latestDecisionDate =
+    latestDecision?.decided_at ??
+    latestDecision?.created_at ??
+    (statusKey === "approved"
+      ? company.approved_at
+      : statusKey === "rejected"
+        ? company.rejected_at
+        : statusKey === "suspended"
+          ? company.suspended_at
+          : null)
 
   return (
     <SectionCard icon={CheckSquare} title={t("verification.title")}>
       <div className="space-y-3">
+        <div className="rounded-2xl border border-border bg-background-secondary/60 p-4">
+          <p className="text-xs font-medium uppercase tracking-wide text-text-muted">
+            {t("verification.currentStatus")}
+          </p>
+          <div className="mt-3">
+            <StatusBadge status={company.approval_status ?? company.status ?? "pending"} variant="soft" />
+          </div>
+        </div>
+
         {(company.verification_items?.length ?? 0) > 0 ? (
           company.verification_items?.map((item) => (
             <div
@@ -50,27 +89,25 @@ export default function AdminCompanyVerificationCard({
           </div>
         )}
 
-        <div className="grid gap-3 md:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-background-secondary/60 p-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
-              <Clock3 className="h-4 w-4 text-primary" />
-              {t("verification.latestApprovalNote")}
-            </div>
-            <p className="mt-2 text-sm text-text-secondary">
-              {company.approval_notes ||
-                company.rejection_reason ||
-                t("verification.noApprovalNote")}
-            </p>
+        <div className="rounded-2xl border border-border bg-background-secondary/60 p-4">
+          <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
+            <Clock3 className="h-4 w-4 text-primary" />
+            {t("verification.latestDecision")}
           </div>
-          <div className="rounded-2xl border border-border bg-background-secondary/60 p-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
-              <Clock3 className="h-4 w-4 text-primary" />
-              {t("verification.activityTimestamps")}
+          <div className="mt-3 grid gap-3 text-sm text-text-secondary md:grid-cols-3">
+            <div>
+              <p className="text-xs font-medium text-text-muted">{t("verification.decisionActor")}</p>
+              <p className="mt-1 text-text-primary">{latestDecisionActor || t("fallbacks.notAvailable")}</p>
             </div>
-            <div className="mt-2 space-y-1 text-sm text-text-secondary">
-              <p>{t("verification.created", { date: formatDate(company.created_at) })}</p>
-              <p>{t("verification.approved", { date: formatDate(company.approved_at) })}</p>
-              <p>{t("verification.lastActive", { date: formatDate(company.last_active_at) })}</p>
+            <div>
+              <p className="text-xs font-medium text-text-muted">{t("verification.decisionDate")}</p>
+              <p className="mt-1 text-text-primary">
+                {formatDate(latestDecisionDate) || t("fallbacks.notAvailable")}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-text-muted">{t("verification.reason")}</p>
+              <p className="mt-1 text-text-primary">{latestDecisionReason || t("fallbacks.notAvailable")}</p>
             </div>
           </div>
         </div>

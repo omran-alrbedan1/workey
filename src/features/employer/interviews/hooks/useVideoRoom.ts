@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Participant, Room, RoomEvent, Track } from "livekit-client"
+import { ConnectionState, Participant, Room, RoomEvent, Track } from "livekit-client"
 import type { VideoRoomConnectionState } from "../types/videoInterview.types"
 
 interface UseVideoRoomOptions {
@@ -21,6 +21,14 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
   const [isMuted, setIsMuted] = useState(false)
   const [isCameraOff, setIsCameraOff] = useState(false)
   const [isScreenSharing, setIsScreenSharing] = useState(false)
+
+  const cleanupRoom = useCallback((room: Room) => {
+    for (const publication of room.localParticipant.trackPublications.values()) {
+      publication.track?.stop()
+    }
+    room.removeAllListeners()
+    void room.disconnect()
+  }, [])
 
   const describeConnectError = useCallback(
     (err: unknown) => {
@@ -67,6 +75,16 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
     [syncLocalControls],
   )
 
+  const syncConnectionState = useCallback((state: ConnectionState) => {
+    if (state === ConnectionState.Connected) setConnectionState("connected")
+    else if (state === ConnectionState.Connecting) setConnectionState("connecting")
+    else if (
+      state === ConnectionState.Reconnecting ||
+      state === ConnectionState.SignalReconnecting
+    ) setConnectionState("reconnecting")
+    else setConnectionState("disconnected")
+  }, [])
+
   const connect = useCallback(async () => {
     if (!url || !token || roomRef.current) return
 
@@ -79,6 +97,10 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
     roomRef.current = room
 
     room
+      .on(RoomEvent.Connected, () => {
+        setConnectionState("connected")
+        refreshParticipants(room)
+      })
       .on(RoomEvent.ParticipantConnected, () => refreshParticipants(room))
       .on(RoomEvent.ParticipantDisconnected, () => refreshParticipants(room))
       .on(RoomEvent.TrackSubscribed, () => refreshParticipants(room))
@@ -88,9 +110,9 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
       .on(RoomEvent.TrackMuted, () => refreshParticipants(room))
       .on(RoomEvent.TrackUnmuted, () => refreshParticipants(room))
       .on(RoomEvent.ActiveSpeakersChanged, () => refreshParticipants(room))
+      .on(RoomEvent.ConnectionStateChanged, (state) => syncConnectionState(state))
       .on(RoomEvent.MediaDevicesError, () => {
-        setError(t("video.errors.devicePermission"))
-        setConnectionState("error")
+        setDeviceWarning(t("video.errors.devicePermission"))
       })
       .on(RoomEvent.Reconnecting, () => setConnectionState("reconnecting"))
       .on(RoomEvent.SignalReconnecting, () => setConnectionState("reconnecting"))
@@ -110,7 +132,9 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
     try {
       setConnectionState("connecting")
       setError(null)
+      setUnexpectedDisconnect(false)
       await room.connect(url, token)
+      setConnectionState("connected")
 
       // Request permissions and publish local tracks. Handle each device
       // separately so a blocked camera still allows microphone use.
@@ -131,26 +155,20 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
     } catch (err) {
       setError(describeConnectError(err))
       setConnectionState("error")
+      cleanupRoom(room)
+      if (roomRef.current === room) roomRef.current = null
     }
-  }, [describeConnectError, refreshParticipants, t, url, token])
+  }, [cleanupRoom, describeConnectError, refreshParticipants, syncConnectionState, t, url, token])
 
   useEffect(() => {
     if (url && token) void connect()
     return () => {
       leavingRef.current = true
       const room = roomRef.current
-      if (room) {
-        // Stop local media tracks before disconnecting so camera/microphone
-        // hardware indicators are released immediately.
-        for (const publication of room.localParticipant.trackPublications.values()) {
-          publication.track?.stop()
-        }
-        void room.disconnect()
-      }
+      if (room) cleanupRoom(room)
       roomRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [cleanupRoom, connect, token, url])
 
   const toggleMute = async () => {
     const room = roomRef.current
@@ -195,12 +213,7 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
   const leave = () => {
     leavingRef.current = true
     const room = roomRef.current
-    if (room) {
-      for (const publication of room.localParticipant.trackPublications.values()) {
-        publication.track?.stop()
-      }
-      void room.disconnect()
-    }
+    if (room) cleanupRoom(room)
     roomRef.current = null
     setConnectionState("disconnected")
     setParticipants([])

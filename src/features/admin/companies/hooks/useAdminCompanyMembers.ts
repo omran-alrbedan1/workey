@@ -40,6 +40,7 @@ export function useAdminCompanyMembers(companyId?: string) {
     if (companyId) {
       void client.invalidateQueries({ queryKey: adminCompanyMembersKeys.members(companyId) })
       void client.invalidateQueries({ queryKey: adminCompanyMembersKeys.invitations(companyId) })
+      void client.invalidateQueries({ queryKey: ["admin", "companies"], refetchType: "active" })
     }
   }
 
@@ -103,7 +104,9 @@ export function useAdminCompanyMembers(companyId?: string) {
       adminCompaniesService.transferOwnership(companyId as string, input),
     onSuccess: () => {
       invalidate()
-      showSuccessToast("Company ownership transferred")
+      showSuccessToast(
+        t("members.toasts.ownershipTransferred", { defaultValue: "Company ownership transferred" }),
+      )
     },
     onError: (error) => showErrorToast(error),
   })

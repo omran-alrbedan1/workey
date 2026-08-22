@@ -70,9 +70,10 @@
     "edit": "Edit",
     "tabs": {
       "overview": "Overview",
-      "recruitment": "Recruitment",
+      "membersOwnership": "Members & Ownership",
+      "jobs": "Jobs",
       "verification": "Verification",
-      "members": "Members"
+      "activity": "Administrative Activity"
     }
   },
   "members": {
@@ -127,7 +128,8 @@
     },
     "toasts": {
       "invitationSent": "Invitation sent",
-      "roleUpdated": "Member role updated"
+      "roleUpdated": "Member role updated",
+      "ownershipTransferred": "Company ownership transferred"
     }
   },
   "overview": {
@@ -149,7 +151,17 @@
     "employerName": "Employer name",
     "employerEmail": "Employer email",
     "employerPhone": "Employer phone",
-    "createdBy": "Created by"
+    "createdBy": "Created by",
+    "ownerName": "Owner name",
+    "ownerEmail": "Owner email",
+    "companyRole": "Company role",
+    "membershipStatus": "Membership status",
+    "transferTitle": "Transfer ownership",
+    "transferPlaceholder": "Select the new owner",
+    "transferAction": "Transfer ownership",
+    "transferHint": "Uses the company ownership transfer endpoint and refreshes membership data.",
+    "transferUnavailable": "No eligible members are available for ownership transfer.",
+    "noOwner": "No owner was returned by the company members endpoint."
   },
   "recruitment": {
     "activeJobs": "Active jobs",
@@ -163,8 +175,24 @@
     "activityMeta": "{{actor}} · {{date}}",
     "activityUnavailable": "Activity history is not available yet from backend for companies."
   },
+  "jobs": {
+    "title": "Company jobs",
+    "applications": "{{count}} applications",
+    "created": "Created {{date}}",
+    "empty": "No jobs were returned for this company.",
+    "error": "Unable to load jobs for this company."
+  },
+  "activity": {
+    "title": "Administrative activity",
+    "empty": "No administrative activity was returned for this company."
+  },
   "verification": {
     "title": "Verification and approval",
+    "currentStatus": "Current status",
+    "latestDecision": "Latest decision",
+    "decisionActor": "Decision actor",
+    "decisionDate": "Decision date",
+    "reason": "Reason",
     "noReviewerNote": "No reviewer note provided.",
     "recordsUnavailable": "Verification records are not returned yet by backend. The frontend is ready to display them once the details endpoint includes verification items.",
     "latestApprovalNote": "Latest approval note",

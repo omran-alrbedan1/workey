@@ -3,6 +3,7 @@ import {
   Building2,
   BriefcaseBusiness,
   Check,
+  Activity,
   Edit,
   ExternalLink,
   ShieldCheck,
@@ -24,7 +25,8 @@ import { AdminFeatureError } from "@/features/admin/shared/components"
 
 import AdminCompanyOverview from "../components/AdminCompanyOverview"
 import AdminCompanyOwnershipCard from "../components/AdminCompanyOwnershipCard"
-import AdminCompanyRecruitmentPanel from "../components/AdminCompanyRecruitmentPanel"
+import AdminCompanyJobsPanel from "../components/AdminCompanyJobsPanel"
+import AdminCompanyActivityPanel from "../components/AdminCompanyActivityPanel"
 import AdminCompanyVerificationCard from "../components/AdminCompanyVerificationCard"
 import AdminCompanyFormDialog from "../components/AdminCompanyFormDialog"
 import CompanyMemberList from "../components/CompanyMemberList"
@@ -189,9 +191,9 @@ export default function AdminCompanyDetailsPage() {
           </div>
         </div>
         <div className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
-          <p className="text-xs uppercase tracking-wide text-text-muted">{t("details.employer")}</p>
+          <p className="text-xs uppercase tracking-wide text-text-muted">{t("overview.industry")}</p>
           <p className="mt-3 text-lg font-semibold text-text-primary">
-            {company.employer?.name || company.employer?.email || t("fallbacks.notAvailable")}
+            {company.industry || t("fallbacks.industryMissing")}
           </p>
         </div>
         <div className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
@@ -214,37 +216,43 @@ export default function AdminCompanyDetailsPage() {
             <Building2 className="h-4 w-4" />
             {t("details.tabs.overview")}
           </TabsTrigger>
-          <TabsTrigger value="recruitment" className="gap-2  px-4 py-2.5">
+          <TabsTrigger value="membersOwnership" className="gap-2  px-4 py-2.5">
+            <Users className="h-4 w-4" />
+            {t("details.tabs.membersOwnership")}
+          </TabsTrigger>
+          <TabsTrigger value="jobs" className="gap-2  px-4 py-2.5">
             <BriefcaseBusiness className="h-4 w-4" />
-            {t("details.tabs.recruitment")}
+            {t("details.tabs.jobs")}
           </TabsTrigger>
           <TabsTrigger value="verification" className="gap-2  px-4 py-2.5">
             <ShieldCheck className="h-4 w-4" />
             {t("details.tabs.verification")}
           </TabsTrigger>
-          <TabsTrigger value="members" className="gap-2  px-4 py-2.5">
-            <Users className="h-4 w-4" />
-            {t("details.tabs.members")}
+          <TabsTrigger value="activity" className="gap-2  px-4 py-2.5">
+            <Activity className="h-4 w-4" />
+            {t("details.tabs.activity")}
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-            <AdminCompanyOverview company={company} />
-            <AdminCompanyOwnershipCard company={company} />
-          </div>
+        <TabsContent value="overview">
+          <AdminCompanyOverview company={company} />
         </TabsContent>
 
-        <TabsContent value="recruitment">
-          <AdminCompanyRecruitmentPanel company={company} />
+        <TabsContent value="membersOwnership" className="space-y-6">
+          <AdminCompanyOwnershipCard company={company} />
+          <CompanyMemberList companyId={company.id} />
+        </TabsContent>
+
+        <TabsContent value="jobs">
+          <AdminCompanyJobsPanel companyId={company.id} />
         </TabsContent>
 
         <TabsContent value="verification">
           <AdminCompanyVerificationCard company={company} />
         </TabsContent>
 
-        <TabsContent value="members">
-          <CompanyMemberList companyId={company.id} />
+        <TabsContent value="activity">
+          <AdminCompanyActivityPanel company={company} />
         </TabsContent>
       </Tabs>
 

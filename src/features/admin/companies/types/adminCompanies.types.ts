@@ -77,8 +77,28 @@ export interface AdminCompanyDetails extends AdminCompanyRecord {
   admin_notes?: string | null
   approval_notes?: string | null
   rejection_reason?: string | null
+  latest_decision?: {
+    status?: AdminKeyValueField
+    actor?: AdminCompanyContact | null
+    actor_name?: string | null
+    reason?: string | null
+    decided_at?: string | null
+    created_at?: string | null
+  } | null
+  approval_decision?: {
+    status?: AdminKeyValueField
+    actor?: AdminCompanyContact | null
+    actor_name?: string | null
+    reason?: string | null
+    decided_at?: string | null
+    created_at?: string | null
+  } | null
+  approved_by?: AdminCompanyContact | null
+  rejected_by?: AdminCompanyContact | null
+  suspended_by?: AdminCompanyContact | null
   approved_at?: string | null
   rejected_at?: string | null
+  suspended_at?: string | null
   last_active_at?: string | null
 }
 

@@ -22,6 +22,19 @@ import type {
   VideoSessionResponse,
 } from "../types/videoInterview.types"
 
+function normalizeVideoSession(response: unknown): VideoSessionResponse {
+  const session = unwrapEmployerEntity<VideoSessionResponse>(response)
+  const token = session.token ?? session.access_token ?? session.livekit_token
+  const url = session.url ?? session.livekit_url ?? session.ws_url ?? session.server_url
+
+  return {
+    ...session,
+    token,
+    url,
+    room: session.room ?? session.room_name,
+  }
+}
+
 export const employerInterviewsService = {
   async listForApplication(applicationId: string | number): Promise<EmployerCollection<EmployerInterview>> {
     return unwrapEmployerCollection<EmployerInterview>(
@@ -124,7 +137,7 @@ export const employerInterviewsService = {
   async createVideoSession(
     interviewId: string | number,
   ): Promise<VideoSessionResponse> {
-    return unwrapEmployerEntity<VideoSessionResponse>(
+    return normalizeVideoSession(
       await api.post(API_ENDPOINTS.interviews.videoSession(interviewId)),
     )
   },

@@ -47,7 +47,7 @@ export default function ParticipantTile({ participant }: { participant: Particip
     <div className="relative aspect-video overflow-hidden rounded-xl border border-border bg-black">
       <video ref={videoRef} autoPlay playsInline className="h-full w-full object-cover" muted={participant.isLocal} />
       <audio ref={audioRef} autoPlay />
-      {!cameraPub && !screenPub && (
+      {!displayTrack && (
         <div className="flex h-full w-full items-center justify-center text-sm text-white/60">
           {name}
         </div>

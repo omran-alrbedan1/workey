@@ -39,6 +39,10 @@ export default function VideoInterviewSection({ interviewId }: { interviewId: st
     setIsLoading(true)
     try {
       const created = await employerInterviewsService.createVideoSession(interviewId)
+      if (!created.url || !created.token) {
+        showErrorToast(t("video.errors.invalidSession"))
+        return
+      }
       setSession(created)
     } catch (error) {
       showErrorToast(videoSessionErrorMessage(error, t("video.sessionError"), t))

@@ -29,6 +29,12 @@ import CompanyMemberRoleDialog from "./CompanyMemberRoleDialog"
 import { ROUTES } from "@/config"
 import { showSuccessToast } from "@/lib/toast"
 
+const OWNER_ROLE_KEYS = new Set(["owner", "company_owner"])
+
+function isOwner(member: AdminCompanyMember) {
+  return member.is_owner === true || OWNER_ROLE_KEYS.has(keyOf(member.role))
+}
+
 export default function CompanyMemberList({ companyId }: { companyId: string | number }) {
   const { t } = useTranslation("adminCompanies")
   const {
@@ -45,6 +51,7 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
   } = useAdminCompanyMembers(String(companyId))
   const [inviteOpen, setInviteOpen] = useState(false)
   const [roleMember, setRoleMember] = useState<AdminCompanyMember | null>(null)
+  const owner = members.find(isOwner)
 
   if (isLoading) {
     return (
@@ -113,7 +120,7 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-text-primary">
                     {member.name}
-                    {member.is_owner ? (
+                    {isOwner(member) ? (
                       <span className="ml-2 text-xs font-normal text-text-muted">
                         {t("members.owner")}
                       </span>
@@ -123,7 +130,7 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                 </div>
                 <StatusBadge status={member.role} variant="soft" size="sm" />
                 <StatusBadge status={member.status} variant="soft" size="sm" />
-                {role !== "owner" && (
+                {!isOwner(member) && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -157,6 +164,7 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
                           ) {
                             transferOwnershipMutation.mutate({
                               new_owner_user_id: member.id,
+                              current_owner_user_id: owner?.id,
                               previous_owner_role: "company_admin",
                             })
                           }

@@ -8,7 +8,7 @@
   "errors": {
     "listTitle": "الشركات",
     "detailsTitle": "تفاصيل الشركة",
-    "missingId": "معرّف الشركة غير موجود في الرابط."
+    "missingId": "معرف الشركة غير موجود في الرابط."
   },
   "filters": {
     "title": "عوامل تصفية الشركات",
@@ -52,7 +52,7 @@
   },
   "modals": {
     "approveTitle": "الموافقة على الشركة؟",
-    "approveDescription": "أنت على وشك الموافقة على {{name}}. ستصبح متاحة عبر منصة وركي.",
+    "approveDescription": "أنت على وشك الموافقة على {{name}}. ستصبح متاحة عبر منصة Workey.",
     "approveConfirm": "الموافقة على الشركة",
     "rejectTitle": "رفض الشركة؟",
     "rejectDescription": "اذكر سبب عدم الموافقة على {{name}}. إضافة السبب اختيارية.",
@@ -62,17 +62,18 @@
     "descriptionFallback": "تفاصيل ملف الشركة",
     "back": "العودة إلى الشركات",
     "imageAlt": "تفاصيل الشركة",
-    "backendCoverageWarning": "تعرض الصفحة بيانات القائمة المخزنة مؤقتًا للمعلومات الأساسية. لا تزال الواجهة الخلفية بحاجة إلى نقطة نهاية مخصصة لتفاصيل الشركة تشمل التحقق والوظائف والنشاط وملاحظات الإدارة.",
+    "backendCoverageWarning": "تعرض الصفحة بيانات القائمة المخزنة مؤقتا للمعلومات الأساسية. لا تزال الواجهة الخلفية بحاجة إلى نقطة نهاية مخصصة لتفاصيل الشركة تشمل التحقق والوظائف والنشاط وملاحظات الإدارة.",
     "approvalStatus": "حالة الموافقة",
     "employer": "صاحب العمل",
     "location": "الموقع",
-    "companyId": "معرّف الشركة",
+    "companyId": "معرف الشركة",
     "edit": "تعديل",
     "tabs": {
       "overview": "نظرة عامة",
-      "recruitment": "التوظيف",
+      "membersOwnership": "الأعضاء والملكية",
+      "jobs": "الوظائف",
       "verification": "التحقق",
-      "members": "الأعضاء"
+      "activity": "النشاط الإداري"
     }
   },
   "members": {
@@ -81,11 +82,11 @@
     "empty": "لا يوجد أعضاء لهذه الشركة.",
     "owner": "(المالك)",
     "cancel": "إلغاء",
-    "submitting": "جارٍ الحفظ...",
+    "submitting": "جار الحفظ...",
     "roles": {
       "admin": "مدير",
       "recruiter": "مسؤول توظيف",
-      "interviewer": "مقابِل",
+      "interviewer": "مقابل",
       "member": "عضو"
     },
     "actions": {
@@ -114,7 +115,7 @@
     },
     "invitationDialog": {
       "title": "دعوة عضو فريق",
-      "description": "أرسل دعوة بالبريد الإلكتروني نيابةً عن هذه الشركة.",
+      "description": "أرسل دعوة بالبريد الإلكتروني نيابة عن هذه الشركة.",
       "email": "البريد الإلكتروني",
       "role": "الدور",
       "submit": "إرسال الدعوة"
@@ -127,7 +128,8 @@
     },
     "toasts": {
       "invitationSent": "تم إرسال الدعوة",
-      "roleUpdated": "تم تحديث دور العضو"
+      "roleUpdated": "تم تحديث دور العضو",
+      "ownershipTransferred": "تم نقل ملكية الشركة"
     }
   },
   "overview": {
@@ -141,15 +143,25 @@
     "companySize": "حجم الشركة",
     "registrationNumber": "رقم التسجيل",
     "description": "الوصف",
-    "descriptionFallback": "لا تزال واجهة تفاصيل الشركة الخلفية مطلوبة لتوفير الوصف وبيانات الملف الأكثر تفصيلًا."
+    "descriptionFallback": "لا تزال واجهة تفاصيل الشركة الخلفية مطلوبة لتوفير الوصف وبيانات الملف الأكثر تفصيلا."
   },
   "ownership": {
     "title": "ملكية صاحب العمل",
-    "primaryAccount": "حساب صاحب العمل الرئيسي",
+    "primaryAccount": "حساب المالك الأساسي",
     "employerName": "اسم صاحب العمل",
     "employerEmail": "بريد صاحب العمل",
     "employerPhone": "هاتف صاحب العمل",
-    "createdBy": "أنشأه"
+    "createdBy": "أنشأه",
+    "ownerName": "اسم المالك",
+    "ownerEmail": "بريد المالك",
+    "companyRole": "دور الشركة",
+    "membershipStatus": "حالة العضوية",
+    "transferTitle": "نقل الملكية",
+    "transferPlaceholder": "اختر المالك الجديد",
+    "transferAction": "نقل الملكية",
+    "transferHint": "يستخدم نقطة نهاية نقل ملكية الشركة ويحدث بيانات العضوية.",
+    "transferUnavailable": "لا يوجد أعضاء مؤهلون لنقل الملكية.",
+    "noOwner": "لم ترجع نقطة نهاية أعضاء الشركة أي مالك."
   },
   "recruitment": {
     "activeJobs": "الوظائف النشطة",
@@ -157,16 +169,32 @@
     "applications": "طلبات التقديم",
     "profileCompletion": "اكتمال الملف",
     "recentJobs": "أحدث الوظائف",
-    "jobMeta": "{{count}} طلبات · أُنشئت في {{date}}",
+    "jobMeta": "{{count}} طلبات - أنشئت في {{date}}",
     "jobsUnavailable": "تحتاج أحدث الوظائف إلى قائمة مخصصة من نقطة نهاية تفاصيل الشركة.",
     "recentActivity": "أحدث نشاطات الإدارة",
-    "activityMeta": "{{actor}} · {{date}}",
+    "activityMeta": "{{actor}} - {{date}}",
     "activityUnavailable": "سجل نشاط الشركات غير متاح من الواجهة الخلفية حتى الآن."
+  },
+  "jobs": {
+    "title": "وظائف الشركة",
+    "applications": "{{count}} طلبات",
+    "created": "أنشئت في {{date}}",
+    "empty": "لم يتم إرجاع وظائف لهذه الشركة.",
+    "error": "تعذر تحميل وظائف هذه الشركة."
+  },
+  "activity": {
+    "title": "النشاط الإداري",
+    "empty": "لم يتم إرجاع أي نشاط إداري لهذه الشركة."
   },
   "verification": {
     "title": "التحقق والموافقة",
+    "currentStatus": "الحالة الحالية",
+    "latestDecision": "أحدث قرار",
+    "decisionActor": "منفذ القرار",
+    "decisionDate": "تاريخ القرار",
+    "reason": "السبب",
     "noReviewerNote": "لا توجد ملاحظة من المراجع.",
-    "recordsUnavailable": "لم تُرجع الواجهة الخلفية سجلات التحقق بعد. الواجهة جاهزة لعرضها عند إضافتها إلى نقطة نهاية التفاصيل.",
+    "recordsUnavailable": "لم ترجع الواجهة الخلفية سجلات التحقق بعد. الواجهة جاهزة لعرضها عند إضافتها إلى نقطة نهاية التفاصيل.",
     "latestApprovalNote": "أحدث ملاحظة موافقة",
     "noApprovalNote": "لم يتم إرجاع أي ملاحظة موافقة.",
     "activityTimestamps": "التواريخ والنشاط",
@@ -176,9 +204,9 @@
   },
   "toasts": {
     "approved": "تمت الموافقة على الشركة",
-    "rejected": "تم رفض الشركة"
-    ,"suspended": "تم إيقاف الشركة"
-    ,"updated": "تم تحديث الشركة"
-    ,"updateFailed": "تعذر تحديث الشركة."
+    "rejected": "تم رفض الشركة",
+    "suspended": "تم إيقاف الشركة",
+    "updated": "تم تحديث الشركة",
+    "updateFailed": "تعذر تحديث الشركة."
   }
 }

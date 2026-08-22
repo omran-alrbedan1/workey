@@ -289,6 +289,7 @@
       "roomNotFound": "The video room could not be found. Start a new session.",
       "network": "Could not reach the video service. Check your connection and try again.",
       "generic": "Could not join the video room. Please try again.",
+      "invalidSession": "The video session response did not include a LiveKit URL and access token.",
       "microphoneUnavailable": "Microphone is unavailable or blocked — you joined without audio input.",
       "cameraUnavailable": "Camera is unavailable or blocked — you joined without video.",
       "screenShareFailed": "Screen sharing failed. Check browser permissions and try again.",
