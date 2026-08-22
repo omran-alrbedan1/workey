@@ -11,7 +11,6 @@ import {
   LayoutDashboard,
   Settings,
   ScrollText,
-  UserRoundCheck,
   Users,
   Wrench,
   X,
@@ -46,8 +45,6 @@ const navigation: Array<{ label: string; items: NavigationItem[] }> = [
     label: "sections.people",
     items: [
       { label: "items.allUsers", path: ROUTES.admin.users, icon: Users },
-      { label: "items.candidates", path: ROUTES.admin.candidates, icon: UserRoundCheck },
-      { label: "items.employers", path: ROUTES.admin.employers, icon: BriefcaseBusiness },
       { label: "items.companies", path: ROUTES.admin.companies, icon: Building2 },
     ],
   },

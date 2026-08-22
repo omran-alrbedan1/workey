@@ -33,6 +33,8 @@ function DistributionChart({
             innerRadius={62}
             outerRadius={88}
             paddingAngle={3}
+            stroke="var(--color-background-card)"
+            strokeWidth={2}
           >
             {data.map((entry) => (
               <Cell key={entry.name} fill={entry.color} />
@@ -43,9 +45,18 @@ function DistributionChart({
               borderRadius: 12,
               borderColor: "var(--color-border)",
               background: "var(--color-background-card)",
+              color: "var(--color-text-primary)",
+            }}
+            labelStyle={{ color: "var(--color-text-primary)" }}
+            itemStyle={{ color: "var(--color-text-primary)" }}
+          />
+          <Legend
+            iconType="circle"
+            wrapperStyle={{
+              color: "var(--color-text-secondary)",
+              fontSize: 12,
             }}
           />
-          <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
         </PieChart>
       </ResponsiveContainer>
       <div className="pointer-events-none absolute inset-x-0 top-[88px] text-center">

@@ -1,6 +1,6 @@
 {
   "title": "الوظائف",
-  "description": "مراقبة إعلانات الوظائف المنشورة من قبل الشركات على Workey.",
+  "description": "راقب إعلانات الوظائف المنشورة من الشركات على Workey.",
   "columns": {
     "job": "الوظيفة",
     "status": "الحالة",
@@ -18,8 +18,8 @@
     "allEmploymentTypes": "جميع أنواع التوظيف",
     "acceptingApplications": "الطلبات",
     "allApplicationStates": "جميع حالات الطلبات",
-    "accepting": "قبول",
-    "notAccepting": "غير قبول",
+    "accepting": "يقبل الطلبات",
+    "notAccepting": "لا يقبل الطلبات",
     "sortBy": "ترتيب حسب",
     "sortDirection": "الاتجاه"
   },
@@ -46,10 +46,15 @@
     "back": "العودة إلى الوظائف",
     "errorTitle": "تعذر تحميل هذه الوظيفة",
     "errorDescription": "قد لا تكون الوظيفة موجودة أو لم تتمكن الواجهة الخلفية من إرجاع تفاصيلها.",
-    "missingId": "معرّف الوظيفة مفقود",
+    "missingId": "معرف الوظيفة مفقود",
     "missingIdDescription": "افتح وظيفة من جدول الوظائف.",
     "viewCompany": "عرض الشركة",
     "viewApplications": "عرض الطلبات",
+    "tabs": {
+      "overview": "نظرة عامة",
+      "company": "الشركة",
+      "applicants": "المتقدمون"
+    },
     "deadline": "الموعد النهائي للتقديم",
     "salary": "نطاق الراتب",
     "overview": "نظرة عامة",
@@ -61,6 +66,9 @@
     "companyName": "اسم الشركة",
     "companyStatus": "حالة الشركة",
     "employer": "صاحب العمل",
+    "employerEmail": "بريد صاحب العمل",
+    "applicantsErrorTitle": "تعذر تحميل المتقدمين",
+    "applicantsErrorDescription": "تعذر تحميل المتقدمين لهذه الوظيفة.",
     "descriptionTitle": "الوصف",
     "requirementsTitle": "المتطلبات",
     "responsibilitiesTitle": "المسؤوليات",

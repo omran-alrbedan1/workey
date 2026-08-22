@@ -140,12 +140,13 @@ export default function AdminApplicationsTable({
       key: "job",
       header: t("columns.job"),
       headerIcon: BriefcaseBusiness,
-      cell: (item) => (
-        <div>
-          <p className="text-text-primary">{jobFor(item)?.title || "-"}</p>
-          <p className="text-xs text-text-muted">{companyFor(item)?.name || "-"}</p>
-        </div>
-      ),
+      cell: (item) => <span className="text-text-primary">{jobFor(item)?.title || "-"}</span>,
+    },
+    {
+      key: "company",
+      header: t("columns.company"),
+      headerIcon: Building2,
+      cell: (item) => <span className="text-text-primary">{companyFor(item)?.name || "-"}</span>,
     },
     {
       key: "status",
@@ -189,7 +190,7 @@ export default function AdminApplicationsTable({
       emptyDescription={t("emptyDescription")}
       emptyImage={images.emptyJobs}
       emptyImageAlt={t("empty")}
-      className="rounded-2xl bg-background-card shadow-card"
+      className="rounded-2xl relative overflow-visible bg-background-card shadow-card"
     />
   )
 }

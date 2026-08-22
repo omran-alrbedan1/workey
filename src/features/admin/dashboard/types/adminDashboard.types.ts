@@ -53,24 +53,13 @@ export interface AdminApplication {
   created_at?: string
   applied_at?: string
   submitted_at?: string
+  interviews_count?: number | null
+  tests_count?: number | null
   job?: {
     title?: string
   }
   company?: {
     name?: string
-  }
-}
-
-export interface AdminInterview {
-  id: number | string
-  status?: AdminKeyValueField
-  scheduled_at?: string
-  scheduled_start_at?: string
-  created_at?: string
-  application?: {
-    job?: {
-      title?: string
-    }
   }
 }
 
@@ -123,7 +112,7 @@ export interface ActivityItem {
   title: string
   description: string
   timestamp?: string
-  type: "user" | "company" | "job" | "application" | "interview" | "test"
+  type: "user" | "company" | "job" | "application" | "test"
 }
 
 export interface AdminDashboardData {

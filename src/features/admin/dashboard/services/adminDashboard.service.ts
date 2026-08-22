@@ -5,7 +5,6 @@ import { normalizeKeyValue } from "@/features/admin/shared/services/adminRespons
 import type {
   AdminCompany,
   AdminApplication,
-  AdminInterview,
   AdminJob,
   AdminSkill,
   AdminTest,
@@ -85,6 +84,7 @@ export const adminDashboardService = {
   async getUsers(): Promise<CollectionResult<AdminUser>> {
     const response = await api.get<unknown>(API_ENDPOINTS.admin.users, {
       params: { per_page: dashboardPageSize },
+      skipNotFoundRedirect: true,
     })
     const collection = normalizeCollection<AdminUser>(response)
     return { ...collection, items: collection.items.map(normalizeUser) }
@@ -93,6 +93,7 @@ export const adminDashboardService = {
   async getCompanies(): Promise<CollectionResult<AdminCompany>> {
     const response = await api.get<unknown>(API_ENDPOINTS.admin.companies, {
       params: { per_page: dashboardPageSize },
+      skipNotFoundRedirect: true,
     })
     const collection = normalizeCollection<AdminCompany>(response)
     return { ...collection, items: collection.items.map(normalizeCompany) }
@@ -106,6 +107,7 @@ export const adminDashboardService = {
   async getJobs(): Promise<CollectionResult<AdminJob>> {
     const response = await api.get<unknown>(API_ENDPOINTS.admin.jobs, {
       params: { page: 1, per_page: dashboardPageSize },
+      skipNotFoundRedirect: true,
     })
     return normalizeCollection<AdminJob>(response)
   },
@@ -113,6 +115,7 @@ export const adminDashboardService = {
   async getOpenJobs(): Promise<CollectionResult<AdminJob>> {
     const response = await api.get<unknown>(API_ENDPOINTS.admin.jobs, {
       params: { page: 1, per_page: 1, accepting_applications: true },
+      skipNotFoundRedirect: true,
     })
     return normalizeCollection<AdminJob>(response)
   },
@@ -120,19 +123,15 @@ export const adminDashboardService = {
   async getApplications(): Promise<CollectionResult<AdminApplication>> {
     const response = await api.get<unknown>(API_ENDPOINTS.admin.applications, {
       params: { page: 1, per_page: dashboardPageSize },
+      skipNotFoundRedirect: true,
     })
     return normalizeCollection<AdminApplication>(response)
   },
 
-  async getInterviews(): Promise<CollectionResult<AdminInterview>> {
-    const response = await api.get<unknown>(API_ENDPOINTS.admin.interviews, {
-      params: { page: 1, per_page: dashboardPageSize },
-    })
-    return normalizeCollection<AdminInterview>(response)
-  },
-
   async getTests(): Promise<CollectionResult<AdminTest>> {
-    const response = await api.get<unknown>(API_ENDPOINTS.admin.tests)
+    const response = await api.get<unknown>(API_ENDPOINTS.admin.tests, {
+      skipNotFoundRedirect: true,
+    })
     return normalizeCollection<AdminTest>(response)
   },
 }

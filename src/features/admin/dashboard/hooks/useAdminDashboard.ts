@@ -18,7 +18,6 @@ import type {
   AdminApplication,
   AdminCompany,
   AdminDashboardData,
-  AdminInterview,
   AdminJob,
   AdminTest,
   AdminUser,
@@ -45,7 +44,6 @@ function createActivity(
   companies: AdminCompany[],
   jobs: AdminJob[],
   applications: AdminApplication[],
-  interviews: AdminInterview[],
   tests: AdminTest[],
   t: (key: string, options?: Record<string, unknown>) => string,
 ): ActivityItem[] {
@@ -81,14 +79,6 @@ function createActivity(
     type: "application",
   }))
 
-  const interviewActivity: ActivityItem[] = interviews.slice(0, 4).map((interview) => ({
-    id: `interview-${interview.id}`,
-    title: interview.application?.job?.title || t("interviewFallback"),
-    description: t("interviewScheduled"),
-    timestamp: interview.scheduled_start_at ?? interview.scheduled_at ?? interview.created_at,
-    type: "interview",
-  }))
-
   const testActivity: ActivityItem[] = tests.slice(0, 4).map((test) => ({
     id: `test-${test.id}`,
     title: test.title,
@@ -102,7 +92,6 @@ function createActivity(
     ...companyActivity,
     ...jobActivity,
     ...applicationActivity,
-    ...interviewActivity,
     ...testActivity,
   ]
     .sort((a, b) => dateValue(b.timestamp) - dateValue(a.timestamp))
@@ -148,12 +137,6 @@ export function useAdminDashboard() {
     staleTime: ADMIN_DASHBOARD_STALE_TIME,
   })
 
-  const interviewsQuery = useQuery({
-    queryKey: [...adminDashboardQueryKeys.root, "interviews"],
-    queryFn: adminDashboardService.getInterviews,
-    staleTime: ADMIN_DASHBOARD_STALE_TIME,
-  })
-
   const testsQuery = useQuery({
     queryKey: adminDashboardQueryKeys.tests(),
     queryFn: adminDashboardService.getTests,
@@ -166,7 +149,6 @@ export function useAdminDashboard() {
     const jobs = jobsQuery.data ?? emptyCollection<AdminJob>()
     const openJobs = openJobsQuery.data ?? emptyCollection<AdminJob>()
     const applications = applicationsQuery.data ?? emptyCollection<AdminApplication>()
-    const interviews = interviewsQuery.data ?? emptyCollection<AdminInterview>()
     const tests = testsQuery.data ?? emptyCollection<AdminTest>()
 
     const jobSeekers = users.items.filter((user) => user.role === "job_seeker").length
@@ -186,17 +168,21 @@ export function useAdminDashboard() {
     ).length
     const sampledUsers = users.meta.total > users.items.length
     const sampledCompanies = companies.meta.total > companies.items.length
+    const interviewsTotal = applications.items.reduce(
+      (total, application) => total + Number(application.interviews_count ?? 0),
+      0,
+    )
 
     const roleDistribution: DistributionItem[] = [
-      { name: t("roles.jobSeekers"), value: jobSeekers, color: "#18A949" },
-      { name: t("roles.employers"), value: employers, color: "#1B2831" },
-      { name: t("roles.admins"), value: admins, color: "#29B148" },
+      { name: t("roles.jobSeekers"), value: jobSeekers, color: "var(--chart-role-job-seekers)" },
+      { name: t("roles.employers"), value: employers, color: "var(--chart-role-employers)" },
+      { name: t("roles.admins"), value: admins, color: "var(--chart-role-admins)" },
     ]
 
     const companyDistribution: DistributionItem[] = [
-      { name: t("statuses.approved"), value: approvedCompanies, color: "#10B981" },
-      { name: t("statuses.pending"), value: pendingCompanies, color: "#F59E0B" },
-      { name: t("statuses.rejected"), value: rejectedCompanies, color: "#F43F5E" },
+      { name: t("statuses.approved"), value: approvedCompanies, color: "var(--chart-company-approved)" },
+      { name: t("statuses.pending"), value: pendingCompanies, color: "var(--chart-company-pending)" },
+      { name: t("statuses.rejected"), value: rejectedCompanies, color: "var(--chart-company-rejected)" },
     ]
 
     return {
@@ -234,7 +220,7 @@ export function useAdminDashboard() {
         },
         {
           label: t("metrics.interviews"),
-          value: interviews.meta.total,
+          value: interviewsTotal,
           subtitle: t("metrics.interviewsSub"),
           icon: "interviews",
         },
@@ -278,7 +264,6 @@ export function useAdminDashboard() {
         companies.items,
         jobs.items,
         applications.items,
-        interviews.items,
         tests.items,
         t,
       ),
@@ -291,7 +276,6 @@ export function useAdminDashboard() {
     jobsQuery.data,
     openJobsQuery.data,
     applicationsQuery.data,
-    interviewsQuery.data,
     testsQuery.data,
     t,
   ])
@@ -302,7 +286,6 @@ export function useAdminDashboard() {
     jobsQuery,
     openJobsQuery,
     applicationsQuery,
-    interviewsQuery,
     testsQuery,
   ]
 

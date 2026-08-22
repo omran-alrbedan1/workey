@@ -35,7 +35,7 @@ export const adminApplicationsService = {
   async list(params: AdminListParams = {}): Promise<AdminCollection<AdminApplicationRecord>> {
     try {
       return unwrapCollection<AdminApplicationRecord>(
-        await api.get(API_ENDPOINTS.admin.applications, { params }),
+        await api.get(API_ENDPOINTS.admin.applications, { params, skipNotFoundRedirect: true }),
       )
     } catch (error) {
       if (!isNotFound(error)) throw error
@@ -48,15 +48,18 @@ export const adminApplicationsService = {
             sort_by: "created_at",
             sort_direction: "desc",
           },
+          skipNotFoundRedirect: true,
         }),
       )
 
       const applicationCollections = await Promise.all(
         jobs.items.map(async (job) => {
+          if (params.job && String(job.id) !== String(params.job)) return []
           try {
             return unwrapCollection<AdminApplicationRecord>(
               await api.get(API_ENDPOINTS.jobs.applications(job.id), {
                 params: { page: 1, per_page: 100 },
+                skipNotFoundRedirect: true,
               }),
             ).items.map((application) => withJobContext(application, job))
           } catch {

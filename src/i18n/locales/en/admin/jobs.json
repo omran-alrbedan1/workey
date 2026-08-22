@@ -25,6 +25,11 @@
     "missingIdDescription": "Open a job from the jobs table.",
     "viewCompany": "View company",
     "viewApplications": "View applications",
+    "tabs": {
+      "overview": "Overview",
+      "company": "Company",
+      "applicants": "Applicants"
+    },
     "deadline": "Application deadline",
     "salary": "Salary range",
     "overview": "Overview",
@@ -36,6 +41,9 @@
     "companyName": "Company name",
     "companyStatus": "Company status",
     "employer": "Employer",
+    "employerEmail": "Employer email",
+    "applicantsErrorTitle": "Unable to load applicants",
+    "applicantsErrorDescription": "The applicants for this job could not be loaded.",
     "descriptionTitle": "Description",
     "requirementsTitle": "Requirements",
     "responsibilitiesTitle": "Responsibilities",

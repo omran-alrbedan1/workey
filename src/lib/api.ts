@@ -14,6 +14,10 @@ export interface ApiError {
   errors?: Record<string, string[] | string | number | boolean | null>;
 }
 
+export interface AppAxiosRequestConfig extends AxiosRequestConfig {
+  skipNotFoundRedirect?: boolean;
+}
+
 const backendErrorMessages: Record<string, string> = {
   COMPANY_PENDING: 'Your company is pending approval. Please wait for administrator approval.',
   COMPANY_REJECTED: 'Your company has been rejected. Please contact support for more information.',
@@ -145,7 +149,12 @@ API.interceptors.response.use(
     if (error.response?.status === 404) {
       apiError.message = error.response?.data?.message || 'The requested resource was not found.';
       // Redirect to Not Found page
-      if (typeof window !== 'undefined' && !window.location.pathname.includes('/not-found')) {
+      const skipNotFoundRedirect = Boolean((error.config as AppAxiosRequestConfig | undefined)?.skipNotFoundRedirect);
+      if (
+        !skipNotFoundRedirect &&
+        typeof window !== 'undefined' &&
+        !window.location.pathname.includes('/not-found')
+      ) {
         window.location.href = '/not-found';
       }
     }
@@ -182,19 +191,19 @@ API.interceptors.response.use(
 
 // Generic wrapper methods with types
 const api = {
-  get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => 
+  get: <T = any>(url: string, config?: AppAxiosRequestConfig): Promise<T> => 
     API.get(url, config).then((response) => response.data),
   
-  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
+  post: <T = any>(url: string, data?: any, config?: AppAxiosRequestConfig): Promise<T> => 
     API.post(url, data, config).then((response) => response.data),
   
-  put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
+  put: <T = any>(url: string, data?: any, config?: AppAxiosRequestConfig): Promise<T> => 
     API.put(url, data, config).then((response) => response.data),
   
-  patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
+  patch: <T = any>(url: string, data?: any, config?: AppAxiosRequestConfig): Promise<T> => 
     API.patch(url, data, config).then((response) => response.data),
   
-  delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => 
+  delete: <T = any>(url: string, config?: AppAxiosRequestConfig): Promise<T> => 
     API.delete(url, config).then((response) => response.data),
 };
 

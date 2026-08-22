@@ -1,7 +1,6 @@
 import {
   BriefcaseBusiness,
   Building2,
-  CalendarClock,
   ClipboardList,
   FlaskConical,
   UserRound,
@@ -42,11 +41,9 @@ export default function AdminRecentActivity({ items }: { items: ActivityItem[] }
                   ? BriefcaseBusiness
                   : item.type === "application"
                     ? ClipboardList
-                    : item.type === "interview"
-                      ? CalendarClock
-                      : item.type === "test"
-                        ? FlaskConical
-                        : UserRound
+                    : item.type === "test"
+                      ? FlaskConical
+                      : UserRound
             return (
               <div key={item.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
                 <div className="rounded-xl bg-primary/10 p-2.5 text-primary">

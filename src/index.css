@@ -106,6 +106,14 @@
   /* Focus Ring Colors - Light */
   --color-ring: #18A949;
   --color-ring-offset: #FDFDFD;
+
+  /* Chart Colors - Light */
+  --chart-role-job-seekers: #18A949;
+  --chart-role-employers: #2563EB;
+  --chart-role-admins: #7C3AED;
+  --chart-company-approved: #10B981;
+  --chart-company-pending: #D97706;
+  --chart-company-rejected: #E11D48;
   
   /* Gradients - Light */
   --gradient-primary: linear-gradient(135deg, #29B148 0%, #18A949 52%, #0FA348 100%);
@@ -154,6 +162,14 @@
   
   --color-ring: #29B148;
   --color-ring-offset: #18262C;
+
+  /* Chart Colors - Dark */
+  --chart-role-job-seekers: #4ADE80;
+  --chart-role-employers: #60A5FA;
+  --chart-role-admins: #C084FC;
+  --chart-company-approved: #34D399;
+  --chart-company-pending: #FBBF24;
+  --chart-company-rejected: #FB7185;
   
   /* Gradients - Dark */
   --gradient-primary: linear-gradient(135deg, #29B148 0%, #18A949 52%, #0FA348 100%);
