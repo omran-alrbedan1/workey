@@ -25,10 +25,8 @@
   "markRead": "Mark read",
   "markAllRead": "Mark all as read",
   "markingAllRead": "Marking all...",
-  "delete": "Delete",
   "empty": "No notifications were returned.",
   "emptyDescription": "You have no platform notifications right now.",
   "markedRead": "Notification marked as read",
-  "markedAllRead": "All notifications marked as read",
-  "deleted": "Notification deleted"
+  "markedAllRead": "All notifications marked as read"
 }

@@ -44,24 +44,12 @@ export function useEmployerNotifications() {
     },
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string | number) => employerNotificationsService.delete(id),
-    onSuccess: async () => {
-      await Promise.all([
-        client.invalidateQueries({ queryKey: rootKey }),
-        client.invalidateQueries({ queryKey: adminRootKey }),
-      ])
-      showSuccessToast(t("toasts.deleted"))
-    },
-  })
-
   return {
     ...listQuery,
     unreadCount: unreadCountQuery.data?.unread_count ?? unreadCountQuery.data?.count ?? 0,
     isUnreadCountPending: unreadCountQuery.isPending,
     markReadMutation,
     markAllReadMutation,
-    deleteMutation,
     page,
     setPage,
   }

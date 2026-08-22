@@ -10,6 +10,7 @@ import type {
   AdminNotificationRecord,
   UnreadCountResponse,
 } from "../types/adminNotifications.types"
+
 export const adminNotificationsService = {
   async list(page = 1): Promise<AdminCollection<AdminNotificationRecord>> {
     return unwrapCollection<AdminNotificationRecord>(
@@ -18,19 +19,19 @@ export const adminNotificationsService = {
       }),
     )
   },
+
   async unreadCount(): Promise<number> {
     const value = unwrapEntity<UnreadCountResponse>(
       await api.get(API_ENDPOINTS.notifications.unreadCount),
     )
     return Number(value?.unread_count ?? value?.count ?? (isRecord(value) ? 0 : value)) || 0
   },
+
   async markRead(id: string | number): Promise<void> {
     await api.patch(API_ENDPOINTS.notifications.markRead(id))
   },
+
   async markAllRead(): Promise<void> {
     await api.patch(API_ENDPOINTS.notifications.markAllRead)
-  },
-  async delete(id: string | number): Promise<void> {
-    await api.delete(API_ENDPOINTS.notifications.delete(id))
   },
 }

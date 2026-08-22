@@ -17,9 +17,7 @@ export default function AdminNotificationsPage() {
   const notifications = useAdminNotifications()
   const navigate = useNavigate()
   const updating =
-    notifications.markReadMutation.isPending ||
-    notifications.markAllReadMutation.isPending ||
-    notifications.deleteMutation.isPending
+    notifications.markReadMutation.isPending || notifications.markAllReadMutation.isPending
 
   const openNotification = (notification: AdminNotificationRecord) => {
     if (isNotificationUnread(notification)) {
@@ -40,6 +38,7 @@ export default function AdminNotificationsPage() {
         }}
       />
     )
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -66,7 +65,6 @@ export default function AdminNotificationsPage() {
         pagination={notifications.data?.pagination}
         onPageChange={notifications.setPage}
         onRead={(id) => notifications.markReadMutation.mutate(id)}
-        onDelete={(id) => notifications.deleteMutation.mutate(id)}
         onOpen={openNotification}
       />
     </div>

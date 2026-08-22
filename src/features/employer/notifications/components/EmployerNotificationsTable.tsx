@@ -3,7 +3,7 @@ import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import type { EmployerCollection } from "@/features/employer/shared/services/employerResponse.utils"
 import type { EmployerNotification } from "../types/employerNotifications.types"
 import { Button } from "@/components/ui/button"
-import { CheckCheck, Mail, MailOpen, Bell, Calendar, Trash2 } from "lucide-react"
+import { CheckCheck, Mail, MailOpen, Bell, Calendar } from "lucide-react"
 import {
   isNotificationUnread,
   notificationMessage,
@@ -15,7 +15,6 @@ interface EmployerNotificationMobileCardProps {
   notification: EmployerNotification
   isMarking: boolean
   onMarkRead: (id: string | number) => void
-  onDelete: (id: string | number) => void
   onOpen: (notification: EmployerNotification) => void
 }
 
@@ -23,7 +22,6 @@ function EmployerNotificationMobileCard({
   notification,
   isMarking,
   onMarkRead,
-  onDelete,
   onOpen,
 }: EmployerNotificationMobileCardProps) {
   const { t, i18n } = useTranslation("employerNotifications")
@@ -67,8 +65,8 @@ function EmployerNotificationMobileCard({
         </p>
       </div>
 
-      <div className="mt-4 flex gap-2">
-        {unread && (
+      {unread && (
+        <div className="mt-4 flex gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -81,20 +79,8 @@ function EmployerNotificationMobileCard({
           >
             <CheckCheck className="h-4 w-4" /> {t("actions.markAsRead")}
           </Button>
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          disabled={isMarking}
-          onClick={(event) => {
-            event.stopPropagation()
-            onDelete(notification.id)
-          }}
-          aria-label={t("actions.delete")}
-        >
-          <Trash2 className="h-4 w-4 text-red-600" />
-        </Button>
-      </div>
+        </div>
+      )}
     </article>
   )
 }
@@ -103,18 +89,18 @@ export default function EmployerNotificationsTable({
   collection,
   isLoading,
   isMarking,
+  unreadCount,
   onMarkRead,
   onMarkAllRead,
-  onDelete,
   onOpen,
   onPageChange,
 }: {
   collection?: EmployerCollection<EmployerNotification>
   isLoading: boolean
   isMarking: boolean
+  unreadCount: number
   onMarkRead: (id: string | number) => void
   onMarkAllRead: () => void
-  onDelete: (id: string | number) => void
   onOpen: (notification: EmployerNotification) => void
   onPageChange: (page: number) => void
 }) {
@@ -195,19 +181,6 @@ export default function EmployerNotificationsTable({
               <CheckCheck className="h-4 w-4 text-primary" />
             </Button>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            disabled={isMarking}
-            onClick={(event) => {
-              event.stopPropagation()
-              onDelete(item.id)
-            }}
-            aria-label={t("actions.delete")}
-          >
-            <Trash2 className="h-4 w-4 text-red-600" />
-          </Button>
         </div>
       ),
     },
@@ -218,14 +191,13 @@ export default function EmployerNotificationsTable({
       notification={item}
       isMarking={isMarking}
       onMarkRead={onMarkRead}
-      onDelete={onDelete}
       onOpen={onOpen}
     />
   )
 
   return (
     <div className="space-y-4">
-      {!isLoading && collection && collection.items.length > 0 && (
+      {!isLoading && collection && collection.items.length > 0 && unreadCount > 0 && (
         <div className="flex justify-end">
           <Button
             variant="outline"

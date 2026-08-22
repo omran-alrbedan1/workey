@@ -194,7 +194,6 @@ export const API_ENDPOINTS = Object.freeze({
     unreadCount: "/notifications/unread-count",
     markRead: (id: string | number) => `/notifications/${id}/read`,
     markAllRead: "/notifications/read-all",
-    delete: (id: string | number) => `/notifications/${id}`,
   },
   activity: "/activity",
   reference: {
@@ -202,5 +201,3 @@ export const API_ENDPOINTS = Object.freeze({
     jobFilters: "/reference/job-filters",
   },
 } as const)
-
-

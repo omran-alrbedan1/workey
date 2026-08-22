@@ -23,12 +23,10 @@
   },
   "actions": {
     "markAsRead": "Mark as read",
-    "markAllRead": "Mark all as read",
-    "delete": "Delete"
+    "markAllRead": "Mark all as read"
   },
   "toasts": {
-    "allRead": "All notifications marked as read",
-    "deleted": "Notification deleted"
+    "allRead": "All notifications marked as read"
   },
   "errors": {
     "title": "Unable to load notifications",

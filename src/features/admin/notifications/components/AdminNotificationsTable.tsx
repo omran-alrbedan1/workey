@@ -1,4 +1,4 @@
-import { CheckCheck, Bell, ShieldCheck, Calendar, Trash2 } from "lucide-react"
+import { CheckCheck, Bell, ShieldCheck, Calendar } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { Button } from "@/components/ui/button"
@@ -20,7 +20,6 @@ interface AdminNotificationsTableProps {
   pagination?: AdminPagination
   onPageChange: (page: number) => void
   onRead: (id: string | number) => void
-  onDelete: (id: string | number) => void
   onOpen: (notification: AdminNotificationRecord) => void
 }
 
@@ -28,7 +27,6 @@ interface AdminNotificationMobileCardProps {
   notification: AdminNotificationRecord
   isUpdating: boolean
   onRead: (id: string | number) => void
-  onDelete: (id: string | number) => void
   onOpen: (notification: AdminNotificationRecord) => void
 }
 
@@ -36,13 +34,13 @@ const AdminNotificationMobileCard = ({
   notification,
   isUpdating,
   onRead,
-  onDelete,
   onOpen,
 }: AdminNotificationMobileCardProps) => {
   const { t, i18n } = useTranslation("adminNotifications")
   const unread = isNotificationUnread(notification)
   const title = notificationTitle(notification, t)
   const message = notificationMessage(notification, t)
+
   return (
     <article
       className="cursor-pointer rounded-2xl border border-border bg-background-card p-4 shadow-card transition-colors hover:bg-background-secondary/60"
@@ -70,8 +68,8 @@ const AdminNotificationMobileCard = ({
         </div>
       )}
 
-      <div className="mt-3 flex gap-2">
-        {unread && (
+      {unread && (
+        <div className="mt-3 flex gap-2">
           <Button
             size="sm"
             variant="outline"
@@ -85,20 +83,8 @@ const AdminNotificationMobileCard = ({
             <CheckCheck className="h-4 w-4" />
             {t("markRead")}
           </Button>
-        )}
-        <Button
-          size="sm"
-          variant="ghost"
-          disabled={isUpdating}
-          onClick={(event) => {
-            event.stopPropagation()
-            onDelete(notification.id)
-          }}
-          aria-label={t("delete")}
-        >
-          <Trash2 className="h-4 w-4 text-red-600" />
-        </Button>
-      </div>
+        </div>
+      )}
     </article>
   )
 }
@@ -110,10 +96,10 @@ export default function AdminNotificationsTable({
   pagination,
   onPageChange,
   onRead,
-  onDelete,
   onOpen,
 }: AdminNotificationsTableProps) {
   const { t, i18n } = useTranslation("adminNotifications")
+
   const columns: Column<AdminNotificationRecord>[] = [
     {
       key: "notification",
@@ -169,18 +155,6 @@ export default function AdminNotificationsTable({
               <CheckCheck /> {t("markRead")}
             </Button>
           )}
-          <Button
-            size="icon"
-            variant="ghost"
-            disabled={isUpdating}
-            onClick={(event) => {
-              event.stopPropagation()
-              onDelete(item.id)
-            }}
-            aria-label={t("delete")}
-          >
-            <Trash2 className="text-red-600" />
-          </Button>
         </div>
       ),
     },
@@ -191,7 +165,6 @@ export default function AdminNotificationsTable({
       notification={item}
       isUpdating={isUpdating}
       onRead={onRead}
-      onDelete={onDelete}
       onOpen={onOpen}
     />
   )

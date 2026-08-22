@@ -23,7 +23,6 @@ export default function EmployerNotificationsPage() {
     unreadCount,
     markReadMutation,
     markAllReadMutation,
-    deleteMutation,
     setPage,
   } = useEmployerNotifications()
 
@@ -63,12 +62,10 @@ export default function EmployerNotificationsPage() {
         <EmployerNotificationsTable
           collection={data}
           isLoading={false}
-          isMarking={
-            markReadMutation.isPending || markAllReadMutation.isPending || deleteMutation.isPending
-          }
+          isMarking={markReadMutation.isPending || markAllReadMutation.isPending}
+          unreadCount={unreadCount}
           onMarkRead={(id) => markReadMutation.mutate(id)}
           onMarkAllRead={() => markAllReadMutation.mutate()}
-          onDelete={(id) => deleteMutation.mutate(id)}
           onOpen={openNotification}
           onPageChange={setPage}
         />
