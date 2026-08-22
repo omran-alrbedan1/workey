@@ -248,37 +248,6 @@ export default function AdminApplicationDetailsPage() {
         onBackClick={() => navigate(ROUTES.admin.applications)}
       />
 
-      <p className="rounded-lg border border-dashed border-border bg-background-secondary px-4 py-2 text-xs text-text-muted">
-        {t("details.readOnlyNote")}
-      </p>
-
-      <div className="flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.admin.applications)}>
-          <UsersRound className="mr-2 h-4 w-4 rtl:rotate-180" />
-          {t("details.back")}
-        </Button>
-        {job?.id && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(ROUTES.admin.jobDetails(job.id!))}
-          >
-            <BriefcaseBusiness className="mr-2 h-4 w-4" />
-            {t("details.viewJob")}
-          </Button>
-        )}
-        {company?.id && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(ROUTES.admin.companyDetails(company.id!))}
-          >
-            <Building2 className="mr-2 h-4 w-4" />
-            {t("details.viewCompany")}
-          </Button>
-        )}
-      </div>
-
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <DetailItem
           icon={ClipboardList}

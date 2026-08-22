@@ -12,7 +12,6 @@ export const API_ENDPOINTS = Object.freeze({
     logout: "/auth/logout",
     logoutAll: "/auth/logout-all",
     me: "/auth/me",
-    refresh: "/auth/refresh",
     forgotPassword: "/auth/forgot-password",
     resetPassword: "/auth/reset-password",
     changePassword: "/auth/change-password",
@@ -203,4 +202,5 @@ export const API_ENDPOINTS = Object.freeze({
     jobFilters: "/reference/job-filters",
   },
 } as const)
+
 

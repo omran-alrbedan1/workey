@@ -7,7 +7,6 @@ import type {
   ApplicationSkillReference,
   EmployerApplicantDetail,
 } from "../../types/employerApplicants.types"
-import CvSummaryPanel from "../CvSummaryPanel"
 import { SectionCard } from "./section-ui"
 
 interface MatchingScoreSectionProps {
@@ -154,7 +153,8 @@ export default function MatchingScoreSection({ application }: MatchingScoreSecti
         )}
       </SectionCard>
 
-      {application.id && <CvSummaryPanel applicationId={application.id} />}
     </div>
   )
 }
+
+

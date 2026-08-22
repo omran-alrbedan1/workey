@@ -19,7 +19,6 @@ import {
 import { useApplicationTests } from "./useApplicationTests"
 import { isTerminalApplicationStatus } from "../utils/statusActions"
 import { getAllowedApplicationActions } from "../utils/applicationActions"
-import { nextSteps } from "../components/test-details/testDetails.helpers"
 import type { ApplicationStatusKey, EmployerTestAttempt } from "../types/employerApplicants.types"
 import type {
   TestAttemptResult,
@@ -46,7 +45,8 @@ export interface ApplicantTestDetailsModel {
   isBulkSaving: boolean
   isStatusPending: boolean
   isTerminalStatus: boolean
-  allowedNextSteps: ReadonlyArray<(typeof nextSteps)[number]>
+  hasExplicitNextSteps: boolean
+  allowedNextSteps: ReadonlyArray<{ value: ApplicationStatusKey; labelKey: string }>
   manualAnswersCount: number
   gradedCount: number
   nextStep: string
@@ -103,19 +103,22 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     tests.deleteGradeMutation.isPending ||
     tests.bulkGradeMutation.isPending
 
+  const applicationActions = useMemo(() => getAllowedApplicationActions(applicant.data), [applicant.data])
+
   const isTerminalStatus = useMemo(() => {
     const app = applicant.data
     if (!app) return false
-    return (
-      isTerminalApplicationStatus(keyOf(app.status)) ||
-      getAllowedApplicationActions(app).statusTargets.length === 0
-    )
+    return isTerminalApplicationStatus(keyOf(app.status))
   }, [applicant.data])
 
-  const allowedNextSteps = useMemo(() => {
-    const targets = getAllowedApplicationActions(applicant.data).statusTargets
-    return nextSteps.filter((step) => targets.includes(step.value))
-  }, [applicant.data])
+  const allowedNextSteps = useMemo(
+    () =>
+      applicationActions.statusTargets.map((status) => ({
+        value: status,
+        labelKey: `statuses.${status}`,
+      })),
+    [applicationActions.statusTargets],
+  )
 
   const goBack = useCallback(() => {
     navigate(id ? ROUTES.employer.applicantDetails(id) : ROUTES.employer.applicants)
@@ -255,6 +258,7 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     isBulkSaving: tests.bulkGradeMutation.isPending,
     isStatusPending: statusMutation.isPending,
     isTerminalStatus,
+    hasExplicitNextSteps: applicationActions.source === "allowed_actions" || allowedNextSteps.length > 0,
     allowedNextSteps,
     manualAnswersCount: manualAnswers.length,
     gradedCount,

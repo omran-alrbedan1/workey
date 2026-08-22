@@ -16,6 +16,7 @@ interface ApplicantTestNextStepTabProps {
   nextStep: string
   isPending: boolean
   isTerminalStatus: boolean
+  hasExplicitNextSteps: boolean
   allowedSteps: ReadonlyArray<{ value: string; labelKey: string }>
   onNextStepChange: (value: string) => void
   onApply: () => void
@@ -26,6 +27,7 @@ export default function ApplicantTestNextStepTab({
   nextStep,
   isPending,
   isTerminalStatus,
+  hasExplicitNextSteps,
   allowedSteps,
   onNextStepChange,
   onApply,
@@ -54,6 +56,21 @@ export default function ApplicantTestNextStepTab({
             "This application is in a final state. No further status changes are allowed.",
         })}
         icon={AlertCircle}
+        className="py-8 bg-transparent"
+      />
+    )
+  }
+
+  if (allowedSteps.length === 0) {
+    return (
+      <EmptyState
+        title={t("tests.nextStep")}
+        description={
+          hasExplicitNextSteps
+            ? t("overview.noActions")
+            : t("overview.actionsFallbackHint")
+        }
+        icon={Send}
         className="py-8 bg-transparent"
       />
     )

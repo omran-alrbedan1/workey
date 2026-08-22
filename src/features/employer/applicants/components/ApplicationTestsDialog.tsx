@@ -58,13 +58,6 @@ type GradeDraft = {
 
 const manualQuestionTypes = new Set(["short_text", "long_text", "file_upload"])
 
-const nextSteps = [
-  { value: "interview_pending", labelKey: "statuses.interview_pending" },
-  { value: "final_review", labelKey: "statuses.final_review" },
-  { value: "on_hold", labelKey: "statuses.on_hold" },
-  { value: "rejected", labelKey: "statuses.rejected" },
-] as const
-
 function attemptId(attempt: EmployerTestAttempt) {
   return attempt.attempt?.id ?? null
 }
@@ -141,7 +134,10 @@ export default function ApplicationTestsDialog({
   const tests = useApplicationTests(application?.id)
   const allowedNextSteps = useMemo(() => {
     const targets = getAllowedApplicationActions(application).statusTargets
-    return nextSteps.filter((step) => targets.includes(step.value))
+    return targets.map((status) => ({
+      value: status,
+      labelKey: `statuses.${status}`,
+    }))
   }, [application])
   const [gradingAttempt, setGradingAttempt] = useState<EmployerTestAttempt | null>(null)
   const [deadlineAttempt, setDeadlineAttempt] = useState<EmployerTestAttempt | null>(null)
@@ -328,6 +324,7 @@ export default function ApplicationTestsDialog({
 
   const handleNextStep = async () => {
     if (!application || !nextStep) return
+    if (!allowedNextSteps.some((step) => step.value === nextStep)) return
     setNextStepLoading(true)
     try {
       await onNextStep?.(application.id, nextStep)
