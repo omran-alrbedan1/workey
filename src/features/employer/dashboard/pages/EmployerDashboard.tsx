@@ -1,8 +1,8 @@
 import {
   ArrowUpRight,
-  Bell,
   BriefcaseBusiness,
   Building2,
+  CalendarClock,
   ClipboardList,
   FileQuestion,
   Plus,
@@ -15,11 +15,11 @@ import { Link } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import EmptyState from "@/components/shared/states/EmptyState"
-import DataSourceIndicator from "@/components/shared/states/DataSourceIndicator"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
 import { valueOf } from "@/lib/keyValue"
+import { candidateDisplayName } from "@/features/employer/applicants/utils/candidateDisplay"
 import { useEmployerDashboard } from "../hooks/useEmployerDashboard"
 
 const quickActions = [
@@ -56,34 +56,28 @@ export default function EmployerDashboard() {
   const metrics = dashboard.data
     ? [
         {
-          key: "totalJobs",
-          value: dashboard.data.stats.totalJobs,
+          key: "openJobs",
+          value: dashboard.data.stats.openJobs,
           icon: BriefcaseBusiness,
           tone: "text-primary bg-primary/10",
         },
         {
-          key: "activeJobs",
-          value: dashboard.data.stats.activeJobs,
+          key: "activeApplicants",
+          value: dashboard.data.stats.activeApplicants,
           icon: ClipboardList,
           tone: "text-emerald-600 bg-emerald-500/10",
         },
         {
-          key: "totalApplications",
-          value: dashboard.data.stats.totalApplications,
-          icon: UsersRound,
+          key: "upcomingInterviews",
+          value: dashboard.data.stats.upcomingInterviews,
+          icon: CalendarClock,
           tone: "text-secondary bg-secondary/10",
         },
         {
-          key: "totalTests",
-          value: dashboard.data.stats.totalTests,
+          key: "pendingTests",
+          value: dashboard.data.stats.pendingTests,
           icon: FileQuestion,
           tone: "text-sky-600 bg-sky-500/10",
-        },
-        {
-          key: "unreadNotifications",
-          value: dashboard.data.stats.unreadNotifications,
-          icon: Bell,
-          tone: "text-amber-600 bg-amber-500/10",
         },
       ]
     : []
@@ -105,12 +99,6 @@ export default function EmployerDashboard() {
         }
       />
 
-      <DataSourceIndicator
-        sources={dashboard.dataSourceStatuses ?? []}
-        onRefresh={() => void dashboard.refetch()}
-        isRefreshing={dashboard.isFetching}
-      />
-
       <section>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -130,8 +118,8 @@ export default function EmployerDashboard() {
         </div>
 
         {dashboard.isLoading ? (
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, index) => (
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, index) => (
               <Skeleton key={index} className="h-32 rounded-lg" />
             ))}
           </div>
@@ -142,7 +130,7 @@ export default function EmployerDashboard() {
             retry={() => void dashboard.refetch()}
           />
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {metrics.map(({ key, value, icon: Icon, tone }) => (
               <div
                 key={key}
@@ -163,6 +151,106 @@ export default function EmployerDashboard() {
           </div>
         )}
       </section>
+
+      <div className="grid gap-3 xl:grid-cols-[1fr_0.9fr]">
+        <section className="rounded-lg border border-border bg-background-card p-5 shadow-card">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-semibold text-text-primary">{t("recentApplications.title")}</h2>
+              <p className="text-sm text-text-muted">{t("recentApplications.description")}</p>
+            </div>
+            <Link
+              to={ROUTES.employer.applicants}
+              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            >
+              {t("recentApplications.viewAll")}
+              <ArrowUpRight className="h-4 w-4 rtl:-rotate-90" />
+            </Link>
+          </div>
+
+          {dashboard.isLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-16 rounded-lg" />
+              <Skeleton className="h-16 rounded-lg" />
+              <Skeleton className="h-16 rounded-lg" />
+            </div>
+          ) : dashboard.data?.recentApplications.length ? (
+            <div className="divide-y divide-border">
+              {dashboard.data.recentApplications.map(({ application, job }) => (
+                <Link
+                  key={application.id}
+                  to={ROUTES.employer.applicantDetails(application.id)}
+                  className="flex flex-wrap items-center justify-between gap-3 py-3 transition hover:text-primary"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-text-primary">
+                      {candidateDisplayName(application, t("recentApplications.unknownCandidate"))}
+                    </p>
+                    <p className="text-xs text-text-muted">
+                      {t("recentApplications.meta", {
+                        job: job.title,
+                        status: valueOf(application.status, t("recentApplications.unknownStatus")),
+                      })}
+                    </p>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-text-muted rtl:-rotate-90" />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title={t("recentApplications.empty")}
+              description={t("recentApplications.emptyDescription")}
+              icon={UsersRound}
+              className="py-8 bg-transparent"
+            />
+          )}
+        </section>
+
+        <section className="rounded-lg border border-border bg-background-card p-5 shadow-card">
+          <div className="mb-4">
+            <h2 className="font-semibold text-text-primary">{t("funnel.title")}</h2>
+            <p className="text-sm text-text-muted">{t("funnel.description")}</p>
+          </div>
+
+          {dashboard.isLoading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Skeleton key={index} className="h-9 rounded-lg" />
+              ))}
+            </div>
+          ) : dashboard.data?.funnel.some((item) => item.value > 0) ? (
+            <div className="space-y-3">
+              {dashboard.data.funnel.map((item) => {
+                const maxValue = Math.max(...dashboard.data.funnel.map((entry) => entry.value), 1)
+                return (
+                  <div key={item.key} className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-3 text-sm">
+                      <span className="font-medium text-text-primary">{item.label}</span>
+                      <span className="text-text-muted">{item.value.toLocaleString()}</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-background-secondary">
+                      <div
+                        className="h-2 rounded-full bg-primary"
+                        style={{
+                          width: item.value > 0 ? `${Math.max(6, (item.value / maxValue) * 100)}%` : 0,
+                        }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <EmptyState
+              title={t("funnel.empty")}
+              description={t("funnel.emptyDescription")}
+              icon={ClipboardList}
+              className="py-8 bg-transparent"
+            />
+          )}
+        </section>
+      </div>
 
       <section className="rounded-lg border border-border bg-background-card p-5 shadow-card">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">

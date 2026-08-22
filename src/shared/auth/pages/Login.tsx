@@ -104,7 +104,7 @@ const Login: React.FC = () => {
                     control={form.control}
                     name="password"
                     label=""
-                    placeholder="••••••••••••"
+                    placeholder="************"
                     disabled={loginMutation.isPending}
                     leftIcon={Lock}  
                     iconPosition="left"

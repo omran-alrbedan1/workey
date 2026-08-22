@@ -15,7 +15,7 @@ import { LogoutModal } from "@/components/shared/modals"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { passwordService } from "../services/password.service"
 import {
-  changePasswordSchema,
+  createChangePasswordSchema,
   type ChangePasswordFormValues,
 } from "../validation/password.validation"
 
@@ -31,7 +31,7 @@ export default function SecuritySettings({
   const { t } = useTranslation("authPassword")
   const [logoutAllOpen, setLogoutAllOpen] = useState(false)
   const form = useForm<ChangePasswordFormValues>({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(createChangePasswordSchema(t)),
     defaultValues: { current_password: "", password: "", password_confirmation: "" },
   })
   const changePassword = useMutation({

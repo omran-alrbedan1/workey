@@ -38,6 +38,42 @@ export interface AdminTest {
   created_at?: string
 }
 
+export interface AdminJob {
+  id: number | string
+  title: string
+  status?: AdminKeyValueField
+  accepting_applications?: boolean
+  is_accepting_applications?: boolean
+  created_at?: string
+}
+
+export interface AdminApplication {
+  id: number | string
+  status?: string | AdminKeyValueField
+  created_at?: string
+  applied_at?: string
+  submitted_at?: string
+  job?: {
+    title?: string
+  }
+  company?: {
+    name?: string
+  }
+}
+
+export interface AdminInterview {
+  id: number | string
+  status?: AdminKeyValueField
+  scheduled_at?: string
+  scheduled_start_at?: string
+  created_at?: string
+  application?: {
+    job?: {
+      title?: string
+    }
+  }
+}
+
 export interface CollectionMeta {
   currentPage: number
   lastPage: number
@@ -52,12 +88,11 @@ export interface CollectionResult<T> {
 
 export type DashboardMetricIcon =
   | "users"
-  | "candidates"
-  | "employers"
   | "companies"
   | "pending"
-  | "suspended"
-  | "skills"
+  | "jobs"
+  | "applications"
+  | "interviews"
   | "tests"
 
 export interface DashboardMetric {
@@ -88,7 +123,7 @@ export interface ActivityItem {
   title: string
   description: string
   timestamp?: string
-  type: "user" | "company"
+  type: "user" | "company" | "job" | "application" | "interview" | "test"
 }
 
 export interface AdminDashboardData {
@@ -97,7 +132,6 @@ export interface AdminDashboardData {
   companyDistribution: DistributionItem[]
   attentionItems: AttentionItem[]
   recentActivity: ActivityItem[]
-  failedSources: string[]
   sampledUsers: boolean
   sampledCompanies: boolean
 }

@@ -1,7 +1,5 @@
 import ErrorState from "@/components/shared/states/ErrorState"
-import DataSourceIndicator from "@/components/shared/states/DataSourceIndicator"
 import {
-  AdminApiCoverageNotice,
   AdminAttentionQueue,
   AdminDashboardHeader,
   AdminDashboardSkeleton,
@@ -14,7 +12,7 @@ import { useTranslation } from "react-i18next"
 
 export default function AdminDashboard() {
   const { t } = useTranslation("adminDashboard")
-  const { data, isLoading, isFetching, isError, error, refetch, dataSourceStatuses } = useAdminDashboard()
+  const { data, isLoading, isFetching, isError, error, refetch } = useAdminDashboard()
 
   if (isLoading)
     return (
@@ -47,14 +45,6 @@ export default function AdminDashboard() {
           void refetch()
         }}
       />
-      <DataSourceIndicator
-        sources={dataSourceStatuses}
-        onRefresh={() => {
-          void refetch()
-        }}
-        isRefreshing={isFetching}
-      />
-      <AdminApiCoverageNotice failedSources={data.failedSources} />
       <AdminStatsGrid metrics={data.metrics} />
       <AdminDistributionCharts
         roles={data.roleDistribution}

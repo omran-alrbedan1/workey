@@ -1,14 +1,27 @@
 import type { EmployerJob } from "@/features/employer/jobs/types/employerJobs.types"
+import type { EmployerApplicantDetail } from "@/features/employer/applicants/types/employerApplicants.types"
 
 export interface EmployerDashboardStats {
-  totalJobs: number
-  activeJobs: number
-  totalApplications: number
-  totalTests: number
-  unreadNotifications: number
+  openJobs: number
+  activeApplicants: number
+  upcomingInterviews: number
+  pendingTests: number
+}
+
+export interface EmployerFunnelItem {
+  key: string
+  label: string
+  value: number
+}
+
+export interface EmployerRecentApplication {
+  application: EmployerApplicantDetail
+  job: EmployerJob
 }
 
 export interface EmployerDashboardData {
   stats: EmployerDashboardStats
   recentJobs: EmployerJob[]
+  recentApplications: EmployerRecentApplication[]
+  funnel: EmployerFunnelItem[]
 }

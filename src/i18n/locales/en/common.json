@@ -307,7 +307,24 @@
     "welcomeToast": "Welcome back!",
     "welcomeToastDesc": "You have been logged in successfully",
     "invalidCredentials": "Unable to login. Please check your credentials.",
+    "forgotPassword": "Forgot password?",
     "heroAlt": "Workey recruitment platform"
+  },
+  "emailVerification": {
+    "title": "Verify your email",
+    "subtitle": "Enter the OTP sent to your email address",
+    "otpSentTo": "OTP sent to:",
+    "otpLabel": "Enter OTP",
+    "otpPlaceholder": "123456",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "resend": "Resend",
+    "verified": "Email verified successfully",
+    "verifyError": "Verification failed",
+    "resent": "OTP resent successfully",
+    "resendError": "Failed to resend OTP",
+    "emailInvalid": "Enter a valid email address",
+    "otpMin": "OTP must be at least 6 characters"
   },
   "companyGate": {
     "unavailableTitle": "Company access unavailable",

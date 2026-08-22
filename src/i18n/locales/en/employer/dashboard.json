@@ -4,28 +4,49 @@
   "createJob": "Create job",
   "stats": {
     "title": "Live hiring stats",
-    "description": "Pulled from employer jobs, tests, and notification APIs.",
+    "description": "Pulled from your jobs and application workflow APIs.",
     "refresh": "Refresh",
     "error": "Unable to load dashboard stats right now.",
-    "totalJobs": {
-      "label": "Total jobs",
-      "description": "All roles owned by your company."
-    },
-    "activeJobs": {
-      "label": "Active jobs",
+    "openJobs": {
+      "label": "Open jobs",
       "description": "Jobs currently accepting applications."
     },
-    "totalApplications": {
-      "label": "Applications",
-      "description": "Applications reported by loaded jobs."
+    "activeApplicants": {
+      "label": "Active applicants",
+      "description": "Candidates still moving through the workflow."
     },
-    "totalTests": {
-      "label": "Tests",
-      "description": "Assessment tests available to assign."
+    "upcomingInterviews": {
+      "label": "Upcoming interviews",
+      "description": "Applications currently waiting for interviews."
     },
-    "unreadNotifications": {
-      "label": "Unread alerts",
-      "description": "Notifications that still need attention."
+    "pendingTests": {
+      "label": "Pending tests",
+      "description": "Candidates waiting to complete assigned tests."
+    }
+  },
+  "recentApplications": {
+    "title": "Recent applications",
+    "description": "Latest candidates from your active job application APIs.",
+    "viewAll": "View all",
+    "meta": "{{job}} · {{status}}",
+    "unknownCandidate": "Unknown candidate",
+    "unknownStatus": "unknown",
+    "empty": "No applications yet.",
+    "emptyDescription": "Applications will appear here as candidates apply to your jobs."
+  },
+  "funnel": {
+    "title": "Hiring funnel",
+    "description": "Application distribution by workflow status.",
+    "empty": "No funnel data yet.",
+    "emptyDescription": "The funnel will populate when applications enter the workflow.",
+    "statuses": {
+      "submitted": "Submitted",
+      "under_review": "Under review",
+      "shortlisted": "Shortlisted",
+      "test_pending": "Test pending",
+      "interview_scheduled": "Interview scheduled",
+      "final_review": "Final review",
+      "accepted": "Accepted"
     }
   },
   "recentJobs": {
@@ -34,7 +55,8 @@
     "viewAll": "View all",
     "meta": "{{applications}} applications · {{status}}",
     "unknownStatus": "unknown",
-    "empty": "No jobs have been created yet."
+    "empty": "No jobs have been created yet.",
+    "emptyDescription": "Create your first job to start receiving applications."
   },
   "quickActions": {
     "title": "Hiring workspace",

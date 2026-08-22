@@ -1,4 +1,3 @@
-export { default as AdminApiCoverageNotice } from "./AdminApiCoverageNotice"
 export { default as AdminAttentionQueue } from "./AdminAttentionQueue"
 export { default as AdminDashboardHeader } from "./AdminDashboardHeader"
 export { default as AdminDashboardSkeleton } from "./AdminDashboardSkeleton"

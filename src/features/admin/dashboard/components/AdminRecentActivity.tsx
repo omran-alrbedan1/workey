@@ -1,4 +1,11 @@
-import { Building2, UserRound } from "lucide-react"
+import {
+  BriefcaseBusiness,
+  Building2,
+  CalendarClock,
+  ClipboardList,
+  FlaskConical,
+  UserRound,
+} from "lucide-react"
 
 import type { ActivityItem } from "../types/adminDashboard.types"
 import DashboardPanel from "./DashboardPanel"
@@ -28,7 +35,18 @@ export default function AdminRecentActivity({ items }: { items: ActivityItem[] }
       ) : (
         <div className="divide-y divide-border">
           {items.map((item) => {
-            const Icon = item.type === "company" ? Building2 : UserRound
+            const Icon =
+              item.type === "company"
+                ? Building2
+                : item.type === "job"
+                  ? BriefcaseBusiness
+                  : item.type === "application"
+                    ? ClipboardList
+                    : item.type === "interview"
+                      ? CalendarClock
+                      : item.type === "test"
+                        ? FlaskConical
+                        : UserRound
             return (
               <div key={item.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
                 <div className="rounded-xl bg-primary/10 p-2.5 text-primary">

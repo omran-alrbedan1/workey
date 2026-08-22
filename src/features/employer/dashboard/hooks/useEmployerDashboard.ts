@@ -1,86 +1,119 @@
 import { useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
-import type { DataSource } from "@/components/shared/states/DataSourceIndicator"
+import { useQueries, useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
+
+import { employerApplicantsService } from "@/features/employer/applicants/services/employerApplicants.service"
+import type { EmployerApplicantDetail } from "@/features/employer/applicants/types/employerApplicants.types"
 import { employerJobsService } from "@/features/employer/jobs/services/employerJobs.service"
-import { employerNotificationsService } from "@/features/employer/notifications/services/employerNotifications.service"
-import { employerTestsService } from "@/features/employer/tests/services/employerTests.service"
-import type { EmployerDashboardData } from "../types/employerDashboard.types"
+import { keyOf } from "@/lib/keyValue"
+import type {
+  EmployerDashboardData,
+  EmployerFunnelItem,
+  EmployerRecentApplication,
+} from "../types/employerDashboard.types"
+
+const DASHBOARD_PAGE_SIZE = 100
+const TERMINAL_APPLICATION_STATUSES = new Set(["accepted", "rejected", "withdrawn"])
+
+function applicationDate(application: EmployerApplicantDetail): string {
+  return application.applied_at ?? application.created_at ?? ""
+}
+
+function statusKey(application: EmployerApplicantDetail): string {
+  return keyOf(application.status).toLowerCase()
+}
 
 export function useEmployerDashboard() {
+  const { t } = useTranslation("employerDashboard")
   const jobsQuery = useQuery({
     queryKey: ["employer", "dashboard", "jobs"],
     queryFn: () =>
-      employerJobsService.list(1, { sort_by: "created_at", sort_direction: "desc" }, 100),
+      employerJobsService.list(
+        1,
+        { sort_by: "created_at", sort_direction: "desc" },
+        DASHBOARD_PAGE_SIZE,
+      ),
     staleTime: 60_000,
   })
 
-  const activeJobsQuery = useQuery({
-    queryKey: ["employer", "dashboard", "activeJobs"],
-    queryFn: () => employerJobsService.list(1, { accepting_applications: true }),
+  const openJobsQuery = useQuery({
+    queryKey: ["employer", "dashboard", "openJobs"],
+    queryFn: () => employerJobsService.list(1, { accepting_applications: true }, 1),
     staleTime: 60_000,
   })
 
-  const testsQuery = useQuery({
-    queryKey: ["employer", "dashboard", "tests"],
-    queryFn: () => employerTestsService.list(1),
-    staleTime: 60_000,
+  const jobItems = jobsQuery.data?.items ?? []
+  const applicationsQueries = useQueries({
+    queries: jobItems.map((job) => ({
+      queryKey: ["employer", "dashboard", "jobApplications", job.id],
+      queryFn: () => employerApplicantsService.list(job.id, 1, DASHBOARD_PAGE_SIZE),
+      staleTime: 60_000,
+      enabled: Boolean(jobsQuery.data),
+    })),
   })
-
-  const notificationsQuery = useQuery({
-    queryKey: ["employer", "dashboard", "notifications"],
-    queryFn: () => employerNotificationsService.getUnreadCount(),
-    staleTime: 60_000,
-  })
-
-  const queries = [jobsQuery, activeJobsQuery, testsQuery, notificationsQuery]
 
   const data = useMemo<EmployerDashboardData | undefined>(() => {
-    const jobs = jobsQuery.data
-    const activeJobs = activeJobsQuery.data
-    const tests = testsQuery.data
-    const unread = notificationsQuery.data
+    if (!jobsQuery.data || !openJobsQuery.data) return undefined
+    if (applicationsQueries.some((query) => query.isPending)) return undefined
 
-    if (!jobs || !activeJobs || !tests || !unread) return undefined
+    const applicationGroups = applicationsQueries.map((query, index) => ({
+      job: jobItems[index],
+      applications: query.data?.items ?? [],
+    }))
+    const applications = applicationGroups.flatMap(({ job, applications }) =>
+      applications.map<EmployerRecentApplication>((application) => ({ application, job })),
+    )
+    const activeApplications = applications.filter(
+      ({ application }) => !TERMINAL_APPLICATION_STATUSES.has(statusKey(application)),
+    )
+    const upcomingInterviews = applications.filter(
+      ({ application }) =>
+        statusKey(application) === "interview_scheduled" ||
+        statusKey(application) === "interview_pending",
+    ).length
+    const pendingTests = applications.filter(
+      ({ application }) => statusKey(application) === "test_pending",
+    ).length
+    const recentApplications = [...applications]
+      .sort((a, b) => applicationDate(b.application).localeCompare(applicationDate(a.application)))
+      .slice(0, 5)
+
+    const funnelKeys = [
+      "submitted",
+      "under_review",
+      "shortlisted",
+      "test_pending",
+      "interview_scheduled",
+      "final_review",
+      "accepted",
+    ]
+    const funnel: EmployerFunnelItem[] = funnelKeys.map((key) => ({
+      key,
+      label: t(`funnel.statuses.${key}`),
+      value: applications.filter(({ application }) => statusKey(application) === key).length,
+    }))
 
     return {
       stats: {
-        totalJobs: jobs.pagination.total,
-        activeJobs: activeJobs.pagination.total,
-        totalApplications: jobs.items.reduce(
-          (total, job) => total + Number(job.applications_count ?? 0),
-          0,
-        ),
-        totalTests: tests.pagination.total,
-        unreadNotifications: unread.count ?? 0,
+        openJobs: openJobsQuery.data.pagination.total,
+        activeApplicants: activeApplications.length,
+        upcomingInterviews,
+        pendingTests,
       },
-      recentJobs: jobs.items.slice(0, 5),
+      recentJobs: jobsQuery.data.items.slice(0, 5),
+      recentApplications,
+      funnel,
     }
-  }, [jobsQuery.data, activeJobsQuery.data, testsQuery.data, notificationsQuery.data])
+  }, [applicationsQueries, jobItems, jobsQuery.data, openJobsQuery.data, t])
 
-  const dataSourceStatuses = useMemo<DataSource[]>(() => {
-    function sourceStatus(
-      query: (typeof queries)[number],
-      label: string,
-    ): DataSource {
-      if (query.isError) return { label, status: "unavailable" }
-      if (query.isPending || query.isFetching) return { label, status: "partial" }
-      return { label, status: "live" }
-    }
-    return [
-      sourceStatus(jobsQuery, "Jobs"),
-      sourceStatus(activeJobsQuery, "Active jobs"),
-      sourceStatus(testsQuery, "Tests"),
-      sourceStatus(notificationsQuery, "Notifications"),
-    ]
-  }, [jobsQuery.status, activeJobsQuery.status, testsQuery.status, notificationsQuery.status])
+  const queries = [jobsQuery, openJobsQuery, ...applicationsQueries]
 
   return {
     data,
-    isLoading: queries.some((q) => q.isPending),
-    isFetching: queries.some((q) => q.isFetching),
-    isError: queries.every((q) => q.isError),
-    error: queries.find((q) => q.error)?.error,
-    refetch: () => Promise.all(queries.map((q) => q.refetch())),
-    dataSourceStatuses,
+    isLoading: queries.some((query) => query.isPending),
+    isFetching: queries.some((query) => query.isFetching),
+    isError: queries.some((query) => query.isError),
+    error: queries.find((query) => query.error)?.error,
+    refetch: () => Promise.all(queries.map((query) => query.refetch())),
   }
 }

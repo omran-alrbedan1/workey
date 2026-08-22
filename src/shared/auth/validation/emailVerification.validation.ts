@@ -1,14 +1,19 @@
 import { z } from "zod"
+import type { TFunction } from "i18next"
 
-export const emailVerificationSchema = z.object({
-  email: z.string().email(),
-  otp: z.string().min(6, "OTP must be at least 6 characters"),
-})
+export function createEmailVerificationSchema(t: TFunction) {
+  return z.object({
+    email: z.string().email(t("emailVerification.emailInvalid")),
+    otp: z.string().min(6, t("emailVerification.otpMin")),
+  })
+}
 
-export type EmailVerificationFormValues = z.infer<typeof emailVerificationSchema>
+export type EmailVerificationFormValues = z.infer<ReturnType<typeof createEmailVerificationSchema>>
 
-export const resendOtpSchema = z.object({
-  email: z.string().email(),
-})
+export function createResendOtpSchema(t: TFunction) {
+  return z.object({
+    email: z.string().email(t("emailVerification.emailInvalid")),
+  })
+}
 
-export type ResendOtpFormValues = z.infer<typeof resendOtpSchema>
+export type ResendOtpFormValues = z.infer<ReturnType<typeof createResendOtpSchema>>

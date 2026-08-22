@@ -4,7 +4,7 @@ import EmailVerificationForm from "../components/EmailVerificationForm"
 import { useEmailVerification, useResendOtp } from "../hooks/useEmailVerification"
 
 export default function EmailVerificationPage() {
-  const { t } = useTranslation("auth")
+  const { t } = useTranslation("common")
   const [searchParams] = useSearchParams()
   const email = searchParams.get("email") || ""
   const verify = useEmailVerification()
@@ -23,12 +23,10 @@ export default function EmailVerificationPage() {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight">
-            {t("emailVerification.title", { defaultValue: "Verify your email" })}
+            {t("emailVerification.title")}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {t("emailVerification.subtitle", {
-              defaultValue: "Enter the OTP sent to your email address",
-            })}
+            {t("emailVerification.subtitle")}
           </p>
         </div>
 

@@ -26,10 +26,14 @@ import type {
 import { hasCandidateDisplayData } from "../utils/candidateDisplay"
 
 export const employerApplicantsService = {
-  async list(jobId: string | number, page = 1): Promise<EmployerCollection<EmployerApplicantDetail>> {
+  async list(
+    jobId: string | number,
+    page = 1,
+    perPage = 15,
+  ): Promise<EmployerCollection<EmployerApplicantDetail>> {
     const collection = unwrapEmployerCollection<EmployerApplicantDetail>(
       await api.get(API_ENDPOINTS.employer.jobApplications(jobId), {
-        params: { page, per_page: 15 },
+        params: { page, per_page: perPage },
       }),
     )
 

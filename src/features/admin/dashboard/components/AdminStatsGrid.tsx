@@ -3,11 +3,10 @@ import {
   BriefcaseBusiness,
   Building2,
   Clock3,
+  CalendarClock,
   FlaskConical,
-  ShieldAlert,
-  UserRoundCheck,
+  ClipboardList,
   Users,
-  Wrench,
 } from "lucide-react"
 
 import type { DashboardMetric, DashboardMetricIcon } from "../types/adminDashboard.types"
@@ -15,12 +14,11 @@ import { useTranslation } from "react-i18next"
 
 const icons: Record<DashboardMetricIcon, LucideIcon> = {
   users: Users,
-  candidates: UserRoundCheck,
-  employers: BriefcaseBusiness,
   companies: Building2,
   pending: Clock3,
-  suspended: ShieldAlert,
-  skills: Wrench,
+  jobs: BriefcaseBusiness,
+  applications: ClipboardList,
+  interviews: CalendarClock,
   tests: FlaskConical,
 }
 

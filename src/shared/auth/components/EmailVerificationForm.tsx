@@ -6,7 +6,7 @@ import CustomFormField, { FormFieldType } from "@/components/shared/inputs/Custo
 import { SubmitButton } from "@/components/shared/buttons"
 import { Form } from "@/components/ui/form"
 import {
-  emailVerificationSchema,
+  createEmailVerificationSchema,
   type EmailVerificationFormValues,
 } from "../validation/emailVerification.validation"
 
@@ -25,9 +25,9 @@ export default function EmailVerificationForm({
   isVerifying = false,
   isResending = false,
 }: EmailVerificationFormProps) {
-  const { t } = useTranslation("auth")
+  const { t } = useTranslation("common")
   const form = useForm<EmailVerificationFormValues>({
-    resolver: zodResolver(emailVerificationSchema),
+    resolver: zodResolver(createEmailVerificationSchema(t)),
     defaultValues: { email, otp: "" },
   })
 
@@ -36,7 +36,7 @@ export default function EmailVerificationForm({
       <form onSubmit={form.handleSubmit(onVerify)} className="space-y-4">
         <div className="bg-muted/50 p-4 rounded-lg">
           <p className="text-sm text-muted-foreground">
-            {t("emailVerification.otpSentTo", { defaultValue: "OTP sent to:" })}{" "}
+            {t("emailVerification.otpSentTo")}{" "}
             <span className="font-semibold">{email}</span>
           </p>
         </div>
@@ -45,8 +45,8 @@ export default function EmailVerificationForm({
           fieldType={FormFieldType.INPUT}
           control={form.control}
           name="otp"
-          label={t("emailVerification.otpLabel", { defaultValue: "Enter OTP" })}
-          placeholder={t("emailVerification.otpPlaceholder", { defaultValue: "123456" })}
+          label={t("emailVerification.otpLabel")}
+          placeholder={t("emailVerification.otpPlaceholder")}
           disabled={isVerifying}
           leftIcon={ShieldCheck}
           iconPosition="left"
@@ -55,8 +55,8 @@ export default function EmailVerificationForm({
         <div className="flex gap-2">
           <SubmitButton
             isLoading={isVerifying}
-            text={t("emailVerification.verify", { defaultValue: "Verify" })}
-            loadingText={t("emailVerification.verifying", { defaultValue: "Verifying..." })}
+            text={t("emailVerification.verify")}
+            loadingText={t("emailVerification.verifying")}
             icon={<ShieldCheck className="h-4 w-4" />}
             className="flex-1"
           />
@@ -68,7 +68,7 @@ export default function EmailVerificationForm({
           >
             <RefreshCw className={`h-4 w-4 ${isResending ? "animate-spin" : ""}`} />
             <span className="text-sm">
-              {t("emailVerification.resend", { defaultValue: "Resend" })}
+              {t("emailVerification.resend")}
             </span>
           </button>
         </div>

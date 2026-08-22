@@ -15,8 +15,11 @@ import {
 import { adminDashboardService } from "../services/adminDashboard.service"
 import type {
   ActivityItem,
+  AdminApplication,
   AdminCompany,
   AdminDashboardData,
+  AdminInterview,
+  AdminJob,
   AdminTest,
   AdminUser,
   CollectionResult,
@@ -40,9 +43,13 @@ function dateValue(value?: string): number {
 function createActivity(
   users: AdminUser[],
   companies: AdminCompany[],
+  jobs: AdminJob[],
+  applications: AdminApplication[],
+  interviews: AdminInterview[],
+  tests: AdminTest[],
   t: (key: string, options?: Record<string, unknown>) => string,
 ): ActivityItem[] {
-  const userActivity: ActivityItem[] = users.slice(0, 6).map((user) => ({
+  const userActivity: ActivityItem[] = users.slice(0, 4).map((user) => ({
     id: `user-${user.id}`,
     title: user.name || user.email,
     description: t("registeredAs", { role: user.role.replaceAll("_", " ") }),
@@ -50,7 +57,7 @@ function createActivity(
     type: "user",
   }))
 
-  const companyActivity: ActivityItem[] = companies.slice(0, 6).map((company) => ({
+  const companyActivity: ActivityItem[] = companies.slice(0, 4).map((company) => ({
     id: `company-${company.id}`,
     title: company.name,
     description: t("companyStatus", { status: statusLabelOf(company) }),
@@ -58,9 +65,48 @@ function createActivity(
     type: "company",
   }))
 
-  return [...userActivity, ...companyActivity]
+  const jobActivity: ActivityItem[] = jobs.slice(0, 4).map((job) => ({
+    id: `job-${job.id}`,
+    title: job.title,
+    description: t("jobPosted"),
+    timestamp: job.created_at,
+    type: "job",
+  }))
+
+  const applicationActivity: ActivityItem[] = applications.slice(0, 4).map((application) => ({
+    id: `application-${application.id}`,
+    title: application.job?.title || application.company?.name || t("applicationFallback"),
+    description: t("applicationReceived"),
+    timestamp: application.applied_at ?? application.submitted_at ?? application.created_at,
+    type: "application",
+  }))
+
+  const interviewActivity: ActivityItem[] = interviews.slice(0, 4).map((interview) => ({
+    id: `interview-${interview.id}`,
+    title: interview.application?.job?.title || t("interviewFallback"),
+    description: t("interviewScheduled"),
+    timestamp: interview.scheduled_start_at ?? interview.scheduled_at ?? interview.created_at,
+    type: "interview",
+  }))
+
+  const testActivity: ActivityItem[] = tests.slice(0, 4).map((test) => ({
+    id: `test-${test.id}`,
+    title: test.title,
+    description: t("testCreated"),
+    timestamp: test.created_at,
+    type: "test",
+  }))
+
+  return [
+    ...userActivity,
+    ...companyActivity,
+    ...jobActivity,
+    ...applicationActivity,
+    ...interviewActivity,
+    ...testActivity,
+  ]
     .sort((a, b) => dateValue(b.timestamp) - dateValue(a.timestamp))
-    .slice(0, 6)
+    .slice(0, 8)
 }
 
 function emptyCollection<T>(): CollectionResult<T> {
@@ -84,9 +130,27 @@ export function useAdminDashboard() {
     staleTime: ADMIN_DASHBOARD_STALE_TIME,
   })
 
-  const skillsQuery = useQuery({
-    queryKey: adminDashboardQueryKeys.skills(),
-    queryFn: adminDashboardService.getSkills,
+  const jobsQuery = useQuery({
+    queryKey: [...adminDashboardQueryKeys.root, "jobs"],
+    queryFn: adminDashboardService.getJobs,
+    staleTime: ADMIN_DASHBOARD_STALE_TIME,
+  })
+
+  const openJobsQuery = useQuery({
+    queryKey: [...adminDashboardQueryKeys.root, "openJobs"],
+    queryFn: adminDashboardService.getOpenJobs,
+    staleTime: ADMIN_DASHBOARD_STALE_TIME,
+  })
+
+  const applicationsQuery = useQuery({
+    queryKey: [...adminDashboardQueryKeys.root, "applications"],
+    queryFn: adminDashboardService.getApplications,
+    staleTime: ADMIN_DASHBOARD_STALE_TIME,
+  })
+
+  const interviewsQuery = useQuery({
+    queryKey: [...adminDashboardQueryKeys.root, "interviews"],
+    queryFn: adminDashboardService.getInterviews,
     staleTime: ADMIN_DASHBOARD_STALE_TIME,
   })
 
@@ -99,7 +163,10 @@ export function useAdminDashboard() {
   const data = useMemo<AdminDashboardData>(() => {
     const users = usersQuery.data ?? emptyCollection<AdminUser>()
     const companies = companiesQuery.data ?? emptyCollection<AdminCompany>()
-    const skills = skillsQuery.data ?? emptyCollection()
+    const jobs = jobsQuery.data ?? emptyCollection<AdminJob>()
+    const openJobs = openJobsQuery.data ?? emptyCollection<AdminJob>()
+    const applications = applicationsQuery.data ?? emptyCollection<AdminApplication>()
+    const interviews = interviewsQuery.data ?? emptyCollection<AdminInterview>()
     const tests = testsQuery.data ?? emptyCollection<AdminTest>()
 
     const jobSeekers = users.items.filter((user) => user.role === "job_seeker").length
@@ -117,7 +184,6 @@ export function useAdminDashboard() {
     const rejectedCompanies = companies.items.filter(
       (company) => statusOf(company) === "rejected",
     ).length
-    const inactiveTests = tests.items.filter((test) => test.is_active === false).length
     const sampledUsers = users.meta.total > users.items.length
     const sampledCompanies = companies.meta.total > companies.items.length
 
@@ -133,13 +199,6 @@ export function useAdminDashboard() {
       { name: t("statuses.rejected"), value: rejectedCompanies, color: "#F43F5E" },
     ]
 
-    const failedSources = [
-      usersQuery.isError ? t("sources.users") : null,
-      companiesQuery.isError ? t("sources.companies") : null,
-      skillsQuery.isError ? t("sources.skills") : null,
-      testsQuery.isError ? t("sources.tests") : null,
-    ].filter((source): source is string => source !== null)
-
     return {
       metrics: [
         {
@@ -147,20 +206,6 @@ export function useAdminDashboard() {
           value: users.meta.total,
           subtitle: t("metrics.totalUsersSub"),
           icon: "users",
-        },
-        {
-          label: t("metrics.jobSeekers"),
-          value: jobSeekers,
-          subtitle: sampledUsers ? t("metrics.sampleSub") : t("metrics.candidateAccounts"),
-          icon: "candidates",
-          approximate: sampledUsers,
-        },
-        {
-          label: t("metrics.employers"),
-          value: employers,
-          subtitle: sampledUsers ? t("metrics.sampleSub") : t("metrics.employerAccounts"),
-          icon: "employers",
-          approximate: sampledUsers,
         },
         {
           label: t("metrics.companies"),
@@ -176,22 +221,27 @@ export function useAdminDashboard() {
           approximate: sampledCompanies,
         },
         {
-          label: t("metrics.suspendedUsers"),
-          value: suspendedUsers,
-          subtitle: t("metrics.suspendedUsersSub"),
-          icon: "suspended",
-          approximate: sampledUsers,
+          label: t("metrics.openJobs"),
+          value: openJobs.meta.total,
+          subtitle: t("metrics.openJobsSub"),
+          icon: "jobs",
         },
         {
-          label: t("metrics.skills"),
-          value: skills.meta.total,
-          subtitle: t("metrics.skillsSub"),
-          icon: "skills",
+          label: t("metrics.applications"),
+          value: applications.meta.total,
+          subtitle: t("metrics.applicationsSub"),
+          icon: "applications",
         },
         {
-          label: t("metrics.activeTests"),
-          value: tests.items.filter((test) => test.is_active !== false).length,
-          subtitle: t("metrics.activeTestsSub"),
+          label: t("metrics.interviews"),
+          value: interviews.meta.total,
+          subtitle: t("metrics.interviewsSub"),
+          icon: "interviews",
+        },
+        {
+          label: t("metrics.tests"),
+          value: tests.meta.total,
+          subtitle: t("metrics.testsSub"),
           icon: "tests",
         },
       ],
@@ -215,57 +265,53 @@ export function useAdminDashboard() {
           tone: "danger",
         },
         {
-          id: "inactive-tests",
-          title: t("attention.inactiveTests"),
-          description: t("attention.inactiveTestsSub"),
-          count: inactiveTests,
-          route: ROUTES.admin.tests,
+          id: "open-jobs",
+          title: t("attention.openJobs"),
+          description: t("attention.openJobsSub"),
+          count: openJobs.meta.total,
+          route: ROUTES.admin.jobs,
           tone: "info",
         },
       ],
-      recentActivity: createActivity(users.items, companies.items, t),
-      failedSources,
+      recentActivity: createActivity(
+        users.items,
+        companies.items,
+        jobs.items,
+        applications.items,
+        interviews.items,
+        tests.items,
+        t,
+      ),
       sampledUsers,
       sampledCompanies,
     }
   }, [
     usersQuery.data,
-    usersQuery.isError,
     companiesQuery.data,
-    companiesQuery.isError,
-    skillsQuery.data,
-    skillsQuery.isError,
+    jobsQuery.data,
+    openJobsQuery.data,
+    applicationsQuery.data,
+    interviewsQuery.data,
     testsQuery.data,
-    testsQuery.isError,
     t,
   ])
 
-  const queries = [usersQuery, companiesQuery, skillsQuery, testsQuery]
-
-  const dataSourceStatuses = useMemo(() => {
-    function sourceStatus(
-      query: (typeof queries)[number],
-      label: string,
-    ): { label: string; status: "live" | "partial" | "unavailable" } {
-      if (query.isError) return { label, status: "unavailable" }
-      if (query.isPending || query.isFetching) return { label, status: "partial" }
-      return { label, status: "live" }
-    }
-    return [
-      sourceStatus(usersQuery, t("sources.users")),
-      sourceStatus(companiesQuery, t("sources.companies")),
-      sourceStatus(skillsQuery, t("sources.skills")),
-      sourceStatus(testsQuery, t("sources.tests")),
-    ]
-  }, [usersQuery.status, companiesQuery.status, skillsQuery.status, testsQuery.status, t])
+  const queries = [
+    usersQuery,
+    companiesQuery,
+    jobsQuery,
+    openJobsQuery,
+    applicationsQuery,
+    interviewsQuery,
+    testsQuery,
+  ]
 
   return {
     data,
     isLoading: queries.some((query) => query.isPending),
     isFetching: queries.some((query) => query.isFetching),
-    isError: queries.every((query) => query.error),
+    isError: queries.some((query) => query.error),
     error: queries.find((query) => query.error)?.error,
     refetch: () => Promise.all(queries.map((query) => query.refetch())),
-    dataSourceStatuses,
   }
 }

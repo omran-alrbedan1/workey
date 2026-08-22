@@ -4,6 +4,9 @@ import { normalizeKeyValue } from "@/features/admin/shared/services/adminRespons
 
 import type {
   AdminCompany,
+  AdminApplication,
+  AdminInterview,
+  AdminJob,
   AdminSkill,
   AdminTest,
   AdminUser,
@@ -98,6 +101,34 @@ export const adminDashboardService = {
   async getSkills(): Promise<CollectionResult<AdminSkill>> {
     const response = await api.get<unknown>(API_ENDPOINTS.admin.skills)
     return normalizeCollection<AdminSkill>(response)
+  },
+
+  async getJobs(): Promise<CollectionResult<AdminJob>> {
+    const response = await api.get<unknown>(API_ENDPOINTS.admin.jobs, {
+      params: { page: 1, per_page: dashboardPageSize },
+    })
+    return normalizeCollection<AdminJob>(response)
+  },
+
+  async getOpenJobs(): Promise<CollectionResult<AdminJob>> {
+    const response = await api.get<unknown>(API_ENDPOINTS.admin.jobs, {
+      params: { page: 1, per_page: 1, accepting_applications: true },
+    })
+    return normalizeCollection<AdminJob>(response)
+  },
+
+  async getApplications(): Promise<CollectionResult<AdminApplication>> {
+    const response = await api.get<unknown>(API_ENDPOINTS.admin.applications, {
+      params: { page: 1, per_page: dashboardPageSize },
+    })
+    return normalizeCollection<AdminApplication>(response)
+  },
+
+  async getInterviews(): Promise<CollectionResult<AdminInterview>> {
+    const response = await api.get<unknown>(API_ENDPOINTS.admin.interviews, {
+      params: { page: 1, per_page: dashboardPageSize },
+    })
+    return normalizeCollection<AdminInterview>(response)
   },
 
   async getTests(): Promise<CollectionResult<AdminTest>> {
