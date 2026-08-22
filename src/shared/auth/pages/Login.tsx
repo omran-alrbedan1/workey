@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { useMutation } from "@tanstack/react-query"
 import { Form } from "@/components/ui/form"
@@ -90,11 +90,20 @@ const Login: React.FC = () => {
                 </div>
 
                 <div>
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-text-primary">{t("password")}</span>
+                    <Link
+                      to={ROUTES.auth.forgotPassword}
+                      className="text-sm font-semibold text-primary transition hover:underline"
+                    >
+                      {t("loginPage.forgotPassword")}
+                    </Link>
+                  </div>
                   <CustomFormField
                     fieldType={FormFieldType.PASSWORD}
                     control={form.control}
                     name="password"
-                    label={t("password")}
+                    label=""
                     placeholder="••••••••••••"
                     disabled={loginMutation.isPending}
                     leftIcon={Lock}  

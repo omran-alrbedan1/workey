@@ -1,6 +1,7 @@
 import { useCallback } from "react"
 import {
   Award,
+  AlertCircle,
   ChevronDown,
   ChevronUp,
   FileText,
@@ -35,6 +36,7 @@ interface QuestionsManagerProps {
   onChange: (questions: TestQuestion[]) => void
   testId?: string | number
   namespace?: string
+  validationErrors?: unknown
 }
 
 const choiceTypes: TestQuestion["question_type"][] = [
@@ -64,13 +66,54 @@ function trueFalseOptions(correctValue: "true" | "false" = "true"): TestQuestion
   ]
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function errorAt(value: unknown, key: string | number): unknown {
+  if (Array.isArray(value)) return value[Number(key)]
+  if (isRecord(value)) return value[key]
+  return undefined
+}
+
+function errorMessage(value: unknown): string | undefined {
+  if (!value) return undefined
+  if (isRecord(value) && typeof value.message === "string") return value.message
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const message = errorMessage(item)
+      if (message) return message
+    }
+  }
+  if (isRecord(value)) {
+    for (const item of Object.values(value)) {
+      const message = errorMessage(item)
+      if (message) return message
+    }
+  }
+  return undefined
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null
+
+  return (
+    <p className="mt-1 flex items-center gap-1 text-xs font-medium text-red-600">
+      <AlertCircle className="h-3 w-3" />
+      {message}
+    </p>
+  )
+}
+
 export default function QuestionsManager({
   questions,
   onChange,
   testId,
   namespace = "employerTests",
+  validationErrors,
 }: QuestionsManagerProps) {
   const { t } = useTranslation(namespace)
+  const formError = errorMessage(validationErrors)
 
   const replaceQuestion = useCallback(
     (index: number, nextQuestion: TestQuestion) => {
@@ -308,6 +351,8 @@ export default function QuestionsManager({
             </Button>
           </div>
 
+          <FieldError message={formError} />
+
           {questions.length === 0 && (
             <div className="rounded-lg border-2 border-dashed border-border p-8 text-center">
               <HelpCircle className="mx-auto mb-3 h-12 w-12 text-muted-foreground" />
@@ -319,6 +364,10 @@ export default function QuestionsManager({
             {questions.map((question, index) => {
               const options = normalizeOptions(question.options)
               const showsOptions = choiceTypes.includes(question.question_type)
+              const questionError = errorAt(validationErrors, index)
+              const questionTextError = errorMessage(errorAt(questionError, "question_text"))
+              const pointsError = errorMessage(errorAt(questionError, "points"))
+              const optionsError = errorMessage(errorAt(questionError, "options"))
 
               return (
                 <div
@@ -380,6 +429,7 @@ export default function QuestionsManager({
                         rows={2}
                         className="resize-none"
                       />
+                      <FieldError message={questionTextError} />
                     </div>
 
                     <div className="grid gap-3 sm:grid-cols-2">
@@ -420,6 +470,7 @@ export default function QuestionsManager({
                           value={question.points}
                           onChange={(event) => updateQuestion(index, "points", event.target.value)}
                         />
+                        <FieldError message={pointsError} />
                       </div>
                     </div>
 
@@ -448,6 +499,7 @@ export default function QuestionsManager({
                           </div>
                         ) : (
                           <>
+                            <FieldError message={optionsError} />
                             {options.length === 0 && (
                               <p className="flex items-center gap-1 text-xs text-text-muted">
                                 <HelpCircle className="h-3 w-3" />
@@ -455,56 +507,63 @@ export default function QuestionsManager({
                               </p>
                             )}
                             {options.map((option, optionIndex) => (
-                              <div key={option.id ?? optionIndex} className="flex items-center gap-2">
-                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
-                                  {optionIndex + 1}
-                                </span>
-                                <div className="flex items-center gap-1">
+                              <div key={option.id ?? optionIndex}>
+                                <div className="flex items-center gap-2">
+                                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                                    {optionIndex + 1}
+                                  </span>
+                                  <div className="flex items-center gap-1">
+                                    <Button
+                                      type="button"
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-6 w-6"
+                                      disabled={optionIndex === 0}
+                                      onClick={() => moveOption(index, optionIndex, "up")}
+                                    >
+                                      <ChevronUp className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      type="button"
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-6 w-6"
+                                      disabled={optionIndex === options.length - 1}
+                                      onClick={() => moveOption(index, optionIndex, "down")}
+                                    >
+                                      <ChevronDown className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                  <span className="flex items-center gap-1.5 whitespace-nowrap text-xs text-text-muted">
+                                    <Switch
+                                      checked={Boolean(option.is_correct)}
+                                      onCheckedChange={(checked) =>
+                                        setOptionCorrect(index, optionIndex, Boolean(checked))
+                                      }
+                                      className="h-4 w-7"
+                                    />
+                                    <Label className="text-xs">{t("questions.isCorrect")}</Label>
+                                  </span>
+                                  <Input
+                                    value={option.option_text}
+                                    onChange={(event) => updateOptionText(index, optionIndex, event.target.value)}
+                                    placeholder={t("questions.optionPlaceholder", { n: optionIndex + 1 })}
+                                  />
                                   <Button
                                     type="button"
                                     size="icon"
                                     variant="ghost"
-                                    className="h-6 w-6"
-                                    disabled={optionIndex === 0}
-                                    onClick={() => moveOption(index, optionIndex, "up")}
+                                    className="h-8 w-8 shrink-0 text-red-500 hover:bg-red-50"
+                                    onClick={() => deleteOption(index, optionIndex)}
                                   >
-                                    <ChevronUp className="h-3 w-3" />
-                                  </Button>
-                                  <Button
-                                    type="button"
-                                    size="icon"
-                                    variant="ghost"
-                                    className="h-6 w-6"
-                                    disabled={optionIndex === options.length - 1}
-                                    onClick={() => moveOption(index, optionIndex, "down")}
-                                  >
-                                    <ChevronDown className="h-3 w-3" />
+                                    <Trash2 className="h-3.5 w-3.5" />
                                   </Button>
                                 </div>
-                                <span className="flex items-center gap-1.5 whitespace-nowrap text-xs text-text-muted">
-                                  <Switch
-                                    checked={Boolean(option.is_correct)}
-                                    onCheckedChange={(checked) =>
-                                      setOptionCorrect(index, optionIndex, Boolean(checked))
-                                    }
-                                    className="h-4 w-7"
-                                  />
-                                  <Label className="text-xs">{t("questions.isCorrect")}</Label>
-                                </span>
-                                <Input
-                                  value={option.option_text}
-                                  onChange={(event) => updateOptionText(index, optionIndex, event.target.value)}
-                                  placeholder={t("questions.optionPlaceholder", { n: optionIndex + 1 })}
+                                <FieldError
+                                  message={errorMessage(
+                                    errorAt(errorAt(errorAt(questionError, "options"), optionIndex), "option_text"),
+                                  )}
                                 />
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 shrink-0 text-red-500 hover:bg-red-50"
-                                  onClick={() => deleteOption(index, optionIndex)}
-                                >
-                                  <Trash2 className="h-3.5 w-3.5" />
-                                </Button>
                               </div>
                             ))}
                             <Button type="button" size="sm" variant="ghost" onClick={() => addOption(index)}>

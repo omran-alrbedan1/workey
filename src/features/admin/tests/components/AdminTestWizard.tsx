@@ -67,6 +67,30 @@ const getDefaults = (): AdminTestWizardFormValues => ({
   questions: [],
 })
 
+function normalizedQuestions(questions: TestQuestion[]): TestQuestion[] {
+  return questions.map((question, index) => ({
+    ...question,
+    question_text: question.question_text ?? "",
+    order_index: index,
+    points: Number(question.points),
+    is_required: question.is_required ?? true,
+    options: (question.options ?? []).map((option, optionIndex) => ({
+      ...option,
+      option_text: option.option_text ?? "",
+      order_index: optionIndex,
+      is_correct: Boolean(option.is_correct),
+    })),
+  }))
+}
+
+function byOrderIndex(a: TestQuestionResponse, b: TestQuestionResponse): number {
+  return Number(a.order_index) - Number(b.order_index)
+}
+
+function needsReorder(questions: TestQuestion[]): boolean {
+  return questions.some((question, index) => Number(question.order_index) !== index)
+}
+
 function toQuestionFormValue(question: TestQuestionResponse): TestQuestion {
   return {
     id: question.id,
@@ -89,11 +113,15 @@ function toQuestionFormValue(question: TestQuestionResponse): TestQuestion {
   }
 }
 
-function toQuestionPayload(question: TestQuestion, index: number): TestQuestionInput {
+function toQuestionPayload(
+  question: TestQuestion,
+  index: number,
+  orderIndex = question.order_index ?? index,
+): TestQuestionInput {
   const payload: TestQuestionInput = {
     question_text: question.question_text,
     question_type: question.question_type,
-    order_index: question.order_index ?? index,
+    order_index: orderIndex,
     points: Number(question.points),
     is_required: question.is_required ?? true,
   }
@@ -156,37 +184,71 @@ export default function AdminTestWizard({
 
   const saveQuestions = async (testId: string | number, nextQuestions: TestQuestion[]) => {
     const savedQuestions: TestQuestion[] = []
+    const orderedQuestions = normalizedQuestions(nextQuestions)
+    const serverQuestions = (await adminTestsService.getQuestions(testId)).sort(byOrderIndex)
+    const serverQuestionById = new Map(serverQuestions.map((question) => [String(question.id), question]))
+    const usedServerQuestionIds = new Set<string>()
+    const highestServerOrder = serverQuestions.reduce(
+      (highest, question) => Math.max(highest, Number(question.order_index) || 0),
+      -1,
+    )
+    let createdCount = 0
 
-    for (let i = 0; i < nextQuestions.length; i++) {
-      const question = nextQuestions[i]
+    for (let i = 0; i < orderedQuestions.length; i++) {
+      const question = orderedQuestions[i]
+      const matchedQuestion =
+        question.id != null
+          ? serverQuestionById.get(String(question.id))
+          : serverQuestions.find((serverQuestion, serverIndex) => {
+              const id = String(serverQuestion.id)
+              return serverIndex === i && !usedServerQuestionIds.has(id)
+            })
 
-      if (question.id) {
+      if (matchedQuestion?.id) {
+        usedServerQuestionIds.add(String(matchedQuestion.id))
         const savedQuestion = await adminTestsService.updateQuestion(
           testId,
-          question.id,
-          toQuestionPayload(question, i),
+          matchedQuestion.id,
+          toQuestionPayload(question, i, matchedQuestion.order_index),
         )
         savedQuestions.push({
           ...question,
           ...toQuestionFormValue(savedQuestion),
         })
       } else {
+        const orderIndex = highestServerOrder + createdCount + 1
         const savedQuestion = await adminTestsService.createQuestion(
           testId,
-          toQuestionPayload(question, i),
+          toQuestionPayload(question, i, orderIndex),
         )
+        createdCount += 1
         savedQuestions.push(toQuestionFormValue(savedQuestion))
       }
+
+      form.setValue(
+        "questions",
+        [
+          ...savedQuestions,
+          ...orderedQuestions.slice(i + 1),
+        ] as never,
+        { shouldValidate: false },
+      )
     }
 
-    if (savedQuestions.length > 1 && savedQuestions.every((question) => question.id)) {
-      await adminTestsService.reorderQuestions(
-        testId,
-        savedQuestions.map((question, index) => ({
-          question_id: question.id!,
-          order_index: index,
-        })),
-      )
+    if (savedQuestions.length > 1 && savedQuestions.every((question) => question.id) && needsReorder(savedQuestions)) {
+      try {
+        await adminTestsService.reorderQuestions(
+          testId,
+          {
+            questions: savedQuestions.map((question, index) => ({
+              question_id: question.id!,
+              order_index: index,
+            })),
+          },
+        )
+      } catch (error) {
+        console.warn("Question reorder failed after questions were saved.", error)
+      }
     }
 
     form.setValue("questions", savedQuestions as never, { shouldValidate: false })
@@ -220,12 +282,21 @@ export default function AdminTestWizard({
     }
 
     if (currentStep === 2) {
+      const currentQuestions = normalizedQuestions(form.getValues("questions") as unknown as TestQuestion[])
+      form.setValue("questions", currentQuestions as never, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: false,
+      })
       const isValid = await form.trigger("questions" as never)
-      if (!isValid) return
+      if (!isValid) {
+        showErrorToast(t("validation.questionsInvalid"))
+        return
+      }
 
       if (createdTestId && questions.length > 0) {
         try {
-          await saveQuestions(createdTestId, questions)
+          await saveQuestions(createdTestId, currentQuestions)
         } catch (error) {
           showErrorToast(error)
           return
@@ -284,7 +355,7 @@ export default function AdminTestWizard({
       <CardContent>
         <Form {...form}>
           <form
-            className="grid gap-6 sm:grid-cols-2"
+            className="grid gap-6 sm:grid-cols-2 relative overflow-visible"
             onSubmit={(event) => event.preventDefault()}
           >
             {/* Step indicator */}
@@ -389,15 +460,17 @@ export default function AdminTestWizard({
               <div className="sm:col-span-2">
                 <QuestionsManager
                   questions={questions}
-                  onChange={(updated) =>
+                  onChange={(updated) => {
+                    form.clearErrors("questions" as never)
                     form.setValue(
                       "questions",
-                      updated.map((q) => ({ ...q, is_required: q.is_required ?? true })) as never,
-                      { shouldValidate: false },
+                      normalizedQuestions(updated) as never,
+                      { shouldDirty: true, shouldTouch: true, shouldValidate: false },
                     )
-                  }
+                  }}
                   testId={createdTestId}
                   namespace="adminTests"
+                  validationErrors={form.formState.errors.questions}
                 />
               </div>
             )}

@@ -138,6 +138,7 @@
     "passingScoreMax": "درجة النجاح لا يمكن أن تتجاوز الدرجة القصوى",
     "passingScoreExceedsTotal": "درجة النجاح لا يمكن أن تتجاوز إجمالي النقاط",
     "activeRequiresScore": "أضف أسئلة ذات درجات قبل تفعيل الاختبار",
+    "questionsInvalid": "يرجى تصحيح أخطاء الأسئلة المظللة قبل المتابعة",
     "questionTextRequired": "نص السؤال مطلوب",
     "questionTextMax": "نص السؤال يجب ألا يتجاوز 2000 حرف",
     "optionTextRequired": "نص الخيار مطلوب",

@@ -36,6 +36,11 @@ export const adminTestsService = {
       await api.post(API_ENDPOINTS.tests.questions.create(testId), input),
     )
   },
+  async getQuestions(testId: string | number): Promise<TestQuestionResponse[]> {
+    return unwrapEntity<TestQuestionResponse[]>(
+      await api.get(API_ENDPOINTS.tests.questions.list(testId)),
+    )
+  },
   async updateQuestion(
     testId: string | number,
     questionId: string | number,
@@ -50,5 +55,8 @@ export const adminTestsService = {
     input: ReorderQuestionsInput,
   ): Promise<void> {
     await api.post(API_ENDPOINTS.tests.questions.reorder(testId), input)
+  },
+  async deleteQuestion(testId: string | number, questionId: string | number): Promise<void> {
+    await api.delete(API_ENDPOINTS.tests.questions.byId(testId, questionId))
   },
 }

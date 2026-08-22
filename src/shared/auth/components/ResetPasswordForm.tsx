@@ -11,7 +11,7 @@ import { Form } from "@/components/ui/form"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { passwordService } from "../services/password.service"
 import {
-  resetPasswordSchema,
+  createResetPasswordSchema,
   type ResetPasswordFormValues,
 } from "../validation/password.validation"
 
@@ -19,11 +19,13 @@ export default function ResetPasswordForm({ loginPath }: { loginPath: string }) 
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const { t } = useTranslation("authPassword")
+  const resetToken = params.get("token") ?? params.get("otp") ?? params.get("code") ?? ""
+  const hasResetLinkValues = Boolean(params.get("email") && resetToken)
   const form = useForm<ResetPasswordFormValues>({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: zodResolver(createResetPasswordSchema(t)),
     defaultValues: {
       email: params.get("email") ?? "",
-      token: params.get("token") ?? "",
+      token: resetToken,
       password: "",
       password_confirmation: "",
     },
@@ -40,11 +42,55 @@ export default function ResetPasswordForm({ loginPath }: { loginPath: string }) 
   return (
     <Form {...form}>
       <form className="mt-7 space-y-4" onSubmit={form.handleSubmit((values) => reset.mutate(values))}>
-        <CustomFormField fieldType={FormFieldType.EMAIL} control={form.control} name="email" label={t("email")} disabled={reset.isPending} />
-        <CustomFormField fieldType={FormFieldType.INPUT} control={form.control} name="token" label={t("reset.token")} disabled={reset.isPending} leftIcon={KeyRound} iconPosition="left" />
-        <CustomFormField fieldType={FormFieldType.PASSWORD} control={form.control} name="password" label={t("reset.newPassword")} disabled={reset.isPending} leftIcon={Lock} iconPosition="left" />
-        <CustomFormField fieldType={FormFieldType.PASSWORD} control={form.control} name="password_confirmation" label={t("reset.confirmPassword")} disabled={reset.isPending} leftIcon={Lock} iconPosition="left" />
-        <SubmitButton isLoading={reset.isPending} text={t("reset.submit")} loadingText={t("reset.submitting")} icon={<KeyRound />} />
+        {!hasResetLinkValues && (
+          <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            {t("reset.missingLinkValues")}
+          </p>
+        )}
+        <CustomFormField
+          fieldType={FormFieldType.EMAIL}
+          control={form.control}
+          name="email"
+          label={t("email")}
+          placeholder={t("reset.emailPlaceholder")}
+          disabled={reset.isPending}
+        />
+        <CustomFormField
+          fieldType={FormFieldType.INPUT}
+          control={form.control}
+          name="token"
+          label={t("reset.token")}
+          placeholder={t("reset.tokenPlaceholder")}
+          disabled={reset.isPending}
+          leftIcon={KeyRound}
+          iconPosition="left"
+        />
+        <CustomFormField
+          fieldType={FormFieldType.PASSWORD}
+          control={form.control}
+          name="password"
+          label={t("reset.newPassword")}
+          placeholder={t("reset.passwordPlaceholder")}
+          disabled={reset.isPending}
+          leftIcon={Lock}
+          iconPosition="left"
+        />
+        <CustomFormField
+          fieldType={FormFieldType.PASSWORD}
+          control={form.control}
+          name="password_confirmation"
+          label={t("reset.confirmPassword")}
+          placeholder={t("reset.confirmPasswordPlaceholder")}
+          disabled={reset.isPending}
+          leftIcon={Lock}
+          iconPosition="left"
+        />
+        <SubmitButton
+          isLoading={reset.isPending}
+          text={t("reset.submit")}
+          loadingText={t("reset.submitting")}
+          icon={<KeyRound />}
+        />
       </form>
     </Form>
   )

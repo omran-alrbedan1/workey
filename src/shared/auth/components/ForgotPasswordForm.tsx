@@ -10,14 +10,14 @@ import { Form } from "@/components/ui/form"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { passwordService } from "../services/password.service"
 import {
-  forgotPasswordSchema,
+  createForgotPasswordSchema,
   type ForgotPasswordFormValues,
 } from "../validation/password.validation"
 
 export default function ForgotPasswordForm() {
   const { t } = useTranslation("authPassword")
   const form = useForm<ForgotPasswordFormValues>({
-    resolver: zodResolver(forgotPasswordSchema),
+    resolver: zodResolver(createForgotPasswordSchema(t)),
     defaultValues: { email: "" },
   })
   const request = useMutation({
@@ -39,7 +39,7 @@ export default function ForgotPasswordForm() {
           control={form.control}
           name="email"
           label={t("email")}
-          placeholder="you@example.com"
+          placeholder={t("forgot.emailPlaceholder")}
           disabled={request.isPending}
           leftIcon={Mail}
           iconPosition="left"

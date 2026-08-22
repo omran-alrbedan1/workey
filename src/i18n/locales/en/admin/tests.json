@@ -102,6 +102,7 @@
     "passingScoreMin": "Passing score cannot be negative",
     "passingScoreExceedsTotal": "Passing score cannot exceed total points",
     "activeRequiresScore": "Add scored questions before activating the test",
+    "questionsInvalid": "Fix the highlighted question errors before continuing",
     "questionTextRequired": "Question text is required",
     "questionTextMax": "Question text must not exceed 2000 characters",
     "optionTextRequired": "Option text is required",

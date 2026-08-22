@@ -66,6 +66,30 @@ const getDefaults = (): EmployerTestFormValues => ({
   questions: [],
 })
 
+function normalizedQuestions(questions: TestQuestion[]): TestQuestion[] {
+  return questions.map((question, index) => ({
+    ...question,
+    question_text: question.question_text ?? "",
+    order_index: index,
+    points: Number(question.points),
+    is_required: question.is_required ?? true,
+    options: (question.options ?? []).map((option, optionIndex) => ({
+      ...option,
+      option_text: option.option_text ?? "",
+      order_index: optionIndex,
+      is_correct: Boolean(option.is_correct),
+    })),
+  }))
+}
+
+function byOrderIndex(a: TestQuestionResponse, b: TestQuestionResponse): number {
+  return Number(a.order_index) - Number(b.order_index)
+}
+
+function needsReorder(questions: TestQuestion[]): boolean {
+  return questions.some((question, index) => Number(question.order_index) !== index)
+}
+
 export default function EmployerTestForm({
   test,
   onSubmit,
@@ -136,11 +160,15 @@ export default function EmployerTestForm({
     })),
   })
 
-  const toQuestionPayload = (question: TestQuestion, index: number): TestQuestionInput => {
+  const toQuestionPayload = (
+    question: TestQuestion,
+    index: number,
+    orderIndex = question.order_index ?? index,
+  ): TestQuestionInput => {
     const payload: TestQuestionInput = {
       question_text: question.question_text,
       question_type: question.question_type,
-      order_index: question.order_index ?? index,
+      order_index: orderIndex,
       points: Number(question.points),
       is_required: question.is_required ?? true,
     }
@@ -161,33 +189,65 @@ export default function EmployerTestForm({
 
   const saveQuestions = async (testId: string | number, nextQuestions: TestQuestion[]) => {
     const savedQuestions: TestQuestion[] = []
+    const orderedQuestions = normalizedQuestions(nextQuestions)
+    const serverQuestions = (await employerTestsService.getQuestions(testId)).sort(byOrderIndex)
+    const serverQuestionById = new Map(serverQuestions.map((question) => [String(question.id), question]))
+    const usedServerQuestionIds = new Set<string>()
+    const highestServerOrder = serverQuestions.reduce(
+      (highest, question) => Math.max(highest, Number(question.order_index) || 0),
+      -1,
+    )
+    let createdCount = 0
 
-    for (let i = 0; i < nextQuestions.length; i++) {
-      const question = nextQuestions[i]
+    for (let i = 0; i < orderedQuestions.length; i++) {
+      const question = orderedQuestions[i]
+      const matchedQuestion =
+        question.id != null
+          ? serverQuestionById.get(String(question.id))
+          : serverQuestions.find((serverQuestion, serverIndex) => {
+              const id = String(serverQuestion.id)
+              return serverIndex === i && !usedServerQuestionIds.has(id)
+            })
 
-      if (question.id) {
+      if (matchedQuestion?.id) {
+        usedServerQuestionIds.add(String(matchedQuestion.id))
         const savedQuestion = await employerTestsService.updateQuestion(
           testId,
-          question.id,
-          toQuestionPayload(question, i),
+          matchedQuestion.id,
+          toQuestionPayload(question, i, matchedQuestion.order_index),
         )
         savedQuestions.push({ ...question, ...toQuestionFormValue(savedQuestion as TestQuestionResponse) })
       } else {
+        const orderIndex = highestServerOrder + createdCount + 1
         const savedQuestion = await employerTestsService.createQuestion(
           testId,
-          toQuestionPayload(question, i),
+          toQuestionPayload(question, i, orderIndex),
         )
+        createdCount += 1
         savedQuestions.push(toQuestionFormValue(savedQuestion as TestQuestionResponse))
       }
+
+      form.setValue(
+        "questions",
+        [
+          ...savedQuestions,
+          ...orderedQuestions.slice(i + 1),
+        ] as EmployerTestFormValues["questions"],
+        { shouldValidate: false },
+      )
     }
 
-    if (savedQuestions.length > 1 && savedQuestions.every((question) => question.id)) {
-      await employerTestsService.reorderQuestions(testId, {
-        questions: savedQuestions.map((question, index) => ({
-          question_id: question.id!,
-          order_index: index,
-        })),
-      })
+    if (savedQuestions.length > 1 && savedQuestions.every((question) => question.id) && needsReorder(savedQuestions)) {
+      try {
+        await employerTestsService.reorderQuestions(testId, {
+          questions: savedQuestions.map((question, index) => ({
+            question_id: question.id!,
+            order_index: index,
+          })),
+        })
+      } catch (error) {
+        console.warn("Question reorder failed after questions were saved.", error)
+      }
     }
 
     form.setValue(
@@ -223,13 +283,21 @@ export default function EmployerTestForm({
     }
 
     if (currentStep === 2) {
+      const currentQuestions = normalizedQuestions(form.getValues("questions") as TestQuestion[])
+      form.setValue("questions", currentQuestions as EmployerTestFormValues["questions"], {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: false,
+      })
       const isValid = await form.trigger("questions")
-      if (!isValid) return
+      if (!isValid) {
+        showErrorToast(t("validation.questionsInvalid"))
+        return
+      }
 
-      const values = form.getValues()
       try {
-        if (createdTestId && values.questions && values.questions.length > 0) {
-          await saveQuestions(createdTestId, values.questions as TestQuestion[])
+        if (createdTestId && currentQuestions.length > 0) {
+          await saveQuestions(createdTestId, currentQuestions)
         }
         setCurrentStep(3)
       } catch (error) {
@@ -380,14 +448,16 @@ export default function EmployerTestForm({
               <div className="sm:col-span-2">
                 <QuestionsManager
                   questions={questions}
-                  onChange={(updated) =>
+                  onChange={(updated) => {
+                    form.clearErrors("questions")
                     form.setValue(
                       "questions",
-                      updated.map((q) => ({ ...q, is_required: q.is_required ?? true })) as EmployerTestFormValues["questions"],
-                      { shouldValidate: false },
+                      normalizedQuestions(updated) as EmployerTestFormValues["questions"],
+                      { shouldDirty: true, shouldTouch: true, shouldValidate: false },
                     )
-                  }
+                  }}
                   testId={createdTestId}
+                  validationErrors={form.formState.errors.questions}
                 />
               </div>
             )}
