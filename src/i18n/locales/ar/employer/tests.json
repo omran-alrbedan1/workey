@@ -7,6 +7,23 @@
   "editDescription": "حدّث تفاصيل الاختبار وأسئلته.",
   "noDescription": "لا يوجد وصف",
   "minutes": "{{count}} دقيقة",
+  "wizard": {
+    "stepInformation": "المعلومات",
+    "stepQuestions": "الأسئلة",
+    "stepSettings": "الإعدادات",
+    "stepReview": "المراجعة"
+  },
+  "review": {
+    "infoSection": "معلومات الاختبار",
+    "settingsSection": "الإعدادات",
+    "questionsSection": "الأسئلة",
+    "totalPoints": "إجمالي النقاط",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "questionCount": "{{count}} سؤال",
+    "optionsCount": "{{count}} خيارات",
+    "empty": "لا توجد أسئلة بعد — عد إلى خطوة الأسئلة لإضافة بعضها."
+  },
   "form": {
     "title": "العنوان",
     "description": "الوصف",
@@ -115,10 +132,23 @@
     "descriptionMax": "الوصف يجب ألا يتجاوز 2000 حرف",
     "instructionsMax": "التعليمات يجب ألا تتجاوز 5000 حرف",
     "durationMin": "المدة يجب أن تكون دقيقة واحدة على الأقل",
+    "durationMax": "المدة يجب ألا تتجاوز 1440 دقيقة",
     "maxScoreMin": "الدرجة القصوى يجب أن تكون 1 على الأقل",
     "passingScoreMin": "درجة النجاح لا يمكن أن تكون سالبة",
     "passingScoreMax": "درجة النجاح لا يمكن أن تتجاوز الدرجة القصوى",
+    "passingScoreExceedsTotal": "درجة النجاح لا يمكن أن تتجاوز إجمالي النقاط",
+    "activeRequiresScore": "أضف أسئلة ذات درجات قبل تفعيل الاختبار",
     "questionTextRequired": "نص السؤال مطلوب",
-    "pointsMin": "الدرجات يجب أن تكون 0.5 على الأقل"
+    "questionTextMax": "نص السؤال يجب ألا يتجاوز 2000 حرف",
+    "optionTextRequired": "نص الخيار مطلوب",
+    "optionTextMax": "نص الخيار يجب ألا يتجاوز 500 حرف",
+    "pointsMin": "الدرجات يجب أن تكون 0.5 على الأقل",
+    "pointsMax": "الدرجات لا يمكن أن تتجاوز 1000",
+    "minTwoOptions": "أسئلة الاختيار تتطلب خيارين على الأقل",
+    "singleChoiceOneCorrect": "أسئلة الاختيار الواحد تتطلب إجابة صحيحة واحدة بالضبط",
+    "multipleChoiceAtLeastOneCorrect": "أسئلة الاختيارات المتعددة تتطلب إجابة صحيحة واحدة على الأقل",
+    "trueFalseOptions": "أسئلة صح/خطأ تتطلب خياري الصح والخطأ مع إجابة صحيحة واحدة",
+    "uniqueOptions": "يجب أن يكون نص الخيارات فريداً ضمن السؤال",
+    "uniqueOptionOrder": "يجب أن يكون ترتيب الخيارات فريداً ضمن السؤال"
   }
 }

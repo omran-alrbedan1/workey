@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
+  Building2,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -11,32 +12,32 @@ import {
   ListChecks,
   Loader2,
   Save,
+  ScrollText,
   Target,
   ToggleRight,
 } from "lucide-react"
-import { useForm } from "react-hook-form"
+import { useForm, type Resolver } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
+import type { AdminCompanyRecord } from "@/features/admin/companies/types/adminCompanies.types"
 import { showErrorToast } from "@/lib/toast"
 import { cn } from "@/lib/utils"
-import QuestionsManager from "./QuestionsManager"
-import { employerTestsService } from "../services/employerTests.service"
+import QuestionsManager from "@/features/employer/tests/components/QuestionsManager"
 import type {
-  EmployerTest,
-  EmployerTestInput,
   TestQuestion,
   TestQuestionInput,
   TestQuestionOption,
   TestQuestionResponse,
-  TestQuestionType,
-} from "../types/employerTests.types"
+} from "@/features/employer/tests/types/employerTests.types"
+import { adminTestsService } from "../services/adminTests.service"
+import type { AdminTestInput, AdminTestUpdateInput } from "../types/adminTests.types"
 import {
-  createEmployerTestSchema,
-  type EmployerTestFormValues,
-} from "../validations/employerTests.validation"
+  createAdminTestWizardSchema,
+  type AdminTestWizardFormValues,
+} from "../validations/adminTests.validation"
 
 const STEPS = [
   { labelKey: "wizard.stepInformation", icon: FileText },
@@ -47,7 +48,7 @@ const STEPS = [
 
 const TOTAL_STEPS = STEPS.length
 
-const questionTypeLabelKeys: Record<TestQuestionType, string> = {
+const questionTypeLabelKeys: Record<TestQuestion["question_type"], string> = {
   single_choice: "questions.singleChoice",
   multiple_choice: "questions.multipleChoice",
   true_false: "questions.trueFalse",
@@ -56,43 +57,94 @@ const questionTypeLabelKeys: Record<TestQuestionType, string> = {
   file_upload: "questions.fileUpload",
 }
 
-const getDefaults = (): EmployerTestFormValues => ({
+const getDefaults = (): AdminTestWizardFormValues => ({
+  company_id: "",
   title: "",
   description: "",
-  instructions: "",
   duration_minutes: 60,
   passing_score: 0,
   is_active: true,
   questions: [],
 })
 
-export default function EmployerTestForm({
-  test,
-  onSubmit,
-  onComplete,
-  isPending,
-}: {
-  test?: EmployerTest | null
-  onSubmit: (input: EmployerTestInput) => Promise<unknown>
+function toQuestionFormValue(question: TestQuestionResponse): TestQuestion {
+  return {
+    id: question.id,
+    test_id: question.test_id,
+    question_text: question.question_text,
+    question_type:
+      typeof question.question_type === "string"
+        ? (question.question_type as TestQuestion["question_type"])
+        : question.question_type.key,
+    order_index: question.order_index,
+    points: Number(question.points),
+    is_required: question.is_required ?? true,
+    options: (question.options ?? []).map((option) => ({
+      id: option.id,
+      test_question_id: option.test_question_id,
+      option_text: option.option_text,
+      order_index: option.order_index,
+      is_correct: Boolean(option.is_correct),
+    })),
+  }
+}
+
+function toQuestionPayload(question: TestQuestion, index: number): TestQuestionInput {
+  const payload: TestQuestionInput = {
+    question_text: question.question_text,
+    question_type: question.question_type,
+    order_index: question.order_index ?? index,
+    points: Number(question.points),
+    is_required: question.is_required ?? true,
+  }
+
+  if (["single_choice", "multiple_choice", "true_false"].includes(question.question_type)) {
+    payload.options =
+      question.options?.map((option: TestQuestionOption, optionIndex: number) => ({
+        option_text: option.option_text,
+        order_index: option.order_index ?? optionIndex,
+        is_correct: Boolean(option.is_correct),
+      })) ?? []
+  }
+
+  return payload
+}
+
+interface AdminTestWizardProps {
+  companies: AdminCompanyRecord[]
+  isLoadingCompanies?: boolean
+  onCreate: (input: AdminTestInput) => Promise<unknown>
+  onUpdate: (input: AdminTestUpdateInput) => Promise<unknown>
   onComplete?: () => void
   isPending: boolean
-}) {
-  const { t } = useTranslation("employerTests")
-  const [currentStep, setCurrentStep] = useState(1)
-  const [createdTestId, setCreatedTestId] = useState<string | number | undefined>(test?.id)
+}
 
-  const employerTestSchema = createEmployerTestSchema(t)
-  const form = useForm<EmployerTestFormValues>({
-    resolver: zodResolver(employerTestSchema) as any,
+export default function AdminTestWizard({
+  companies,
+  isLoadingCompanies = false,
+  onCreate,
+  onUpdate,
+  onComplete,
+  isPending,
+}: AdminTestWizardProps) {
+  const { t } = useTranslation("adminTests")
+  const [currentStep, setCurrentStep] = useState(1)
+  const [createdTestId, setCreatedTestId] = useState<string | number | undefined>()
+
+  const wizardSchema = createAdminTestWizardSchema(t)
+  const form = useForm<AdminTestWizardFormValues>({
+    resolver: zodResolver(wizardSchema) as Resolver<AdminTestWizardFormValues>,
     defaultValues: getDefaults(),
   })
 
-  const questions = form.watch("questions") ?? []
+  const questions = (form.watch("questions") ?? []) as unknown as TestQuestion[]
 
   // Total points across all questions (used for max score + passing score cap).
-  const calculatedMaxScore = questions.reduce((sum: number, q: { points?: number }) => sum + (Number(q.points) || 0), 0)
+  const calculatedMaxScore = questions.reduce(
+    (sum, q) => sum + (Number(q.points) || 0),
+    0,
+  )
 
-  // Keep the passing score within the achievable total.
   useEffect(() => {
     if (calculatedMaxScore > 0) {
       const currentPassingScore = form.getValues("passing_score")
@@ -102,63 +154,6 @@ export default function EmployerTestForm({
     }
   }, [calculatedMaxScore, form])
 
-  useEffect(() => {
-    form.reset(
-      test
-        ? {
-            title: test.title,
-            description: test.description ?? "",
-            instructions: test.instructions ?? "",
-            duration_minutes: test.duration_minutes,
-            passing_score: test.passing_score ?? 0,
-            is_active: test.is_active,
-            questions: (test.questions ?? []).map((q) => toQuestionFormValue(q)) as EmployerTestFormValues["questions"],
-          }
-        : getDefaults(),
-    )
-  }, [form, test])
-
-  const toQuestionFormValue = (question: TestQuestionResponse): TestQuestion => ({
-    id: question.id,
-    test_id: question.test_id,
-    question_text: question.question_text,
-    question_type: question.question_type.key,
-    order_index: question.order_index,
-    points: Number(question.points),
-    is_required: question.is_required ?? true,
-    image_url: question.image_url,
-    options: (question.options ?? []).map((option) => ({
-      id: option.id,
-      test_question_id: option.test_question_id,
-      option_text: option.option_text,
-      order_index: option.order_index,
-      is_correct: Boolean(option.is_correct),
-    })),
-  })
-
-  const toQuestionPayload = (question: TestQuestion, index: number): TestQuestionInput => {
-    const payload: TestQuestionInput = {
-      question_text: question.question_text,
-      question_type: question.question_type,
-      order_index: question.order_index ?? index,
-      points: Number(question.points),
-      is_required: question.is_required ?? true,
-    }
-
-    if (["single_choice", "multiple_choice", "true_false"].includes(question.question_type)) {
-      payload.options =
-        question.options?.map((option: TestQuestionOption, optionIndex: number) => {
-          return {
-            option_text: option.option_text,
-            order_index: option.order_index ?? optionIndex,
-            is_correct: Boolean(option.is_correct),
-          }
-        }) ?? []
-    }
-
-    return payload
-  }
-
   const saveQuestions = async (testId: string | number, nextQuestions: TestQuestion[]) => {
     const savedQuestions: TestQuestion[] = []
 
@@ -166,53 +161,55 @@ export default function EmployerTestForm({
       const question = nextQuestions[i]
 
       if (question.id) {
-        const savedQuestion = await employerTestsService.updateQuestion(
+        const savedQuestion = await adminTestsService.updateQuestion(
           testId,
           question.id,
           toQuestionPayload(question, i),
         )
-        savedQuestions.push({ ...question, ...toQuestionFormValue(savedQuestion as TestQuestionResponse) })
+        savedQuestions.push({
+          ...question,
+          ...toQuestionFormValue(savedQuestion),
+        })
       } else {
-        const savedQuestion = await employerTestsService.createQuestion(
+        const savedQuestion = await adminTestsService.createQuestion(
           testId,
           toQuestionPayload(question, i),
         )
-        savedQuestions.push(toQuestionFormValue(savedQuestion as TestQuestionResponse))
+        savedQuestions.push(toQuestionFormValue(savedQuestion))
       }
     }
 
     if (savedQuestions.length > 1 && savedQuestions.every((question) => question.id)) {
-      await employerTestsService.reorderQuestions(testId, {
-        questions: savedQuestions.map((question, index) => ({
+      await adminTestsService.reorderQuestions(
+        testId,
+        savedQuestions.map((question, index) => ({
           question_id: question.id!,
           order_index: index,
         })),
-      })
+      )
     }
 
-    form.setValue(
-      "questions",
-      savedQuestions.map((q) => ({ ...q, is_required: q.is_required ?? true })) as EmployerTestFormValues["questions"],
-      { shouldValidate: false },
-    )
+    form.setValue("questions", savedQuestions as never, { shouldValidate: false })
   }
 
   const handleNext = async () => {
     if (currentStep === 1) {
-      const isValid = await form.trigger(["title", "description"] as any)
+      const isValid = await form.trigger(["company_id", "title", "description"] as never)
       if (!isValid) return
 
       const values = form.getValues()
       try {
         if (!createdTestId) {
-          // Create the draft first so questions can be attached in step 2.
-          const createdTest = (await onSubmit({
+          // Create the catalog draft first so questions can be attached in step 2.
+          // Passing score and duration are intentionally not collected here;
+          // they are configured in step 3 once questions exist.
+          const createdTest = (await onCreate({
+            company_id: values.company_id,
             title: values.title,
             description: values.description || undefined,
-            instructions: values.instructions || undefined,
-            duration_minutes: values.duration_minutes,
-            is_active: false,
-          })) as EmployerTest
+            duration_minutes: 60,
+            passing_score: 0,
+          })) as Awaited<ReturnType<typeof adminTestsService.create>>
           if (createdTest?.id) setCreatedTestId(createdTest.id)
         }
         setCurrentStep(2)
@@ -223,28 +220,27 @@ export default function EmployerTestForm({
     }
 
     if (currentStep === 2) {
-      const isValid = await form.trigger("questions")
+      const isValid = await form.trigger("questions" as never)
       if (!isValid) return
 
-      const values = form.getValues()
-      try {
-        if (createdTestId && values.questions && values.questions.length > 0) {
-          await saveQuestions(createdTestId, values.questions as TestQuestion[])
+      if (createdTestId && questions.length > 0) {
+        try {
+          await saveQuestions(createdTestId, questions)
+        } catch (error) {
+          showErrorToast(error)
+          return
         }
-        setCurrentStep(3)
-      } catch (error) {
-        showErrorToast(error)
       }
+      setCurrentStep(3)
       return
     }
 
     if (currentStep === 3) {
       const isValid = await form.trigger([
-        "instructions",
         "duration_minutes",
         "passing_score",
         "is_active",
-      ] as any)
+      ] as never)
       if (!isValid) return
       setCurrentStep(4)
     }
@@ -261,30 +257,16 @@ export default function EmployerTestForm({
   const handleFinalSubmit = async () => {
     const values = form.getValues()
 
-    try {
-      if (test?.id) {
-        await onSubmit({
-          title: values.title,
-          description: values.description || undefined,
-          instructions: values.instructions || undefined,
-          duration_minutes: values.duration_minutes,
-          passing_score: values.passing_score,
-          is_active: values.is_active,
-        })
-        return
-      }
+    if (!createdTestId) return
 
-      if (createdTestId) {
-        await employerTestsService.patch(createdTestId, {
-          title: values.title,
-          description: values.description || undefined,
-          instructions: values.instructions || undefined,
-          duration_minutes: values.duration_minutes,
-          passing_score: values.passing_score,
-          is_active: values.is_active,
-        })
-        onComplete?.()
-      }
+    try {
+      await onUpdate({
+        id: createdTestId,
+        duration_minutes: values.duration_minutes,
+        passing_score: values.passing_score ?? 0,
+        is_active: values.is_active,
+      })
+      onComplete?.()
     } catch (error) {
       showErrorToast(error)
     }
@@ -295,15 +277,18 @@ export default function EmployerTestForm({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5" />
-          {test ? t("editTitle") : t("createTitle")}
+          {t("create.title")}
         </CardTitle>
-        <CardDescription>{test ? t("editDescription") : t("createDescription")}</CardDescription>
+        <CardDescription>{t("create.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form className="grid gap-6 sm:grid-cols-2" onSubmit={(event) => event.preventDefault()}>
+          <form
+            className="grid gap-6 sm:grid-cols-2"
+            onSubmit={(event) => event.preventDefault()}
+          >
             {/* Step indicator */}
-            <div className="sm:col-span-2 mb-2">
+            <div className="mb-2 sm:col-span-2">
               <div className="mx-auto flex max-w-2xl items-start justify-between gap-1">
                 {STEPS.map((step, index) => {
                   const number = index + 1
@@ -351,25 +336,49 @@ export default function EmployerTestForm({
               </div>
             </div>
 
-            {/* Step 1: Information */}
+            {/* Step 1: Basic information */}
             {currentStep === 1 && (
               <>
                 <div className="sm:col-span-2">
                   <CustomFormField
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    name="company_id"
+                    label={t("form.company")}
+                    placeholder={
+                      isLoadingCompanies
+                        ? t("form.loadingCompanies")
+                        : t("form.companyPlaceholder")
+                    }
+                    leftIcon={Building2}
+                    iconPosition="left"
+                    disabled={isPending || isLoadingCompanies}
+                    options={companies.map((company) => ({
+                      value: String(company.id),
+                      label: company.name,
+                    }))}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <CustomFormField
                     fieldType={FormFieldType.INPUT}
-                    control={form.control as any}
+                    control={form.control}
                     name="title"
                     label={t("form.title")}
-                    leftIcon={FileText}
+                    placeholder={t("form.titlePlaceholder")}
+                    leftIcon={ScrollText}
+                    iconPosition="left"
+                    disabled={isPending}
                   />
                 </div>
                 <div className="sm:col-span-2">
                   <CustomFormField
                     fieldType={FormFieldType.TEXTAREA}
-                    control={form.control as any}
+                    control={form.control}
                     name="description"
                     label={t("form.description")}
-                    leftIcon={Info}
+                    placeholder={t("form.descriptionPlaceholder")}
+                    disabled={isPending}
                   />
                 </div>
               </>
@@ -383,82 +392,101 @@ export default function EmployerTestForm({
                   onChange={(updated) =>
                     form.setValue(
                       "questions",
-                      updated.map((q) => ({ ...q, is_required: q.is_required ?? true })) as EmployerTestFormValues["questions"],
+                      updated.map((q) => ({ ...q, is_required: q.is_required ?? true })) as never,
                       { shouldValidate: false },
                     )
                   }
                   testId={createdTestId}
+                  namespace="adminTests"
                 />
               </div>
             )}
 
-            {/* Step 3: Settings */}
+            {/* Step 3: Configuration */}
             {currentStep === 3 && (
               <>
-                <div className="sm:col-span-2">
-                  <CustomFormField
-                    fieldType={FormFieldType.TEXTAREA}
-                    control={form.control as any}
-                    name="instructions"
-                    label={t("form.instructions")}
-                    leftIcon={ListChecks}
-                  />
-                </div>
                 <CustomFormField
                   fieldType={FormFieldType.NUMBER}
-                  control={form.control as any}
+                  control={form.control}
                   name="duration_minutes"
                   label={t("form.duration")}
                   leftIcon={Clock}
+                  iconPosition="left"
+                  disabled={isPending}
                 />
                 <CustomFormField
                   fieldType={FormFieldType.NUMBER}
-                  control={form.control as any}
+                  control={form.control}
                   name="passing_score"
                   label={t("form.passingScore")}
                   leftIcon={Target}
-                  description={calculatedMaxScore > 0 ? `Max: ${calculatedMaxScore} pts` : undefined}
+                  iconPosition="left"
+                  disabled={isPending}
+                  description={
+                    calculatedMaxScore > 0
+                      ? `${t("review.totalPoints")}: ${calculatedMaxScore}`
+                      : undefined
+                  }
                 />
+                <p className="text-xs text-text-muted sm:col-span-2">
+                  {t("form.maxScoreManaged")}
+                </p>
                 <div className="sm:col-span-2">
                   <CustomFormField
                     fieldType={FormFieldType.SWITCH}
-                    control={form.control as any}
+                    control={form.control}
                     name="is_active"
                     label={t("form.active")}
                     leftIcon={ToggleRight}
+                    disabled={isPending}
                   />
                 </div>
               </>
             )}
 
             {/* Step 4: Review */}
-            {currentStep === 4 && <ReviewStep values={form.watch()} maxScore={calculatedMaxScore} />}
+            {currentStep === 4 && (
+              <ReviewStep
+                values={form.watch()}
+                maxScore={calculatedMaxScore}
+                companyName={
+                  companies.find(
+                    (company) => String(company.id) === String(form.getValues("company_id")),
+                  )?.name
+                }
+              />
+            )}
 
             {/* Navigation */}
-            <div className="sm:col-span-2 flex items-center justify-between gap-4">
+            <div className="flex items-center justify-between gap-4 sm:col-span-2">
               {currentStep > 1 && (
                 <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}>
                   <ChevronLeft className="mr-2 h-4 w-4" />
-                  {t("actions.back")}
+                  {t("wizard.back")}
                 </Button>
               )}
               <div className="flex-1" />
               {currentStep < TOTAL_STEPS ? (
                 <Button type="button" onClick={() => void handleNext()} disabled={isPending}>
-                  {t("actions.next")}
+                  {t("wizard.next")}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               ) : (
-                <Button type="button" onClick={() => void handleFinalSubmit()} disabled={isPending}>
+                <Button
+                  type="button"
+                  onClick={() => void handleFinalSubmit()}
+                  disabled={isPending}
+                  className="text-white"
+                >
                   {isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {t("actions.saving")}
+                      {t("wizard.saving")}
                     </>
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      {test ? t("actions.save") : t("actions.create")}
+                      {t("create.submit")}
                     </>
                   )}
                 </Button>
@@ -474,12 +502,14 @@ export default function EmployerTestForm({
 function ReviewStep({
   values,
   maxScore,
+  companyName,
 }: {
-  values: EmployerTestFormValues
+  values: AdminTestWizardFormValues
   maxScore: number
+  companyName?: string
 }) {
-  const { t } = useTranslation("employerTests")
-  const reviewQuestions = values.questions ?? []
+  const { t } = useTranslation("adminTests")
+  const reviewQuestions = (values.questions ?? []) as unknown as TestQuestion[]
 
   return (
     <div className="space-y-6 sm:col-span-2">
@@ -489,8 +519,12 @@ function ReviewStep({
           {t("review.infoSection")}
         </h3>
         <dl className="grid gap-3 sm:grid-cols-2">
+          <ReviewItem label={t("form.company")} value={companyName || "-"} />
           <ReviewItem label={t("form.title")} value={values.title || "-"} />
-          <ReviewItem label={t("form.description")} value={values.description || t("noDescription")} />
+          <ReviewItem
+            label={t("form.description")}
+            value={values.description || t("noDescription")}
+          />
         </dl>
       </section>
 
@@ -502,17 +536,15 @@ function ReviewStep({
         <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <ReviewItem label={t("review.totalPoints")} value={`${maxScore}`} />
           <ReviewItem label={t("form.passingScore")} value={`${values.passing_score ?? 0}`} />
-          <ReviewItem label={t("form.duration")} value={t("minutes", { count: values.duration_minutes ?? 0 })} />
+          <ReviewItem
+            label={t("form.duration")}
+            value={t("minutes", { count: values.duration_minutes ?? 0 })}
+          />
           <ReviewItem
             label={t("form.active")}
             value={values.is_active ? t("review.active") : t("review.inactive")}
           />
         </dl>
-        {values.instructions && (
-          <div className="mt-3">
-            <ReviewItem label={t("form.instructions")} value={values.instructions} multiline />
-          </div>
-        )}
       </section>
 
       <section className="rounded-lg border border-border p-4">
@@ -539,7 +571,9 @@ function ReviewStep({
                     <p className="text-sm font-medium text-text-primary">
                       {index + 1}. {question.question_text}
                     </p>
-                    <span className="text-xs font-medium text-primary">{Number(question.points)} pts</span>
+                    <span className="text-xs font-medium text-primary">
+                      {Number(question.points)} pts
+                    </span>
                   </div>
                   <p className="mt-1 text-xs text-text-muted">
                     {t(questionTypeLabelKeys[question.question_type])}
@@ -561,18 +595,14 @@ function ReviewStep({
 function ReviewItem({
   label,
   value,
-  multiline,
 }: {
   label: string
   value: string
-  multiline?: boolean
 }) {
   return (
     <div>
       <dt className="text-xs font-medium text-text-muted">{label}</dt>
-      <dd className={cn("mt-0.5 whitespace-pre-line text-sm text-text-primary", !multiline && "truncate")} title={!multiline ? value : undefined}>
-        {value}
-      </dd>
+      <dd className="mt-0.5 whitespace-pre-line text-sm text-text-primary">{value}</dd>
     </div>
   )
 }

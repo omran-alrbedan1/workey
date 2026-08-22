@@ -1,6 +1,6 @@
 {
   "title": "Assessment Tests",
-  "description": "Manage reusable assessments available to Admins and employers.",
+  "description": "Manage the global assessment catalog available to Admins and employers.",
   "form": {
     "company": "Company",
     "companyPlaceholder": "Select a company",
@@ -9,10 +9,31 @@
     "titlePlaceholder": "Backend Assessment",
     "description": "Description",
     "descriptionPlaceholder": "Backend screening test.",
-    "duration": "Duration",
+    "duration": "Duration (minutes)",
     "passingScore": "Passing score",
+    "active": "Active",
     "maxScoreManaged": "Maximum score is calculated by the backend from the test questions. Set passing score after adding questions.",
     "add": "Add test"
+  },
+  "wizard": {
+    "stepInformation": "Basic information",
+    "stepQuestions": "Questions",
+    "stepSettings": "Configuration",
+    "stepReview": "Review",
+    "back": "Back",
+    "next": "Next",
+    "saving": "Saving..."
+  },
+  "review": {
+    "infoSection": "Test information",
+    "settingsSection": "Configuration",
+    "questionsSection": "Questions (global catalog)",
+    "totalPoints": "Total points",
+    "active": "Active",
+    "inactive": "Inactive",
+    "questionCount": "{{count}} question(s)",
+    "optionsCount": "{{count}} options",
+    "empty": "No questions yet — go back to the Questions step to add some."
   },
   "edit": {
     "action": "Edit",
@@ -23,7 +44,8 @@
   },
   "create": {
     "title": "Create assessment",
-    "description": "Add a reusable assessment. Maximum score is calculated from questions."
+    "description": "Add a reusable assessment to the global catalog. Maximum score is calculated from questions.",
+    "submit": "Create assessment"
   },
   "columns": {
     "assessment": "Assessment",
@@ -42,12 +64,55 @@
   "created": "Assessment created",
   "updated": "Assessment updated",
   "deleted": "Assessment deleted",
+  "questions": {
+    "title": "Global catalog questions",
+    "add": "Add question",
+    "empty": "No questions added. Click \"Add question\" to create one.",
+    "questionNumber": "Question #{{n}}",
+    "questionText": "Question",
+    "questionTextPlaceholder": "Enter the question text",
+    "type": "Type",
+    "singleChoice": "Single Choice",
+    "multipleChoice": "Multiple Choice",
+    "trueFalse": "True/False",
+    "shortText": "Short Text",
+    "longText": "Long Text",
+    "fileUpload": "File Upload",
+    "points": "Points",
+    "options": "Answer options",
+    "noOptions": "No options. Click \"Add option\" to create one.",
+    "optionPlaceholder": "Option {{n}}",
+    "addOption": "Add option",
+    "correctAnswer": "Correct answer",
+    "selectCorrect": "Select correct answer",
+    "isCorrect": "Correct",
+    "true": "True",
+    "false": "False",
+    "fileUploadInstructions": "File Upload Question",
+    "fileUploadHint": "Candidates will be able to upload a file as their answer.",
+    "totalPoints": "Total: {{count}} pts"
+  },
   "validation": {
     "companyRequired": "Company is required",
     "titleRequired": "Title must be at least 3 characters",
     "titleMax": "Title must not exceed 150 characters",
     "descriptionMax": "Description must not exceed 2000 characters",
     "durationMin": "Duration must be at least 1 minute",
-    "passingScoreMin": "Passing score cannot be negative"
+    "durationMax": "Duration must not exceed 1440 minutes",
+    "passingScoreMin": "Passing score cannot be negative",
+    "passingScoreExceedsTotal": "Passing score cannot exceed total points",
+    "activeRequiresScore": "Add scored questions before activating the test",
+    "questionTextRequired": "Question text is required",
+    "questionTextMax": "Question text must not exceed 2000 characters",
+    "optionTextRequired": "Option text is required",
+    "optionTextMax": "Option text must not exceed 500 characters",
+    "pointsMin": "Points cannot be negative",
+    "pointsMax": "Points cannot exceed 1000",
+    "minTwoOptions": "Choice questions require at least two options",
+    "singleChoiceOneCorrect": "Single choice questions require exactly one correct option",
+    "multipleChoiceAtLeastOneCorrect": "Multiple choice questions require at least one correct option",
+    "trueFalseOptions": "True/false questions require exactly True and False options with one correct answer",
+    "uniqueOptions": "Option text must be unique within a question",
+    "uniqueOptionOrder": "Option order must be unique within a question"
   }
 }

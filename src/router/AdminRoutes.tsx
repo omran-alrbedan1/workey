@@ -23,6 +23,7 @@ const AdminApplicationsPage = lazy(() => import("@/features/admin/applications/p
 const AdminApplicationDetailsPage = lazy(() => import("@/features/admin/applications/pages/AdminApplicationDetailsPage"))
 const AdminSkillsPage = lazy(() => import("@/features/admin/skills/pages/AdminSkillsPage"))
 const AdminTestsPage = lazy(() => import("@/features/admin/tests/pages/AdminTestsPage"))
+const AdminCreateTestPage = lazy(() => import("@/features/admin/tests/pages/AdminCreateTestPage"))
 const AdminNotificationsPage = lazy(() => import("@/features/admin/notifications/pages/AdminNotificationsPage"))
 const AdminReportsLayout = lazy(() => import("@/features/admin/reports/pages/AdminReportsLayout"))
 const AdminReportsOverviewPage = lazy(() => import("@/features/admin/reports/pages/AdminReportsOverviewPage"))
@@ -65,6 +66,7 @@ export const adminRoutes: RouteObject = {
     { path: ROUTES.admin.applicationDetails(":id"), element: withRouteSuspense(<AdminApplicationDetailsPage />) },
     { path: ROUTES.admin.skills, element: withRouteSuspense(<AdminSkillsPage />) },
     { path: ROUTES.admin.tests, element: withRouteSuspense(<AdminTestsPage />) },
+    { path: ROUTES.admin.testsCreate, element: withRouteSuspense(<AdminCreateTestPage />) },
     { path: ROUTES.admin.notifications, element: withRouteSuspense(<AdminNotificationsPage />) },
     {
       path: ROUTES.admin.reports.root,

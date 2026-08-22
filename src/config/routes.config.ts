@@ -24,6 +24,7 @@ export const ROUTES = Object.freeze({
     interviews: "/admin/interviews",
     skills: "/admin/skills",
     tests: "/admin/tests",
+    testsCreate: "/admin/tests/create",
     notifications: "/admin/notifications",
     reports: {
       root: "/admin/reports",

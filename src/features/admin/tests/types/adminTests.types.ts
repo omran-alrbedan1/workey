@@ -14,8 +14,10 @@ export interface AdminTestInput {
   company_id: string | number
   title: string
   description?: string
+  instructions?: string
   duration_minutes: number
   passing_score: number
+  is_active?: boolean
 }
 
 export type AdminTestUpdateInput = Partial<AdminTestInput> & { id: string | number }

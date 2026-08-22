@@ -34,6 +34,7 @@ interface QuestionsManagerProps {
   questions: TestQuestion[]
   onChange: (questions: TestQuestion[]) => void
   testId?: string | number
+  namespace?: string
 }
 
 const choiceTypes: TestQuestion["question_type"][] = [
@@ -63,8 +64,13 @@ function trueFalseOptions(correctValue: "true" | "false" = "true"): TestQuestion
   ]
 }
 
-export default function QuestionsManager({ questions, onChange, testId }: QuestionsManagerProps) {
-  const { t } = useTranslation("employerTests")
+export default function QuestionsManager({
+  questions,
+  onChange,
+  testId,
+  namespace = "employerTests",
+}: QuestionsManagerProps) {
+  const { t } = useTranslation(namespace)
 
   const replaceQuestion = useCallback(
     (index: number, nextQuestion: TestQuestion) => {

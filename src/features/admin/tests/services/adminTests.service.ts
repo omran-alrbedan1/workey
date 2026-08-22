@@ -6,6 +6,11 @@ import {
 } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminCollection } from "@/features/admin/shared/types/adminApi.types"
 import type {
+  ReorderQuestionsInput,
+  TestQuestionInput,
+  TestQuestionResponse,
+} from "@/features/employer/tests/types/employerTests.types"
+import type {
   AdminTestInput,
   AdminTestRecord,
   AdminTestUpdateInput,
@@ -22,5 +27,28 @@ export const adminTestsService = {
   },
   async remove(id: string | number): Promise<void> {
     await api.delete(API_ENDPOINTS.admin.testById(id))
+  },
+  async createQuestion(
+    testId: string | number,
+    input: TestQuestionInput,
+  ): Promise<TestQuestionResponse> {
+    return unwrapEntity<TestQuestionResponse>(
+      await api.post(API_ENDPOINTS.tests.questions.create(testId), input),
+    )
+  },
+  async updateQuestion(
+    testId: string | number,
+    questionId: string | number,
+    input: Partial<TestQuestionInput>,
+  ): Promise<TestQuestionResponse> {
+    return unwrapEntity<TestQuestionResponse>(
+      await api.put(API_ENDPOINTS.tests.questions.byId(testId, questionId), input),
+    )
+  },
+  async reorderQuestions(
+    testId: string | number,
+    input: ReorderQuestionsInput,
+  ): Promise<void> {
+    await api.post(API_ENDPOINTS.tests.questions.reorder(testId), input)
   },
 }

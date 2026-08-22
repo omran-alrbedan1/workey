@@ -7,6 +7,23 @@
   "editDescription": "Update the test details and questions.",
   "noDescription": "No description",
   "minutes": "{{count}} min",
+  "wizard": {
+    "stepInformation": "Information",
+    "stepQuestions": "Questions",
+    "stepSettings": "Settings",
+    "stepReview": "Review"
+  },
+  "review": {
+    "infoSection": "Test information",
+    "settingsSection": "Settings",
+    "questionsSection": "Questions",
+    "totalPoints": "Total points",
+    "active": "Active",
+    "inactive": "Inactive",
+    "questionCount": "{{count}} question(s)",
+    "optionsCount": "{{count}} options",
+    "empty": "No questions yet — go back to the Questions step to add some."
+  },
   "form": {
     "title": "Title",
     "description": "Description",
@@ -113,9 +130,11 @@
     "descriptionMax": "Description must not exceed 2000 characters",
     "instructionsMax": "Instructions must not exceed 5000 characters",
     "durationMin": "Duration must be at least 1 minute",
+    "durationMax": "Duration must not exceed 1440 minutes",
     "maxScoreMin": "Maximum score must be at least 1",
     "passingScoreMin": "Passing score cannot be negative",
     "passingScoreMax": "Passing score cannot exceed maximum score",
+    "passingScoreExceedsTotal": "Passing score cannot exceed total points",
     "questionTextRequired": "Question text is required",
     "questionTextMax": "Question text must not exceed 2000 characters",
     "optionTextRequired": "Option text is required",

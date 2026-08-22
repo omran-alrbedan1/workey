@@ -1,6 +1,6 @@
 {
   "title": "اختبارات التقييم",
-  "description": "أدر التقييمات القابلة لإعادة الاستخدام للمسؤولين وأصحاب العمل.",
+  "description": "أدر دليل التقييمات المشترك المتاح للمسؤولين وأصحاب العمل.",
   "form": {
     "company": "الشركة",
     "companyPlaceholder": "اختر شركة",
@@ -9,10 +9,31 @@
     "titlePlaceholder": "تقييم الواجهة الخلفية",
     "description": "الوصف",
     "descriptionPlaceholder": "اختبار فحص للواجهة الخلفية.",
-    "duration": "المدة",
+    "duration": "المدة بالدقائق",
     "passingScore": "درجة النجاح",
+    "active": "نشط",
     "maxScoreManaged": "يتم حساب الدرجة القصوى من أسئلة الاختبار بواسطة الخادم. حدد درجة النجاح بعد إضافة الأسئلة.",
     "add": "إضافة اختبار"
+  },
+  "wizard": {
+    "stepInformation": "المعلومات الأساسية",
+    "stepQuestions": "الأسئلة",
+    "stepSettings": "الإعدادات",
+    "stepReview": "المراجعة",
+    "back": "رجوع",
+    "next": "التالي",
+    "saving": "جارٍ الحفظ..."
+  },
+  "review": {
+    "infoSection": "معلومات الاختبار",
+    "settingsSection": "الإعدادات",
+    "questionsSection": "الأسئلة (الدليل المشترك)",
+    "totalPoints": "إجمالي النقاط",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "questionCount": "{{count}} سؤال",
+    "optionsCount": "{{count}} خيارات",
+    "empty": "لا توجد أسئلة بعد — عد إلى خطوة الأسئلة لإضافة بعضها."
   },
   "edit": {
     "action": "تعديل",
@@ -23,7 +44,8 @@
   },
   "create": {
     "title": "إنشاء تقييم",
-    "description": "أضف تقييماً قابلاً لإعادة الاستخدام. يتم حساب الدرجة القصوى من الأسئلة."
+    "description": "أضف تقييماً قابلاً لإعادة الاستخدام إلى الدليل المشترك. يتم حساب الدرجة القصوى من الأسئلة.",
+    "submit": "إنشاء التقييم"
   },
   "columns": {
     "assessment": "التقييم",
@@ -42,12 +64,55 @@
   "created": "تم إنشاء التقييم",
   "updated": "تم تحديث التقييم",
   "deleted": "تم حذف التقييم",
+  "questions": {
+    "title": "أسئلة الدليل المشترك",
+    "add": "إضافة سؤال",
+    "empty": "لم تُضف أي أسئلة. اضغط \"إضافة سؤال\" لإنشاء واحد.",
+    "questionNumber": "السؤال #{{n}}",
+    "questionText": "السؤال",
+    "questionTextPlaceholder": "أدخل نص السؤال",
+    "type": "النوع",
+    "singleChoice": "اختيار واحد",
+    "multipleChoice": "اختيارات متعددة",
+    "trueFalse": "صح/خطأ",
+    "shortText": "نص قصير",
+    "longText": "نص طويل",
+    "fileUpload": "رفع ملف",
+    "points": "الدرجات",
+    "options": "خيارات الإجابة",
+    "noOptions": "لا توجد خيارات. اضغط \"إضافة خيار\" لإنشاء واحد.",
+    "optionPlaceholder": "خيار {{n}}",
+    "addOption": "إضافة خيار",
+    "correctAnswer": "الإجابة الصحيحة",
+    "selectCorrect": "اختر الإجابة الصحيحة",
+    "isCorrect": "صحيح",
+    "true": "صح",
+    "false": "خطأ",
+    "fileUploadInstructions": "سؤال رفع ملف",
+    "fileUploadHint": "سيتمكن المرشحون من رفع ملف كإجابة.",
+    "totalPoints": "المجموع: {{count}} درجة"
+  },
   "validation": {
     "companyRequired": "الشركة مطلوبة",
     "titleRequired": "العنوان يجب أن يكون 3 أحرف على الأقل",
     "titleMax": "العنوان يجب ألا يتجاوز 150 حرفاً",
     "descriptionMax": "الوصف يجب ألا يتجاوز 2000 حرف",
     "durationMin": "المدة يجب أن تكون دقيقة واحدة على الأقل",
-    "passingScoreMin": "درجة النجاح لا يمكن أن تكون سالبة"
+    "durationMax": "المدة يجب ألا تتجاوز 1440 دقيقة",
+    "passingScoreMin": "درجة النجاح لا يمكن أن تكون سالبة",
+    "passingScoreExceedsTotal": "درجة النجاح لا يمكن أن تتجاوز إجمالي النقاط",
+    "activeRequiresScore": "أضف أسئلة ذات درجات قبل تفعيل الاختبار",
+    "questionTextRequired": "نص السؤال مطلوب",
+    "questionTextMax": "نص السؤال يجب ألا يتجاوز 2000 حرف",
+    "optionTextRequired": "نص الخيار مطلوب",
+    "optionTextMax": "نص الخيار يجب ألا يتجاوز 500 حرف",
+    "pointsMin": "الدرجات لا يمكن أن تكون سالبة",
+    "pointsMax": "الدرجات لا يمكن أن تتجاوز 1000",
+    "minTwoOptions": "أسئلة الاختيار تتطلب خيارين على الأقل",
+    "singleChoiceOneCorrect": "أسئلة الاختيار الواحد تتطلب إجابة صحيحة واحدة بالضبط",
+    "multipleChoiceAtLeastOneCorrect": "أسئلة الاختيارات المتعددة تتطلب إجابة صحيحة واحدة على الأقل",
+    "trueFalseOptions": "أسئلة صح/خطأ تتطلب خياري الصح والخطأ مع إجابة صحيحة واحدة",
+    "uniqueOptions": "يجب أن يكون نص الخيارات فريداً ضمن السؤال",
+    "uniqueOptionOrder": "يجب أن يكون ترتيب الخيارات فريداً ضمن السؤال"
   }
 }
