@@ -41,10 +41,11 @@
     "submitting": "Saving...",
     "tabs": { "members": "Members", "invitations": "Invitations" },
     "roles": {
-      "admin": "Admin",
+      "owner": "Owner",
+      "companyAdmin": "Company admin",
       "recruiter": "Recruiter",
       "interviewer": "Interviewer",
-      "member": "Member"
+      "reviewer": "Reviewer"
     },
     "statusOptions": {
       "active": "Active",

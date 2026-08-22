@@ -26,10 +26,10 @@ const invitationSchema = z.object({
 export type InvitationFormValues = z.infer<typeof invitationSchema>
 
 const roleOptions: Option[] = [
-  { value: "company_admin", label: "team.roles.admin" },
+  { value: "company_admin", label: "team.roles.companyAdmin" },
   { value: "recruiter", label: "team.roles.recruiter" },
   { value: "interviewer", label: "team.roles.interviewer" },
-  { value: "reviewer", label: "team.roles.member" },
+  { value: "reviewer", label: "team.roles.reviewer" },
 ]
 
 export default function InvitationForm({

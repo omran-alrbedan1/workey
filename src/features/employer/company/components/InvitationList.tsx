@@ -43,6 +43,7 @@ export default function InvitationList({
       ) : (
         invitations.map((invitation) => {
           const status = keyOf(invitation.status, "pending")
+          const role = keyOf(invitation.company_role ?? invitation.role, "reviewer")
           return (
             <div key={invitation.id} className="flex items-center gap-4 px-5 py-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -54,7 +55,7 @@ export default function InvitationList({
                 </p>
                 <p className="truncate text-xs text-text-muted">
                   {t("team.roleLabel", {
-                    role: keyOf(invitation.company_role ?? invitation.role, ""),
+                    role: t(`team.roles.${role}`, { defaultValue: role }),
                   })}
                 </p>
               </div>

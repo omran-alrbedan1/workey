@@ -1,6 +1,11 @@
 import type { KeyValueField } from "@/lib/keyValue"
 
-export type CompanyMemberRole = "owner" | "admin" | "recruiter" | "interviewer" | "member"
+export type CompanyMemberRole =
+  | "owner"
+  | "company_admin"
+  | "recruiter"
+  | "interviewer"
+  | "reviewer"
 
 export interface CompanyMember {
   id: string | number

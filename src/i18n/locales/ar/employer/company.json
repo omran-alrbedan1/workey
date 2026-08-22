@@ -47,10 +47,11 @@
       "invitations": "الدعوات"
     },
     "roles": {
-      "admin": "مدير",
+      "owner": "المالك",
+      "companyAdmin": "مدير الشركة",
       "recruiter": "مسؤول توظيف",
       "interviewer": "مقابل",
-      "member": "عضو"
+      "reviewer": "مراجع"
     },
     "statusOptions": {
       "active": "نشط",

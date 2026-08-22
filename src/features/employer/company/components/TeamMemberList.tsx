@@ -18,6 +18,8 @@ import MemberRoleDialog from "./MemberRoleDialog"
 import MemberStatusDialog from "./MemberStatusDialog"
 import TransferOwnershipDialog from "./TransferOwnershipDialog"
 
+const DEFAULT_COMPANY_ROLE = "reviewer"
+
 export default function TeamMemberList({
   members,
   isLoading,
@@ -64,8 +66,7 @@ export default function TeamMemberList({
           <p className="px-6 py-8 text-center text-sm text-text-muted">{t("team.membersEmpty")}</p>
         ) : (
           members.map((member) => {
-            const role = keyOf(member.role, "member")
-            const status = keyOf(member.status, "active")
+            const role = keyOf(member.company_role ?? member.role, DEFAULT_COMPANY_ROLE)
             return (
               <div key={member.id} className="flex items-center gap-4 px-5 py-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -82,8 +83,8 @@ export default function TeamMemberList({
                   </p>
                   <p className="truncate text-xs text-text-muted">{member.email}</p>
                 </div>
-                <StatusBadge status={member.role} variant="soft" size="sm" />
-                <StatusBadge status={member.status} variant="soft" size="sm" />
+                <StatusBadge status={member.company_role ?? member.role} variant="soft" size="sm" />
+                <StatusBadge status={member.membership_status ?? member.status} variant="soft" size="sm" />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -129,7 +130,7 @@ export default function TeamMemberList({
       <MemberRoleDialog
         open={roleMember !== null}
         memberName={roleMember?.name ?? ""}
-        currentRole={keyOf(roleMember?.role, "member")}
+        currentRole={keyOf(roleMember?.company_role ?? roleMember?.role, DEFAULT_COMPANY_ROLE)}
         isPending={isUpdatingRole}
         onOpenChange={(open) => !open && setRoleMember(null)}
         onSubmit={async (input) => {
@@ -140,7 +141,7 @@ export default function TeamMemberList({
       <MemberStatusDialog
         open={statusMember !== null}
         memberName={statusMember?.name ?? ""}
-        currentStatus={keyOf(statusMember?.status, "active")}
+        currentStatus={keyOf(statusMember?.membership_status ?? statusMember?.status, "active")}
         isPending={isUpdatingStatus}
         onOpenChange={(open) => !open && setStatusMember(null)}
         onSubmit={async (input) => {

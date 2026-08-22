@@ -23,10 +23,10 @@ const roleSchema = z.object({ company_role: z.string().min(1) })
 type RoleFormValues = z.infer<typeof roleSchema>
 
 const roleOptions: Option[] = [
-  { value: "company_admin", label: "team.roles.admin" },
+  { value: "company_admin", label: "team.roles.companyAdmin" },
   { value: "recruiter", label: "team.roles.recruiter" },
   { value: "interviewer", label: "team.roles.interviewer" },
-  { value: "reviewer", label: "team.roles.member" },
+  { value: "reviewer", label: "team.roles.reviewer" },
 ]
 
 export default function MemberRoleDialog({

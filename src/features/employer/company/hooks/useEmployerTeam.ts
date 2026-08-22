@@ -31,6 +31,10 @@ export function useEmployerTeam() {
     void client.invalidateQueries({ queryKey: employerTeamKey })
   }
 
+  const showTeamError = (error: unknown) => {
+    showErrorToast(error, t("team.toasts.error", { defaultValue: "An error occurred" }))
+  }
+
   const updateRoleMutation = useMutation({
     mutationFn: ({ userId, input }: { userId: string | number; input: MemberRoleInput }) =>
       employerTeamService.updateMemberRole(userId, input),
@@ -38,8 +42,7 @@ export function useEmployerTeam() {
       invalidate()
       showSuccessToast(t("team.toasts.roleUpdated", { defaultValue: "Member role updated" }))
     },
-    onError: (error) =>
-      showErrorToast(t("team.toasts.error", { defaultValue: "An error occurred" })),
+    onError: showTeamError,
   })
 
   const updateStatusMutation = useMutation({
@@ -49,8 +52,7 @@ export function useEmployerTeam() {
       invalidate()
       showSuccessToast(t("team.toasts.statusUpdated", { defaultValue: "Member status updated" }))
     },
-    onError: (error) =>
-      showErrorToast(t("team.toasts.error", { defaultValue: "An error occurred" })),
+    onError: showTeamError,
   })
 
   const removeMemberMutation = useMutation({
@@ -59,8 +61,7 @@ export function useEmployerTeam() {
       invalidate()
       showSuccessToast(t("team.toasts.memberRemoved", { defaultValue: "Member removed" }))
     },
-    onError: (error) =>
-      showErrorToast(t("team.toasts.error", { defaultValue: "An error occurred" })),
+    onError: showTeamError,
   })
 
   const createInvitationMutation = useMutation({
@@ -70,8 +71,7 @@ export function useEmployerTeam() {
       invalidate()
       showSuccessToast(t("team.toasts.invitationSent", { defaultValue: "Invitation sent" }))
     },
-    onError: (error) =>
-      showErrorToast(t("team.toasts.error", { defaultValue: "An error occurred" })),
+    onError: showTeamError,
   })
 
   const resendInvitationMutation = useMutation({
@@ -82,8 +82,7 @@ export function useEmployerTeam() {
       invalidate()
       showSuccessToast(t("team.toasts.invitationResent", { defaultValue: "Invitation resent" }))
     },
-    onError: (error) =>
-      showErrorToast(t("team.toasts.error", { defaultValue: "An error occurred" })),
+    onError: showTeamError,
   })
 
   const revokeInvitationMutation = useMutation({
@@ -93,8 +92,7 @@ export function useEmployerTeam() {
       invalidate()
       showSuccessToast(t("team.toasts.invitationRevoked", { defaultValue: "Invitation revoked" }))
     },
-    onError: (error) =>
-      showErrorToast(t("team.toasts.error", { defaultValue: "An error occurred" })),
+    onError: showTeamError,
   })
 
   const transferOwnershipMutation = useMutation({
@@ -105,8 +103,7 @@ export function useEmployerTeam() {
         t("team.toasts.ownershipTransferred", { defaultValue: "Ownership transferred" }),
       )
     },
-    onError: (error) =>
-      showErrorToast(t("team.toasts.error", { defaultValue: "An error occurred" })),
+    onError: showTeamError,
   })
 
   return {
