@@ -3,9 +3,9 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import { Button } from "@/components/ui/button"
 import { ROUTES } from "@/config"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import EmployerJobsFilter from "../components/EmployerJobsFilter"
 import EmployerJobsTable from "../components/EmployerJobsTable"
 import { useEmployerJobs } from "../hooks/useEmployerJobs"
@@ -21,10 +21,9 @@ export default function EmployerJobsPage() {
 
   if (jobs.isError) {
     return (
-      <ErrorState
-        variant="network"
-        title={t("errors.title")}
-        description={t("errors.description")}
+      <EmployerFeatureError
+        title={t("title")}
+        error={jobs.error}
         retry={() => void jobs.refetch()}
       />
     )

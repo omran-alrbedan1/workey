@@ -60,6 +60,9 @@
   "detailsDescription": "View job posting details and manage applicants.",
   "editTitle": "Edit Job",
   "editDescription": "Update this job posting and save your changes.",
+  "overview": {
+    "applicationsCount": "{{count}} applications"
+  },
   "tabs": {
     "jobInformation": "Job Information",
     "applicants": "Applicants",

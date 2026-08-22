@@ -60,6 +60,9 @@
   "detailsDescription": "عرض تفاصيل الوظيفة وإدارة المتقدمين.",
   "editTitle": "تعديل الوظيفة",
   "editDescription": "حدّث إعلان الوظيفة واحفظ التغييرات.",
+  "overview": {
+    "applicationsCount": "{{count}} طلب"
+  },
   "tabs": {
     "jobInformation": "معلومات الوظيفة",
     "applicants": "المتقدمون",

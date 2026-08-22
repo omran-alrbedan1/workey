@@ -65,18 +65,17 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       client.invalidateQueries({ queryKey: ["employer", "dashboard"] }),
     ])
 
+  const showJobError = (error: unknown) => {
+    showErrorToast(error, t("errors.description"))
+  }
+
   const publishMutation = useMutation({
     mutationFn: employerJobsService.publish,
     onSuccess: async () => {
       await refresh()
       showSuccessToast(t("toasts.published"))
     },
-    onError: (error) => {
-      showErrorToast(
-        t("errors.title"),
-        error instanceof Error ? error.message : t("errors.description"),
-      )
-    },
+    onError: showJobError,
   })
   const closeMutation = useMutation({
     mutationFn: employerJobsService.close,
@@ -84,12 +83,7 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       await refresh()
       showSuccessToast(t("toasts.closed"))
     },
-    onError: (error) => {
-      showErrorToast(
-        t("errors.title"),
-        error instanceof Error ? error.message : t("errors.description"),
-      )
-    },
+    onError: showJobError,
   })
   const deleteMutation = useMutation({
     mutationFn: employerJobsService.remove,
@@ -97,12 +91,7 @@ export function useEmployerJobs(filters: EmployerJobFilterForm = EMPLOYER_JOB_FI
       await refresh()
       showSuccessToast(t("toasts.deleted"))
     },
-    onError: (error) => {
-      showErrorToast(
-        t("errors.title"),
-        error instanceof Error ? error.message : t("errors.description"),
-      )
-    },
+    onError: showJobError,
   })
 
   return { ...query, page, setPage, publishMutation, closeMutation, deleteMutation }

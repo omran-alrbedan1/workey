@@ -38,6 +38,15 @@ function getValue(v: unknown): string {
   return valueOf(v)
 }
 
+function canPublishJob(job: EmployerJob): boolean {
+  return getKey(job.status) === "draft"
+}
+
+function canCloseJob(job: EmployerJob): boolean {
+  const statusKey = getKey(job.status)
+  return statusKey === "published" || statusKey === "open"
+}
+
 interface EmployerJobMobileCardProps {
   job: EmployerJob
   isUpdating: boolean
@@ -60,7 +69,6 @@ function EmployerJobMobileCard({
   onDelete,
 }: EmployerJobMobileCardProps) {
   const { t, i18n } = useTranslation("employerJobs")
-  const statusKey = getKey(job.status) || "draft"
 
   return (
     <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
@@ -72,7 +80,7 @@ function EmployerJobMobileCard({
           <h3 className="truncate font-semibold text-text-primary">{job.title}</h3>
           <p className="truncate text-xs text-text-muted">{job.location || "-"}</p>
         </div>
-        <StatusBadge status={statusKey} variant="soft" />
+        <StatusBadge status={job.status ?? undefined} variant="soft" />
       </div>
 
       <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3 text-xs text-text-secondary">
@@ -105,12 +113,12 @@ function EmployerJobMobileCard({
             <DropdownMenuItem onSelect={() => onApplicants(job)}>
               <UsersRound /> {t("actions.applicants")}
             </DropdownMenuItem>
-            {statusKey === "draft" && (
+            {canPublishJob(job) && (
               <DropdownMenuItem onSelect={() => onPublish(job)}>
                 <Send /> {t("actions.publish")}
               </DropdownMenuItem>
             )}
-            {statusKey !== "closed" && statusKey !== "draft" && (
+            {canCloseJob(job) && (
               <DropdownMenuItem onSelect={() => onClose(job)}>
                 <Square /> {t("actions.close")}
               </DropdownMenuItem>
@@ -203,7 +211,7 @@ export default function EmployerJobsTable({
     {
       key: "status",
       header: t("columns.status"),
-      cell: (job) => <StatusBadge status={job.status ?? "draft"} variant="soft" />,
+      cell: (job) => <StatusBadge status={job.status ?? undefined} variant="soft" />,
     },
     { key: "type", header: t("columns.type"), cell: (job) => getValue(job.employment_type) },
     {
@@ -242,12 +250,12 @@ export default function EmployerJobsTable({
               <DropdownMenuItem onSelect={() => handleApplicants(job)}>
                 <UsersRound /> {t("actions.applicants")}
               </DropdownMenuItem>
-              {(getKey(job.status) || "draft") === "draft" && (
+              {canPublishJob(job) && (
                 <DropdownMenuItem onSelect={() => handlePublish(job)}>
                   <Send /> {t("actions.publish")}
                 </DropdownMenuItem>
               )}
-              {getKey(job.status) !== "closed" && getKey(job.status) !== "draft" && (
+              {canCloseJob(job) && (
                 <DropdownMenuItem onSelect={() => handleClose(job)}>
                   <Square /> {t("actions.close")}
                 </DropdownMenuItem>

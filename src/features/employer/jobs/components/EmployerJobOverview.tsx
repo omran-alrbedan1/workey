@@ -59,10 +59,11 @@ function InfoRow({
 
 export default function EmployerJobOverview({ job, showSkills = true }: EmployerJobOverviewProps) {
   const { t } = useTranslation("employerJobs")
+  const statusKey = getKey(job.status)
+  const statusLabel = getValue(job.status) || statusKey || "-"
 
   return (
     <div className="space-y-6">
-      {/* Job Info Card */}
       <Card className="overflow-hidden border-border bg-background-card shadow-card">
         <CardHeader className="border-b border-border bg-gradient-to-r from-primary/5 via-primary/[0.02] to-transparent pb-4">
           <div className="flex items-start justify-between gap-4">
@@ -79,16 +80,16 @@ export default function EmployerJobOverview({ job, showSkills = true }: Employer
               variant="outline"
               className={cn(
                 "text-xs font-semibold uppercase tracking-wider",
-                getKey(job.status) === "published" || getKey(job.status) === "open"
+                statusKey === "published" || statusKey === "open"
                   ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-                  : getKey(job.status) === "draft"
+                  : statusKey === "draft"
                     ? "bg-gray-100 text-gray-700 border-gray-200"
-                    : getKey(job.status) === "closed"
+                    : statusKey === "closed"
                       ? "bg-rose-100 text-rose-800 border-rose-200"
                       : "bg-blue-100 text-blue-800 border-blue-200",
               )}
             >
-              {getValue(job.status) || "draft"}
+              {statusLabel}
             </Badge>
           </div>
         </CardHeader>
@@ -153,7 +154,7 @@ export default function EmployerJobOverview({ job, showSkills = true }: Employer
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-primary" />
                 <span>
-                  {t("fields.applicationDeadline")}:{" "}
+                  {t("fields.applicationDeadline")}: {" "}
                   {new Date(job.application_deadline).toLocaleDateString()}
                 </span>
               </div>
@@ -161,7 +162,7 @@ export default function EmployerJobOverview({ job, showSkills = true }: Employer
             {job.applications_count != null && (
               <div className="flex items-center gap-1.5">
                 <Eye className="h-3.5 w-3.5 text-primary" />
-                <span>{job.applications_count} applicants</span>
+                <span>{t("overview.applicationsCount", { count: job.applications_count })}</span>
               </div>
             )}
           </div>
@@ -214,7 +215,6 @@ export default function EmployerJobOverview({ job, showSkills = true }: Employer
         </CardContent>
       </Card>
 
-      {/* Skills Card */}
       {showSkills && job.skills && job.skills.length > 0 ? (
         <Card className="border-border bg-background-card shadow-card">
           <CardHeader className="border-b border-border pb-3">

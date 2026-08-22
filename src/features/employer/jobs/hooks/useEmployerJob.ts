@@ -20,6 +20,11 @@ export function useEmployerJob(id?: string | number) {
     enabled: Boolean(id),
     retry: 1,
   })
+
+  const showJobError = (error: unknown, fallback: string) => {
+    showErrorToast(error, fallback)
+  }
+
   const updateMutation = useMutation({
     mutationFn: (input: EmployerJobInput) => employerJobsService.update(id!, input),
     onSuccess: async (job) => {
@@ -29,11 +34,7 @@ export function useEmployerJob(id?: string | number) {
       navigate(ROUTES.employer.jobs)
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        showErrorToast(t("errors.editTitle"), error.message)
-      } else {
-        showErrorToast(t("errors.editTitle"), t("errors.editDescription"))
-      }
+      showJobError(error, t("errors.editDescription"))
     },
   })
   const refreshJob = () =>
@@ -49,10 +50,7 @@ export function useEmployerJob(id?: string | number) {
       showSuccessToast(t("toasts.skillsAttached"))
     },
     onError: (error) => {
-      showErrorToast(
-        t("errors.title"),
-        error instanceof Error ? error.message : t("errors.description"),
-      )
+      showJobError(error, t("errors.description"))
     },
   })
   const detachSkillMutation = useMutation({
@@ -62,10 +60,7 @@ export function useEmployerJob(id?: string | number) {
       showSuccessToast(t("toasts.skillDetached"))
     },
     onError: (error) => {
-      showErrorToast(
-        t("errors.title"),
-        error instanceof Error ? error.message : t("errors.description"),
-      )
+      showJobError(error, t("errors.description"))
     },
   })
 
@@ -88,10 +83,7 @@ export function useEmployerJob(id?: string | number) {
       showSuccessToast(t("screeningQuestions.toasts.created"))
     },
     onError: (error) => {
-      showErrorToast(
-        t("errors.editTitle"),
-        error instanceof Error ? error.message : t("errors.editDescription"),
-      )
+      showJobError(error, t("errors.editDescription"))
     },
   })
 
@@ -108,10 +100,7 @@ export function useEmployerJob(id?: string | number) {
       showSuccessToast(t("screeningQuestions.toasts.updated"))
     },
     onError: (error) => {
-      showErrorToast(
-        t("errors.editTitle"),
-        error instanceof Error ? error.message : t("errors.editDescription"),
-      )
+      showJobError(error, t("errors.editDescription"))
     },
   })
 
@@ -123,10 +112,7 @@ export function useEmployerJob(id?: string | number) {
       showSuccessToast(t("screeningQuestions.toasts.deleted"))
     },
     onError: (error) => {
-      showErrorToast(
-        t("errors.editTitle"),
-        error instanceof Error ? error.message : t("errors.editDescription"),
-      )
+      showJobError(error, t("errors.editDescription"))
     },
   })
 

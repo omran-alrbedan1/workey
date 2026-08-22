@@ -2,9 +2,9 @@ import { Pencil } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import EmployerJobForm from "../components/EmployerJobForm"
 import EmployerJobScreeningQuestions from "../components/EmployerJobScreeningQuestions"
 import EmployerJobSkills from "../components/EmployerJobSkills"
@@ -27,9 +27,9 @@ export default function EmployerEditJobPage() {
 
   if (job.isError) {
     return (
-      <ErrorState
-        title={t("errors.editTitle")}
-        description={t("errors.editDescription")}
+      <EmployerFeatureError
+        title={t("editTitle")}
+        error={job.error}
         retry={() => void job.refetch()}
       />
     )

@@ -2,10 +2,10 @@ import { Briefcase, ListChecks, Users } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import { useEmployerJob } from "../hooks/useEmployerJob"
 import { useEmployerSkills } from "../hooks/useEmployerSkills"
 import { useJobApplicants } from "../hooks/useJobApplicants"
@@ -24,9 +24,9 @@ export default function EmployerJobDetailsPage() {
 
   if (job.isError) {
     return (
-      <ErrorState
-        title={t("errors.editTitle")}
-        description={t("errors.editDescription")}
+      <EmployerFeatureError
+        title={t("detailsTitle")}
+        error={job.error}
         retry={() => void job.refetch()}
       />
     )
@@ -62,7 +62,6 @@ export default function EmployerJobDetailsPage() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Job Information Tab */}
           <TabsContent value="information" className="space-y-6">
             <EmployerJobOverview job={job.data} showSkills={false} />
             <EmployerJobSkills
@@ -76,7 +75,6 @@ export default function EmployerJobDetailsPage() {
             />
           </TabsContent>
 
-          {/* Applicants Tab */}
           <TabsContent value="applicants">
             <EmployerJobApplicantsTab
               rows={applicants.rows}
@@ -91,7 +89,6 @@ export default function EmployerJobDetailsPage() {
             />
           </TabsContent>
 
-          {/* Screening Questions Tab */}
           <TabsContent value="screening">
             <EmployerJobScreeningQuestionsTab
               questions={job.screeningQuestions ?? []}
