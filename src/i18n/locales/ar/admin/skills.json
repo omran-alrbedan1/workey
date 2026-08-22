@@ -42,5 +42,7 @@
   "selectedFile": "المحدد: {{name}}",
   "cancel": "إلغاء",
   "upload": "رفع",
-  "deleteIcon": "حذف الأيقونة"
+  "deleteIcon": "حذف الأيقونة",
+  "uploadIconError": "تعذر رفع أيقونة المهارة.",
+  "deleteIconError": "تعذر حذف أيقونة المهارة."
 }

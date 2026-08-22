@@ -42,5 +42,7 @@
   "selectedFile": "Selected: {{name}}",
   "cancel": "Cancel",
   "upload": "Upload",
-  "deleteIcon": "Delete Icon"
+  "deleteIcon": "Delete Icon",
+  "uploadIconError": "Unable to upload the skill icon.",
+  "deleteIconError": "Unable to delete the skill icon."
 }

@@ -9,6 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { useState, useRef } from "react"
+import { showErrorToast } from "@/lib/toast"
 import { adminSkillsService } from "../services/adminSkills.service"
 
 interface SkillIconUploadProps {
@@ -54,7 +55,7 @@ export default function SkillIconUpload({
       setFile(null)
       setPreview(null)
     } catch (error) {
-      console.error("Failed to upload icon:", error)
+      showErrorToast(error, t("uploadIconError"))
     } finally {
       setIsUploading(false)
     }
@@ -68,7 +69,7 @@ export default function SkillIconUpload({
       onOpenChange(false)
       setPreview(null)
     } catch (error) {
-      console.error("Failed to delete icon:", error)
+      showErrorToast(error, t("deleteIconError"))
     } finally {
       setIsUploading(false)
     }
@@ -88,7 +89,6 @@ export default function SkillIconUpload({
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Preview */}
           <div className="flex justify-center">
             <div className="relative h-32 w-32 overflow-hidden rounded-lg border-2 border-dashed border-border">
               {preview ? (
@@ -105,7 +105,6 @@ export default function SkillIconUpload({
             </div>
           </div>
 
-          {/* File Input */}
           <div className="flex justify-center">
             <input
               ref={fileInputRef}
