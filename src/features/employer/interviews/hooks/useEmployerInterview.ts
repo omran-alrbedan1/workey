@@ -33,6 +33,18 @@ export function useEmployerInterview(interviewId?: string | number) {
     },
   })
 
+  // Inline "private notes" save from the HR assistance panel — stays on the page.
+  const noteMutation = useMutation({
+    mutationFn: (internalNote: string) =>
+      employerInterviewsService.update(interviewId!, { internal_note: internalNote }),
+    onSuccess: async () => {
+      await client.invalidateQueries({
+        queryKey: ["employer", "interviews", "detail", String(interviewId ?? "")],
+      })
+      showSuccessToast(t("toasts.updated"))
+    },
+  })
+
   const deleteMutation = useMutation({
     mutationFn: () => employerInterviewsService.remove(interviewId!),
     onSuccess: async () => {
@@ -99,6 +111,7 @@ export function useEmployerInterview(interviewId?: string | number) {
   return {
     ...query,
     updateMutation,
+    noteMutation,
     rescheduleMutation,
     deleteMutation,
     cancelMutation,

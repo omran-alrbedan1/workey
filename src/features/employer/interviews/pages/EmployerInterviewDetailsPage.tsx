@@ -1,20 +1,25 @@
-import { useState } from "react"
-import type { ElementType } from "react"
+import { useEffect, useState } from "react"
+import type { ElementType, ReactNode } from "react"
 import {
+  Ban,
+  Briefcase,
   Calendar,
   CalendarSync,
   CheckCircle,
   ClipboardCheck,
   Clock,
-  FileText,
+  ExternalLink,
+  HelpCircle,
   History,
   ListChecks,
   MapPin,
-  Ban,
   MoreHorizontal,
-  UserX,
+  Plus,
+  StickyNote,
   UserRound,
+  UserX,
   Video,
+  X,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
@@ -30,19 +35,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
 import { ROUTES } from "@/config"
+import type { KeyValueField } from "@/lib/keyValue"
+import { showErrorToast } from "@/lib/toast"
 import { cn } from "@/lib/utils"
 import CompleteInterviewDialog from "../components/CompleteInterviewDialog"
 import AttendanceInterviewDialog from "../components/AttendanceInterviewDialog"
 import CancelInterviewDialog from "../components/CancelInterviewDialog"
-import EvaluateInterviewDialog from "../components/EvaluateInterviewDialog"
+import InterviewEvaluationForm from "../components/InterviewEvaluationForm"
 import NoShowInterviewDialog from "../components/NoShowInterviewDialog"
 import RescheduleInterviewDialog from "../components/RescheduleInterviewDialog"
-import VideoSessionSetup from "../components/VideoSessionSetup"
+import VideoInterviewSection from "../components/VideoInterviewSection"
 import { useEmployerInterview } from "../hooks/useEmployerInterview"
 import type {
+  ApplicationSnapshotProfile,
+} from "@/features/employer/applicants/types/employerApplicants.types"
+import type {
+  EmployerInterview,
+  EmployerInterviewEvaluation,
+  EmployerInterviewEvaluateInput,
   EmployerInterviewHistoryItem,
   EmployerInterviewScheduleHistoryItem,
 } from "../types/employerInterviews.types"
@@ -67,11 +81,9 @@ export default function EmployerInterviewDetailsPage() {
   const interview = useEmployerInterview(id)
   const [rescheduleOpen, setRescheduleOpen] = useState(false)
   const [completeOpen, setCompleteOpen] = useState(false)
-  const [evaluateOpen, setEvaluateOpen] = useState(false)
   const [cancelOpen, setCancelOpen] = useState(false)
   const [attendanceOpen, setAttendanceOpen] = useState(false)
   const [noShowOpen, setNoShowOpen] = useState(false)
-  const [videoOpen, setVideoOpen] = useState(false)
 
   if (interview.isPending) {
     return (
@@ -83,8 +95,8 @@ export default function EmployerInterviewDetailsPage() {
           backButtonLabel={t("back")}
           onBackClick={() => navigate(ROUTES.employer.interviews)}
         />
-        <Skeleton className="h-32 w-full rounded-xl" />
-        <Skeleton className="h-64 w-full rounded-xl" />
+        <Skeleton className="h-72 w-full rounded-xl" />
+        <Skeleton className="h-96 w-full rounded-xl" />
       </div>
     )
   }
@@ -122,10 +134,9 @@ export default function EmployerInterviewDetailsPage() {
       ? Math.round((new Date(endAt).getTime() - new Date(startAt).getTime()) / 60_000)
       : data.duration_minutes
   const evaluation = data.evaluation
-  const note = data.internal_note || data.note || data.notes
-  const hasNotes = Boolean(note || data.candidate_message || data.attendance_note || data.completion_note || data.cancellation_reason)
-  const hasEvaluation = Boolean(evaluation)
   const hasHistory = Boolean(data.status_history?.length || data.schedule_history?.length)
+  const applicationId = data.job_application_id ?? data.application_id ?? data.job_application?.id
+  const snapshotProfile = data.job_application?.submitted_snapshot?.profile
 
   return (
     <div className="space-y-6">
@@ -142,198 +153,65 @@ export default function EmployerInterviewDetailsPage() {
             canReschedule={canReschedule}
             canRecordAttendance={canRecordAttendance}
             canComplete={canComplete}
-            canEvaluate={canEvaluate}
             canMarkNoShow={canMarkNoShow}
             canCancel={canCancel}
             onReschedule={() => setRescheduleOpen(true)}
             onRecordAttendance={() => setAttendanceOpen(true)}
             onComplete={() => setCompleteOpen(true)}
-            onEvaluate={() => setEvaluateOpen(true)}
             onMarkNoShow={() => setNoShowOpen(true)}
             onCancel={() => setCancelOpen(true)}
           />
         }
       />
 
-      <section className="rounded-lg border border-border bg-background-card p-4 shadow-card">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className={cn("flex min-w-0 items-start gap-3", isRtl && "flex-row-reverse text-end")}>
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              <UserRound className="h-5 w-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="truncate text-lg font-semibold text-text-primary">
-                  {interviewCandidateName(data, t("unknownCandidate"))}
-                </h2>
-                <StatusBadge
-                  status={statusKey}
-                  label={interviewValue(data.status)}
-                  variant="soft"
-                />
-              </div>
-              <p className="mt-1 text-sm text-text-muted">
-                {interviewJobTitle(data) || interviewValue(interviewType)}
-              </p>
-            </div>
-          </div>
-          {canJoinVideo && (
-            <Button onClick={() => setVideoOpen(true)} className="shrink-0">
-              <Video className="h-4 w-4" />
-              {t("video.join")}
-            </Button>
-          )}
+      {canJoinVideo && <VideoInterviewSection interviewId={data.id} />}
+
+      <InterviewInfoSection
+        isRtl={isRtl}
+        data={data}
+        statusKey={statusKey}
+        interviewType={interviewType}
+        interviewMode={interviewMode}
+        isOnline={isOnline}
+        startAt={startAt}
+        durationMinutes={durationMinutes}
+      />
+
+      <section className="space-y-4">
+        <div className={cn(isRtl && "text-end")}>
+          <h2 className="text-lg font-semibold text-text-primary">{t("hrAssistance.title")}</h2>
+          <p className="mt-0.5 text-sm text-text-muted">{t("hrAssistance.description")}</p>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <PrivateNotesCard
+            savedNote={data.internal_note || data.note || data.notes}
+            isSaving={interview.noteMutation.isPending}
+            onSave={(value) => interview.noteMutation.mutateAsync(value)}
+          />
+          <PreparedQuestionsCard isRtl={isRtl} />
+          <CandidateContextCard
+            isRtl={isRtl}
+            data={data}
+            profile={snapshotProfile}
+            applicationId={applicationId}
+          />
+          <EvaluationCard
+            isRtl={isRtl}
+            evaluation={evaluation}
+            canEvaluate={canEvaluate}
+            isSubmitting={interview.evaluateMutation.isPending}
+            onSubmit={(input) => interview.evaluateMutation.mutateAsync(input)}
+          />
         </div>
       </section>
 
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList
-          className={cn("flex h-auto flex-wrap", isRtl ? "justify-end" : "justify-start")}
-        >
-          <TabsTrigger value="overview" className="gap-2">
-            <Calendar className="h-4 w-4" />
-            {t("tabs.overview")}
-          </TabsTrigger>
-          {hasNotes && (
-            <TabsTrigger value="notes" className="gap-2">
-              <FileText className="h-4 w-4" />
-              {t("tabs.notes")}
-            </TabsTrigger>
-          )}
-          {hasEvaluation && (
-            <TabsTrigger value="evaluation" className="gap-2">
-              <ClipboardCheck className="h-4 w-4" />
-              {t("tabs.evaluation")}
-            </TabsTrigger>
-          )}
-          {hasHistory && (
-            <TabsTrigger value="history" className="gap-2">
-              <History className="h-4 w-4" />
-              {t("tabs.history")}
-            </TabsTrigger>
-          )}
-        </TabsList>
-
-        <TabsContent value="overview">
-          <section className="grid gap-4 rounded-lg border border-border bg-background-card p-5 shadow-card sm:grid-cols-2">
-            <DetailItem
-              isRtl={isRtl}
-              icon={Calendar}
-              label={t("columns.scheduled")}
-              value={
-                startAt
-                  ? new Date(startAt).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })
-                  : "-"
-              }
-            />
-            <DetailItem
-              isRtl={isRtl}
-              icon={Clock}
-              label={t("columns.type")}
-              value={`${interviewValue(interviewType)} - ${durationMinutes ?? "-"}m`}
-            />
-            <DetailItem
-              isRtl={isRtl}
-              icon={isOnline ? Video : MapPin}
-              label={t("schedule.mode")}
-              value={
-                isOnline
-                  ? data.meeting_link || t("interviewModes.video")
-                  : data.location_text || data.location || interviewValue(interviewMode)
-              }
-              className="sm:col-span-2"
-            />
-            {data.candidate_confirmation_status && (
-              <DetailItem
-                isRtl={isRtl}
-                icon={CheckCircle}
-                label={t("details.candidateConfirmation")}
-                value={interviewValue(data.candidate_confirmation_status)}
-              />
-            )}
-            {data.candidate_attendance_status && (
-              <DetailItem
-                isRtl={isRtl}
-                icon={UserRound}
-                label={t("details.candidateAttendance")}
-                value={interviewValue(data.candidate_attendance_status)}
-              />
-            )}
-            {data.interviewer_attendance_status && (
-              <DetailItem
-                isRtl={isRtl}
-                icon={ListChecks}
-                label={t("details.interviewerAttendance")}
-                value={interviewValue(data.interviewer_attendance_status)}
-              />
-            )}
-            {(data.confirmed_at || data.attendance_recorded_at || data.cancelled_at || data.completed_at) && (
-              <div className={cn(
-                "grid gap-2 rounded-lg border border-border bg-muted/20 p-3 text-xs text-text-muted sm:col-span-2 sm:grid-cols-2",
-                isRtl && "text-end",
-              )}>
-                {data.confirmed_at && <span>{t("details.confirmedAt")}: {new Date(data.confirmed_at).toLocaleString()}</span>}
-                {data.attendance_recorded_at && <span>{t("details.attendanceAt")}: {new Date(data.attendance_recorded_at).toLocaleString()}</span>}
-                {data.cancelled_at && <span>{t("details.cancelledAt")}: {new Date(data.cancelled_at).toLocaleString()}</span>}
-                {data.completed_at && <span>{t("details.completedAt")}: {new Date(data.completed_at).toLocaleString()}</span>}
-              </div>
-            )}
-          </section>
-        </TabsContent>
-
-        {hasNotes && (
-          <TabsContent value="notes">
-            <section className="space-y-4 rounded-lg border border-border bg-background-card p-5 shadow-card">
-              {note && <TextBlock isRtl={isRtl} label={t("details.notes")} value={note} />}
-              {data.candidate_message && <TextBlock isRtl={isRtl} label={t("details.candidateMessage")} value={data.candidate_message} />}
-              {data.attendance_note && <TextBlock isRtl={isRtl} label={t("details.attendanceNote")} value={data.attendance_note} />}
-              {data.completion_note && <TextBlock isRtl={isRtl} label={t("details.completionNote")} value={data.completion_note} />}
-              {data.cancellation_reason && <TextBlock isRtl={isRtl} label={t("details.cancellationReason")} value={data.cancellation_reason} />}
-            </section>
-          </TabsContent>
-        )}
-
-        {hasEvaluation && (
-          <TabsContent value="evaluation">
-            <section className="space-y-4 rounded-lg border border-border bg-background-card p-5 shadow-card">
-              {evaluation?.recommendation && (
-                <TextBlock
-                  isRtl={isRtl}
-                  label={t("details.recommendation")}
-                  value={interviewValue(evaluation.recommendation)}
-                />
-              )}
-              {evaluation?.overall_comment && (
-                <TextBlock isRtl={isRtl} label={t("details.overallComment")} value={evaluation.overall_comment} />
-              )}
-              {evaluation?.items && evaluation.items.length > 0 ? (
-                <div className="space-y-2">
-                  <p className={cn("text-xs font-medium text-text-muted", isRtl && "text-end")}>{t("details.evaluationItems")}</p>
-                  {evaluation.items.map((item, i) => (
-                    <div key={i} className="rounded-lg border border-border p-3">
-                      <div className={cn("flex items-center justify-between", isRtl && "flex-row-reverse text-end")}>
-                        <span className="text-sm font-medium text-text-primary">{item.criterion}</span>
-                        <span className="text-sm font-semibold text-primary">{item.score}/5</span>
-                      </div>
-                      {item.comment && <p className={cn("mt-1 text-xs text-text-muted", isRtl && "text-end")}>{item.comment}</p>}
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </section>
-          </TabsContent>
-        )}
-
-        {hasHistory && (
-          <TabsContent value="history">
-            <InterviewHistoryFromResponse
-              isRtl={isRtl}
-              statusHistory={data.status_history ?? []}
-              scheduleHistory={data.schedule_history ?? []}
-            />
-          </TabsContent>
-        )}
-      </Tabs>
+      {hasHistory && (
+        <InterviewHistoryFromResponse
+          isRtl={isRtl}
+          statusHistory={data.status_history ?? []}
+          scheduleHistory={data.schedule_history ?? []}
+        />
+      )}
 
       <RescheduleInterviewDialog
         interviewId={data.id}
@@ -371,17 +249,6 @@ export default function EmployerInterviewDetailsPage() {
         onOpenChange={setCancelOpen}
         onSubmit={(input) => interview.cancelMutation.mutateAsync(input)}
       />
-      <EvaluateInterviewDialog
-        open={evaluateOpen}
-        isPending={interview.evaluateMutation.isPending}
-        onOpenChange={setEvaluateOpen}
-        onSubmit={(input) => interview.evaluateMutation.mutateAsync(input)}
-      />
-      <VideoSessionSetup
-        interviewId={data.id}
-        open={videoOpen}
-        onOpenChange={setVideoOpen}
-      />
     </div>
   )
 }
@@ -391,13 +258,11 @@ function InterviewActionsMenu({
   canReschedule,
   canRecordAttendance,
   canComplete,
-  canEvaluate,
   canMarkNoShow,
   canCancel,
   onReschedule,
   onRecordAttendance,
   onComplete,
-  onEvaluate,
   onMarkNoShow,
   onCancel,
 }: {
@@ -405,13 +270,11 @@ function InterviewActionsMenu({
   canReschedule: boolean
   canRecordAttendance: boolean
   canComplete: boolean
-  canEvaluate: boolean
   canMarkNoShow: boolean
   canCancel: boolean
   onReschedule: () => void
   onRecordAttendance: () => void
   onComplete: () => void
-  onEvaluate: () => void
   onMarkNoShow: () => void
   onCancel: () => void
 }) {
@@ -420,7 +283,6 @@ function InterviewActionsMenu({
     canReschedule ||
     canRecordAttendance ||
     canComplete ||
-    canEvaluate ||
     canMarkNoShow ||
     canCancel
 
@@ -455,11 +317,6 @@ function InterviewActionsMenu({
             <CheckCircle /> {t("actions.complete")}
           </DropdownMenuItem>
         )}
-        {canEvaluate && (
-          <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-end")} onSelect={onEvaluate}>
-            <ClipboardCheck /> {t("actions.evaluate")}
-          </DropdownMenuItem>
-        )}
         {canMarkNoShow && (
           <DropdownMenuItem className={cn(isRtl && "flex-row-reverse text-end")} onSelect={onMarkNoShow}>
             <UserX /> {t("actions.noShow")}
@@ -475,6 +332,414 @@ function InterviewActionsMenu({
         )}
       </DropdownMenuContent>
     </DropdownMenu>
+  )
+}
+
+function InterviewInfoSection({
+  isRtl,
+  data,
+  statusKey,
+  interviewType,
+  interviewMode,
+  isOnline,
+  startAt,
+  durationMinutes,
+}: {
+  isRtl: boolean
+  data: EmployerInterview
+  statusKey: string
+  interviewType?: KeyValueField
+  interviewMode?: KeyValueField
+  isOnline: boolean
+  startAt?: string | null
+  durationMinutes?: number
+}) {
+  const { t } = useTranslation("employerInterviews")
+
+  return (
+    <section className="rounded-lg border border-border bg-background-card p-5 shadow-card">
+      <div className={cn("mb-4 flex flex-wrap items-center justify-between gap-3", isRtl && "flex-row-reverse text-end")}>
+        <h2 className="text-lg font-semibold text-text-primary">{t("details.infoTitle")}</h2>
+        <StatusBadge status={statusKey} label={interviewValue(data.status)} variant="soft" />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <DetailItem
+          isRtl={isRtl}
+          icon={UserRound}
+          label={t("columns.candidate")}
+          value={interviewCandidateName(data, t("unknownCandidate"))}
+        />
+        <DetailItem
+          isRtl={isRtl}
+          icon={Briefcase}
+          label={t("scope.job")}
+          value={interviewJobTitle(data)}
+        />
+        <DetailItem
+          isRtl={isRtl}
+          icon={Clock}
+          label={t("columns.type")}
+          value={`${interviewValue(interviewType)}${durationMinutes ? ` - ${durationMinutes}m` : ""}`}
+        />
+        <DetailItem
+          isRtl={isRtl}
+          icon={Calendar}
+          label={t("columns.scheduled")}
+          value={
+            startAt
+              ? new Date(startAt).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })
+              : "-"
+          }
+        />
+        <DetailItem
+          isRtl={isRtl}
+          icon={isOnline ? Video : MapPin}
+          label={t("schedule.mode")}
+          value={
+            isOnline
+              ? data.meeting_link || t("interviewModes.video")
+              : data.location_text || data.location || interviewValue(interviewMode)
+          }
+        />
+        {data.candidate_confirmation_status && (
+          <DetailItem
+            isRtl={isRtl}
+            icon={CheckCircle}
+            label={t("details.candidateConfirmation")}
+            value={interviewValue(data.candidate_confirmation_status)}
+          />
+        )}
+        {data.candidate_attendance_status && (
+          <DetailItem
+            isRtl={isRtl}
+            icon={UserRound}
+            label={t("details.candidateAttendance")}
+            value={interviewValue(data.candidate_attendance_status)}
+          />
+        )}
+        {data.interviewer_attendance_status && (
+          <DetailItem
+            isRtl={isRtl}
+            icon={ListChecks}
+            label={t("details.interviewerAttendance")}
+            value={interviewValue(data.interviewer_attendance_status)}
+          />
+        )}
+      </div>
+      {(data.confirmed_at || data.attendance_recorded_at || data.cancelled_at || data.completed_at) && (
+        <div className={cn(
+          "mt-4 grid gap-2 rounded-lg border border-border bg-muted/20 p-3 text-xs text-text-muted sm:grid-cols-2",
+          isRtl && "text-end",
+        )}>
+          {data.confirmed_at && <span>{t("details.confirmedAt")}: {new Date(data.confirmed_at).toLocaleString()}</span>}
+          {data.attendance_recorded_at && <span>{t("details.attendanceAt")}: {new Date(data.attendance_recorded_at).toLocaleString()}</span>}
+          {data.cancelled_at && <span>{t("details.cancelledAt")}: {new Date(data.cancelled_at).toLocaleString()}</span>}
+          {data.completed_at && <span>{t("details.completedAt")}: {new Date(data.completed_at).toLocaleString()}</span>}
+        </div>
+      )}
+      {(data.candidate_message || data.attendance_note || data.completion_note || data.cancellation_reason) && (
+        <div className="mt-4 space-y-3 border-t border-border pt-4">
+          {data.candidate_message && (
+            <TextBlock isRtl={isRtl} label={t("details.candidateMessage")} value={data.candidate_message} />
+          )}
+          {data.attendance_note && (
+            <TextBlock isRtl={isRtl} label={t("details.attendanceNote")} value={data.attendance_note} />
+          )}
+          {data.completion_note && (
+            <TextBlock isRtl={isRtl} label={t("details.completionNote")} value={data.completion_note} />
+          )}
+          {data.cancellation_reason && (
+            <TextBlock isRtl={isRtl} label={t("details.cancellationReason")} value={data.cancellation_reason} />
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
+
+function PrivateNotesCard({
+  savedNote,
+  isSaving,
+  onSave,
+}: {
+  savedNote?: string | null
+  isSaving: boolean
+  onSave: (value: string) => Promise<unknown>
+}) {
+  const { t } = useTranslation("employerInterviews")
+  const [draft, setDraft] = useState(savedNote ?? "")
+
+  useEffect(() => {
+    setDraft(savedNote ?? "")
+  }, [savedNote])
+
+  const dirty = draft !== (savedNote ?? "")
+
+  return (
+    <PanelCard icon={StickyNote} title={t("hrAssistance.privateNotes.title")} hint={t("hrAssistance.privateNotes.hint")}>
+      <Textarea
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
+        placeholder={t("hrAssistance.privateNotes.placeholder")}
+        rows={6}
+        disabled={isSaving}
+        className="resize-none"
+      />
+      <div className="flex justify-end">
+        <Button
+          size="sm"
+          disabled={!dirty || isSaving}
+          onClick={() => {
+            void onSave(draft).catch((error) => showErrorToast(error))
+          }}
+        >
+          {isSaving ? t("hrAssistance.privateNotes.saving") : t("hrAssistance.privateNotes.save")}
+        </Button>
+      </div>
+    </PanelCard>
+  )
+}
+
+function PreparedQuestionsCard({ isRtl }: { isRtl: boolean }) {
+  const { t } = useTranslation("employerInterviews")
+  const [questions, setQuestions] = useState<string[]>([])
+  const [draft, setDraft] = useState("")
+
+  const addQuestion = () => {
+    const value = draft.trim()
+    if (!value) return
+    setQuestions((current) => [...current, value])
+    setDraft("")
+  }
+
+  const removeQuestion = (index: number) => {
+    setQuestions((current) => current.filter((_, i) => i !== index))
+  }
+
+  return (
+    <PanelCard icon={HelpCircle} title={t("hrAssistance.preparedQuestions.title")}>
+      <div className={cn("flex gap-2", isRtl && "flex-row-reverse")}>
+        <Input
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault()
+              addQuestion()
+            }
+          }}
+          placeholder={t("hrAssistance.preparedQuestions.placeholder")}
+        />
+        <Button type="button" variant="secondary" size="icon" className="shrink-0" onClick={addQuestion} aria-label={t("hrAssistance.preparedQuestions.add")}>
+          <Plus className="h-4 w-4" />
+        </Button>
+      </div>
+      {questions.length === 0 ? (
+        <p className="text-sm text-text-muted">{t("hrAssistance.preparedQuestions.empty")}</p>
+      ) : (
+        <ul className="space-y-2">
+          {questions.map((question, index) => (
+            <li key={`${question}-${index}`} className={cn("flex items-start justify-between gap-2 rounded-md border border-border p-2", isRtl && "flex-row-reverse text-end")}>
+              <span className="text-sm text-text-primary">{question}</span>
+              <button
+                type="button"
+                onClick={() => removeQuestion(index)}
+                className="mt-0.5 shrink-0 text-text-muted transition-colors hover:text-destructive"
+                aria-label={t("common:remove")}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </PanelCard>
+  )
+}
+
+function CandidateContextCard({
+  isRtl,
+  data,
+  profile,
+  applicationId,
+}: {
+  isRtl: boolean
+  data: EmployerInterview
+  profile?: ApplicationSnapshotProfile
+  applicationId?: string | number
+}) {
+  const { t } = useTranslation("employerInterviews")
+  const navigate = useNavigate()
+  const identity = profile?.identity
+  const skills = (profile?.skills ?? []).filter((skill) => skill.name).slice(0, 8)
+  const experiences = [...(profile?.experiences ?? [])].slice(0, 2)
+  const education = [...(profile?.education ?? [])].slice(0, 2)
+  const summary = identity?.summary || profile?.professional?.summary
+  const headline = identity?.headline || profile?.professional?.headline
+  const location = profile?.location?.city || profile?.location?.country || profile?.location?.full_address
+  const hasContext = Boolean(headline || summary || location || skills.length || experiences.length || education.length)
+
+  return (
+    <PanelCard icon={UserRound} title={t("hrAssistance.candidateContext.title")}>
+      {!hasContext ? (
+        <p className="text-sm text-text-muted">{t("hrAssistance.candidateContext.empty")}</p>
+      ) : (
+        <div className="space-y-4">
+          {(headline || location) && (
+            <p className={cn("text-sm text-text-muted", isRtl && "text-end")}>
+              {[headline, location].filter(Boolean).join(" · ")}
+            </p>
+          )}
+          {summary && (
+            <ContextBlock isRtl={isRtl} label={t("hrAssistance.candidateContext.summary")}>
+              <p className="line-clamp-4 text-sm text-text-primary">{summary}</p>
+            </ContextBlock>
+          )}
+          {skills.length > 0 && (
+            <ContextBlock isRtl={isRtl} label={t("hrAssistance.candidateContext.skills")}>
+              <div className="flex flex-wrap gap-1.5">
+                {skills.map((skill, index) => (
+                  <span key={`${skill.slug}-${index}`} className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
+            </ContextBlock>
+          )}
+          {experiences.length > 0 && (
+            <ContextBlock isRtl={isRtl} label={t("hrAssistance.candidateContext.experience")}>
+              {experiences.map((experience, index) => (
+                <p key={index} className="text-sm text-text-primary">
+                  {[experience.title, experience.company].filter(Boolean).join(" - ")}
+                </p>
+              ))}
+            </ContextBlock>
+          )}
+          {education.length > 0 && (
+            <ContextBlock isRtl={isRtl} label={t("hrAssistance.candidateContext.education")}>
+              {education.map((item, index) => (
+                <p key={index} className="text-sm text-text-primary">
+                  {[item.degree, item.field_of_study, item.institution].filter(Boolean).join(" - ")}
+                </p>
+              ))}
+            </ContextBlock>
+          )}
+        </div>
+      )}
+      {applicationId && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="mt-auto w-full"
+          onClick={() => navigate(ROUTES.employer.applicantDetails(applicationId))}
+        >
+          {t("hrAssistance.candidateContext.viewApplication")}
+          <ExternalLink className="h-4 w-4" />
+        </Button>
+      )}
+    </PanelCard>
+  )
+}
+
+function EvaluationCard({
+  isRtl,
+  evaluation,
+  canEvaluate,
+  isSubmitting,
+  onSubmit,
+}: {
+  isRtl: boolean
+  evaluation?: EmployerInterviewEvaluation | null
+  canEvaluate: boolean
+  isSubmitting: boolean
+  onSubmit: (input: EmployerInterviewEvaluateInput) => Promise<unknown>
+}) {
+  const { t } = useTranslation("employerInterviews")
+
+  return (
+    <PanelCard icon={ClipboardCheck} title={t("hrAssistance.evaluation.title")}>
+      {evaluation ? (
+        <div className="space-y-3">
+          {evaluation.recommendation && (
+            <TextBlock isRtl={isRtl} label={t("details.recommendation")} value={interviewValue(evaluation.recommendation)} />
+          )}
+          {evaluation.overall_comment && (
+            <TextBlock isRtl={isRtl} label={t("details.overallComment")} value={evaluation.overall_comment} />
+          )}
+          {evaluation.items && evaluation.items.length > 0 ? (
+            <ContextBlock isRtl={isRtl} label={t("details.evaluationItems")}>
+              {evaluation.items.map((item, index) => (
+                <div key={item.id ?? index} className="rounded-md border border-border p-2">
+                  <div className={cn("flex items-center justify-between", isRtl && "flex-row-reverse text-end")}>
+                    <span className="text-sm font-medium text-text-primary">{item.criterion}</span>
+                    <span className="text-sm font-semibold text-primary">{item.score}/5</span>
+                  </div>
+                  {item.comment && <p className="mt-1 text-xs text-text-muted">{item.comment}</p>}
+                </div>
+              ))}
+            </ContextBlock>
+          ) : null}
+        </div>
+      ) : canEvaluate ? (
+        <InterviewEvaluationForm isPending={isSubmitting} onSubmit={onSubmit} />
+      ) : (
+        <p className="text-sm text-text-muted">{t("hrAssistance.evaluation.notAvailable")}</p>
+      )}
+    </PanelCard>
+  )
+}
+
+function PanelCard({
+  icon: Icon,
+  title,
+  hint,
+  children,
+}: {
+  icon: ElementType
+  title: string
+  hint?: string
+  children: ReactNode
+}) {
+  return (
+    <section className="flex flex-col gap-3 rounded-lg border border-border bg-background-card p-5 shadow-card">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+            <Icon className="h-4 w-4" />
+          </span>
+          {title}
+        </h3>
+        {hint && <span className="text-xs text-text-muted">{hint}</span>}
+      </div>
+      {children}
+    </section>
+  )
+}
+
+function ContextBlock({
+  isRtl,
+  label,
+  children,
+}: {
+  isRtl: boolean
+  label: string
+  children: ReactNode
+}) {
+  return (
+    <div className={cn(isRtl && "text-end")}>
+      <p className="mb-1 text-xs font-medium text-text-muted">{label}</p>
+      <div className="space-y-1">{children}</div>
+    </div>
+  )
+}
+
+function TextBlock({ isRtl, label, value }: { isRtl: boolean; label: string; value?: string | null }) {
+  return (
+    <div className={cn(isRtl && "text-end")}>
+      <p className="text-xs font-medium text-text-muted">{label}</p>
+      <p className="mt-1 whitespace-pre-line text-sm text-text-primary">{value || "-"}</p>
+    </div>
   )
 }
 
@@ -576,16 +841,9 @@ function DetailItem({
         <Icon className="h-3.5 w-3.5 text-primary" />
         {label}
       </p>
-      <p className={cn("text-sm font-medium text-text-primary", isRtl && "text-end")}>{value || "-"}</p>
-    </div>
-  )
-}
-
-function TextBlock({ isRtl, label, value }: { isRtl: boolean; label: string; value?: string | null }) {
-  return (
-    <div className={cn(isRtl && "text-end")}>
-      <p className="text-xs font-medium text-text-muted">{label}</p>
-      <p className="mt-1 text-sm text-text-primary">{value || "-"}</p>
+      <p className={cn("truncate text-sm font-medium text-text-primary", isRtl && "text-end")} title={value || undefined}>
+        {value || "-"}
+      </p>
     </div>
   )
 }

@@ -199,6 +199,7 @@
   },
   "details": {
     "title": "Interview details",
+    "infoTitle": "Interview information",
     "notes": "Notes",
     "candidateMessage": "Candidate message",
     "attendanceNote": "Attendance note",
@@ -214,6 +215,36 @@
     "attendanceAt": "Attendance recorded at",
     "cancelledAt": "Cancelled at",
     "completedAt": "Completed at"
+  },
+  "hrAssistance": {
+    "title": "HR assistance",
+    "description": "Everything you need before, during, and after the interview.",
+    "privateNotes": {
+      "title": "Private notes",
+      "hint": "Only visible to your team",
+      "placeholder": "Write your private notes about this interview...",
+      "save": "Save notes",
+      "saving": "Saving..."
+    },
+    "preparedQuestions": {
+      "title": "Prepared questions",
+      "placeholder": "Add a question and press Enter",
+      "add": "Add question",
+      "empty": "No prepared questions yet."
+    },
+    "candidateContext": {
+      "title": "Candidate context",
+      "empty": "No candidate context available for this interview.",
+      "viewApplication": "View application",
+      "summary": "Summary",
+      "skills": "Skills",
+      "experience": "Experience",
+      "education": "Education"
+    },
+    "evaluation": {
+      "title": "Evaluation & recommendation",
+      "notAvailable": "The evaluation form will be available once the interview is completed."
+    }
   },
   "toasts": {
     "created": "Interview scheduled successfully",

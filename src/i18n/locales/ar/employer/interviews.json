@@ -41,6 +41,7 @@
   },
   "recommendations": {
     "advance": "تقديم",
+    "hold": "إبقاء",
     "consider": "دراسة",
     "reject": "رفض"
   },
@@ -198,6 +199,7 @@
   },
   "details": {
     "title": "تفاصيل المقابلة",
+    "infoTitle": "معلومات المقابلة",
     "notes": "ملاحظات",
     "candidateMessage": "رسالة المرشح",
     "attendanceNote": "ملاحظة الحضور",
@@ -209,6 +211,36 @@
     "recommendation": "التوصية",
     "overallComment": "التعليق العام",
     "evaluationItems": "عناصر التقييم"
+  },
+  "hrAssistance": {
+    "title": "مساعدة الموارد البشرية",
+    "description": "كل ما تحتاجه قبل المقابلة وأثناءها وبعدها.",
+    "privateNotes": {
+      "title": "ملاحظات خاصة",
+      "hint": "تظهر لفريقك فقط",
+      "placeholder": "اكتب ملاحظاتك الخاصة حول هذه المقابلة...",
+      "save": "حفظ الملاحظات",
+      "saving": "جارٍ الحفظ..."
+    },
+    "preparedQuestions": {
+      "title": "الأسئلة المحضرة",
+      "placeholder": "أضف سؤالاً واضغط Enter",
+      "add": "إضافة سؤال",
+      "empty": "لا توجد أسئلة محضرة بعد."
+    },
+    "candidateContext": {
+      "title": "نبذة عن المرشح",
+      "empty": "لا توجد معلومات متاحة عن المرشح لهذه المقابلة.",
+      "viewApplication": "عرض الطلب",
+      "summary": "الملخص",
+      "skills": "المهارات",
+      "experience": "الخبرة",
+      "education": "التعليم"
+    },
+    "evaluation": {
+      "title": "التقييم والتوصية",
+      "notAvailable": "سيكون نموذج التقييم متاحاً بعد اكتمال المقابلة."
+    }
   },
   "toasts": {
     "created": "تم جدولة المقابلة بنجاح",

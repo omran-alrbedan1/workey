@@ -3,13 +3,6 @@ import { Loader2, Video } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import { showErrorToast } from "@/lib/toast"
 import { employerInterviewsService } from "../services/employerInterviews.service"
 import type { VideoSessionResponse } from "../types/videoInterview.types"
@@ -32,15 +25,11 @@ function videoSessionErrorMessage(error: any, fallback: string, t: (key: string)
   return message || fallback
 }
 
-export default function VideoSessionSetup({
-  interviewId,
-  open,
-  onOpenChange,
-}: {
-  interviewId: string | number
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}) {
+/**
+ * Full-page video section for online interviews: hosts the LiveKit room
+ * inline instead of a large modal.
+ */
+export default function VideoInterviewSection({ interviewId }: { interviewId: string | number }) {
   const { t } = useTranslation(["employerInterviews", "common"])
   const [session, setSession] = useState<VideoSessionResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -58,40 +47,37 @@ export default function VideoSessionSetup({
     }
   }
 
-  const handleClose = (next: boolean) => {
-    if (!next) {
-      setSession(null)
-    }
-    onOpenChange(next)
-  }
+  const leaveSession = () => setSession(null)
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl">
-        <DialogHeader>
-          <DialogTitle>{t("video.title")}</DialogTitle>
-          <DialogDescription>{t("video.description")}</DialogDescription>
-        </DialogHeader>
+    <section className="overflow-hidden rounded-xl border border-border bg-background-card shadow-card">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/30 px-5 py-4">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+            <Video className="h-4 w-4" />
+          </span>
+          {t("video.title")}
+        </h3>
+        {!session && (
+          <Button onClick={() => void startSession()} disabled={isLoading} size="sm">
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}
+            {isLoading ? t("video.starting") : t("video.start")}
+          </Button>
+        )}
+      </div>
 
+      <div className="p-5">
         {!session ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-8">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Video className="h-7 w-7" />
+          <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Video className="h-6 w-6" />
             </div>
             <p className="text-sm text-text-muted">{t("video.setupHint")}</p>
-            <Button onClick={() => void startSession()} disabled={isLoading}>
-              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}
-              {isLoading ? t("video.starting") : t("video.start")}
-            </Button>
           </div>
         ) : (
-          <VideoInterviewRoom
-            url={session.url}
-            token={session.token}
-            onLeave={() => handleClose(false)}
-          />
+          <VideoInterviewRoom url={session.url} token={session.token} onLeave={leaveSession} />
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </section>
   )
 }
