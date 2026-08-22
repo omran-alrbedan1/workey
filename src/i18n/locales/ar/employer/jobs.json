@@ -47,7 +47,13 @@
     "summary": {
       "title": "ملخص",
       "notProvided": "غير مُدخل",
-      "skillsCount": "{{count}} مطلوبة · {{nice}} مفيدة"
+      "skillsCount": "{{count}} مطلوبة · {{nice}} مفيدة",
+      "sections": {
+        "basic": "التفاصيل الأساسية",
+        "role": "وصف الوظيفة",
+        "qualifications": "المتطلبات والمؤهلات",
+        "compensation": "الراتب والتفاصيل"
+      }
     }
   },
   "detailsTitle": "تفاصيل الوظيفة",

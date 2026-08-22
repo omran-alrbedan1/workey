@@ -7,17 +7,21 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  ClipboardList,
   DollarSign,
   FileText,
   Gift,
+  Globe,
   GraduationCap,
   ListChecks,
   Loader2,
   MapPin,
   Plus,
   Send,
+  Sparkles,
   TrendingUp,
   X,
+  type LucideIcon,
 } from "lucide-react"
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react"
 import { useForm, type Resolver } from "react-hook-form"
@@ -242,7 +246,7 @@ export default function EmployerCreateJobWizard() {
 
   const catalogSkills = useMemo(
     () =>
-      (skillsQuery.data?.data ?? []).map((skill) => ({
+      (skillsQuery.data?.items ?? []).map((skill) => ({
         id: skill.id,
         name: skill.name,
       })),
@@ -378,58 +382,117 @@ export default function EmployerCreateJobWizard() {
   const enumLabel = (prefix: string, value?: string | null) =>
     value ? t(`${prefix}.${value}`) : t("wizard.summary.notProvided")
 
-  const summaryRows: { label: string; value: string }[] = [
-    { label: t("fields.title"), value: values.title.trim() || t("wizard.summary.notProvided") },
-    { label: t("fields.department"), value: values.department?.trim() || t("wizard.summary.notProvided") },
+  const notProvided = t("wizard.summary.notProvided")
+
+  const summarySections: {
+    titleKey: string
+    icon: LucideIcon
+    rows: { label: string; value: string; icon: LucideIcon; multiline?: boolean }[]
+  }[] = [
     {
-      label: t("fields.employmentType"),
-      value: enumLabel("employmentTypes", values.employment_type),
-    },
-    { label: t("fields.workMode"), value: enumLabel("workModes", values.work_mode) },
-    {
-      label: t("fields.location"),
-      value:
-        values.work_mode === "remote"
-          ? t("validation.locationOptionalForRemote")
-          : values.location?.trim() || t("wizard.summary.notProvided"),
-    },
-    { label: t("fields.description"), value: values.description.trim() || t("wizard.summary.notProvided") },
-    { label: t("fields.requirements"), value: values.requirements.trim() || t("wizard.summary.notProvided") },
-    {
-      label: t("fields.responsibilities"),
-      value: values.responsibilities?.trim() || t("wizard.summary.notProvided"),
-    },
-    {
-      label: t("fields.experienceLevel"),
-      value: enumLabel("experienceLevels", values.experience_level),
-    },
-    {
-      label: t("fields.educationLevel"),
-      value: values.education_level
-        ? enumLabel("educationLevels", values.education_level)
-        : t("educationLevels.none"),
-    },
-    {
-      label: `${t("fields.salaryMin")} – ${t("fields.salaryMax")}`,
-      value:
-        values.salary_min === undefined && values.salary_max === undefined
-          ? t("wizard.summary.notProvided")
-          : `${values.salary_min ?? "?"} – ${values.salary_max ?? "?"}`,
-    },
-    {
-      label: t("fields.applicationDeadline"),
-      value: values.application_deadline || t("wizard.summary.notProvided"),
+      titleKey: "wizard.summary.sections.basic",
+      icon: Briefcase,
+      rows: [
+        { label: t("fields.title"), value: values.title.trim() || notProvided, icon: Briefcase },
+        {
+          label: t("fields.department"),
+          value: values.department?.trim() || notProvided,
+          icon: Building2,
+        },
+        {
+          label: t("fields.employmentType"),
+          value: enumLabel("employmentTypes", values.employment_type),
+          icon: Clock,
+        },
+        {
+          label: t("fields.workMode"),
+          value: enumLabel("workModes", values.work_mode),
+          icon: Globe,
+        },
+        {
+          label: t("fields.location"),
+          value:
+            values.work_mode === "remote"
+              ? t("validation.locationOptionalForRemote")
+              : values.location?.trim() || notProvided,
+          icon: MapPin,
+        },
+      ],
     },
     {
-      label: t("fields.benefits"),
-      value: values.benefits?.trim() || t("wizard.summary.notProvided"),
+      titleKey: "wizard.summary.sections.role",
+      icon: FileText,
+      rows: [
+        {
+          label: t("fields.description"),
+          value: values.description.trim() || notProvided,
+          icon: FileText,
+          multiline: true,
+        },
+        {
+          label: t("fields.requirements"),
+          value: values.requirements.trim() || notProvided,
+          icon: ListChecks,
+          multiline: true,
+        },
+        {
+          label: t("fields.responsibilities"),
+          value: values.responsibilities?.trim() || notProvided,
+          icon: ClipboardList,
+          multiline: true,
+        },
+      ],
     },
     {
-      label: t("skills.title"),
-      value: t("wizard.summary.skillsCount", {
-        count: requiredSkills.length,
-        nice: niceToHaveSkills.length,
-      }),
+      titleKey: "wizard.summary.sections.qualifications",
+      icon: GraduationCap,
+      rows: [
+        {
+          label: t("fields.experienceLevel"),
+          value: enumLabel("experienceLevels", values.experience_level),
+          icon: TrendingUp,
+        },
+        {
+          label: t("fields.educationLevel"),
+          value: values.education_level
+            ? enumLabel("educationLevels", values.education_level)
+            : t("educationLevels.none"),
+          icon: GraduationCap,
+        },
+        {
+          label: t("skills.title"),
+          value: t("wizard.summary.skillsCount", {
+            count: requiredSkills.length,
+            nice: niceToHaveSkills.length,
+          }),
+          icon: Sparkles,
+        },
+      ],
+    },
+    {
+      titleKey: "wizard.summary.sections.compensation",
+      icon: DollarSign,
+      rows: [
+        {
+          label: `${t("fields.salaryMin")} – ${t("fields.salaryMax")}`,
+          value:
+            values.salary_min === undefined && values.salary_max === undefined
+              ? notProvided
+              : `${values.salary_min ?? "?"} – ${values.salary_max ?? "?"}`,
+          icon: DollarSign,
+        },
+        {
+          label: t("fields.applicationDeadline"),
+          value: values.application_deadline || notProvided,
+          icon: Calendar,
+        },
+        {
+          label: t("fields.benefits"),
+          value: values.benefits?.trim() || notProvided,
+          icon: Gift,
+          multiline: true,
+        },
+      ],
     },
   ]
 
@@ -653,7 +716,7 @@ export default function EmployerCreateJobWizard() {
                         </span>
                         <span className="text-text-primary">{t(`wizard.readiness.items.${check.key}`)}</span>
                       </span>
-                      <Badge variant="secondary" className="shrink-0">
+                      <Badge variant="secondary" className="shrink-0 text-white">
                         {check.required
                           ? t("wizard.readiness.requiredTag")
                           : t("wizard.readiness.optionalTag")}
@@ -663,17 +726,50 @@ export default function EmployerCreateJobWizard() {
                 </ul>
               </div>
               <div className="rounded-lg border border-border p-4">
-                <h3 className="mb-3 font-semibold text-text-primary">{t("wizard.summary.title")}</h3>
-                <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
-                  {summaryRows.map((row) => (
-                    <div key={row.label} className="min-w-0">
-                      <dt className="text-xs uppercase tracking-wide text-text-muted">{row.label}</dt>
-                      <dd className="truncate text-sm text-text-primary" title={row.value}>
-                        {row.value}
-                      </dd>
+                <h3 className="mb-4 flex items-center gap-2.5 font-semibold text-text-primary">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <FileText className="h-4 w-4" />
+                  </span>
+                  {t("wizard.summary.title")}
+                </h3>
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {summarySections.map((section) => (
+                    <div
+                      key={section.titleKey}
+                      className="rounded-lg border border-border bg-background p-4 shadow-sm"
+                    >
+                      <div className="mb-3 flex items-center gap-2 border-b border-border pb-2.5">
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                          <section.icon className="h-3.5 w-3.5" />
+                        </span>
+                        <h4 className="text-sm font-semibold text-text-primary">
+                          {t(section.titleKey)}
+                        </h4>
+                      </div>
+                      <dl className="space-y-3">
+                        {section.rows.map((row) => (
+                          <div key={row.label} className="flex items-start gap-2.5">
+                            <row.icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-text-muted" />
+                            <div className="min-w-0 flex-1">
+                              <dt className="text-xs uppercase tracking-wide text-text-muted">
+                                {row.label}
+                              </dt>
+                              <dd
+                                className={cn(
+                                  "text-sm text-text-primary",
+                                  row.multiline ? "whitespace-pre-line" : "truncate",
+                                )}
+                                title={row.multiline ? undefined : row.value}
+                              >
+                                {row.value}
+                              </dd>
+                            </div>
+                          </div>
+                        ))}
+                      </dl>
                     </div>
                   ))}
-                </dl>
+                </div>
               </div>
             </section>
           )}
@@ -693,6 +789,7 @@ export default function EmployerCreateJobWizard() {
                   <Button
                     type="button"
                     variant="secondary"
+                    className="text-white"
                     disabled={createJob.isPending}
                     onClick={() => void saveDraft()}
                   >
@@ -709,6 +806,7 @@ export default function EmployerCreateJobWizard() {
                   <Button
                     type="button"
                     variant="secondary"
+                    className="text-white"
                     disabled={createJob.isPending}
                     onClick={() => void saveDraft()}
                   >

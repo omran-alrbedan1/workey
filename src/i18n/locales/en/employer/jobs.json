@@ -47,7 +47,13 @@
     "summary": {
       "title": "Summary",
       "notProvided": "Not provided",
-      "skillsCount": "{{count}} required · {{nice}} nice-to-have"
+      "skillsCount": "{{count}} required · {{nice}} nice-to-have",
+      "sections": {
+        "basic": "Basic details",
+        "role": "Role description",
+        "qualifications": "Requirements & qualifications",
+        "compensation": "Compensation & details"
+      }
     }
   },
   "detailsTitle": "Job Details",
