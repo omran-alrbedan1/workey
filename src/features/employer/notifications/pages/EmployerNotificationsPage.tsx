@@ -1,8 +1,8 @@
 import { Bell } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import { Skeleton } from "@/components/ui/skeleton"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import EmployerNotificationsTable from "../components/EmployerNotificationsTable"
 import { useEmployerNotifications } from "../hooks/useEmployerNotifications"
 import { useNavigate } from "react-router-dom"
@@ -19,6 +19,7 @@ export default function EmployerNotificationsPage() {
     data,
     isPending,
     isError,
+    error,
     refetch,
     unreadCount,
     markReadMutation,
@@ -39,11 +40,7 @@ export default function EmployerNotificationsPage() {
     return (
       <div className="space-y-6">
         <PageHeader title={t("title")} description={t("description")} icon={Bell} />
-        <ErrorState
-          title={t("errors.title")}
-          description={t("errors.description")}
-          retry={() => void refetch()}
-        />
+        <EmployerFeatureError title={t("title")} error={error} retry={() => void refetch()} />
       </div>
     )
   }

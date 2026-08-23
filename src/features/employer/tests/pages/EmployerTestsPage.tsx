@@ -3,12 +3,12 @@ import { FlaskConical, Plus } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import EmptyState from "@/components/shared/states/EmptyState"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ROUTES } from "@/config"
 import { useEmployerJobs } from "@/features/employer/jobs/hooks/useEmployerJobs"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import AssignTestDialog from "../components/AssignTestDialog"
 import EmployerTestsTable from "../components/EmployerTestsTable"
 import { useEmployerTests } from "../hooks/useEmployerTests"
@@ -32,10 +32,9 @@ export default function EmployerTestsPage() {
 
   if (tests.isError) {
     return (
-      <ErrorState
-        variant="network"
-        title={t("errors.title")}
-        description={t("errors.description")}
+      <EmployerFeatureError
+        title={t("title")}
+        error={tests.error}
         retry={() => void tests.refetch()}
       />
     )

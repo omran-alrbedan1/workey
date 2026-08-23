@@ -1,4 +1,3 @@
-import ErrorState from "@/components/shared/states/ErrorState"
 import {
   AdminAttentionQueue,
   AdminDashboardHeader,
@@ -9,6 +8,7 @@ import {
 } from "../components"
 import { useAdminDashboard } from "../hooks/useAdminDashboard"
 import { useTranslation } from "react-i18next"
+import { AdminFeatureError } from "@/features/admin/shared/components"
 
 export default function AdminDashboard() {
   const { t } = useTranslation("adminDashboard")
@@ -24,15 +24,12 @@ export default function AdminDashboard() {
 
   if (isError) {
     return (
-      <ErrorState
-        variant="network"
-        title={t("errorTitle")}
-        description={t("errorDescription")}
-        error={error instanceof Error ? error : undefined}
+      <AdminFeatureError
+        title={t("pageTitle")}
+        error={error}
         retry={() => {
           void refetch()
         }}
-        className="min-h-[60vh]"
       />
     )
   }

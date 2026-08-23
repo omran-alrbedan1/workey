@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import { SubmitButton } from "@/components/shared/buttons"
 import { Form } from "@/components/ui/form"
+import { applyApiValidationErrors } from "@/lib/forms"
+import { showErrorToast } from "@/lib/toast"
 import type { EmployerCompany, EmployerCompanyInput } from "../types/employerCompany.types"
 import {
   employerCompanySchema,
@@ -58,6 +60,8 @@ export default function EmployerCompanyForm({
   }, [company, form])
 
   const handleSubmit = async (values: EmployerCompanyFormValues) => {
+    form.clearErrors()
+
     const input: EmployerCompanyInput = {
       name: values.name.trim(),
       industry: normalizeOptional(values.industry),
@@ -65,12 +69,18 @@ export default function EmployerCompanyForm({
       location: normalizeOptional(values.location),
       description: normalizeOptional(values.description),
     }
-    await onSubmit(input)
+
+    try {
+      await onSubmit(input)
+    } catch (error) {
+      if (!applyApiValidationErrors(form.setError, error)) {
+        showErrorToast(error, t("toasts.updateError"))
+      }
+    }
   }
 
   return (
     <div className="space-y-6">
-      {/* Media Section */}
       <div className="grid gap-6 md:grid-cols-2">
         <CompanyLogoSection
           logoUrl={company.logo_url}
@@ -86,7 +96,6 @@ export default function EmployerCompanyForm({
         />
       </div>
 
-      {/* Basic Information Form */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}

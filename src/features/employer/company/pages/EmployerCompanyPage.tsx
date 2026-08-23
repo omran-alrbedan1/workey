@@ -1,9 +1,9 @@
 import { Building2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
 import { StatusBadge } from "@/components/shared/badges"
 import { keyOf } from "@/lib/keyValue"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import CompanyVisualHeader from "../components/CompanyVisualHeader"
 import EmployerCompanyForm from "../components/EmployerCompanyForm"
 import TeamManagementSection from "../components/TeamManagementSection"
@@ -15,10 +15,9 @@ export default function EmployerCompanyPage() {
 
   if (company.isError) {
     return (
-      <ErrorState
-        variant="network"
-        title={t("errors.title")}
-        description={t("errors.description")}
+      <EmployerFeatureError
+        title={t("title")}
+        error={company.error}
         retry={() => void company.refetch()}
       />
     )

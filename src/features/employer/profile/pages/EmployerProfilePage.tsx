@@ -1,7 +1,7 @@
 import { UserRound } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import PageHeader from "@/components/shared/headers/PageHeader"
-import ErrorState from "@/components/shared/states/ErrorState"
+import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import EmployerProfileForm from "../components/EmployerProfileForm"
 import { useEmployerProfile } from "../hooks/useEmployerProfile"
 
@@ -11,10 +11,9 @@ export default function EmployerProfilePage() {
 
   if (profile.isError) {
     return (
-      <ErrorState
-        variant="network"
-        title={t("errors.title")}
-        description={t("errors.description")}
+      <EmployerFeatureError
+        title={t("title")}
+        error={profile.error}
         retry={() => void profile.refetch()}
       />
     )
