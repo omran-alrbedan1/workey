@@ -77,9 +77,52 @@ const getPageNumbers = (current: number, last: number) => {
 // Skeleton loading component
 function DataTableSkeleton<T extends object = Record<string, unknown>>({
   columns,
+  isMobile = false,
+  showMobileCards = false,
 }: {
   columns: Column<T>[]
+  isMobile?: boolean
+  showMobileCards?: boolean
 }) {
+  if (isMobile && showMobileCards) {
+    return (
+      <div className="space-y-3">
+        {[...Array(4)].map((_, index) => (
+          <div
+            key={index}
+            className="rounded-2xl border border-border bg-background-card p-4 shadow-card"
+          >
+            <div className="flex items-start gap-3">
+              <Skeleton className="h-10 w-10 rounded-xl" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <Skeleton className="h-4 w-32 max-w-full" />
+                <Skeleton className="h-3 w-24 max-w-full" />
+              </div>
+              <Skeleton className="h-6 w-20 rounded-full" />
+            </div>
+            <div className="mt-4 space-y-2 rounded-xl bg-background-secondary p-3">
+              <Skeleton className="h-3.5 w-full" />
+              <Skeleton className="h-3.5 w-4/5" />
+              <Skeleton className="h-3.5 w-3/5" />
+            </div>
+            <Skeleton className="mt-4 h-9 w-full rounded-md" />
+          </div>
+        ))}
+        <div className="rounded-md border border-border px-4 py-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <Skeleton className="order-2 h-3.5 w-32 sm:order-1" />
+            <div className="order-1 flex items-center gap-1 sm:order-2">
+              <Skeleton className="h-7 w-16 rounded-md" />
+              <Skeleton className="h-7 w-7 rounded-md" />
+              <Skeleton className="h-7 w-7 rounded-md" />
+              <Skeleton className="h-7 w-16 rounded-md" />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="rounded-md border border-border">
       <div className="min-w-3xl">
@@ -234,7 +277,13 @@ export function DataTable<T extends object = Record<string, unknown>>({
   }, [])
 
   if (loading) {
-    return <DataTableSkeleton columns={columns} />
+    return (
+      <DataTableSkeleton
+        columns={columns}
+        isMobile={isMobile}
+        showMobileCards={Boolean(MobileCard)}
+      />
+    )
   }
 
   // Mobile view with custom card component
