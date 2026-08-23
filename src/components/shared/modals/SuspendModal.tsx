@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 import Logo from "@/components/shared/logo/Logo"
-import { createSuspendSchema, type SuspendFormValues } from "./validations/sharedModals.validation"
+import { createSuspendSchema, type SuspendFormValues } from "./validation/sharedModals.validation"
 
 interface SuspendModalProps {
   open: boolean

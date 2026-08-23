@@ -11,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -213,13 +214,13 @@ export default function EmployerJobScreeningQuestions({
               <Skeleton key={i} className="h-20 w-full rounded-lg" />
             ))}
           </div>
-        ) : questions.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-8 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-              <HelpCircle className="h-6 w-6 text-text-muted" />
-            </div>
-            <p className="text-sm text-text-muted">{t("screeningQuestions.empty")}</p>
-          </div>
+                ) : questions.length === 0 ? (
+          <EmptyState
+            title={t("screeningQuestions.empty")}
+            description={t("screeningQuestions.empty")}
+            icon={HelpCircle}
+            className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+          />
         ) : (
           <ul className="space-y-2">
             {questions.map((q) => {
@@ -468,3 +469,5 @@ export default function EmployerJobScreeningQuestions({
     </>
   )
 }
+
+

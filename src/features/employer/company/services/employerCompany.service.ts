@@ -7,12 +7,12 @@ const UPLOAD_TIMEOUT = 120_000
 
 export const employerCompanyService = {
   async get(): Promise<EmployerCompany> {
-    return unwrapEmployerEntity<EmployerCompany>(await api.get(API_ENDPOINTS.employer.company))
+    return unwrapEmployerEntity<EmployerCompany>(await api.get(API_ENDPOINTS.company.self))
   },
 
   async update(input: EmployerCompanyInput): Promise<EmployerCompany> {
     return unwrapEmployerEntity<EmployerCompany>(
-      await api.put(API_ENDPOINTS.employer.company, input),
+      await api.put(API_ENDPOINTS.company.self, input),
     )
   },
 
@@ -21,7 +21,7 @@ export const employerCompanyService = {
     formData.append("logo", file)
     formData.append("_method", "PUT")
     return unwrapEmployerEntity<EmployerCompany>(
-      await api.post(API_ENDPOINTS.employer.company, formData, {
+      await api.post(API_ENDPOINTS.company.self, formData, {
         timeout: UPLOAD_TIMEOUT,
         headers: {
           "Content-Type": undefined,
@@ -34,7 +34,7 @@ export const employerCompanyService = {
     const formData = new FormData()
     formData.append("image", file)
     return unwrapEmployerEntity<EmployerCompany>(
-      await api.post(API_ENDPOINTS.employer.coverImage, formData, {
+      await api.post(API_ENDPOINTS.company.coverImage, formData, {
         timeout: UPLOAD_TIMEOUT,
         headers: {
           "Content-Type": undefined,
@@ -45,7 +45,7 @@ export const employerCompanyService = {
 
   async removeCoverImage(): Promise<EmployerCompany> {
     return unwrapEmployerEntity<EmployerCompany>(
-      await api.delete(API_ENDPOINTS.employer.coverImage),
+      await api.delete(API_ENDPOINTS.company.coverImage),
     )
   },
 }

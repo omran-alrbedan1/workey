@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { jobRecommendationsService } from "../services/jobRecommendations.service"
 import type { RecommendedJob } from "../types/jobRecommendations.types"
 import { useQuery } from "@tanstack/react-query"
@@ -41,9 +42,11 @@ export default function RecommendedJobs({ candidateId, limit = 10 }: Recommended
 
   if (isError || !data?.data?.length) {
     return (
-      <div className="flex min-h-32 items-center justify-center text-sm text-text-muted">
-        {t("noRecommendations")}
-      </div>
+      <EmptyState
+        title={t("noRecommendations")}
+        description={t("noRecommendations")}
+        className="min-h-32 rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+      />
     )
   }
 
@@ -137,3 +140,5 @@ export default function RecommendedJobs({ candidateId, limit = 10 }: Recommended
     </div>
   )
 }
+
+

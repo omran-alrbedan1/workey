@@ -19,7 +19,6 @@ export interface EmployerAuthUser {
 
 export interface EmployerAuthSession {
   accessToken: string
-  refreshToken?: string
   user: EmployerAuthUser
 }
 

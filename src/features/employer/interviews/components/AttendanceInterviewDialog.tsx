@@ -19,7 +19,7 @@ import type { EmployerInterviewAttendanceInput } from "../types/employerIntervie
 import {
   attendanceInterviewSchema,
   type AttendanceInterviewFormValues,
-} from "../validations/employerInterviews.validation"
+} from "../validation/employerInterviews.validation"
 
 const attendanceOptions: Option[] = [
   { value: "present", label: "attendance.present" },

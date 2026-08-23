@@ -34,7 +34,7 @@ export const employerJobsService = {
     perPage = 15,
   ): Promise<EmployerCollection<EmployerJob>> {
     return unwrapEmployerCollection<EmployerJob>(
-      await api.get(API_ENDPOINTS.employer.jobs, {
+      await api.get(API_ENDPOINTS.jobs.mine, {
         params: { page, per_page: perPage, ...filters },
       }),
     )

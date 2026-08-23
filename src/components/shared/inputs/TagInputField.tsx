@@ -20,7 +20,6 @@ export const TagInputField: React.FC<TagInputFieldProps> = ({
   placeholder,
   disabled,
   inputClassName,
-  tagInputOptions,
 }) => {
   const { t } = useTranslation("common")
   const [inputValue, setInputValue] = useState("")

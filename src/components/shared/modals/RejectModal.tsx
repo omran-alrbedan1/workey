@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 import Logo from "@/components/shared/logo/Logo"
-import { createRejectSchema, type RejectFormValues } from "./validations/sharedModals.validation"
+import { createRejectSchema, type RejectFormValues } from "./validation/sharedModals.validation"
 
 interface RejectModalProps {
   open: boolean

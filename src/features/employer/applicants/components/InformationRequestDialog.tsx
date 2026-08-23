@@ -37,7 +37,7 @@ import type { InformationRequest, InformationRequestInput } from "../types/emplo
 import {
   informationRequestSchema,
   type InformationRequestFormValues,
-} from "../validations/employerApplicants.validation"
+} from "../validation/employerApplicants.validation"
 
 interface InformationRequestDialogProps {
   open: boolean

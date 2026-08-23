@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import type { AdminSkillInput } from "../types/adminSkills.types"
-import { adminSkillSchema, type AdminSkillFormValues } from "../validations/adminSkills.validation"
+import { adminSkillSchema, type AdminSkillFormValues } from "../validation/adminSkills.validation"
 
 export default function CreateSkillForm({
   open,

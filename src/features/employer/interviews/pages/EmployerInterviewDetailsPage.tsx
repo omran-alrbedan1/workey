@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
+import EmptyState from "@/components/shared/states/EmptyState"
 import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
 import { StatusBadge } from "@/components/shared/badges"
 import { Button } from "@/components/ui/button"
@@ -229,7 +230,7 @@ export default function EmployerInterviewDetailsPage() {
         open={rescheduleOpen}
         isPending={interview.rescheduleMutation.isPending}
         onOpenChange={setRescheduleOpen}
-        onSubmit={(id, input) => interview.rescheduleMutation.mutateAsync(input)}
+        onSubmit={(_id, input) => interview.rescheduleMutation.mutateAsync(input)}
       />
       <CompleteInterviewDialog
         open={completeOpen}
@@ -610,7 +611,12 @@ function PreparedQuestionsCard({ isRtl }: { isRtl: boolean }) {
         </Button>
       </div>
       {questions.length === 0 ? (
-        <p className="text-sm text-text-muted">{t("hrAssistance.preparedQuestions.empty")}</p>
+        <EmptyState
+          title={t("hrAssistance.preparedQuestions.empty")}
+          description={t("hrAssistance.preparedQuestions.empty")}
+          icon={HelpCircle}
+          className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+        />
       ) : (
         <ul className="space-y-2">
           {questions.map((question, index) => (
@@ -640,7 +646,7 @@ function PreparedQuestionsCard({ isRtl }: { isRtl: boolean }) {
 
 function CandidateContextCard({
   isRtl,
-  data,
+  data: _data,
   profile,
   applicationId,
 }: {
@@ -1003,6 +1009,9 @@ function formatDateTime(value?: string | null) {
   const date = new Date(value)
   return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString()
 }
+
+
+
 
 
 

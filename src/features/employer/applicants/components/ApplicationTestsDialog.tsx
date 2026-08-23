@@ -17,6 +17,7 @@ import {
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { StatusBadge } from "@/components/shared/badges"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { keyOf, valueOf } from "@/lib/keyValue"
 import { Button } from "@/components/ui/button"
 import {
@@ -361,7 +362,12 @@ export default function ApplicationTestsDialog({
             </Button>
           </div>
         ) : tests.data?.items.length === 0 ? (
-          <p className="py-8 text-center text-sm text-text-muted">{t("tests.empty")}</p>
+          <EmptyState
+            title={t("tests.empty")}
+            description={t("tests.title")}
+            icon={FileText}
+            className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-8"
+          />
         ) : (
           <div className="space-y-4">
             {tests.data?.items.map((attempt) => {
@@ -563,9 +569,12 @@ export default function ApplicationTestsDialog({
                 </div>
 
                 {answers.length === 0 ? (
-                  <p className="rounded-md border border-border bg-background p-4 text-sm text-text-muted">
-                    {t("tests.noAnswers")}
-                  </p>
+                  <EmptyState
+                    title={t("tests.noAnswers")}
+                    description={t("tests.noAnswers")}
+                    icon={ListChecks}
+                    className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-8"
+                  />
                 ) : (
                   <div className="space-y-3">
                     {answers.map((answer, index) => {

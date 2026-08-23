@@ -1,6 +1,7 @@
 import { Link } from "lucide-react"
 import type { ComponentType, ReactNode } from "react"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import type {
@@ -110,7 +111,13 @@ export function ProfileLinkItems({ profile }: { profile: ApplicationSnapshotProf
 
   const links = [...namedLinks, ...extraLinks]
   if (links.length === 0) {
-    return <p className="text-sm text-text-muted">-</p>
+    return (
+      <EmptyState
+        title={t("common:noLinks", { defaultValue: "No links available" })}
+        description={t("common:noLinksDescription", { defaultValue: "This profile has no links." })}
+        className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-6"
+      />
+    )
   }
 
   return (
@@ -165,3 +172,5 @@ export function formatSalary(min?: string | number | null, max?: string | number
   if (min && max) return `${min} - ${max}`
   return String(min ?? max)
 }
+
+

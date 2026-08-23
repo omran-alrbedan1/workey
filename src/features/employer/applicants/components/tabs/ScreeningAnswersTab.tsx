@@ -1,6 +1,7 @@
 import { CheckCircle2, ChevronDown, MessageSquare, ClipboardCheck } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { keyOf } from "@/lib/keyValue"
 import type { ApplicationScreeningAnswer } from "../../types/employerApplicants.types"
 
@@ -75,3 +76,5 @@ export default function ScreeningAnswersTab({ answers }: ScreeningAnswersTabProp
     </Card>
   )
 }
+
+

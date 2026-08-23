@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { CalendarPlus, History, Loader2, RotateCcw, Save } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { StatusBadge } from "@/components/shared/badges"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -270,9 +271,12 @@ export default function TestAssignmentRetakePanel({
             <Skeleton className="h-20 w-full" />
           </div>
         ) : !series || series.assignments.length === 0 ? (
-          <p className="rounded-md border border-border bg-background p-3 text-sm text-text-muted">
-            {t("tests.attemptTimelineEmpty")}
-          </p>
+          <EmptyState
+            title={t("tests.attemptTimelineEmpty")}
+            description={t("tests.attemptTimeline")}
+            icon={History}
+            className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-8"
+          />
         ) : (
           <div className="space-y-2">
             <div className="rounded-md border border-border bg-background p-3 text-sm">

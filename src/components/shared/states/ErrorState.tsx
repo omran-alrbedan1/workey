@@ -2,17 +2,17 @@ import { cn } from "@/lib/utils"
 import {
   AlertCircle,
   RefreshCw,
-  Home,
   WifiOff,
   Server,
   Lock,
   FileWarning,
+  UserX,
   LucideIcon,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 
-export type ErrorVariant = "default" | "404" | "500" | "403" | "network" | "timeout" | "custom"
+export type ErrorVariant = "default" | "401" | "404" | "422" | "500" | "403" | "network" | "timeout" | "custom"
 
 interface ErrorStateProps {
   title?: string
@@ -61,6 +61,18 @@ const variantConfig: Record<
     color: "text-orange-600",
     bgColor: "bg-orange-50",
     borderColor: "border-orange-200",
+  },
+  "401": {
+    icon: UserX,
+    color: "text-slate-600",
+    bgColor: "bg-slate-50",
+    borderColor: "border-slate-200",
+  },
+  "422": {
+    icon: FileWarning,
+    color: "text-yellow-600",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
   },
   network: {
     icon: WifiOff,
@@ -129,7 +141,9 @@ const ErrorState: React.FC<ErrorStateProps> = ({
 
   const titleKey: Record<ErrorVariant, string> = {
     default: "somethingWentWrong",
+    "401": "unauthorized",
     "404": "pageNotFound",
+    "422": "errors.validationError",
     "500": "errors.serverError",
     "403": "errors.accessDenied",
     network: "errors.networkError",
@@ -138,7 +152,9 @@ const ErrorState: React.FC<ErrorStateProps> = ({
   }
   const descKey: Record<ErrorVariant, string> = {
     default: "errors.defaultErrorDesc",
+    "401": "errors.accessDeniedDesc",
     "404": "errors.pageNotFoundDesc",
+    "422": "errors.validationErrorDesc",
     "500": "errors.serverErrorDesc",
     "403": "errors.accessDeniedDesc",
     network: "errors.networkErrorDesc",
@@ -198,7 +214,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({
 
       <p className={cn(styles.description, "text-gray-600 max-w-md")}>{displayDescription}</p>
 
-      {errorMessage && variant === "default" && (
+      {errorMessage && (variant === "default" || variant === "422") && (
         <div
           className={cn(
             "mt-3 px-3 py-2 rounded-md bg-red-100 text-red-700",
@@ -244,3 +260,4 @@ const ErrorState: React.FC<ErrorStateProps> = ({
 }
 
 export default ErrorState
+

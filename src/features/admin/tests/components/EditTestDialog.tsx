@@ -18,7 +18,7 @@ import type { AdminTestRecord, AdminTestUpdateInput } from "../types/adminTests.
 import {
   createAdminTestSchema,
   type AdminTestFormValues,
-} from "../validations/adminTests.validation"
+} from "../validation/adminTests.validation"
 
 function buildPatch(test: AdminTestRecord, values: AdminTestFormValues): AdminTestUpdateInput {
   const patch: AdminTestUpdateInput = { id: test.id }

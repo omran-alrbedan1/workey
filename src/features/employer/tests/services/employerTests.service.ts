@@ -19,7 +19,6 @@ import type {
   TestAssignmentSeriesResponse,
   TestAttemptAnswer,
   TestAttemptResult,
-  TestQuestion,
   TestQuestionInput,
   TestQuestionOption,
   TestQuestionOptionInput,

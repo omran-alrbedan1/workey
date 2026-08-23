@@ -29,7 +29,7 @@ import type {
 import {
   employerJobSchema,
   type EmployerJobFormValues,
-} from "../validations/employerJobs.validation"
+} from "../validation/employerJobs.validation"
 
 const employmentTypeOptions: { value: EmploymentType; label: string }[] = [
   { value: "full_time", label: "employmentTypes.full_time" },

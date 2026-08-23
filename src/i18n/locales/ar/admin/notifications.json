@@ -1,6 +1,6 @@
 {
   "title": "الإشعارات",
-  "description": "{{count}} إشعارات منصة غير مقروءة.",
+  "description": "لديك {{count}} إشعارًا غير مقروء من المنصة.",
   "columns": {
     "notification": "الإشعار",
     "status": "الحالة",
@@ -14,6 +14,8 @@
     "interview_cancelled": "مقابلة ملغاة",
     "application_received": "طلب جديد",
     "application_status": "حالة الطلب",
+    "application_status_changed": "تم تحديث حالة الطلب",
+    "company_approval_attention": "قائمة مراجعة الشركة",
     "test_assigned": "اختبار مخصص",
     "test_completed": "اختبار مكتمل",
     "company_approved": "شركة معتمدة",
@@ -25,8 +27,34 @@
   "markRead": "تحديد كمقروء",
   "markAllRead": "تحديد الكل كمقروء",
   "markingAllRead": "جار تحديد الكل...",
-  "empty": "لم يتم إرجاع أي إشعارات.",
-  "emptyDescription": "لا توجد إشعارات للمنصة حاليا.",
+  "empty": "لا توجد إشعارات بعد.",
+  "emptyDescription": "لا توجد إشعارات للمنصة حاليًا.",
   "markedRead": "تم تحديد الإشعار كمقروء",
-  "markedAllRead": "تم تحديد جميع الإشعارات كمقروءة"
+  "markedAllRead": "تم تحديد جميع الإشعارات كمقروءة",
+  "titles": {
+    "interview_scheduled": "تمت جدولة المقابلة",
+    "interview_completed": "اكتملت المقابلة",
+    "interview_cancelled": "تم إلغاء المقابلة",
+    "application_received": "تم استلام طلب جديد",
+    "application_status_changed": "تم تحديث حالة الطلب",
+    "company_approval_attention": "قائمة مراجعة الشركة",
+    "test_assigned": "تم تعيين اختبار",
+    "test_completed": "اكتمل الاختبار",
+    "company_approved": "تمت الموافقة على الشركة",
+    "company_rejected": "تم رفض الشركة",
+    "general": "تحديث إشعار"
+  },
+  "messages": {
+    "interview_scheduled": "تم إنشاء أو تحديث موعد المقابلة.",
+    "interview_completed": "تم وضع المقابلة كمنجزة.",
+    "interview_cancelled": "تم إلغاء المقابلة.",
+    "application_received": "تم استلام طلب جديد.",
+    "application_status_changed": "يتوفر تحديث على مسار التوظيف.",
+    "company_approval_attention": "تنتظر شركة مراجعة المدير.",
+    "test_assigned": "تم تعيين اختبار.",
+    "test_completed": "اكتمل الاختبار.",
+    "company_approved": "تمت الموافقة على الشركة.",
+    "company_rejected": "تم رفض الشركة.",
+    "general": "لديك إشعار جديد."
+  }
 }

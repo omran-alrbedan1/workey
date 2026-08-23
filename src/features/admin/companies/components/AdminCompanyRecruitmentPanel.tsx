@@ -1,5 +1,6 @@
 import { Activity, BriefcaseBusiness, FileText } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
 import { MetricStatusCard } from "@/components/shared/cards/MetricCard"
@@ -68,9 +69,11 @@ export default function AdminCompanyRecruitmentPanel({
               </div>
             ))
           ) : (
-            <p className="rounded-2xl border border-dashed border-border bg-background-secondary/50 p-4 text-sm text-text-secondary">
-              {t("recruitment.jobsUnavailable")}
-            </p>
+            <EmptyState
+              title={t("recruitment.jobsUnavailable")}
+              description={t("recruitment.jobsUnavailable")}
+              className="rounded-2xl border border-dashed border-border bg-background-secondary/50 p-4"
+            />
           )}
         </div>
       </SectionCard>
@@ -96,12 +99,17 @@ export default function AdminCompanyRecruitmentPanel({
               </div>
             ))
           ) : (
-            <p className="rounded-2xl border border-dashed border-border bg-background-secondary/50 p-4 text-sm text-text-secondary">
-              {t("recruitment.activityUnavailable")}
-            </p>
+            <EmptyState
+              title={t("recruitment.activityUnavailable")}
+              description={t("recruitment.activityUnavailable")}
+              className="rounded-2xl border border-dashed border-border bg-background-secondary/50 p-4"
+            />
           )}
         </div>
       </SectionCard>
     </div>
   )
 }
+
+
+

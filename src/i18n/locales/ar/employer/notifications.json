@@ -13,8 +13,12 @@
     "interview_cancelled": "مقابلة ملغاة",
     "application_received": "طلب جديد",
     "application_status": "حالة الطلب",
+    "application_status_changed": "تم تحديث حالة الطلب",
+    "company_approval_attention": "قائمة مراجعة الشركة",
     "test_assigned": "اختبار مخصص",
     "test_completed": "اختبار مكتمل",
+    "company_approved": "شركة معتمدة",
+    "company_rejected": "شركة مرفوضة",
     "general": "عام"
   },
   "empty": {
@@ -31,5 +35,31 @@
   "errors": {
     "title": "تعذر تحميل الإشعارات",
     "description": "حدث خطأ أثناء تحميل الإشعارات. حاول مرة أخرى."
+  },
+  "titles": {
+    "interview_scheduled": "تمت جدولة المقابلة",
+    "interview_completed": "اكتملت المقابلة",
+    "interview_cancelled": "تم إلغاء المقابلة",
+    "application_received": "تم استلام طلب جديد",
+    "application_status_changed": "تم تحديث حالة الطلب",
+    "company_approval_attention": "قائمة مراجعة الشركة",
+    "test_assigned": "تم تعيين اختبار",
+    "test_completed": "اكتمل الاختبار",
+    "company_approved": "تمت الموافقة على الشركة",
+    "company_rejected": "تم رفض الشركة",
+    "general": "تحديث إشعار"
+  },
+  "messages": {
+    "interview_scheduled": "تم إنشاء أو تحديث موعد المقابلة.",
+    "interview_completed": "تم وضع المقابلة كمنجزة.",
+    "interview_cancelled": "تم إلغاء المقابلة.",
+    "application_received": "تم استلام طلب جديد.",
+    "application_status_changed": "يتوفر تحديث على مسار التوظيف.",
+    "company_approval_attention": "تنتظر شركة مراجعة المدير.",
+    "test_assigned": "تم تعيين اختبار.",
+    "test_completed": "اكتمل الاختبار.",
+    "company_approved": "تمت الموافقة على الشركة.",
+    "company_rejected": "تم رفض الشركة.",
+    "general": "لديك إشعار جديد."
   }
 }

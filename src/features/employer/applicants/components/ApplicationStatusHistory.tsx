@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import { Clock, User, ArrowRight } from "lucide-react"
 import { keyOf, valueOf } from "@/lib/keyValue"
 import { StatusBadge } from "@/components/shared/badges"
+import EmptyState from "@/components/shared/states/EmptyState"
 import type { ApplicationStatusHistoryEntry } from "../types/employerApplicants.types"
 
 interface ApplicationStatusHistoryProps {
@@ -13,9 +14,12 @@ export default function ApplicationStatusHistory({ history }: ApplicationStatusH
 
   if (!history || history.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-border bg-background/50 p-8 text-center text-sm text-text-muted">
-        {t("statusHistory.empty")}
-      </div>
+      <EmptyState
+        title={t("statusHistory.empty")}
+        description={t("statusHistory.title")}
+        icon={Clock}
+        className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+      />
     )
   }
 

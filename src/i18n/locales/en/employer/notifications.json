@@ -13,8 +13,12 @@
     "interview_cancelled": "Interview cancelled",
     "application_received": "Application received",
     "application_status": "Application status",
+    "application_status_changed": "Application status updated",
+    "company_approval_attention": "Company review queue",
     "test_assigned": "Test assigned",
     "test_completed": "Test completed",
+    "company_approved": "Company approved",
+    "company_rejected": "Company rejected",
     "general": "General"
   },
   "empty": {
@@ -31,5 +35,31 @@
   "errors": {
     "title": "Unable to load notifications",
     "description": "An error occurred while loading notifications. Please try again."
+  },
+  "titles": {
+    "interview_scheduled": "Interview scheduled",
+    "interview_completed": "Interview completed",
+    "interview_cancelled": "Interview cancelled",
+    "application_received": "Application received",
+    "application_status_changed": "Application status updated",
+    "company_approval_attention": "Company review queue",
+    "test_assigned": "Test assigned",
+    "test_completed": "Test completed",
+    "company_approved": "Company approved",
+    "company_rejected": "Company rejected",
+    "general": "Notification update"
+  },
+  "messages": {
+    "interview_scheduled": "An interview schedule was created or updated.",
+    "interview_completed": "An interview has been marked as completed.",
+    "interview_cancelled": "An interview has been cancelled.",
+    "application_received": "A new application has been received.",
+    "application_status_changed": "A recruitment workflow update is available.",
+    "company_approval_attention": "A company is waiting for administrator review.",
+    "test_assigned": "A test has been assigned.",
+    "test_completed": "A test has been completed.",
+    "company_approved": "A company has been approved.",
+    "company_rejected": "A company has been rejected.",
+    "general": "You have a new notification."
   }
 }

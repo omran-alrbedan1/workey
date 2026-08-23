@@ -32,7 +32,6 @@ export function isEmailVerified(user?: AuthUser | null): boolean {
 
 export interface AuthSession {
   accessToken: string
-  refreshToken?: string
   user: AuthUser
 }
 
@@ -52,7 +51,6 @@ function normalizeSession(response: unknown): AuthSession {
 
   return {
     accessToken: token,
-    refreshToken: typeof payload.refresh_token === "string" ? payload.refresh_token : undefined,
     user: user as unknown as AuthUser,
   }
 }
@@ -75,19 +73,16 @@ export const authService = {
 
   storeSession(session: AuthSession): void {
     localStorage.setItem(STORAGE_KEYS.accessToken, session.accessToken)
-    if (session.refreshToken) localStorage.setItem(STORAGE_KEYS.refreshToken, session.refreshToken)
     localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(session.user))
   },
 
   clearSession(): void {
     localStorage.removeItem(STORAGE_KEYS.accessToken)
-    localStorage.removeItem(STORAGE_KEYS.refreshToken)
     localStorage.removeItem(STORAGE_KEYS.user)
   },
 
   getSession(): AuthSession | null {
     const accessToken = localStorage.getItem(STORAGE_KEYS.accessToken)
-    const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken)
     const userStr = localStorage.getItem(STORAGE_KEYS.user)
 
     if (!accessToken || !userStr) return null
@@ -96,7 +91,6 @@ export const authService = {
       const user = JSON.parse(userStr)
       return {
         accessToken,
-        refreshToken: refreshToken || undefined,
         user,
       }
     } catch {

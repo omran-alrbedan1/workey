@@ -6,7 +6,7 @@ import type {
   EmployerApplicant,
 } from "../types/employerApplicants.types"
 import { employerApplicantsService } from "../services/employerApplicants.service"
-import { canDownloadCv, canPreviewCv, getApplicationCvDocument } from "../utils/cv"
+import { canPreviewCv, getApplicationCvDocument } from "../utils/cv"
 
 function openDocumentUrl(url: string, target: "download" | "preview") {
   if (target === "preview") {

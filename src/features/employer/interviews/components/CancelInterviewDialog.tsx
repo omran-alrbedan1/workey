@@ -18,7 +18,7 @@ import type { EmployerInterviewCancelInput } from "../types/employerInterviews.t
 import {
   cancelInterviewSchema,
   type CancelInterviewFormValues,
-} from "../validations/employerInterviews.validation"
+} from "../validation/employerInterviews.validation"
 
 export default function CancelInterviewDialog({
   open,

@@ -3,7 +3,6 @@ import { env } from "./env"
 export const API_CONFIG = Object.freeze({
   baseUrl: env.apiBaseUrl,
   timeout: 30_000,
-  enableTokenRefresh: false,
 } as const)
 
 export const API_ENDPOINTS = Object.freeze({
@@ -25,7 +24,10 @@ export const API_ENDPOINTS = Object.freeze({
     accept: (token: string) => `/company-invitations/${token}/accept`,
     reject: (token: string) => `/company-invitations/${token}/reject`,
   },
-  company: "/company",
+  company: {
+    self: "/company",
+    coverImage: "/company/cover-image",
+  },
   employerProfile: "/employer/profile",
   skills: "/skills",
   jobs: {
@@ -50,7 +52,6 @@ export const API_ENDPOINTS = Object.freeze({
     status: (id: string | number) => `/applications/${id}/status`,
     assignTest: (id: string | number) => `/applications/${id}/assign-test`,
     tests: (id: string | number) => `/applications/${id}/tests`,
-    interviews: (id: string | number) => `/applications/${id}/interviews`,
     internalNotes: (id: string | number) => `/applications/${id}/internal-notes`,
     informationRequests: (id: string | number) => `/applications/${id}/information-requests`,
   },
@@ -118,14 +119,6 @@ export const API_ENDPOINTS = Object.freeze({
     complete: (id: string | number) => `/interviews/${id}/complete`,
     evaluate: (id: string | number) => `/interviews/${id}/evaluate`,
     videoSession: (id: string | number) => `/interviews/${id}/video-session`,
-  },
-  employer: {
-    company: "/company",
-    coverImage: "/company/cover-image",
-    profile: "/employer/profile",
-    jobs: "/jobs/my",
-    jobApplications: (id: string | number) => `/jobs/${id}/applications`,
-    rankedCandidates: (id: string | number) => `/jobs/${id}/candidates/ranked`,
   },
   companyTeam: {
     members: "/company/members",

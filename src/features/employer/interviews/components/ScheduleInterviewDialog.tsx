@@ -19,7 +19,7 @@ import type { EmployerInterviewInput } from "../types/employerInterviews.types"
 import {
   scheduleInterviewSchema,
   type ScheduleInterviewFormValues,
-} from "../validations/employerInterviews.validation"
+} from "../validation/employerInterviews.validation"
 
 const interviewTypeOptions: Option[] = [
   { value: "hr", label: "interviewTypes.hr" },

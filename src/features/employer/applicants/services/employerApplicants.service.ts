@@ -29,7 +29,7 @@ export const employerApplicantsService = {
     perPage = 15,
   ): Promise<EmployerCollection<EmployerApplicantDetail>> {
     return unwrapEmployerCollection<EmployerApplicantDetail>(
-      await api.get(API_ENDPOINTS.employer.jobApplications(jobId), {
+      await api.get(API_ENDPOINTS.jobs.applications(jobId), {
         params: { page, per_page: perPage },
       }),
     )
@@ -65,7 +65,7 @@ export const employerApplicantsService = {
     applicationId: string | number,
     input: EmployerInterviewInput,
   ): Promise<void> {
-    await api.post(API_ENDPOINTS.applications.interviews(applicationId), input)
+    await api.post(API_ENDPOINTS.interviews.forApplication(applicationId), input)
   },
 
   async evaluateInterview(

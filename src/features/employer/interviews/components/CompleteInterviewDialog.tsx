@@ -17,7 +17,7 @@ import { Form } from "@/components/ui/form"
 import {
   completeInterviewSchema,
   type CompleteInterviewFormValues,
-} from "../validations/employerInterviews.validation"
+} from "../validation/employerInterviews.validation"
 
 export default function CompleteInterviewDialog({
   open,

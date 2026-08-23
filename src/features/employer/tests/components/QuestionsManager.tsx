@@ -14,6 +14,7 @@ import {
   Upload,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -255,7 +256,6 @@ export default function QuestionsManager({
         )
       }
 
-      const selected = nextOptions[optionIndex]
       replaceQuestion(questionIndex, {
         ...question,
         options: nextOptions,
@@ -362,10 +362,12 @@ export default function QuestionsManager({
           <FieldError message={formError} />
 
           {questions.length === 0 && (
-            <div className="rounded-lg border-2 border-dashed border-border p-8 text-center">
-              <HelpCircle className="mx-auto mb-3 h-12 w-12 text-muted-foreground" />
-              <p className="text-sm text-text-muted">{t("questions.empty")}</p>
-            </div>
+            <EmptyState
+              title={t("questions.empty")}
+              description={t("questions.empty")}
+              icon={HelpCircle}
+              className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+            />
           )}
 
           <div className="space-y-3">
@@ -628,3 +630,6 @@ export default function QuestionsManager({
     </Card>
   )
 }
+
+
+

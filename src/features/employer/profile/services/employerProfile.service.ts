@@ -5,12 +5,12 @@ import type { EmployerProfile, EmployerProfileInput } from "../types/employerPro
 
 export const employerProfileService = {
   async get(): Promise<EmployerProfile> {
-    return unwrapEmployerEntity<EmployerProfile>(await api.get(API_ENDPOINTS.employer.profile))
+    return unwrapEmployerEntity<EmployerProfile>(await api.get(API_ENDPOINTS.employerProfile))
   },
 
   async update(input: EmployerProfileInput): Promise<EmployerProfile> {
     return unwrapEmployerEntity<EmployerProfile>(
-      await api.put(API_ENDPOINTS.employer.profile, input),
+      await api.put(API_ENDPOINTS.employerProfile, input),
     )
   },
 }

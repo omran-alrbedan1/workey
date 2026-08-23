@@ -172,7 +172,9 @@
     "test_pending": "Test Pending",
     "test_completed": "Test Completed",
     "final_review": "Final Review",
-    "on_hold": "On Hold"
+    "on_hold": "On Hold",
+    "read": "Read",
+    "unread": "Unread"
   },
   "modals": {
     "cancel": "Cancel",

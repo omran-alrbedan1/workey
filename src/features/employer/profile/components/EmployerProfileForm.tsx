@@ -12,7 +12,7 @@ import type { EmployerProfile, EmployerProfileInput } from "../types/employerPro
 import {
   employerProfileSchema,
   type EmployerProfileFormValues,
-} from "../validations/employerProfile.validation"
+} from "../validation/employerProfile.validation"
 
 export default function EmployerProfileForm({
   profile,

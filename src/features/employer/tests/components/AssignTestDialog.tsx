@@ -16,13 +16,12 @@ import {
 import { Form } from "@/components/ui/form"
 import { Skeleton } from "@/components/ui/skeleton"
 import { employerApplicantsService } from "@/features/employer/applicants/services/employerApplicants.service"
-import { keyOf } from "@/lib/keyValue"
 import type { AssignTestPayload, EmployerTest } from "../types/employerTests.types"
 import {
   assignNoApplicantsValue,
   createAssignTestSchema,
   type AssignTestFormValues,
-} from "../validations/employerTests.validation"
+} from "../validation/employerTests.validation"
 
 function serializeDeadline(value: string | Date | null | undefined) {
   if (!value) return undefined
@@ -223,3 +222,4 @@ export default function AssignTestDialog({
     </Dialog>
   )
 }
+

@@ -9,6 +9,7 @@ import {
   UserRound,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { valueOf } from "@/lib/keyValue"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -37,11 +38,12 @@ export default function CandidateProfileSection({
 
   return (
     <div className="space-y-6">
-      {!profile ? (
-        <p className="rounded-lg border border-dashed border-border bg-background/50 p-8 text-center text-sm text-text-muted">
-          {t("candidate.profileEmpty")}
-        </p>
-      ) : (
+            {!profile ? (
+        <EmptyState
+          title={t("candidate.profileEmpty")}
+          description={t("candidate.profileEmpty")}
+          className="rounded-lg border border-dashed border-border bg-background/50 p-8"
+        />      ) : (
         <>
           <div className="grid gap-4 lg:grid-cols-2">
             <SectionCard title={t("candidate.profileTitle")} icon={UserRound}>
@@ -163,3 +165,7 @@ export default function CandidateProfileSection({
     </div>
   )
 }
+
+
+
+

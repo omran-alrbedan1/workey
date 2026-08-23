@@ -1,5 +1,6 @@
 import { Activity, CalendarClock, UserRound } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 
 import StatusBadge from "@/components/shared/badges/StatusBadge"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
@@ -51,11 +52,15 @@ export default function AdminCompanyActivityPanel({ company }: { company: AdminC
             </div>
           ))
         ) : (
-          <p className="rounded-2xl border border-dashed border-border bg-background-secondary/50 p-4 text-sm text-text-secondary">
-            {t("activity.empty")}
-          </p>
+          <EmptyState
+            title={t("activity.empty")}
+            description={t("activity.empty")}
+            className="rounded-2xl border border-dashed border-border bg-background-secondary/50 p-4"
+          />
         )}
       </div>
     </SectionCard>
   )
 }
+
+

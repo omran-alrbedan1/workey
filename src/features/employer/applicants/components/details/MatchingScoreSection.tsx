@@ -2,6 +2,7 @@ import { CheckCircle2, CircleDashed, Target } from "lucide-react"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Badge } from "@/components/ui/badge"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { cn } from "@/lib/utils"
 import type {
   ApplicationSkillReference,
@@ -156,5 +157,7 @@ export default function MatchingScoreSection({ application }: MatchingScoreSecti
     </div>
   )
 }
+
+
 
 

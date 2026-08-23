@@ -1,8 +1,8 @@
-import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Mail, RefreshCw, XCircle } from "lucide-react"
 
 import { StatusBadge } from "@/components/shared/badges"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { keyOf } from "@/lib/keyValue"
@@ -37,9 +37,12 @@ export default function InvitationList({
   return (
     <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
       {invitations.length === 0 ? (
-        <p className="px-6 py-8 text-center text-sm text-text-muted">
-          {t("team.invitationsEmpty")}
-        </p>
+        <EmptyState
+          title={t("team.invitationsEmpty")}
+          description={t("team.invitationsEmpty")}
+          icon={Mail}
+          className="rounded-xl border border-border/60 py-10"
+        />
       ) : (
         invitations.map((invitation) => {
           const status = keyOf(invitation.status, "pending")

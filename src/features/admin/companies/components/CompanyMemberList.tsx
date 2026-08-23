@@ -13,6 +13,7 @@ import {
 } from "lucide-react"
 
 import { StatusBadge } from "@/components/shared/badges"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -109,10 +110,14 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
 
       <div className="space-y-2 overflow-hidden rounded-xl">
         {members.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-text-muted">{t("members.empty")}</p>
+          <EmptyState
+            title={t("members.empty")}
+            description={t("members.description")}
+            icon={UserRound}
+            className="rounded-xl border border-border/60 py-10"
+          />
         ) : (
           members.map((member) => {
-            const role = keyOf(member.role, "member")
             const status = keyOf(member.status, "active")
             return (
               <div
@@ -213,9 +218,12 @@ export default function CompanyMemberList({ companyId }: { companyId: string | n
         </div>
         <div className="space-y-2 overflow-hidden rounded-xl">
           {invitations.length === 0 ? (
-            <p className="px-6 py-8 text-center text-sm text-text-muted">
-              {t("members.invitations.empty")}
-            </p>
+            <EmptyState
+              title={t("members.invitations.empty")}
+              description={t("members.invitations.description")}
+              icon={MailPlus}
+              className="rounded-xl border border-border/60 py-10"
+            />
           ) : (
             invitations.map((invitation) => (
               <div

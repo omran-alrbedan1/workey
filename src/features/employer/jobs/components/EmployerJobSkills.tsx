@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Check, Plus, X } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -100,7 +101,13 @@ export default function EmployerJobSkills({
         </Button>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills.length === 0 && <p className="text-sm text-text-muted">{t("skills.empty")}</p>}
+        {skills.length === 0 && (
+          <EmptyState
+            title={t("skills.empty")}
+            description={t("skills.empty")}
+            className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-6"
+          />
+        )}
         {skills.map((skill) => (
           <Badge key={skill.id} variant="secondary" className="gap-1.5 py-1.5 text-white">
             {skill.name || `#${skill.id}`}
@@ -119,3 +126,5 @@ export default function EmployerJobSkills({
     </section>
   )
 }
+
+

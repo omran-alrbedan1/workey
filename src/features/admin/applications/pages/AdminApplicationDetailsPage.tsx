@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   BriefcaseBusiness,
-  Building2,
   CalendarClock,
   ClipboardList,
   Hash,
@@ -9,7 +8,6 @@ import {
   Mail,
   Target,
   User,
-  UsersRound,
   Video,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -18,7 +16,6 @@ import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import ErrorState from "@/components/shared/states/ErrorState"
 import { StatusBadge } from "@/components/shared/badges"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ROUTES } from "@/config"

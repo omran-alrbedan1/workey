@@ -19,7 +19,7 @@ import type { EmployerInterviewEvaluateInput } from "../types/employerInterviews
 import {
   evaluateInterviewSchema,
   type EvaluateInterviewFormValues,
-} from "../validations/employerInterviews.validation"
+} from "../validation/employerInterviews.validation"
 
 const recommendationOptions: Option[] = [
   { value: "advance", label: "recommendations.advance" },

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { employerInterviewsService } from "../services/employerInterviews.service"
 import type {
   EmployerInterviewHistoryItem,
@@ -31,7 +32,14 @@ function formatMetadata(metadata?: Record<string, unknown> | null) {
 function StatusHistoryList({ items }: { items: EmployerInterviewHistoryItem[] }) {
   const { t } = useTranslation("employerInterviews")
   if (items.length === 0) {
-    return <p className="text-sm text-text-muted">{t("history.empty")}</p>
+    return (
+      <EmptyState
+        title={t("history.empty")}
+        description={t("history.statusTitle")}
+        icon={History}
+        className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-8"
+      />
+    )
   }
 
   return (
@@ -61,7 +69,14 @@ function StatusHistoryList({ items }: { items: EmployerInterviewHistoryItem[] })
 function ScheduleHistoryList({ items }: { items: EmployerInterviewScheduleHistoryItem[] }) {
   const { t } = useTranslation("employerInterviews")
   if (items.length === 0) {
-    return <p className="text-sm text-text-muted">{t("history.empty")}</p>
+    return (
+      <EmptyState
+        title={t("history.empty")}
+        description={t("history.scheduleTitle")}
+        icon={CalendarClock}
+        className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-8"
+      />
+    )
   }
 
   return (

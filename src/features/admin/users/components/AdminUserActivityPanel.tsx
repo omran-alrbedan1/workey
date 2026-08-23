@@ -2,6 +2,7 @@ import { Activity, ClipboardList, MonitorSmartphone } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { LoadingState } from "@/components/shared/states"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 import { valueOf } from "@/lib/keyValue"
 
@@ -50,9 +51,12 @@ export default function AdminUserActivityPanel({
     const items = activityQuery.data?.items ?? []
     if (!items.length) {
       return (
-        <p className="rounded-lg border border-dashed border-border bg-background-secondary/50 p-4 text-sm text-text-secondary">
-          {t("activity.empty")}
-        </p>
+        <EmptyState
+          title={t("activity.empty")}
+          description={t("activity.title")}
+          icon={Activity}
+          className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+        />
       )
     }
     return (
@@ -82,9 +86,12 @@ export default function AdminUserActivityPanel({
     const items = auditQuery.data?.items ?? []
     if (!items.length) {
       return (
-        <p className="rounded-lg border border-dashed border-border bg-background-secondary/50 p-4 text-sm text-text-secondary">
-          {t("activity.auditEmpty")}
-        </p>
+        <EmptyState
+          title={t("activity.auditEmpty")}
+          description={t("activity.auditTitle")}
+          icon={ClipboardList}
+          className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+        />
       )
     }
     return (

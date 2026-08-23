@@ -6,7 +6,7 @@ import axios, {
 } from "axios"
 import { API_CONFIG, ROUTES, STORAGE_KEYS } from "@/config"
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T
   message?: string
   success?: boolean
@@ -91,7 +91,6 @@ API.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEYS.accessToken)
-      localStorage.removeItem(STORAGE_KEYS.refreshToken)
       localStorage.removeItem(STORAGE_KEYS.user)
       if (!window.location.pathname.includes("/login")) {
         window.location.href = ROUTES.auth.login
@@ -163,19 +162,19 @@ API.interceptors.response.use(
 )
 
 const api = {
-  get: <T = any>(url: string, config?: AppAxiosRequestConfig): Promise<T> =>
+  get: <T = unknown>(url: string, config?: AppAxiosRequestConfig): Promise<T> =>
     API.get(url, config).then((response) => response.data),
 
-  post: <T = any>(url: string, data?: any, config?: AppAxiosRequestConfig): Promise<T> =>
+  post: <T = unknown>(url: string, data?: unknown, config?: AppAxiosRequestConfig): Promise<T> =>
     API.post(url, data, config).then((response) => response.data),
 
-  put: <T = any>(url: string, data?: any, config?: AppAxiosRequestConfig): Promise<T> =>
+  put: <T = unknown>(url: string, data?: unknown, config?: AppAxiosRequestConfig): Promise<T> =>
     API.put(url, data, config).then((response) => response.data),
 
-  patch: <T = any>(url: string, data?: any, config?: AppAxiosRequestConfig): Promise<T> =>
+  patch: <T = unknown>(url: string, data?: unknown, config?: AppAxiosRequestConfig): Promise<T> =>
     API.patch(url, data, config).then((response) => response.data),
 
-  delete: <T = any>(url: string, config?: AppAxiosRequestConfig): Promise<T> =>
+  delete: <T = unknown>(url: string, config?: AppAxiosRequestConfig): Promise<T> =>
     API.delete(url, config).then((response) => response.data),
 }
 

@@ -22,7 +22,6 @@ function normalizeSession(response: unknown): EmployerAuthSession {
 
   return {
     accessToken: token,
-    refreshToken: typeof payload.refresh_token === "string" ? payload.refresh_token : undefined,
     user: user as unknown as EmployerAuthUser,
   }
 }
@@ -49,13 +48,11 @@ export const employerAuthService = {
 
   storeSession(session: EmployerAuthSession): void {
     localStorage.setItem(STORAGE_KEYS.accessToken, session.accessToken)
-    if (session.refreshToken) localStorage.setItem(STORAGE_KEYS.refreshToken, session.refreshToken)
     localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(session.user))
   },
 
   clearSession(): void {
     localStorage.removeItem(STORAGE_KEYS.accessToken)
-    localStorage.removeItem(STORAGE_KEYS.refreshToken)
     localStorage.removeItem(STORAGE_KEYS.user)
   },
 }

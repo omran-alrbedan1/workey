@@ -25,14 +25,51 @@ function internalPath(value: unknown): string | undefined {
   return value
 }
 
+function normalizeTypeKey(type: string): string {
+  return type.replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "")
+}
+
+function fallbackTypeLabel(type: string): string {
+  return type.replace(/[_.]+/g, " ").replace(/w/g, (char) => char.toUpperCase())
+}
+
+function localizedTypeKey(notification: NotificationRecordBase): string | undefined {
+  return notification.type ? normalizeTypeKey(notification.type) : undefined
+}
+
+function titleFallback(notification: NotificationRecordBase, t: TFunction): string {
+  const typeKey = localizedTypeKey(notification)
+  if (typeKey) {
+    return t(`titles.${typeKey}`, {
+      defaultValue: notification.title ?? fallbackTypeLabel(typeKey),
+    })
+  }
+
+  return notification.title ?? notificationTypeLabel(notification, t)
+}
+
+function messageFallback(notification: NotificationRecordBase, t: TFunction): string {
+  const typeKey = localizedTypeKey(notification)
+  if (typeKey) {
+    return t(`messages.${typeKey}`, {
+      defaultValue: notification.message ?? notification.text ?? notification.body ?? "",
+    })
+  }
+
+  return notification.message ?? notification.text ?? notification.body ?? ""
+}
+
 export function isNotificationUnread(notification: NotificationRecordBase): boolean {
   return !notification.read_at && notification.is_read !== true
 }
 
 export function notificationTypeLabel(notification: NotificationRecordBase, t: TFunction): string {
-  return notification.type
-    ? t(`types.${notification.type}`, { defaultValue: notification.type })
-    : t("types.general", { defaultValue: "General" })
+  const typeKey = localizedTypeKey(notification)
+  if (!typeKey) {
+    return t("types.general", { defaultValue: "General" })
+  }
+
+  return t(`types.${typeKey}`, { defaultValue: fallbackTypeLabel(typeKey) })
 }
 
 export function notificationTitle(notification: NotificationRecordBase, t: TFunction): string {
@@ -43,24 +80,23 @@ export function notificationTitle(notification: NotificationRecordBase, t: TFunc
   if (key) {
     return t(key, {
       ...(params ?? {}),
-      defaultValue:
-        notification.title ??
-        notification.message ??
-        notification.text ??
-        notification.body ??
-        notificationTypeLabel(notification, t),
+      defaultValue: titleFallback(notification, t),
     })
   }
 
-  return notification.title ?? notificationTypeLabel(notification, t)
+  return titleFallback(notification, t)
 }
 
 export function notificationMessage(notification: NotificationRecordBase, t: TFunction): string {
-  if (notification.translation_key || notification.translationKey) {
-    return notification.message ?? notification.text ?? notification.body ?? ""
+  const key = notification.translation_key ?? notification.translationKey
+
+  if (key) {
+    return t(key, {
+      defaultValue: notification.message ?? notification.text ?? notification.body ?? "",
+    })
   }
 
-  return notification.message ?? notification.text ?? notification.body ?? ""
+  return messageFallback(notification, t)
 }
 
 export function resolveNotificationTarget(

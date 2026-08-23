@@ -26,7 +26,7 @@ export default function ValidationErrors({ error, className }: ValidationErrorsP
       <ul className="space-y-1 text-sm text-red-600">
         {Object.entries(errors).map(([field, messages]) => (
           <li key={field} className="flex flex-col">
-            <span className="font-medium capitalize">{field}</span>
+            <span className="font-mono text-xs font-medium text-red-700">{field}</span>
             {Array.isArray(messages) ? (
               messages.map((message, index) => (
                 <span key={index} className="text-red-500">

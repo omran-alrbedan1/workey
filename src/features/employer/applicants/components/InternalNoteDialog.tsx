@@ -18,7 +18,7 @@ import { Form } from "@/components/ui/form"
 import {
   internalNoteSchema,
   type InternalNoteFormValues,
-} from "../validations/employerApplicants.validation"
+} from "../validation/employerApplicants.validation"
 
 interface InternalNoteDialogProps {
   open: boolean

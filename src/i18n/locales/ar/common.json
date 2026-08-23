@@ -172,7 +172,9 @@
     "test_pending": "بانتظار الاختبار",
     "test_completed": "اكتمل الاختبار",
     "final_review": "المراجعة النهائية",
-    "on_hold": "معلق"
+    "on_hold": "معلق",
+    "read": "مقروء",
+    "unread": "غير مقروء"
   },
   "modals": {
     "cancel": "إلغاء",

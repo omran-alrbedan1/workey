@@ -26,6 +26,7 @@ import {
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react"
 import { useForm, type Resolver } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -52,7 +53,7 @@ import type {
 import {
   employerJobSchema,
   type EmployerJobFormValues,
-} from "../validations/employerJobs.validation"
+} from "../validation/employerJobs.validation"
 
 const employmentTypeOptions: { value: EmploymentType; label: string }[] = [
   { value: "full_time", label: "employmentTypes.full_time" },
@@ -169,10 +170,12 @@ function WizardSkillPicker({
           </CommandList>
         </Command>
       </div>
-      {selected.length === 0 ? (
-        <p className="text-sm text-text-muted">
-          {t("wizard.selectedEmpty", { group: t(groupLabel) })}
-        </p>
+            {selected.length === 0 ? (
+        <EmptyState
+          title={t("wizard.selectedEmpty", { group: t(groupLabel) })}
+          description={t("wizard.selectedEmpty", { group: t(groupLabel) })}
+          className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-6"
+        />
       ) : (
         <ul className="space-y-2">
           {selected.map((item) => {
@@ -896,3 +899,5 @@ export default function EmployerCreateJobWizard() {
     </div>
   )
 }
+
+

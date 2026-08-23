@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom"
 
 import { ROUTES } from "@/config"
+import LoadingState from "@/components/shared/states/LoadingState"
 import { useAdminSession } from "../hooks/useAdminSession"
 
 function statusCodeOf(error: unknown): number | undefined {
@@ -13,7 +14,7 @@ export default function AdminProtectedRoute({ children }: { children: React.Reac
   const session = useAdminSession()
 
   if (!session.hasToken) return <Navigate to={ROUTES.auth.login} replace />
-  if (session.isPending) return null
+  if (session.isPending) return <LoadingState className="min-h-screen" />
 
   const statusCode = statusCodeOf(session.error)
 

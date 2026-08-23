@@ -12,7 +12,7 @@ import type { EmployerCompany, EmployerCompanyInput } from "../types/employerCom
 import {
   employerCompanySchema,
   type EmployerCompanyFormValues,
-} from "../validations/employerCompany.validation"
+} from "../validation/employerCompany.validation"
 import CompanyLogoSection from "./CompanyLogoSection"
 import CompanyCoverSection from "./CompanyCoverSection"
 

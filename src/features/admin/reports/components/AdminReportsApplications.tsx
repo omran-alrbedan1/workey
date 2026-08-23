@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
+import EmptyState from "@/components/shared/states/EmptyState"
 import {
   Table,
   TableBody,
@@ -94,9 +95,15 @@ export default function AdminReportsApplications({
 
         {(!statusCounts || Object.keys(statusCounts).length === 0) &&
           (!dailyCounts || dailyCounts.length === 0) && (
-            <p className="text-sm text-text-muted">{t("applications.empty")}</p>
+            <EmptyState
+              title={t("applications.empty")}
+              description={t("applications.empty")}
+              className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+            />
           )}
       </div>
     </SectionCard>
   )
 }
+
+

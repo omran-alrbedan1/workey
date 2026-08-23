@@ -20,6 +20,7 @@ import StatusBadge from "@/components/shared/badges/StatusBadge"
 import { MetricStatusCard } from "@/components/shared/cards/MetricCard"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import { ActivateModal, SuspendModal } from "@/components/shared/modals"
+import LoadingState from "@/components/shared/states/LoadingState"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
@@ -157,7 +158,9 @@ export default function AdminUserDetailsPage() {
   }
 
   const user = query.user
-  if (!user) return null
+  if (!user) {
+    return <LoadingState className="min-h-96" />
+  }
 
   const updating = query.statusMutation.isPending || query.roleMutation.isPending
   const isSuspended = keyOf(user.status) === "suspended"
@@ -211,13 +214,21 @@ export default function AdminUserDetailsPage() {
     if (!query.statusMutation.isPending) setStatusAction(null)
   }
   const confirmActivate = async () => {
-    await query.statusMutation.mutateAsync({ id: user.id, status: "active" })
-    setStatusAction(null)
+    try {
+      await query.statusMutation.mutateAsync({ id: user.id, status: "active" })
+      setStatusAction(null)
+    } catch {
+      // Failure toast is surfaced by the global mutation cache.
+    }
   }
   const confirmSuspend = async () => {
     // The backend suspend endpoint accepts no body; a reason cannot be stored.
-    await query.statusMutation.mutateAsync({ id: user.id, status: "suspended" })
-    setStatusAction(null)
+    try {
+      await query.statusMutation.mutateAsync({ id: user.id, status: "suspended" })
+      setStatusAction(null)
+    } catch {
+      // Failure toast is surfaced by the global mutation cache.
+    }
   }
   const renderTabContent = (value: UserDetailsTabValue) => {
     switch (value) {

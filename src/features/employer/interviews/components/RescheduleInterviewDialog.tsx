@@ -23,7 +23,7 @@ import {
   createRescheduleInterviewSchema,
   parseLocalDateTime,
   type RescheduleInterviewFormValues,
-} from "../validations/employerInterviews.validation"
+} from "../validation/employerInterviews.validation"
 
 const modeOptions: Option[] = [
   { value: "online", label: "interviewModes.online" },

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Textarea } from "@/components/ui/textarea"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { employerTestsService } from "@/features/employer/tests/services/employerTests.service"
@@ -169,9 +170,12 @@ export default function TestAssignmentDeadlinePanel({
             <Skeleton className="h-16 w-full" />
           </div>
         ) : history.length === 0 ? (
-          <p className="rounded-md border border-border bg-background p-3 text-sm text-text-muted">
-            {t("tests.deadlineHistoryEmpty")}
-          </p>
+          <EmptyState
+            title={t("tests.deadlineHistoryEmpty")}
+            description={t("tests.deadlineHistory")}
+            icon={CalendarClock}
+            className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-8"
+          />
         ) : (
           <div className="space-y-2">
             {history.map((item) => (

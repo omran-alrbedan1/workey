@@ -29,7 +29,7 @@ import { candidateDisplayName } from "../utils/candidateDisplay"
 import {
   scheduleInterviewSchema,
   type ScheduleInterviewFormValues,
-} from "../validations/employerApplicants.validation"
+} from "../validation/employerApplicants.validation"
 
 const interviewTypeOptions: Option[] = [
   { value: "hr", label: "interview.types.hr" },

@@ -8,7 +8,6 @@ import {
   ClipboardCheck,
   Clock,
   FileText,
-  Info,
   ListChecks,
   Loader2,
   Save,
@@ -37,7 +36,7 @@ import type { AdminTestInput, AdminTestUpdateInput } from "../types/adminTests.t
 import {
   createAdminTestWizardSchema,
   type AdminTestWizardFormValues,
-} from "../validations/adminTests.validation"
+} from "../validation/adminTests.validation"
 
 const STEPS = [
   { labelKey: "wizard.stepInformation", icon: FileText },
@@ -666,3 +665,4 @@ function ReviewItem({ label, value }: { label: string; value: string }) {
     </div>
   )
 }
+

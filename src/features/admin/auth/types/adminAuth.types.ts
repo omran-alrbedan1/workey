@@ -23,6 +23,5 @@ export interface AdminAuthUser {
 
 export interface AdminAuthSession {
   accessToken: string
-  refreshToken?: string
   user: AdminAuthUser
 }

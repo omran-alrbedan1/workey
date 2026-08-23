@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import EmptyState from "@/components/shared/states/EmptyState"
 import type { PublicCompanyJob } from "../types/publicCompany.types"
 
 interface PublicCompanyJobsProps {
@@ -25,9 +26,11 @@ export default function PublicCompanyJobs({ jobs, isLoading }: PublicCompanyJobs
 
   if (!jobs.length) {
     return (
-      <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-text-muted">
-        {t("noJobs")}
-      </div>
+      <EmptyState
+        title={t("noJobs")}
+        description={t("noJobs")}
+        className="rounded-lg border border-dashed border-border p-8"
+      />
     )
   }
 
@@ -95,3 +98,5 @@ export default function PublicCompanyJobs({ jobs, isLoading }: PublicCompanyJobs
     </div>
   )
 }
+
+

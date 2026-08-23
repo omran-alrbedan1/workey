@@ -1,4 +1,5 @@
 export { default as EmptyState } from "./EmptyState"
+export { resolveErrorVariant } from "./errorVariant"
 export { default as ErrorState } from "./ErrorState"
 export { default as LoadingState } from "./LoadingState"
 export { default as PartialError } from "./PartialError"

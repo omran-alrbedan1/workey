@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Globe, Check, ChevronDown, Languages } from "lucide-react"
+import { Globe, Check, ChevronDown } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next"
 import StatusBadge from "@/components/shared/badges/StatusBadge"
 import PageHeader from "@/components/shared/headers/PageHeader"
 import { ApproveModal, RejectModal, SuspendModal } from "@/components/shared/modals"
+import LoadingState from "@/components/shared/states/LoadingState"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ROUTES } from "@/config"
@@ -64,7 +65,9 @@ export default function AdminCompanyDetailsPage() {
   }
 
   const company = companyQuery.company
-  if (!company) return null
+  if (!company) {
+    return <LoadingState className="min-h-96" />
+  }
 
   const approvalActions = getCompanyApprovalActions(company)
   const isUpdating =
@@ -75,16 +78,28 @@ export default function AdminCompanyDetailsPage() {
     if (!isUpdating) setApprovalAction(null)
   }
   const confirmApprove = async () => {
-    await companyQuery.approveMutation.mutateAsync()
-    setApprovalAction(null)
+    try {
+      await companyQuery.approveMutation.mutateAsync()
+      setApprovalAction(null)
+    } catch {
+      // Failure toast is surfaced by the global mutation cache.
+    }
   }
   const confirmReject = async (reason: string) => {
-    await companyQuery.rejectMutation.mutateAsync(reason)
-    setApprovalAction(null)
+    try {
+      await companyQuery.rejectMutation.mutateAsync(reason)
+      setApprovalAction(null)
+    } catch {
+      // Failure toast is surfaced by the global mutation cache.
+    }
   }
   const confirmSuspend = async () => {
-    await companyQuery.suspendMutation.mutateAsync()
-    setApprovalAction(null)
+    try {
+      await companyQuery.suspendMutation.mutateAsync()
+      setApprovalAction(null)
+    } catch {
+      // Failure toast is surfaced by the global mutation cache.
+    }
   }
 
   return (

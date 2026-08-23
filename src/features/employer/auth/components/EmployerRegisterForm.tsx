@@ -9,7 +9,7 @@ import { useEmployerRegister } from "../hooks/useEmployerRegister"
 import {
   employerRegisterSchema,
   type EmployerRegisterFormValues,
-} from "../validations/employerAuth.validation"
+} from "../validation/employerAuth.validation"
 
 export default function EmployerRegisterForm() {
   const { t } = useTranslation("employerAuth")

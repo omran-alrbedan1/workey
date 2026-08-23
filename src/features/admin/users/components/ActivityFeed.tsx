@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { activityService } from "@/shared/activity/services/activity.service"
 import type { Activity } from "@/types/activity.types"
 import { useQuery } from "@tanstack/react-query"
@@ -117,9 +118,11 @@ export default function ActivityFeed({ limit = 10 }: ActivityFeedProps) {
 
   if (isError || !data?.data?.length) {
     return (
-      <div className="flex min-h-32 items-center justify-center text-sm text-text-muted">
-        {t("noActivity")}
-      </div>
+      <EmptyState
+        title={t("noActivity")}
+        description={t("noActivity")}
+        className="min-h-32 rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
+      />
     )
   }
 
@@ -150,3 +153,5 @@ export default function ActivityFeed({ limit = 10 }: ActivityFeedProps) {
     </div>
   )
 }
+
+

@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
+import EmptyState from "@/components/shared/states/EmptyState"
 import type { AdminCvParsingReport } from "../types/adminReports.types"
 
 interface AdminReportsCvParsingProps {
@@ -127,3 +128,5 @@ export default function AdminReportsCvParsing({ data, isLoading }: AdminReportsC
     </SectionCard>
   )
 }
+
+

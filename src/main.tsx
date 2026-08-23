@@ -14,8 +14,11 @@ const queryClient = new QueryClient({
   ...QUERY_CONFIG,
   queryCache: new QueryCache({
     onError: (error, query) => {
-      const is403 = (error as any)?.statusCode === 403
-      if (query.state.data === undefined || is403)
+      const statusCode =
+        typeof error === "object" && error !== null && "statusCode" in error
+          ? (error as { statusCode?: number }).statusCode
+          : undefined
+      if (query.state.data === undefined || statusCode === 403)
         showErrorToast(error, i18n.t("common:errors.loadDataFailed"))
     },
   }),

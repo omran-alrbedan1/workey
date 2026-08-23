@@ -11,7 +11,7 @@ import { useEmployerLogin } from "../hooks/useEmployerLogin"
 import {
   employerLoginSchema,
   type EmployerLoginFormValues,
-} from "../validations/employerAuth.validation"
+} from "../validation/employerAuth.validation"
 
 export default function EmployerLoginForm() {
   const { t } = useTranslation("employerAuth")

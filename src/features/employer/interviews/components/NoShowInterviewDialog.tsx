@@ -19,7 +19,7 @@ import type { EmployerInterviewNoShowInput } from "../types/employerInterviews.t
 import {
   noShowInterviewSchema,
   type NoShowInterviewFormValues,
-} from "../validations/employerInterviews.validation"
+} from "../validation/employerInterviews.validation"
 
 const partyOptions: Option[] = [
   { value: "candidate", label: "noShow.candidate" },

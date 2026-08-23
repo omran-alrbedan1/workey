@@ -5,7 +5,6 @@ import {
   ShieldCheck,
   MapPinned,
   UsersRound,
-  Building2,
 } from "lucide-react"
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import { StatusBadge } from "@/components/shared/badges"

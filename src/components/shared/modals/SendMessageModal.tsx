@@ -16,7 +16,7 @@ import { CancelButton, SubmitButton } from "@/components/shared/buttons"
 import {
   createSendMessageSchema,
   type SendMessageFormValues,
-} from "./validations/sharedModals.validation"
+} from "./validation/sharedModals.validation"
 
 interface SendMessageModalProps {
   open: boolean

@@ -1,4 +1,4 @@
-import { BarChart3, FileText, BriefcaseBusiness, ClipboardList, ScanLine } from "lucide-react"
+import { BarChart3, BriefcaseBusiness, ClipboardList, ScanLine } from "lucide-react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { ROUTES } from "@/config"

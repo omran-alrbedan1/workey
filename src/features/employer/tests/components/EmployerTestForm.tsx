@@ -17,6 +17,7 @@ import {
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
@@ -36,7 +37,7 @@ import type {
 import {
   createEmployerTestSchema,
   type EmployerTestFormValues,
-} from "../validations/employerTests.validation"
+} from "../validation/employerTests.validation"
 
 const STEPS = [
   { labelKey: "wizard.stepInformation", icon: FileText },
@@ -617,7 +618,12 @@ function ReviewStep({ values, maxScore }: { values: EmployerTestFormValues; maxS
           </span>
         </h3>
         {reviewQuestions.length === 0 ? (
-          <p className="text-sm text-text-muted">{t("review.empty")}</p>
+          <EmptyState
+            title={t("review.empty")}
+            description={t("review.questionsSection")}
+            icon={ListChecks}
+            className="rounded-md border border-dashed border-border/60 bg-background-secondary/40 py-8"
+          />
         ) : (
           <ol className="space-y-2">
             {reviewQuestions.map((question, index) => {

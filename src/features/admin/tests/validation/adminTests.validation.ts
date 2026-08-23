@@ -1,6 +1,6 @@
 import { z } from "zod"
 import type { TFunction } from "i18next"
-import { createTestQuestionSchema } from "@/features/employer/tests/validations/employerTests.validation"
+import { createTestQuestionSchema } from "@/features/employer/tests/validation/employerTests.validation"
 
 export function createAdminTestSchema(t: TFunction, requireCompany = false) {
   return z.object({

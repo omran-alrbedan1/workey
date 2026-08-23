@@ -3,6 +3,7 @@ import { BriefcaseBusiness, Building2, ClipboardList, FlaskConical, UserRound } 
 import type { ActivityItem } from "../types/adminDashboard.types"
 import DashboardPanel from "./DashboardPanel"
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 
 function formatDate(value: string | undefined, locale: string, fallback: string): string {
   if (!value) return fallback
@@ -19,9 +20,11 @@ export default function AdminRecentActivity({ items }: { items: ActivityItem[] }
   return (
     <DashboardPanel title={t("recentTitle")} subtitle={t("recentSubtitle")}>
       {items.length === 0 ? (
-        <div className="flex min-h-52 items-center justify-center text-sm text-text-muted">
-          {t("noRecent")}
-        </div>
+        <EmptyState
+          title={t("noRecent")}
+          description={t("recentSubtitle")}
+          className="min-h-52 rounded-xl border border-dashed border-border/60 bg-background-secondary/40 py-10"
+        />
       ) : (
         <div className="divide-y divide-border">
           {items.map((item) => {

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { MoreVertical, ShieldCheck, Trash2, UserRound } from "lucide-react"
 
 import { StatusBadge } from "@/components/shared/badges"
+import EmptyState from "@/components/shared/states/EmptyState"
 import { DeleteModal } from "@/components/shared/modals"
 import { Button } from "@/components/ui/button"
 import {
@@ -67,7 +68,12 @@ export default function TeamMemberList({
     <>
       <div className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/60">
         {members.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-text-muted">{t("team.membersEmpty")}</p>
+          <EmptyState
+            title={t("team.membersEmpty")}
+            description={t("team.membersEmpty")}
+            icon={UserRound}
+            className="rounded-xl border border-border/60 py-10"
+          />
         ) : (
           members.map((member) => {
             const role = keyOf(member.company_role ?? member.role, DEFAULT_COMPANY_ROLE)

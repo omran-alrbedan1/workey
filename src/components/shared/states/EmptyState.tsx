@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
-import { LucideIcon, Inbox, Plus } from "lucide-react"
+import { LucideIcon, Inbox } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface EmptyStateProps {

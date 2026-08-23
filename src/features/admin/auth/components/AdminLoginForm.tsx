@@ -9,7 +9,7 @@ import { Form } from "@/components/ui/form"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import { SubmitButton } from "@/components/shared/buttons/SubmitButton"
 import { useAdminLogin } from "../hooks/useAdminLogin"
-import { adminLoginSchema, type AdminLoginFormValues } from "../validations/adminAuth.validation"
+import { adminLoginSchema, type AdminLoginFormValues } from "../validation/adminAuth.validation"
 
 export default function AdminLoginForm() {
   const { t } = useTranslation("adminAuth")

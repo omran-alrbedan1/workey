@@ -98,7 +98,7 @@ function ApplicantDetailsSkeleton() {
   )
 }
 
-function ApplicantDetailsTabs({ model }: { model: EmployerApplicantDetailsModel }) {
+function ApplicantDetailsTabs({ model: _model }: { model: EmployerApplicantDetailsModel }) {
   const { t } = useTranslation("employerApplicants")
 
   return (

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import EmptyState from "@/components/shared/states/EmptyState"
 import {
   AlertTriangle,
   Camera,
@@ -101,9 +102,11 @@ export default function VideoInterviewRoom({
           <ParticipantTile key={participant.identity} participant={participant} />
         ))}
         {participants.length === 0 ? (
-          <div className="flex aspect-video items-center justify-center rounded-xl border border-border bg-black text-sm text-white/60">
-            {t("video.noParticipants")}
-          </div>
+          <EmptyState
+            title={t("video.noParticipants")}
+            description={t("video.noParticipants")}
+            className="aspect-video rounded-xl border border-dashed border-border bg-background-card"
+          />
         ) : null}
       </div>
 
@@ -140,3 +143,5 @@ export default function VideoInterviewRoom({
     </div>
   )
 }
+
+

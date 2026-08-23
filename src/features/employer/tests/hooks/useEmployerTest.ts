@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { ROUTES } from "@/config"
 import { showSuccessToast } from "@/lib/toast"
 import { employerTestsService } from "../services/employerTests.service"
 import type { EmployerTest, EmployerTestInput } from "../types/employerTests.types"
