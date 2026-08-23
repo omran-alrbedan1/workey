@@ -71,7 +71,7 @@ export const ComboboxField: React.FC<ComboboxFieldProps> = ({
                   >
                     <Check
                       className={cn(
-                        "mr-2 h-4 w-4",
+                        "me-2 h-4 w-4",
                         field.value === option.value ? "opacity-100" : "opacity-0",
                       )}
                     />

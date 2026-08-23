@@ -80,7 +80,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({
                   >
                     <Check
                       className={cn(
-                        "mr-2 h-4 w-4",
+                        "me-2 h-4 w-4",
                         field.value?.includes(option.value) ? "opacity-100" : "opacity-0",
                       )}
                     />

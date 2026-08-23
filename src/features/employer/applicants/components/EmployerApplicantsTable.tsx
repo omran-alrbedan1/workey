@@ -136,7 +136,7 @@ function EmployerApplicantMobileCard({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="ghost" disabled={isUpdating} className="w-full">
-              {t("actions.label")} <MoreHorizontal className="ml-2 h-4 w-4" />
+              {t("actions.label")} <MoreHorizontal className="ms-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">

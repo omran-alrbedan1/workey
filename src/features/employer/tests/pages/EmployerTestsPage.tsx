@@ -64,7 +64,7 @@ export default function EmployerTestsPage() {
         count={tests.data?.pagination.total}
         rightContent={
           <Button onClick={() => navigate(ROUTES.employer.createTest)} className="text-white">
-            <Plus className="mr-2 h-4 w-4" /> {t("actions.new")}
+            <Plus className="me-2 h-4 w-4" /> {t("actions.new")}
           </Button>
         }
       />

@@ -83,7 +83,7 @@ function EmployerInterviewMobileCard({
           onClick={() => onViewDetails(interview)}
           className="w-full"
         >
-          <Eye className="mr-2 h-4 w-4" /> {t("actions.viewDetails")}
+          <Eye className="me-2 h-4 w-4" /> {t("actions.viewDetails")}
         </Button>
       </div>
     </article>

@@ -99,7 +99,7 @@ export default function InternalNotes({
             disabled={isCreating || !canCreate}
             className="shrink-0"
           >
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="me-2 h-4 w-4" />
             {t("internalNotes.addNote")}
           </Button>
         </CardHeader>

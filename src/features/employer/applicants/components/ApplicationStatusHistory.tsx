@@ -26,9 +26,9 @@ export default function ApplicationStatusHistory({ history }: ApplicationStatusH
         {history.map((entry) => (
           <div
             key={entry.id}
-            className="relative pl-8 pb-6 last:pb-0 before:absolute before:left-2 before:top-0 before:bottom-0 before:w-0.5 before:bg-border last:before:hidden"
+            className="relative pb-6 ps-8 last:pb-0 before:absolute before:top-0 before:bottom-0 before:w-0.5 before:bg-border last:before:hidden ltr:before:left-2 rtl:before:right-2"
           >
-            <div className="absolute left-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-background border border-border">
+            <div className="absolute top-0 flex h-4 w-4 items-center justify-center rounded-full border border-border bg-background ltr:left-0 rtl:right-0">
               <div className="h-2 w-2 rounded-full bg-primary" />
             </div>
             <div className="space-y-2">

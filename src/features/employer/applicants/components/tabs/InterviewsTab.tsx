@@ -58,7 +58,7 @@ export default function InterviewsTab({
               onClick={onSchedule}
               className="shrink-0"
             >
-              <Calendar className="h-4 w-4 mr-2" /> {t("interview.schedule")}
+              <Calendar className="me-2 h-4 w-4" /> {t("interview.schedule")}
             </Button>
           )}
         </CardHeader>
@@ -93,7 +93,7 @@ export default function InterviewsTab({
         </CardTitle>
         {canSchedule && (
           <Button type="button" variant="outline" size="sm" onClick={onSchedule} className="shrink-0">
-            <Calendar className="h-4 w-4 mr-2" /> {t("interview.schedule")}
+            <Calendar className="me-2 h-4 w-4" /> {t("interview.schedule")}
           </Button>
         )}
       </CardHeader>

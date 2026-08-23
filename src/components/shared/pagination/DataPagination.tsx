@@ -42,12 +42,12 @@ export const DataPagination: React.FC<DataPaginationProps> = ({
 
   return (
     <Pagination>
-      <PaginationContent className="space-x-3">
+      <PaginationContent className="gap-3">
         <PaginationItem>
           <PaginationLink
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             className={cn(
-              "gap-1 pl-2.5 cursor-pointer",
+              "gap-1 ps-2.5 cursor-pointer",
               currentPage === 1 && "pointer-events-none opacity-50 mx-4",
             )}
             aria-label={t("pagination.previousAria")}
@@ -77,7 +77,7 @@ export const DataPagination: React.FC<DataPaginationProps> = ({
           <PaginationLink
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             className={cn(
-              "gap-1 pr-2.5 cursor-pointer",
+              "gap-1 pe-2.5 cursor-pointer",
               currentPage === totalPages && "pointer-events-none opacity-50 mx-4 ",
             )}
             aria-label={t("pagination.nextAria")}

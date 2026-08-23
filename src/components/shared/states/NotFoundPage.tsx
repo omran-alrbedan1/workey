@@ -26,11 +26,11 @@ export default function NotFoundPage() {
         <p className="mt-3 text-sm text-text-secondary">{t("errors.pageNotFoundDesc")}</p>
         <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
           <Button onClick={handleGoBack} variant="outline">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="me-2 h-4 w-4 rtl:rotate-180" />
             {t("goBack")}
           </Button>
           <Button onClick={() => navigate(ROUTES.home)}>
-            <Home className="mr-2 h-4 w-4" />
+            <Home className="me-2 h-4 w-4" />
             {t("goHome")}
           </Button>
         </div>

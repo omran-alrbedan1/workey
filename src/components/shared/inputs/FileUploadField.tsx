@@ -123,7 +123,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
           type="button"
           variant="ghost"
           size="sm"
-          className="absolute top-2 right-2 h-8 w-8 rounded-full p-0 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-destructive-foreground"
+          className="absolute top-2 h-8 w-8 rounded-full p-0 bg-background/80 backdrop-blur-sm opacity-0 transition-all group-hover:opacity-100 hover:bg-destructive hover:text-destructive-foreground ltr:right-2 rtl:left-2"
           onClick={() => handleRemoveFile(index)}
           aria-label={t("fileUpload.removeFile")}
         >

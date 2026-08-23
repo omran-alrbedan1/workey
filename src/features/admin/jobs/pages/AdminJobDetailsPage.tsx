@@ -216,7 +216,7 @@ function CompanyTab({ data }: { data: AdminJobRecord }) {
             size="sm"
             onClick={() => navigate(ROUTES.admin.companyDetails(company.id!))}
           >
-            <Building2 className="mr-2 h-4 w-4" />
+            <Building2 className="me-2 h-4 w-4" />
             {t("details.viewCompany")}
           </Button>
         )}

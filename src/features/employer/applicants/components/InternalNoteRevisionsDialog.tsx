@@ -38,7 +38,7 @@ export default function InternalNoteRevisionsDialog({
           <DialogDescription>{t("internalNotes.revisionsDescription")}</DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-[65vh] space-y-3 overflow-y-auto py-2 pr-1">
+        <div className="max-h-[65vh] space-y-3 overflow-y-auto py-2 pe-1">
           {isLoading ? (
             <div className="space-y-3">
               <Skeleton className="h-24 w-full" />

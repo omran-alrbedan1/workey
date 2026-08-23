@@ -59,19 +59,19 @@ export default function ParticipantTile({ participant }: { participant: Particip
           {name}
         </div>
       )}
-      <div className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white">
+      <div className="absolute bottom-2 flex items-center gap-1.5 rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white ltr:left-2 rtl:right-2">
         {participant.isSpeaking && (
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
         )}
         {name}
       </div>
       {screenPub?.track && (
-        <span className="absolute top-2 left-2 flex h-6 w-6 items-center justify-center rounded-md bg-black/60 text-white">
+        <span className="absolute top-2 flex h-6 w-6 items-center justify-center rounded-md bg-black/60 text-white ltr:left-2 rtl:right-2">
           <ScreenShare className="h-3.5 w-3.5" />
         </span>
       )}
       {isMicMuted && (
-        <span className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-md bg-red-500/80 text-white">
+        <span className="absolute top-2 flex h-6 w-6 items-center justify-center rounded-md bg-red-500/80 text-white ltr:right-2 rtl:left-2">
           <MicOff className="h-3.5 w-3.5" />
         </span>
       )}

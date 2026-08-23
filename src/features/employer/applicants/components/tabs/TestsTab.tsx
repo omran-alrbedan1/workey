@@ -54,7 +54,7 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
             onClick={onViewAll}
             className="shrink-0"
           >
-            <FileText className="h-4 w-4 mr-2" /> {t("tests.viewAll")}
+            <FileText className="me-2 h-4 w-4" /> {t("tests.viewAll")}
           </Button>
         </CardHeader>
         <CardContent>
@@ -78,7 +78,7 @@ export default function TestsTab({ tests, onViewAll, onOpenTest }: TestsTabProps
           {t("tests.title")}
         </CardTitle>
         <Button type="button" variant="outline" size="sm" onClick={onViewAll} className="shrink-0">
-          <FileText className="h-4 w-4 mr-2" /> {t("tests.viewAll")}
+          <FileText className="me-2 h-4 w-4" /> {t("tests.viewAll")}
         </Button>
       </CardHeader>
       <CardContent className="space-y-2">

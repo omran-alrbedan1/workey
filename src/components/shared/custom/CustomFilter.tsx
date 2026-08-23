@@ -179,11 +179,11 @@ export function CustomFilter<T extends FieldValues>({
           disabled={!hasActive}
           className="group/btn h-8 px-3 text-xs transition-all duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
         >
-          <FilterX className="mr-1.5 h-3.5 w-3.5 transition-transform group-hover/btn:rotate-12" />
+          <FilterX className="me-1.5 h-3.5 w-3.5 transition-transform group-hover/btn:rotate-12" />
           <span className="hidden sm:inline">{t("reset") || "Reset Filters"}</span>
           <span className="sm:hidden">{t("reset") || "Reset"}</span>
           {hasActive && (
-            <span className="ml-1.5 rounded-full bg-primary px-1.5 py-0 text-xs text-white transition-all group-hover/btn:bg-red-500">
+            <span className="ms-1.5 rounded-full bg-primary px-1.5 py-0 text-xs text-white transition-all group-hover/btn:bg-red-500">
               {activeFilters.length}
             </span>
           )}
@@ -200,7 +200,7 @@ export function CustomFilter<T extends FieldValues>({
               return (
                 <div key={String(filter.name)}>
                   <label className="mb-1.5 block text-xs font-medium text-text-secondary">
-                    <Icon className="mr-1 inline-block h-3.5 w-3.5 text-primary" />
+                    <Icon className="me-1 inline-block h-3.5 w-3.5 text-primary" />
                     {filter.label}
                   </label>
                   <CustomFormField
@@ -237,7 +237,7 @@ export function CustomFilter<T extends FieldValues>({
                   style={{ minWidth: filter.minWidth ?? "150px" }}
                 >
                   <label className="mb-1.5 block text-xs font-medium text-text-secondary">
-                    <Icon className="mr-1 inline-block h-3.5 w-3.5 text-primary" />
+                    <Icon className="me-1 inline-block h-3.5 w-3.5 text-primary" />
                     {filter.label}
                   </label>
                   <CustomFormField
@@ -297,7 +297,7 @@ export function CustomFilter<T extends FieldValues>({
                 <span className="sm:hidden">{filter.label}: </span>
                 {label}
                 <XCircle
-                  className="ml-1 h-3 w-3 cursor-pointer transition-colors hover:text-red-500"
+                  className="ms-1 h-3 w-3 cursor-pointer transition-colors hover:text-red-500"
                   onClick={() => clearField(filter.name)}
                 />
               </Badge>

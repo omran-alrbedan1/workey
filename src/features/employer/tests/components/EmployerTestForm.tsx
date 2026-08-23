@@ -529,7 +529,7 @@ export default function EmployerTestForm({
             <div className="sm:col-span-2 flex items-center justify-between gap-4">
               {currentStep > 1 && (
                 <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}>
-                  <ChevronLeft className="mr-2 h-4 w-4" />
+                  <ChevronLeft className="me-2 h-4 w-4 rtl:rotate-180" />
                   {t("actions.back")}
                 </Button>
               )}
@@ -537,18 +537,18 @@ export default function EmployerTestForm({
               {currentStep < TOTAL_STEPS ? (
                 <Button type="button" onClick={() => void handleNext()} disabled={isPending}>
                   {t("actions.next")}
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  <ChevronRight className="ms-2 h-4 w-4 rtl:rotate-180" />
                 </Button>
               ) : (
                 <Button type="button" onClick={() => void handleFinalSubmit()} disabled={isPending}>
                   {isPending ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
                       {t("actions.saving")}
                     </>
                   ) : (
                     <>
-                      <Save className="mr-2 h-4 w-4" />
+                      <Save className="me-2 h-4 w-4" />
                       {test ? t("actions.save") : t("actions.create")}
                     </>
                   )}

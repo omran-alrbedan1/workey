@@ -113,7 +113,9 @@ function NavigationGroup({ item, onNavigate }: { item: NavigationItem; onNavigat
       >
         <Icon className="h-[18px] w-[18px]" />
         <span className="flex-1 text-start">{t(item.label)}</span>
-        <ChevronDown className={`h-4 w-4 transition ${open ? "rotate-0" : "-rotate-90"}`} />
+        <ChevronDown
+          className={`h-4 w-4 transition ${open ? "rotate-0" : "ltr:-rotate-90 rtl:rotate-90"}`}
+        />
       </button>
       {open && (
         <div className="ms-4 mt-1 space-y-1 border-s border-border ps-2">
@@ -131,7 +133,7 @@ function SidebarContent({ isMobile, onClose }: { isMobile: boolean; onClose?: ()
   const navigate = useNavigate()
 
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-border bg-background-card shadow-lg">
+    <aside className="flex h-screen w-64 shrink-0 flex-col border-e border-border bg-background-card shadow-lg">
       <div className="relative border-b border-border p-4">
         {isMobile && (
           <button

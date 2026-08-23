@@ -86,7 +86,7 @@ export default function TeamMemberList({
                   <p className="truncate text-sm font-semibold text-text-primary">
                     {member.name}
                     {member.is_current_user ? (
-                      <span className="ml-2 text-xs font-normal text-text-muted">
+                      <span className="ms-2 text-xs font-normal text-text-muted">
                         {t("team.currentUser")}
                       </span>
                     ) : null}

@@ -527,7 +527,7 @@ export default function AdminTestWizard({
             <div className="flex items-center justify-between gap-4 sm:col-span-2">
               {currentStep > 1 && (
                 <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}>
-                  <ChevronLeft className="mr-2 h-4 w-4" />
+                  <ChevronLeft className="me-2 h-4 w-4 rtl:rotate-180" />
                   {t("wizard.back")}
                 </Button>
               )}
@@ -535,7 +535,7 @@ export default function AdminTestWizard({
               {currentStep < TOTAL_STEPS ? (
                 <Button type="button" onClick={() => void handleNext()} disabled={isPending}>
                   {t("wizard.next")}
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  <ChevronRight className="ms-2 h-4 w-4 rtl:rotate-180" />
                 </Button>
               ) : (
                 <Button
@@ -546,12 +546,12 @@ export default function AdminTestWizard({
                 >
                   {isPending ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
                       {t("wizard.saving")}
                     </>
                   ) : (
                     <>
-                      <Save className="mr-2 h-4 w-4" />
+                      <Save className="me-2 h-4 w-4" />
                       {t("create.submit")}
                     </>
                   )}
