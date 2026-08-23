@@ -20,7 +20,7 @@ const Command = React.forwardRef<
 ))
 Command.displayName = CommandPrimitive.displayName
 
-interface CommandDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
+type CommandDialogProps = React.ComponentPropsWithoutRef<typeof Dialog> & {
   children: React.ReactNode
 }
 
@@ -121,7 +121,7 @@ const CommandItem = React.forwardRef<
 
 CommandItem.displayName = CommandPrimitive.Item.displayName
 
-interface CommandShortcutProps extends React.HTMLAttributes<HTMLSpanElement> {}
+type CommandShortcutProps = React.HTMLAttributes<HTMLSpanElement>
 
 const CommandShortcut = ({ className, ...props }: CommandShortcutProps) => {
   return (

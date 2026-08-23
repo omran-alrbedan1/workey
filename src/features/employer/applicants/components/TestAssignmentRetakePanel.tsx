@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { CalendarPlus, History, Loader2, RotateCcw, Save } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { StatusBadge } from "@/components/shared/badges"
@@ -62,7 +62,7 @@ export default function TestAssignmentRetakePanel({
   const [savingPolicy, setSavingPolicy] = useState(false)
   const [grantingRetake, setGrantingRetake] = useState(false)
 
-  const loadSeries = async () => {
+  const loadSeries = useCallback(async () => {
     setLoadingSeries(true)
     try {
       setSeries(await employerTestsService.getAttemptSeries(assignmentId))
@@ -72,7 +72,7 @@ export default function TestAssignmentRetakePanel({
     } finally {
       setLoadingSeries(false)
     }
-  }
+  }, [assignmentId, t])
 
   useEffect(() => {
     setMaxAttempts(currentMaxAttempts == null ? "" : String(currentMaxAttempts))
@@ -81,7 +81,7 @@ export default function TestAssignmentRetakePanel({
     setInstructions("")
     setDeadline("")
     void loadSeries()
-  }, [assignmentId, currentMaxAttempts])
+  }, [assignmentId, currentMaxAttempts, loadSeries])
 
   const updatePolicy = async () => {
     if (!canManage) return

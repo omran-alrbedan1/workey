@@ -1,5 +1,12 @@
-// @ts-nocheck
-import { useForm, FieldValues, Path, PathValue } from "react-hook-form"
+import {
+  useForm,
+  useWatch,
+  type DefaultValues,
+  type FieldValues,
+  type Path,
+  type PathValue,
+  type SubmitHandler,
+} from "react-hook-form"
 import type { DateRange } from "react-day-picker"
 import { FilterX, SlidersHorizontal, XCircle, LucideIcon } from "lucide-react"
 import { useEffect, useMemo, ReactNode } from "react"
@@ -51,7 +58,10 @@ function isFieldActive<T extends FieldValues>(
     case "text":
       return typeof value === "string" && value.trim() !== ""
     case "date":
-      return value instanceof Date || (typeof value === "string" && value.trim() !== "")
+      return (
+        isDateValue(value) ||
+        (typeof value === "string" && (value as string).trim() !== "")
+      )
     case "select":
       return value !== empty && value !== undefined && value !== null && value !== ""
     default:
@@ -77,7 +87,9 @@ function defaultBadgeLabel<T extends FieldValues>(
     return `${from} – ${to}`
   }
 
-  if (value instanceof Date) return format(value, "MMM d, yyyy")
+  if (isDateValue(value)) {
+    return format(value, "MMM d, yyyy")
+  }
   const str = String(value)
   return str.length > 24 ? `${str.slice(0, 24)}…` : str
 }
@@ -94,16 +106,16 @@ export function CustomFilter<T extends FieldValues>({
 }: CustomFilterProps<T>) {
   const { t } = useTranslation("common")
   const form = useForm<T>({
-    defaultValues: defaultValues as T,
+    defaultValues: defaultValues as DefaultValues<T>,
   })
-  const { control, reset, handleSubmit, watch, setValue } = form
-  const currentValues = watch()
+  const { control, reset, handleSubmit, setValue, getValues } = form
+  const currentValues = useWatch({ control }) as T
 
   useEffect(() => {
     if (initialFilters && Object.keys(initialFilters).length > 0) {
       reset({ ...defaultValues, ...initialFilters } as T)
     }
-  }, [initialFilters, reset])
+  }, [initialFilters, defaultValues, reset])
 
   const activeFilters = useMemo(
     () =>
@@ -119,7 +131,7 @@ export function CustomFilter<T extends FieldValues>({
 
   const hasActive = activeFilters.length > 0
 
-  const onSubmit = (data: T) => {
+  const onSubmit: SubmitHandler<T> = (data) => {
     onApplyFilters(data)
   }
 
@@ -134,7 +146,7 @@ export function CustomFilter<T extends FieldValues>({
       shouldValidate: true,
     })
     setTimeout(() => {
-      const currentFormValues = watch()
+      const currentFormValues = getValues()
       onSubmit(currentFormValues)
     }, 0)
   }
@@ -307,4 +319,8 @@ export function CustomFilter<T extends FieldValues>({
       )}
     </div>
   )
+}
+
+function isDateValue(value: unknown): value is Date {
+  return value instanceof Date
 }

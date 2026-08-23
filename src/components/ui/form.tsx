@@ -24,10 +24,10 @@ type FormFieldContextValue<
 
 const FormFieldContext = React.createContext<FormFieldContextValue | null>(null)
 
-interface FormFieldProps<
+type FormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> extends ControllerProps<TFieldValues, TName> {}
+> = ControllerProps<TFieldValues, TName>
 
 const FormField = <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
   ...props
@@ -72,7 +72,7 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue | null>(null)
 
-interface FormItemProps extends React.HTMLAttributes<HTMLDivElement> {}
+type FormItemProps = React.HTMLAttributes<HTMLDivElement>
 
 const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(({ className, ...props }, ref) => {
   const id = React.useId()
@@ -85,7 +85,7 @@ const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(({ className, .
 })
 FormItem.displayName = "FormItem"
 
-interface FormLabelProps extends React.ComponentPropsWithoutRef<typeof Label> {}
+type FormLabelProps = React.ComponentPropsWithoutRef<typeof Label>
 
 const FormLabel = React.forwardRef<React.ElementRef<typeof Label>, FormLabelProps>(
   ({ className, ...props }, ref) => {
@@ -103,7 +103,7 @@ const FormLabel = React.forwardRef<React.ElementRef<typeof Label>, FormLabelProp
 )
 FormLabel.displayName = "FormLabel"
 
-interface FormControlProps extends React.ComponentPropsWithoutRef<typeof Slot> {}
+type FormControlProps = React.ComponentPropsWithoutRef<typeof Slot>
 
 const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, FormControlProps>(
   ({ ...props }, ref) => {
@@ -122,7 +122,7 @@ const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, FormControlP
 )
 FormControl.displayName = "FormControl"
 
-interface FormDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+type FormDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>
 
 const FormDescription = React.forwardRef<HTMLParagraphElement, FormDescriptionProps>(
   ({ className, ...props }, ref) => {
@@ -140,7 +140,7 @@ const FormDescription = React.forwardRef<HTMLParagraphElement, FormDescriptionPr
 )
 FormDescription.displayName = "FormDescription"
 
-interface FormMessageProps extends React.HTMLAttributes<HTMLParagraphElement> {
+type FormMessageProps = React.HTMLAttributes<HTMLParagraphElement> & {
   children?: React.ReactNode
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { CalendarClock, Loader2, RotateCcw, Save } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
@@ -55,7 +55,7 @@ export default function TestAssignmentDeadlinePanel({
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     setLoadingHistory(true)
     try {
       setHistory(await employerTestsService.getDeadlineHistory(assignmentId))
@@ -65,13 +65,13 @@ export default function TestAssignmentDeadlinePanel({
     } finally {
       setLoadingHistory(false)
     }
-  }
+  }, [assignmentId, t])
 
   useEffect(() => {
     setDeadline(toDateTimeLocal(currentDeadline))
     setReason("")
     void loadHistory()
-  }, [assignmentId, currentDeadline])
+  }, [assignmentId, currentDeadline, loadHistory])
 
   const saveDeadline = async () => {
     if (!canManage) return

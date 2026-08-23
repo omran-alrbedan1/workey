@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { Building2, CheckCircle2, Clock, LogIn, Mail, ShieldCheck, XCircle } from "lucide-react"
@@ -29,13 +29,12 @@ export default function CompanyInvitationPage() {
   })
 
   const invitation = invitationQuery.data
-  const expiresAt = useMemo(() => {
-    if (!invitation?.expires_at) return null
-    return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(invitation.expires_at))
-  }, [invitation?.expires_at])
+  const expiresAt = invitation?.expires_at
+    ? new Intl.DateTimeFormat(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date(invitation.expires_at))
+    : null
 
   const acceptMutation = useMutation({
     mutationFn: () =>

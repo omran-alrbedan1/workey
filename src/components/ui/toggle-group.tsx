@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 "use client"
 import * as React from "react"
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group"
@@ -17,9 +15,7 @@ const ToggleGroupContext = React.createContext<ToggleGroupContextType>({
   variant: "default",
 })
 
-interface ToggleGroupProps extends React.ComponentPropsWithoutRef<
-  typeof ToggleGroupPrimitive.Root
-> {
+type ToggleGroupProps = React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> & {
   variant?: "default" | "outline"
   size?: "default" | "sm" | "lg"
 }
@@ -39,9 +35,7 @@ const ToggleGroup = React.forwardRef<
 
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
 
-interface ToggleGroupItemProps extends React.ComponentPropsWithoutRef<
-  typeof ToggleGroupPrimitive.Item
-> {
+type ToggleGroupItemProps = React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> & {
   variant?: "default" | "outline"
   size?: "default" | "sm" | "lg"
 }

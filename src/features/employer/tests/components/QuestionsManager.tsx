@@ -214,7 +214,7 @@ export default function QuestionsManager({
 
       return questionService.updateQuestionOption(testId, question.id, option.id, input)
     },
-    [testId],
+    [questionService, testId],
   )
 
   const addOption = useCallback(
@@ -241,7 +241,7 @@ export default function QuestionsManager({
         options: [...options, normalizeOption(option, options.length)],
       })
     },
-    [questions, replaceQuestion, testId],
+    [questionService, questions, replaceQuestion, testId],
   )
 
   const updateOptionText = useCallback(
@@ -299,7 +299,7 @@ export default function QuestionsManager({
         options: nextOptions,
       })
     },
-    [questions, replaceQuestion, testId],
+    [questionService, questions, replaceQuestion, testId],
   )
 
   const deleteOption = useCallback(
@@ -322,7 +322,7 @@ export default function QuestionsManager({
         options: nextOptions,
       })
     },
-    [questions, replaceQuestion, testId],
+    [questionService, questions, replaceQuestion, testId],
   )
 
   const moveOption = useCallback(

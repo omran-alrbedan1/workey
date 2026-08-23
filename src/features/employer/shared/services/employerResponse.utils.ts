@@ -34,7 +34,6 @@ export function unwrapEmployerCollection<T>(response: unknown): EmployerCollecti
   let payload = response
   if (isRecord(payload) && "data" in payload) payload = payload.data
 
-  console.log(response)
   let items: T[] = []
   let meta: Record<string, unknown> = {}
 
