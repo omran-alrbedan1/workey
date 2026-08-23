@@ -43,12 +43,11 @@ export function formatETA(isoDate: string): string {
   return `In ${hours}h${mins > 0 ? ` ${mins}m` : ""}`
 }
 
-export function formatAddress(address: any): string {
-  return address
-    .split(",")
-    .map((part: any) => part.trim())
-    .filter(Boolean)
-    .join(", ")
+export function formatAddress(address: string | string[] | null | undefined): string {
+  if (!address) return "-"
+
+  const parts = Array.isArray(address) ? address : address.split(",")
+  return parts.map((part) => part.trim()).filter(Boolean).join(", ")
 }
 
 export function formatJoinedDate(date: string | null | undefined, locale: string): string {

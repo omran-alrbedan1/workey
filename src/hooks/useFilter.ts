@@ -1,26 +1,46 @@
 import { useState, useMemo, useCallback, useEffect } from "react"
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom"
 
-export interface FilterConfig<T = any> {
+type RangeFilterValue = {
+  from?: Date
+  to?: Date
+}
+
+export type FilterValue = string | string[] | number | RangeFilterValue | undefined
+type FilterMap = Record<string, FilterValue>
+
+export interface FilterConfig<T extends object = object> {
   key: string
   label: string
   type: "search" | "select" | "multi-select" | "date" | "range"
   options?: Array<{ value: string; label: string }>
-  getValue?: (item: T) => string | string[] | number
+  getValue?: (item: T) => string | string[] | number | null | undefined
 }
 
-export interface UseFiltersOptions<T> {
-  data: T[]
-  config: FilterConfig<T>[]
-  initialFilters?: Record<string, any>
+export interface UseFiltersOptions<
+  TData extends object,
+  TFilters extends object = Record<string, FilterValue>,
+> {
+  data: TData[]
+  config: FilterConfig<TData>[]
+  initialFilters?: Partial<TFilters>
   syncWithURL?: boolean
 }
 
-function parseURLFilters(
+function isRangeFilterValue(value: FilterValue): value is RangeFilterValue {
+  return Boolean(value && typeof value === "object" && ("from" in value || "to" in value))
+}
+
+function getFallbackValue(item: object, key: string): string | number {
+  const value = (item as Record<string, unknown>)[key]
+  return value == null ? "" : (value as string | number)
+}
+
+function parseURLFilters<TData extends object>(
   searchParams: URLSearchParams,
-  config: FilterConfig<any>[],
-): Record<string, any> {
-  const result: Record<string, any> = {}
+  config: FilterConfig<TData>[],
+): FilterMap {
+  const result: FilterMap = {}
   config.forEach((cfg) => {
     const urlValue = searchParams.get(cfg.key)
     if (urlValue !== null) {
@@ -42,13 +62,13 @@ function parseURLFilters(
   return result
 }
 
-function serializeFiltersToParams(filters: Record<string, any>): URLSearchParams {
+function serializeFiltersToParams(filters: FilterMap): URLSearchParams {
   const params = new URLSearchParams()
   Object.entries(filters).forEach(([key, value]) => {
     if (!value || value === "" || value === "all") return
     if (Array.isArray(value) && value.length === 0) return
 
-    if (value?.from !== undefined || value?.to !== undefined) {
+    if (isRangeFilterValue(value)) {
       const from = value.from ? value.from.getTime() : ""
       const to = value.to ? value.to.getTime() : ""
       params.set(key, `${from}|${to}`)
@@ -61,28 +81,32 @@ function serializeFiltersToParams(filters: Record<string, any>): URLSearchParams
   return params
 }
 
-export function useFilters<T extends Record<string, any>>({
+export function useFilters<
+  TData extends object,
+  TFilters extends object = Record<string, FilterValue>,
+>({
   data,
   config,
   initialFilters = {},
   syncWithURL = true,
-}: UseFiltersOptions<T>) {
+}: UseFiltersOptions<TData, TFilters>) {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [filters, setFilters] = useState<Record<string, any>>(() => {
+  const [filters, setFilters] = useState<FilterMap>(() => {
     if (syncWithURL) {
       return parseURLFilters(searchParams, config)
     }
-    const initial: Record<string, any> = {}
+    const initial: FilterMap = {}
+    const initialFilterMap = initialFilters as FilterMap
     config.forEach((cfg) => {
-      initial[cfg.key] = initialFilters[cfg.key] ?? (cfg.type === "range" ? undefined : "")
+      initial[cfg.key] = initialFilterMap[cfg.key] ?? (cfg.type === "range" ? undefined : "")
     })
     return initial
   })
 
-  // Sync URL → state on back/forward navigation
+  // Sync URL -> state on back/forward navigation.
   useEffect(() => {
     if (!syncWithURL) return
     const handlePop = () => {
@@ -93,16 +117,12 @@ export function useFilters<T extends Record<string, any>>({
     return () => window.removeEventListener("popstate", handlePop)
   }, [config, syncWithURL])
 
-  /**
-   * The single source of truth for applying filters.
-   * Accepts new filter values, updates state, and syncs URL.
-   */
   const applyFilters = useCallback(
-    (newFilters: Record<string, any>) => {
-      // Normalize: replace 'all' / undefined with ""
-      const normalized: Record<string, any> = {}
+    (newFilters: TFilters) => {
+      const newFilterMap = newFilters as FilterMap
+      const normalized: FilterMap = {}
       config.forEach((cfg) => {
-        const val = newFilters[cfg.key]
+        const val = newFilterMap[cfg.key]
         if (cfg.type === "range") {
           normalized[cfg.key] = val ?? undefined
         } else {
@@ -122,7 +142,7 @@ export function useFilters<T extends Record<string, any>>({
   )
 
   const resetFilters = useCallback(() => {
-    const reset: Record<string, any> = {}
+    const reset: FilterMap = {}
     config.forEach((cfg) => {
       reset[cfg.key] = cfg.type === "range" ? undefined : ""
     })
@@ -137,7 +157,7 @@ export function useFilters<T extends Record<string, any>>({
       Object.entries(filters).some(([, value]) => {
         if (!value || value === "" || value === "all") return false
         if (Array.isArray(value)) return value.length > 0
-        if (typeof value === "object") return value.from || value.to
+        if (isRangeFilterValue(value)) return Boolean(value.from || value.to)
         return true
       }),
     [filters],
@@ -148,7 +168,7 @@ export function useFilters<T extends Record<string, any>>({
       Object.values(filters).filter((value) => {
         if (!value || value === "" || value === "all") return false
         if (Array.isArray(value)) return value.length > 0
-        if (typeof value === "object") return value.from || value.to
+        if (isRangeFilterValue(value)) return Boolean(value.from || value.to)
         return true
       }).length,
     [filters],
@@ -164,17 +184,17 @@ export function useFilters<T extends Record<string, any>>({
       switch (cfg.type) {
         case "search":
           result = result.filter((item) => {
-            const value = cfg.getValue!(item)
+            const value = cfg.getValue ? cfg.getValue(item) : getFallbackValue(item, cfg.key)
             if (Array.isArray(value)) {
-              return value.some((v) => v.toLowerCase().includes(filterValue.toLowerCase()))
+              return value.some((v) => v.toLowerCase().includes(String(filterValue).toLowerCase()))
             }
-            return String(value).toLowerCase().includes(filterValue.toLowerCase())
+            return String(value).toLowerCase().includes(String(filterValue).toLowerCase())
           })
           break
 
         case "select":
           result = result.filter((item) => {
-            const value = cfg.getValue ? cfg.getValue(item) : String(item[cfg.key])
+            const value = cfg.getValue ? cfg.getValue(item) : getFallbackValue(item, cfg.key)
             return value === filterValue
           })
           break
@@ -182,25 +202,24 @@ export function useFilters<T extends Record<string, any>>({
         case "multi-select":
           if (Array.isArray(filterValue) && filterValue.length > 0) {
             result = result.filter((item) => {
-              const value = cfg.getValue ? cfg.getValue(item) : String(item[cfg.key])
-              return filterValue.includes(value)
+              const value = cfg.getValue ? cfg.getValue(item) : getFallbackValue(item, cfg.key)
+              return filterValue.includes(String(value))
             })
           }
           break
 
         case "date":
           result = result.filter((item) => {
-            const value = cfg.getValue ? cfg.getValue(item) : String(item[cfg.key])
+            const value = cfg.getValue ? cfg.getValue(item) : getFallbackValue(item, cfg.key)
             return value === filterValue
           })
           break
 
         case "range":
-          if (filterValue?.from !== undefined || filterValue?.to !== undefined) {
+          if (isRangeFilterValue(filterValue)) {
             result = result.filter((item) => {
-              const value = cfg.getValue
-                ? (cfg.getValue(item) as number)
-                : new Date(item[cfg.key]).getTime()
+              const rawValue = cfg.getValue ? cfg.getValue(item) : getFallbackValue(item, cfg.key)
+              const value = Number(rawValue)
               if (filterValue.from && value < filterValue.from.getTime()) return false
               if (filterValue.to && value > filterValue.to.getTime()) return false
               return true
@@ -220,8 +239,8 @@ export function useFilters<T extends Record<string, any>>({
       if (cfg.options) return cfg.options
       const values = new Set<string>()
       data.forEach((item) => {
-        const value = cfg.getValue ? cfg.getValue(item) : String(item[cfg.key])
-        if (Array.isArray(value)) value.forEach((v) => values.add(v))
+        const value = cfg.getValue ? cfg.getValue(item) : getFallbackValue(item, cfg.key)
+        if (Array.isArray(value)) value.forEach((v) => values.add(String(v)))
         else values.add(String(value))
       })
       return Array.from(values)
@@ -231,11 +250,10 @@ export function useFilters<T extends Record<string, any>>({
     [data, config],
   )
 
-  // Form-compatible shape: range stays as-is, others default to ""
   const filtersForForm = useMemo(() => {
-    const form: Record<string, any> = {}
+    const form: Partial<TFilters> = {}
     config.forEach((cfg) => {
-      form[cfg.key] = filters[cfg.key] ?? (cfg.type === "range" ? undefined : "")
+      ;(form as FilterMap)[cfg.key] = filters[cfg.key] ?? (cfg.type === "range" ? undefined : "")
     })
     return form
   }, [filters, config])

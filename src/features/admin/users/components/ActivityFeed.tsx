@@ -11,6 +11,7 @@ import {
   UserMinus,
   Mail,
   Shield,
+  type LucideIcon,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -19,7 +20,7 @@ import { activityService } from "@/shared/activity/services/activity.service"
 import type { Activity } from "@/types/activity.types"
 import { useQuery } from "@tanstack/react-query"
 
-const activityIcons: Record<string, any> = {
+const activityIcons: Record<string, LucideIcon> = {
   user_created: UserPlus,
   user_updated: Users,
   user_deleted: UserMinus,

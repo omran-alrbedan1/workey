@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { keyOf } from "@/lib/keyValue"
+import { keyOf, type KeyValueField } from "@/lib/keyValue"
 import { ROUTES } from "@/config"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 import type { AdminUserRecord, AdminUserStatus } from "../types/adminUsers.types"
@@ -136,16 +136,16 @@ const AdminUserMobileCard = ({ user, isUpdating, onAction }: AdminUserMobileCard
   )
 }
 
-function getRoleDisplay(role: string | any) {
+function getRoleDisplay(role: KeyValueField) {
   if (typeof role === "object" && role !== null) {
-    return role.value || role.key || String(role)
+    return role.value || role.key || ""
   }
   return role || ""
 }
 
 function useRoleLabel() {
   const { t } = useTranslation("adminUsers")
-  return (role: string | any) => {
+  return (role: KeyValueField) => {
     const display = getRoleDisplay(role)
     if (!display) return "—"
     return t(`roles.${display}`, { defaultValue: display })

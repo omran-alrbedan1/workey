@@ -8,7 +8,10 @@ import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { useFilters } from "@/hooks/useFilter"
 import { useSearchParams } from "react-router-dom"
 import { adminCompanyFilterConfig } from "../configs/adminCompanies.config"
-import type { AdminCompanyFilterForm } from "../types/adminCompanies.types"
+import type {
+  AdminCompanyFilterForm,
+  AdminCompanyRecord,
+} from "../types/adminCompanies.types"
 
 const keys = {
   all: ["admin", "companies"] as const,
@@ -68,7 +71,7 @@ export function useAdminCompanies() {
     },
     onError: (error) => showErrorToast(error, "Unable to create company."),
   })
-  const filtering = useFilters({
+  const filtering = useFilters<AdminCompanyRecord, AdminCompanyFilterForm>({
     data: query.data?.items ?? [],
     config: adminCompanyFilterConfig,
     syncWithURL: true,
