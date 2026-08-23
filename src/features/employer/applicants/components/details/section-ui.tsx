@@ -172,5 +172,3 @@ export function formatSalary(min?: string | number | null, max?: string | number
   if (min && max) return `${min} - ${max}`
   return String(min ?? max)
 }
-
-

@@ -62,5 +62,3 @@ export default function AdminCompanyActivityPanel({ company }: { company: AdminC
     </SectionCard>
   )
 }
-
-

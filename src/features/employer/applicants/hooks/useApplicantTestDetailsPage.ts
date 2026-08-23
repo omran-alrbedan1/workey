@@ -105,7 +105,10 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     tests.deleteGradeMutation.isPending ||
     tests.bulkGradeMutation.isPending
 
-  const applicationActions = useMemo(() => getAllowedApplicationActions(applicant.data), [applicant.data])
+  const applicationActions = useMemo(
+    () => getAllowedApplicationActions(applicant.data),
+    [applicant.data],
+  )
   const canManage = applicant.data?.permissions?.can_manage !== false
 
   const isTerminalStatus = useMemo(() => {
@@ -262,7 +265,8 @@ export function useApplicantTestDetailsPage(): ApplicantTestDetailsModel {
     isBulkSaving: tests.bulkGradeMutation.isPending,
     isStatusPending: statusMutation.isPending,
     isTerminalStatus,
-    hasExplicitNextSteps: applicationActions.source === "allowed_actions" || allowedNextSteps.length > 0,
+    hasExplicitNextSteps:
+      applicationActions.source === "allowed_actions" || allowedNextSteps.length > 0,
     canManage,
     allowedNextSteps,
     manualAnswersCount: manualAnswers.length,

@@ -65,9 +65,7 @@ export const adminUsersService = {
     id: string | number,
     params: AdminListParams = {},
   ): Promise<AdminCollection<AdminUserApplicationItem>> {
-    return unwrapCollection(
-      await api.get(API_ENDPOINTS.admin.userApplications(id), { params }),
-    )
+    return unwrapCollection(await api.get(API_ENDPOINTS.admin.userApplications(id), { params }))
   },
   async listJobs(
     id: string | number,
@@ -79,48 +77,36 @@ export const adminUsersService = {
     id: string | number,
     params: AdminListParams = {},
   ): Promise<AdminCollection<AdminUserInterviewItem>> {
-    return unwrapCollection(
-      await api.get(API_ENDPOINTS.admin.userInterviews(id), { params }),
-    )
+    return unwrapCollection(await api.get(API_ENDPOINTS.admin.userInterviews(id), { params }))
   },
   async listTestAssignments(
     id: string | number,
     params: AdminListParams = {},
   ): Promise<AdminCollection<AdminUserTestAssignmentItem>> {
-    return unwrapCollection(
-      await api.get(API_ENDPOINTS.admin.userTestAssignments(id), { params }),
-    )
+    return unwrapCollection(await api.get(API_ENDPOINTS.admin.userTestAssignments(id), { params }))
   },
   async listActivity(
     id: string | number,
     params: AdminListParams = {},
   ): Promise<AdminCollection<AdminUserActivityEvent>> {
-    return unwrapCollection(
-      await api.get(API_ENDPOINTS.admin.userActivity(id), { params }),
-    )
+    return unwrapCollection(await api.get(API_ENDPOINTS.admin.userActivity(id), { params }))
   },
   async listAuditLogs(
     id: string | number,
     params: AdminListParams = {},
   ): Promise<AdminCollection<AdminUserAuditLogItem>> {
-    return unwrapCollection(
-      await api.get(API_ENDPOINTS.admin.userAuditLogs(id), { params }),
-    )
+    return unwrapCollection(await api.get(API_ENDPOINTS.admin.userAuditLogs(id), { params }))
   },
   async listLoginHistory(
     id: string | number,
     params: AdminListParams = {},
   ): Promise<AdminCollection<AdminUserLoginItem>> {
-    return unwrapCollection(
-      await api.get(API_ENDPOINTS.admin.userLoginHistory(id), { params }),
-    )
+    return unwrapCollection(await api.get(API_ENDPOINTS.admin.userLoginHistory(id), { params }))
   },
   async listSessions(
     id: string | number,
     params: AdminListParams = {},
   ): Promise<AdminCollection<AdminUserSessionItem>> {
-    return unwrapCollection(
-      await api.get(API_ENDPOINTS.admin.userSessions(id), { params }),
-    )
+    return unwrapCollection(await api.get(API_ENDPOINTS.admin.userSessions(id), { params }))
   },
 }

@@ -92,7 +92,13 @@ export default function InterviewsTab({
           {t("interview.title")}
         </CardTitle>
         {canSchedule && (
-          <Button type="button" variant="outline" size="sm" onClick={onSchedule} className="shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onSchedule}
+            className="shrink-0"
+          >
             <Calendar className="me-2 h-4 w-4" /> {t("interview.schedule")}
           </Button>
         )}

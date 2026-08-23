@@ -35,8 +35,7 @@ export default function AdminUserOverview({ user }: { user: AdminUserRecord }) {
   const seeker = user.job_seeker_profile ?? null
   const employer = user.employer_profile ?? null
   const phone = seeker?.phone || employer?.phone || null
-  const location =
-    [seeker?.location, seeker?.city?.name].filter(Boolean).join(", ") || null
+  const location = [seeker?.location, seeker?.city?.name].filter(Boolean).join(", ") || null
   const bio = seeker?.summary || employer?.bio || null
   const headline = seeker?.headline || employer?.job_title || null
 

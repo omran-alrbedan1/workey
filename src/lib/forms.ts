@@ -1,9 +1,4 @@
-import type {
-  FieldPath,
-  FieldValues,
-  Path,
-  UseFormSetError,
-} from "react-hook-form"
+import type { FieldPath, FieldValues, Path, UseFormSetError } from "react-hook-form"
 
 function firstValidationMessage(value: unknown): string | undefined {
   if (typeof value === "string" && value.trim()) return value

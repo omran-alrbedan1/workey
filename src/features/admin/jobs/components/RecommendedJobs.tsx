@@ -140,5 +140,3 @@ export default function RecommendedJobs({ candidateId, limit = 10 }: Recommended
     </div>
   )
 }
-
-

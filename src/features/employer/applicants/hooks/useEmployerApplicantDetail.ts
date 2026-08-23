@@ -33,9 +33,10 @@ export function useEmployerApplicantDetail(applicationId?: string | number) {
 export function useDownloadCv() {
   return async (application: EmployerApplicant) => {
     const document = getApplicationCvDocument(application)
-    const url = application.submitted_snapshot?.cv?.download_url
-      ?? application.submitted_snapshot?.generated_document?.download_url
-      ?? application.submitted_cv?.download_url
+    const url =
+      application.submitted_snapshot?.cv?.download_url ??
+      application.submitted_snapshot?.generated_document?.download_url ??
+      application.submitted_cv?.download_url
 
     if (!document?.canDownload || !url) {
       throw new Error("CV download is not available for this application")
@@ -47,12 +48,13 @@ export function useDownloadCv() {
 
 export function usePreviewCv() {
   return async (application: EmployerApplicant) => {
-    const previewUrl = application.submitted_snapshot?.cv?.preview_url
-      ?? application.submitted_snapshot?.generated_document?.preview_url
-      ?? application.submitted_cv?.preview_url
-      ?? application.submitted_snapshot?.cv?.download_url
-      ?? application.submitted_snapshot?.generated_document?.download_url
-      ?? application.submitted_cv?.download_url
+    const previewUrl =
+      application.submitted_snapshot?.cv?.preview_url ??
+      application.submitted_snapshot?.generated_document?.preview_url ??
+      application.submitted_cv?.preview_url ??
+      application.submitted_snapshot?.cv?.download_url ??
+      application.submitted_snapshot?.generated_document?.download_url ??
+      application.submitted_cv?.download_url
 
     if (!canPreviewCv(application) || !previewUrl) {
       throw new Error("CV preview is not available for this application")

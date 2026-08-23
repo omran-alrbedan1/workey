@@ -30,7 +30,7 @@ function normalizeTypeKey(type: string): string {
 }
 
 function fallbackTypeLabel(type: string): string {
-  return type.replace(/[_.]+/g, " ").replace(/w/g, (char) => char.toUpperCase())
+  return type.replace(/[_.]+/g, " ").replace(/\w/g, (char) => char.toUpperCase())
 }
 
 function localizedTypeKey(notification: NotificationRecordBase): string | undefined {

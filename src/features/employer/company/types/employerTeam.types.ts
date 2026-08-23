@@ -1,11 +1,6 @@
 import type { KeyValueField } from "@/lib/keyValue"
 
-export type CompanyMemberRole =
-  | "owner"
-  | "company_admin"
-  | "recruiter"
-  | "interviewer"
-  | "reviewer"
+export type CompanyMemberRole = "owner" | "company_admin" | "recruiter" | "interviewer" | "reviewer"
 
 export interface CompanyMember {
   id: string | number
@@ -13,9 +8,7 @@ export interface CompanyMember {
   name: string
   email: string
   role: KeyValueField
-  company_role?: KeyValueField
   status: KeyValueField
-  membership_status?: KeyValueField
   avatar_url?: string | null
   phone?: string | null
   last_active_at?: string | null
@@ -40,7 +33,6 @@ export interface CompanyInvitation {
   id: string | number
   email: string
   role: KeyValueField
-  company_role?: KeyValueField
   status: KeyValueField
   invited_by?: { id: string | number; name: string } | null
   token?: string

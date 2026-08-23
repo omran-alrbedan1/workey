@@ -157,7 +157,6 @@ export const API_ENDPOINTS = Object.freeze({
     userLoginHistory: (id: string | number) => `/admin/users/${id}/login-history`,
     userSessions: (id: string | number) => `/admin/users/${id}/sessions`,
     userRole: (id: string | number) => `/admin/users/${id}/role`,
-    userStatus: (id: string | number) => `/admin/users/${id}/status`,
     activateUser: (id: string | number) => `/admin/users/${id}/activate`,
     suspendUser: (id: string | number) => `/admin/users/${id}/suspend`,
     companies: "/admin/companies",

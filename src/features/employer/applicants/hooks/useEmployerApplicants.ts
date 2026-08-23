@@ -63,4 +63,3 @@ export function useEmployerApplicants(jobId?: string | number) {
 
   return { ...query, page, setPage, statusMutation, scheduleInterviewMutation }
 }
-

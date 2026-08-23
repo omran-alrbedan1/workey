@@ -463,6 +463,7 @@ export default function AdminTestWizard({
                     })
                   }}
                   testId={createdTestId}
+                  testService={adminTestsService}
                   namespace="adminTests"
                   validationErrors={form.formState.errors.questions}
                 />
@@ -665,4 +666,3 @@ function ReviewItem({ label, value }: { label: string; value: string }) {
     </div>
   )
 }
-

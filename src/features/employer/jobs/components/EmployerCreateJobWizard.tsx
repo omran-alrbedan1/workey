@@ -170,7 +170,7 @@ function WizardSkillPicker({
           </CommandList>
         </Command>
       </div>
-            {selected.length === 0 ? (
+      {selected.length === 0 ? (
         <EmptyState
           title={t("wizard.selectedEmpty", { group: t(groupLabel) })}
           description={t("wizard.selectedEmpty", { group: t(groupLabel) })}
@@ -899,5 +899,3 @@ export default function EmployerCreateJobWizard() {
     </div>
   )
 }
-
-

@@ -87,7 +87,9 @@ export default function ApplicantTestGradingTab({
               <Button
                 type="button"
                 size="sm"
-                disabled={!activeAttemptId || manualAnswersCount === 0 || isGradingBusy || !canManage}
+                disabled={
+                  !activeAttemptId || manualAnswersCount === 0 || isGradingBusy || !canManage
+                }
                 onClick={onBulkSave}
               >
                 {isBulkSaving ? (

@@ -187,7 +187,9 @@ function ApplicantDetailsTabContent({ model }: { model: EmployerApplicantDetails
       <TabsContent value="interviews">
         <InterviewsTab
           interviews={model.interviews}
-          canSchedule={getAllowedApplicationActions(application).flows.includes("schedule_interview")}
+          canSchedule={getAllowedApplicationActions(application).flows.includes(
+            "schedule_interview",
+          )}
           onSchedule={() => model.setShowScheduleDialog(true)}
         />
       </TabsContent>

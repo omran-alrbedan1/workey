@@ -30,9 +30,7 @@ function normalizeMember(member: CompanyMember): CompanyMember {
     ...member,
     id: raw.id ?? raw.user_id ?? "",
     role,
-    company_role: role,
     status,
-    membership_status: status,
     can_update_role: member.can_update_role ?? member.available_actions?.change_role,
     can_update_status:
       member.can_update_status ??
@@ -52,7 +50,6 @@ function normalizeInvitation(invitation: CompanyInvitation): CompanyInvitation {
   return {
     ...invitation,
     role,
-    company_role: role,
   }
 }
 

@@ -12,7 +12,16 @@ import {
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 
-export type ErrorVariant = "default" | "401" | "404" | "422" | "500" | "403" | "network" | "timeout" | "custom"
+export type ErrorVariant =
+  | "default"
+  | "401"
+  | "404"
+  | "422"
+  | "500"
+  | "403"
+  | "network"
+  | "timeout"
+  | "custom"
 
 interface ErrorStateProps {
   title?: string
@@ -260,4 +269,3 @@ const ErrorState: React.FC<ErrorStateProps> = ({
 }
 
 export default ErrorState
-

@@ -30,7 +30,11 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { employerTestsService } from "../services/employerTests.service"
-import type { TestQuestion, TestQuestionOption } from "../types/employerTests.types"
+import type {
+  TestQuestion,
+  TestQuestionOption,
+  TestQuestionOptionInput,
+} from "../types/employerTests.types"
 
 interface QuestionsManagerProps {
   questions: TestQuestion[]
@@ -38,6 +42,38 @@ interface QuestionsManagerProps {
   testId?: string | number
   namespace?: string
   validationErrors?: unknown
+  testService?: QuestionService
+}
+
+interface QuestionService {
+  addQuestionOption(
+    testId: string | number,
+    questionId: string | number,
+    input: TestQuestionOptionInput,
+  ): Promise<TestQuestionOption>
+  updateQuestionOption(
+    testId: string | number,
+    questionId: string | number,
+    optionId: string | number,
+    input: Partial<TestQuestionOptionInput>,
+  ): Promise<TestQuestionOption>
+  deleteQuestionOption(
+    testId: string | number,
+    questionId: string | number,
+    optionId: string | number,
+  ): Promise<void>
+  reorderQuestionOptions(
+    testId: string | number,
+    questionId: string | number,
+    input: { options: Array<{ option_id: string | number; order_index: number }> },
+  ): Promise<TestQuestionOption[]>
+  uploadQuestionImage?(
+    testId: string | number,
+    questionId: string | number,
+    image: File,
+  ): Promise<unknown>
+  downloadQuestionImage?(testId: string | number, questionId: string | number): Promise<Blob>
+  deleteQuestionImage?(testId: string | number, questionId: string | number): Promise<void>
 }
 
 const choiceTypes: TestQuestion["question_type"][] = [
@@ -112,8 +148,10 @@ export default function QuestionsManager({
   testId,
   namespace = "employerTests",
   validationErrors,
+  testService = employerTestsService,
 }: QuestionsManagerProps) {
   const { t } = useTranslation(namespace)
+  const questionService = testService ?? employerTestsService
   const formError = errorMessage(validationErrors)
 
   const replaceQuestion = useCallback(
@@ -174,7 +212,7 @@ export default function QuestionsManager({
     ) => {
       if (!testId || !question.id || !option.id) return option
 
-      return employerTestsService.updateQuestionOption(testId, question.id, option.id, input)
+      return questionService.updateQuestionOption(testId, question.id, option.id, input)
     },
     [testId],
   )
@@ -191,7 +229,7 @@ export default function QuestionsManager({
 
       const option =
         testId && question.id
-          ? await employerTestsService.addQuestionOption(testId, question.id, {
+          ? await questionService.addQuestionOption(testId, question.id, {
               option_text: draftOption.option_text,
               order_index: draftOption.order_index ?? options.length,
               is_correct: draftOption.is_correct,
@@ -272,7 +310,7 @@ export default function QuestionsManager({
       if (!option) return
 
       if (testId && question.id && option.id) {
-        await employerTestsService.deleteQuestionOption(testId, question.id, option.id)
+        await questionService.deleteQuestionOption(testId, question.id, option.id)
       }
 
       const nextOptions = options
@@ -301,7 +339,7 @@ export default function QuestionsManager({
 
       const allOptionsHaveIds = nextOptions.every((option) => option.id)
       if (testId && question.id && allOptionsHaveIds) {
-        const reordered = await employerTestsService.reorderQuestionOptions(testId, question.id, {
+        const reordered = await questionService.reorderQuestionOptions(testId, question.id, {
           options: nextOptions.map((option, index) => ({
             option_id: option.id!,
             order_index: index,
@@ -630,6 +668,3 @@ export default function QuestionsManager({
     </Card>
   )
 }
-
-
-

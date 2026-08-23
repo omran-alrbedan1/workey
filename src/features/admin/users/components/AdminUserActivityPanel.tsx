@@ -6,10 +6,7 @@ import EmptyState from "@/components/shared/states/EmptyState"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 import { valueOf } from "@/lib/keyValue"
 
-import {
-  useAdminUserActivity,
-  useAdminUserAuditLogs,
-} from "../hooks/useAdminUserRelated"
+import { useAdminUserActivity, useAdminUserAuditLogs } from "../hooks/useAdminUserRelated"
 
 export type AdminUserActivityLogsVariant = "both" | "activity" | "audit"
 

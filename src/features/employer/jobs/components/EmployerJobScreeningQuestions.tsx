@@ -214,7 +214,7 @@ export default function EmployerJobScreeningQuestions({
               <Skeleton key={i} className="h-20 w-full rounded-lg" />
             ))}
           </div>
-                ) : questions.length === 0 ? (
+        ) : questions.length === 0 ? (
           <EmptyState
             title={t("screeningQuestions.empty")}
             description={t("screeningQuestions.empty")}
@@ -469,5 +469,3 @@ export default function EmployerJobScreeningQuestions({
     </>
   )
 }
-
-

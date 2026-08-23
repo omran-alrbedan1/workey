@@ -11,9 +11,7 @@ export const employerCompanyService = {
   },
 
   async update(input: EmployerCompanyInput): Promise<EmployerCompany> {
-    return unwrapEmployerEntity<EmployerCompany>(
-      await api.put(API_ENDPOINTS.company.self, input),
-    )
+    return unwrapEmployerEntity<EmployerCompany>(await api.put(API_ENDPOINTS.company.self, input))
   },
 
   async updateLogo(file: File): Promise<EmployerCompany> {
@@ -44,8 +42,6 @@ export const employerCompanyService = {
   },
 
   async removeCoverImage(): Promise<EmployerCompany> {
-    return unwrapEmployerEntity<EmployerCompany>(
-      await api.delete(API_ENDPOINTS.company.coverImage),
-    )
+    return unwrapEmployerEntity<EmployerCompany>(await api.delete(API_ENDPOINTS.company.coverImage))
   },
 }

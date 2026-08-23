@@ -110,12 +110,7 @@ export default function EmployerInterviewDetailsPage() {
   }
 
   if (!interview.data) {
-    return (
-      <ErrorState
-        title={t("errors.title")}
-        description={t("errors.notFound")}
-      />
-    )
+    return <ErrorState title={t("errors.title")} description={t("errors.notFound")} />
   }
 
   const data = interview.data
@@ -1009,11 +1004,3 @@ function formatDateTime(value?: string | null) {
   const date = new Date(value)
   return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString()
 }
-
-
-
-
-
-
-
-

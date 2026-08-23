@@ -154,7 +154,7 @@ export default function EmployerJobOverview({ job, showSkills = true }: Employer
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-primary" />
                 <span>
-                  {t("fields.applicationDeadline")}: {" "}
+                  {t("fields.applicationDeadline")}:{" "}
                   {new Date(job.application_deadline).toLocaleDateString()}
                 </span>
               </div>

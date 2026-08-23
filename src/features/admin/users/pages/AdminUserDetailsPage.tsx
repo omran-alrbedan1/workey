@@ -132,10 +132,16 @@ export default function AdminUserDetailsPage() {
   // Related collections come from dedicated backend endpoints; totals feed
   // the metric cards and mapped items feed the matching tabs.
   const hasCandidateCoverage = role === "job_seeker" || role === "employer"
-  const applicationsQuery = useAdminUserApplications(id, { enabled: Boolean(id) && hasCandidateCoverage })
+  const applicationsQuery = useAdminUserApplications(id, {
+    enabled: Boolean(id) && hasCandidateCoverage,
+  })
   const jobsQuery = useAdminUserJobs(id, { enabled: Boolean(id) && role === "employer" })
-  const interviewsQuery = useAdminUserInterviews(id, { enabled: Boolean(id) && hasCandidateCoverage })
-  const testsQuery = useAdminUserTestAssignments(id, { enabled: Boolean(id) && hasCandidateCoverage })
+  const interviewsQuery = useAdminUserInterviews(id, {
+    enabled: Boolean(id) && hasCandidateCoverage,
+  })
+  const testsQuery = useAdminUserTestAssignments(id, {
+    enabled: Boolean(id) && hasCandidateCoverage,
+  })
 
   if (!id) {
     return (
@@ -180,9 +186,7 @@ export default function AdminUserDetailsPage() {
       <AdminUserRelatedSection
         section="applications"
         isLoading={applicationsQuery.isPending}
-        items={applicationsQuery.data?.items.map((item) =>
-          mapApplicationItem(item, fallbackTitle),
-        )}
+        items={applicationsQuery.data?.items.map((item) => mapApplicationItem(item, fallbackTitle))}
       />
     ),
     jobs: (
@@ -203,9 +207,7 @@ export default function AdminUserDetailsPage() {
       <AdminUserRelatedSection
         section="tests"
         isLoading={testsQuery.isPending}
-        items={testsQuery.data?.items.map((item) =>
-          mapTestAssignmentItem(item, fallbackTitle),
-        )}
+        items={testsQuery.data?.items.map((item) => mapTestAssignmentItem(item, fallbackTitle))}
       />
     ),
   }

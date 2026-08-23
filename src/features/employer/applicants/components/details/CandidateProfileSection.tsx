@@ -38,12 +38,13 @@ export default function CandidateProfileSection({
 
   return (
     <div className="space-y-6">
-            {!profile ? (
+      {!profile ? (
         <EmptyState
           title={t("candidate.profileEmpty")}
           description={t("candidate.profileEmpty")}
           className="rounded-lg border border-dashed border-border bg-background/50 p-8"
-        />      ) : (
+        />
+      ) : (
         <>
           <div className="grid gap-4 lg:grid-cols-2">
             <SectionCard title={t("candidate.profileTitle")} icon={UserRound}>
@@ -165,7 +166,3 @@ export default function CandidateProfileSection({
     </div>
   )
 }
-
-
-
-

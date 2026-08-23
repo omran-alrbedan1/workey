@@ -1,13 +1,16 @@
 import { API_ENDPOINTS } from "@/config"
-import { api } from "@/lib/api"
+import { api, rawApi } from "@/lib/api"
 import {
   unwrapCollection,
   unwrapEntity,
 } from "@/features/admin/shared/services/adminResponse.utils"
 import type { AdminCollection, AdminListParams } from "@/features/admin/shared/types/adminApi.types"
 import type {
+  ReorderOptionsInput,
   ReorderQuestionsInput,
   TestQuestionInput,
+  TestQuestionOption,
+  TestQuestionOptionInput,
   TestQuestionResponse,
 } from "@/features/employer/tests/types/employerTests.types"
 import type {
@@ -56,5 +59,65 @@ export const adminTestsService = {
   },
   async deleteQuestion(testId: string | number, questionId: string | number): Promise<void> {
     await api.delete(API_ENDPOINTS.tests.questions.byId(testId, questionId))
+  },
+  async uploadQuestionImage(
+    testId: string | number,
+    questionId: string | number,
+    image: File,
+  ): Promise<TestQuestionResponse> {
+    const formData = new FormData()
+    formData.append("image", image)
+    return unwrapEntity<TestQuestionResponse>(
+      await api.post(API_ENDPOINTS.tests.questions.image(testId, questionId), formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }),
+    )
+  },
+  async downloadQuestionImage(testId: string | number, questionId: string | number): Promise<Blob> {
+    const response = await rawApi.get(API_ENDPOINTS.tests.questions.image(testId, questionId), {
+      responseType: "blob",
+    })
+    return response.data
+  },
+  async deleteQuestionImage(testId: string | number, questionId: string | number): Promise<void> {
+    await api.delete(API_ENDPOINTS.tests.questions.image(testId, questionId))
+  },
+  async addQuestionOption(
+    testId: string | number,
+    questionId: string | number,
+    input: TestQuestionOptionInput,
+  ): Promise<TestQuestionOption> {
+    return unwrapEntity<TestQuestionOption>(
+      await api.post(API_ENDPOINTS.tests.questions.options(testId, questionId), input),
+    )
+  },
+  async updateQuestionOption(
+    testId: string | number,
+    questionId: string | number,
+    optionId: string | number,
+    input: Partial<TestQuestionOptionInput>,
+  ): Promise<TestQuestionOption> {
+    return unwrapEntity<TestQuestionOption>(
+      await api.patch(
+        API_ENDPOINTS.tests.questions.optionById(testId, questionId, optionId),
+        input,
+      ),
+    )
+  },
+  async deleteQuestionOption(
+    testId: string | number,
+    questionId: string | number,
+    optionId: string | number,
+  ): Promise<void> {
+    await api.delete(API_ENDPOINTS.tests.questions.optionById(testId, questionId, optionId))
+  },
+  async reorderQuestionOptions(
+    testId: string | number,
+    questionId: string | number,
+    input: ReorderOptionsInput,
+  ): Promise<TestQuestionOption[]> {
+    return unwrapEntity<TestQuestionOption[]>(
+      await api.post(API_ENDPOINTS.tests.questions.reorderOptions(testId, questionId), input),
+    )
   },
 }

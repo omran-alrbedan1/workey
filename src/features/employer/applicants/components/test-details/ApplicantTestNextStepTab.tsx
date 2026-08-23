@@ -66,9 +66,7 @@ export default function ApplicantTestNextStepTab({
       <EmptyState
         title={t("tests.nextStep")}
         description={
-          hasExplicitNextSteps
-            ? t("overview.noActions")
-            : t("overview.actionsFallbackHint")
+          hasExplicitNextSteps ? t("overview.noActions") : t("overview.actionsFallbackHint")
         }
         icon={Send}
         className="py-8 bg-transparent"

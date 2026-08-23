@@ -153,5 +153,3 @@ export default function ActivityFeed({ limit = 10 }: ActivityFeedProps) {
     </div>
   )
 }
-
-

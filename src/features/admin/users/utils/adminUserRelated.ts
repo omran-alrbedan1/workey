@@ -29,16 +29,11 @@ export function mapApplicationItem(
   }
 }
 
-export function mapJobItem(
-  item: AdminUserJobItem,
-  emptyLabel: string,
-): AdminUserRelatedItemView {
+export function mapJobItem(item: AdminUserJobItem, emptyLabel: string): AdminUserRelatedItemView {
   const subtitle = [
     item.company?.name,
     item.location,
-    typeof item.applications_count === "number"
-      ? `${item.applications_count}`
-      : null,
+    typeof item.applications_count === "number" ? `${item.applications_count}` : null,
   ]
     .filter(Boolean)
     .join(" · ")
@@ -51,20 +46,19 @@ export function mapJobItem(
   }
 }
 
-export function mapInterviewItem(
-  item: AdminUserInterviewItem,
-): AdminUserRelatedItemView {
+export function mapInterviewItem(item: AdminUserInterviewItem): AdminUserRelatedItemView {
   return {
     id: item.id,
     title: item.job?.title || valueOf(item.type),
-    subtitle: [
-      valueOf(item.type),
-      valueOf(item.mode),
-      item.duration_minutes != null ? `${item.duration_minutes}m` : null,
-      item.company?.name,
-    ]
-      .filter(Boolean)
-      .join(" · ") || null,
+    subtitle:
+      [
+        valueOf(item.type),
+        valueOf(item.mode),
+        item.duration_minutes != null ? `${item.duration_minutes}m` : null,
+        item.company?.name,
+      ]
+        .filter(Boolean)
+        .join(" · ") || null,
     status: item.status,
     date: item.scheduled_at ?? null,
   }
@@ -78,12 +72,10 @@ export function mapTestAssignmentItem(
   return {
     id: item.id,
     title: item.test?.title || emptyLabel,
-    subtitle: [
-      item.company?.name,
-      percentage != null ? `${percentage}%` : null,
-    ]
-      .filter(Boolean)
-      .join(" · ") || null,
+    subtitle:
+      [item.company?.name, percentage != null ? `${percentage}%` : null]
+        .filter(Boolean)
+        .join(" · ") || null,
     status: item.state,
     date: item.assignment?.deadline_at ?? item.assignment?.assigned_at ?? null,
   }

@@ -98,5 +98,3 @@ export default function PublicCompanyJobs({ jobs, isLoading }: PublicCompanyJobs
     </div>
   )
 }
-
-

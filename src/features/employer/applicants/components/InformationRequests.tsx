@@ -215,7 +215,9 @@ export default function InformationRequests({
                             {t("informationRequests.responseTitle")}
                           </div>
                           {request.response.message && (
-                            <p className="text-sm text-text-secondary">{request.response.message}</p>
+                            <p className="text-sm text-text-secondary">
+                              {request.response.message}
+                            </p>
                           )}
                           {request.response.attachments &&
                             request.response.attachments.length > 0 && (
