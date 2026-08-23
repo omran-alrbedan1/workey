@@ -116,6 +116,11 @@ export default function VideoInterviewRoom({
           size="icon"
           title={isMuted ? t("video.unmute") : t("video.mute")}
           onClick={() => void toggleMute()}
+          className={
+            isMuted
+              ? "bg-black text-white hover:bg-black/90 hover:text-white"
+              : "bg-black text-white hover:bg-black/90 hover:text-white"
+          }
         >
           {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
         </Button>
@@ -124,6 +129,11 @@ export default function VideoInterviewRoom({
           size="icon"
           title={isCameraOff ? t("video.cameraOn") : t("video.cameraOff")}
           onClick={() => void toggleCamera()}
+          className={
+            isCameraOff
+              ? "bg-black text-white hover:bg-black/90 hover:text-white"
+              : "bg-black text-white hover:bg-black/90 hover:text-white"
+          }
         >
           {isCameraOff ? <CameraOff className="h-5 w-5" /> : <Camera className="h-5 w-5" />}
         </Button>
@@ -132,10 +142,15 @@ export default function VideoInterviewRoom({
           size="icon"
           title={t("video.screenShare")}
           onClick={() => void toggleScreenShare()}
+          className="bg-black text-white hover:bg-black/90 hover:text-white"
         >
           <MonitorUp className="h-5 w-5" />
         </Button>
-        <Button variant="destructive" onClick={handleLeave}>
+        <Button
+          variant="destructive"
+          onClick={handleLeave}
+          className="bg-black text-white hover:bg-black/90 hover:text-white"
+        >
           <PhoneOff className="h-4 w-4" />
           {t("video.leave")}
         </Button>
