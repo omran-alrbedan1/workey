@@ -241,7 +241,7 @@ export default function QuestionsManager({
         options: [...options, normalizeOption(option, options.length)],
       })
     },
-    [questionService, questions, replaceQuestion, testId],
+    [questions, replaceQuestion, testId],
   )
 
   const updateOptionText = useCallback(
@@ -351,7 +351,7 @@ export default function QuestionsManager({
 
       replaceQuestion(questionIndex, { ...question, options: nextOptions })
     },
-    [questions, replaceQuestion, testId],
+    [questionService, questions, replaceQuestion, testId],
   )
 
   const handleQuestionTypeChange = useCallback(

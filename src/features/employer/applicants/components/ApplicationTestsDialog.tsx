@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   CheckCircle2,
   ChevronDown,
@@ -171,7 +171,7 @@ export default function ApplicationTestsDialog({
     setDownloadingQuestionId(null)
   }
 
-  const loadAttemptDetails = async (attempt: EmployerTestAttempt) => {
+  const loadAttemptDetails = useCallback(async (attempt: EmployerTestAttempt) => {
     const id = attemptId(attempt)
     if (!id) return
 
@@ -199,7 +199,7 @@ export default function ApplicationTestsDialog({
     } finally {
       setLoadingDetails(false)
     }
-  }
+  }, [t])
 
   useEffect(() => {
     if (!open) {
@@ -215,7 +215,7 @@ export default function ApplicationTestsDialog({
     if (gradingAttempt) {
       void loadAttemptDetails(gradingAttempt)
     }
-  }, [gradingAttempt])
+  }, [gradingAttempt, loadAttemptDetails])
 
   const updateDraft = (questionId: string | number, field: keyof GradeDraft, value: string) => {
     setDrafts((current) => ({
