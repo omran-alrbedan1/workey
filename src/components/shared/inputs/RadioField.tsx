@@ -3,8 +3,9 @@ import { cn } from "@/lib/utils"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Option } from "@/types/customFormField.types"
+import type { SharedFieldController } from "./fieldTypes"
 interface RadioFieldProps {
-  field: any
+  field: SharedFieldController
   disabled?: boolean
   inputClassName?: string
   options?: Option[]

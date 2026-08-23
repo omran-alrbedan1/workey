@@ -2,9 +2,10 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { DateTimeOption } from "@/types/customFormField.types"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface DateTimePickerFieldProps {
-  field: any
+  field: SharedFieldController
   dateTimeOptions?: DateTimeOption
   disabled?: boolean
   inputClassName?: string

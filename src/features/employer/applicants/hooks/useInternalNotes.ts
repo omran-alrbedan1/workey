@@ -6,12 +6,22 @@ import type {
 } from "../types/employerApplicants.types"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 
-function apiErrorCode(error: any) {
-  return error?.code ?? error?.response?.data?.code
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
 }
 
-function apiErrorMessage(error: any, fallback: string) {
-  return error?.message ?? error?.response?.data?.message ?? fallback
+function apiErrorCode(error: unknown) {
+  if (!isRecord(error)) return undefined
+  const response = isRecord(error.response) ? error.response : undefined
+  const data = response && isRecord(response.data) ? response.data : undefined
+  return (error.code ?? data?.code) as string | undefined
+}
+
+function apiErrorMessage(error: unknown, fallback: string) {
+  if (!isRecord(error)) return fallback
+  const response = isRecord(error.response) ? error.response : undefined
+  const data = response && isRecord(response.data) ? response.data : undefined
+  return (error.message as string | undefined) ?? (data?.message as string | undefined) ?? fallback
 }
 
 export function useInternalNotes(applicationId: string | number | undefined) {
@@ -35,7 +45,7 @@ export function useInternalNotes(applicationId: string | number | undefined) {
       refreshNotes()
       showSuccessToast("Internal note created")
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message = apiErrorMessage(error, "Failed to create note")
       if (apiErrorCode(error) === "APPLICATION_INTERNAL_NOTES_READ_ONLY") {
         showErrorToast("Cannot add notes to final-state applications")
@@ -57,7 +67,7 @@ export function useInternalNotes(applicationId: string | number | undefined) {
       refreshNotes()
       showSuccessToast("Internal note updated")
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message = apiErrorMessage(error, "Failed to update note")
       const code = apiErrorCode(error)
       if (code === "APPLICATION_INTERNAL_NOTE_EDIT_WINDOW_EXPIRED") {
@@ -80,7 +90,7 @@ export function useInternalNotes(applicationId: string | number | undefined) {
       refreshNotes()
       showSuccessToast("Internal note deleted")
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       if (apiErrorCode(error) === "APPLICATION_INTERNAL_NOTE_VERSION_CONFLICT") {
         refreshNotes()
         showErrorToast(

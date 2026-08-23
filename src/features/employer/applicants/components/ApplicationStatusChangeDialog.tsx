@@ -14,6 +14,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { StatusBadge } from "@/components/shared/badges"
 import type { ApplicationStatus, ApplicationStatusKey } from "../types/employerApplicants.types"
+import { keyOf } from "@/lib/keyValue"
 
 interface ApplicationStatusChangeDialogProps {
   open: boolean
@@ -68,13 +69,13 @@ export default function ApplicationStatusChangeDialog({
           {/* Status Transition Display */}
           <div className="flex items-center justify-center gap-3">
             <StatusBadge
-              status={(currentStatus?.key as any) || "unknown"}
+              status={keyOf(currentStatus?.key, "unknown") || "unknown"}
               label={currentStatus?.value || t("statuses.unknown")}
               variant="soft"
             />
             <ArrowRight className="h-4 w-4 text-text-muted" />
             <StatusBadge
-              status={(targetStatus as any) || "unknown"}
+              status={targetStatus || "unknown"}
               label={t(`statuses.${targetStatus}`, { defaultValue: targetStatus || "" })}
               variant="soft"
             />

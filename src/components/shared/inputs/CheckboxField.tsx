@@ -1,9 +1,10 @@
 import React from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface CheckboxFieldProps {
-  field: any
+  field: SharedFieldController
   name: string
   label?: string
   disabled?: boolean

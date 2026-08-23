@@ -19,8 +19,9 @@ import PartialError from "@/components/shared/states/PartialError"
 import { activityService } from "@/shared/activity/services/activity.service"
 import type { Activity } from "@/types/activity.types"
 import { useQuery } from "@tanstack/react-query"
+import type { LucideIcon } from "lucide-react"
 
-const activityIcons: Record<string, any> = {
+const activityIcons: Record<string, LucideIcon> = {
   user_created: UserPlus,
   user_updated: Users,
   user_deleted: UserMinus,

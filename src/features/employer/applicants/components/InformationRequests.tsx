@@ -31,6 +31,10 @@ import { Textarea } from "@/components/ui/textarea"
 import type { InformationRequest } from "../types/employerApplicants.types"
 import EmptyState from "@/components/shared/states/EmptyState"
 import EmployerFeatureError from "@/features/employer/shared/components/EmployerFeatureError"
+import type {
+  InformationRequestInput,
+  InformationRequestUpdateInput,
+} from "../types/employerApplicants.types"
 
 interface InformationRequestsProps {
   applicationId: string | number
@@ -92,12 +96,15 @@ export default function InformationRequests({
     setCancelReason("")
   }
 
-  const handleSubmit = async (input: any) => {
+  const handleSubmit = async (input: InformationRequestInput | InformationRequestUpdateInput) => {
     if (editingRequest) {
-      await updateRequest({ requestId: editingRequest.id, input })
+      await updateRequest({
+        requestId: editingRequest.id,
+        input: input as InformationRequestUpdateInput,
+      })
       setDialogOpen(false)
     } else {
-      await createRequest(input)
+      await createRequest(input as InformationRequestInput)
       setDialogOpen(false)
     }
   }
@@ -111,12 +118,28 @@ export default function InformationRequests({
         })
         setCancelRequestId(null)
         setCancelReason("")
-      } catch (error: any) {
-        const code = error?.code ?? error?.response?.data?.code
+      } catch (error: unknown) {
+        const code =
+          typeof error === "object" && error !== null
+            ? "code" in error
+              ? (error.code as string | undefined)
+              : "response" in error &&
+                  error.response &&
+                  typeof error.response === "object" &&
+                  "data" in error.response &&
+                  error.response.data &&
+                  typeof error.response.data === "object" &&
+                  "code" in error.response.data
+                ? (error.response.data.code as string | undefined)
+                : undefined
+            : undefined
         if (code === "APPLICATION_INFORMATION_REQUEST_NOT_PENDING") {
           showErrorToast(t("common:informationRequestToasts.notPending"))
         } else {
-          showErrorToast(error?.message || t("common:informationRequestToasts.cancelFailed"))
+          showErrorToast(
+            (error instanceof Error ? error.message : undefined) ||
+              t("common:informationRequestToasts.cancelFailed"),
+          )
         }
       }
     }

@@ -14,7 +14,7 @@ import {
   Target,
   ToggleRight,
 } from "lucide-react"
-import { useForm } from "react-hook-form"
+import { useForm, type Resolver } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import CustomFormField, { FormFieldType } from "@/components/shared/inputs/CustomFormField"
 import EmptyState from "@/components/shared/states/EmptyState"
@@ -47,6 +47,13 @@ const STEPS = [
 ] as const
 
 const TOTAL_STEPS = STEPS.length
+const STEP_ONE_FIELDS = ["title", "description"] as const
+const STEP_THREE_FIELDS = [
+  "instructions",
+  "duration_minutes",
+  "passing_score",
+  "is_active",
+] as const
 
 const questionTypeLabelKeys: Record<TestQuestionType, string> = {
   single_choice: "questions.singleChoice",
@@ -108,7 +115,7 @@ export default function EmployerTestForm({
 
   const employerTestSchema = createEmployerTestSchema(t)
   const form = useForm<EmployerTestFormValues>({
-    resolver: zodResolver(employerTestSchema) as any,
+    resolver: zodResolver(employerTestSchema) as Resolver<EmployerTestFormValues>,
     defaultValues: getDefaults(),
   })
 
@@ -277,7 +284,7 @@ export default function EmployerTestForm({
 
   const handleNext = async () => {
     if (currentStep === 1) {
-      const isValid = await form.trigger(["title", "description"] as any)
+      const isValid = await form.trigger(STEP_ONE_FIELDS)
       if (!isValid) return
 
       const values = form.getValues()
@@ -325,12 +332,7 @@ export default function EmployerTestForm({
     }
 
     if (currentStep === 3) {
-      const isValid = await form.trigger([
-        "instructions",
-        "duration_minutes",
-        "passing_score",
-        "is_active",
-      ] as any)
+      const isValid = await form.trigger(STEP_THREE_FIELDS)
       if (!isValid) return
       setCurrentStep(4)
     }
@@ -443,7 +445,7 @@ export default function EmployerTestForm({
                 <div className="sm:col-span-2">
                   <CustomFormField
                     fieldType={FormFieldType.INPUT}
-                    control={form.control as any}
+                    control={form.control}
                     name="title"
                     label={t("form.title")}
                     leftIcon={FileText}
@@ -452,7 +454,7 @@ export default function EmployerTestForm({
                 <div className="sm:col-span-2">
                   <CustomFormField
                     fieldType={FormFieldType.TEXTAREA}
-                    control={form.control as any}
+                    control={form.control}
                     name="description"
                     label={t("form.description")}
                     leftIcon={Info}
@@ -486,25 +488,25 @@ export default function EmployerTestForm({
                 <div className="sm:col-span-2">
                   <CustomFormField
                     fieldType={FormFieldType.TEXTAREA}
-                    control={form.control as any}
+                    control={form.control}
                     name="instructions"
                     label={t("form.instructions")}
                     leftIcon={ListChecks}
-                  />
-                </div>
-                <CustomFormField
-                  fieldType={FormFieldType.NUMBER}
-                  control={form.control as any}
-                  name="duration_minutes"
-                  label={t("form.duration")}
-                  leftIcon={Clock}
                 />
-                <CustomFormField
-                  fieldType={FormFieldType.NUMBER}
-                  control={form.control as any}
-                  name="passing_score"
-                  label={t("form.passingScore")}
-                  leftIcon={Target}
+              </div>
+              <CustomFormField
+                fieldType={FormFieldType.NUMBER}
+                control={form.control}
+                name="duration_minutes"
+                label={t("form.duration")}
+                leftIcon={Clock}
+              />
+              <CustomFormField
+                fieldType={FormFieldType.NUMBER}
+                control={form.control}
+                name="passing_score"
+                label={t("form.passingScore")}
+                leftIcon={Target}
                   description={
                     calculatedMaxScore > 0 ? `Max: ${calculatedMaxScore} pts` : undefined
                   }
@@ -512,7 +514,7 @@ export default function EmployerTestForm({
                 <div className="sm:col-span-2">
                   <CustomFormField
                     fieldType={FormFieldType.SWITCH}
-                    control={form.control as any}
+                    control={form.control}
                     name="is_active"
                     label={t("form.active")}
                     leftIcon={ToggleRight}

@@ -1,9 +1,10 @@
 import React, { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Star } from "lucide-react"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface RatingFieldProps {
-  field: any
+  field: SharedFieldController
   disabled?: boolean
   inputClassName?: string
   maxRating?: number

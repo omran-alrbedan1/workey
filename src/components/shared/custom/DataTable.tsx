@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
 import EmptyState from "@/components/shared/states/EmptyState"
 
-export interface Column<T = any> {
+export interface Column<T extends object = Record<string, unknown>> {
   key: string
   header: string
   headerIcon?: React.ComponentType<{ className?: string }>
@@ -31,7 +31,7 @@ export interface Column<T = any> {
   width?: string
 }
 
-export interface DataTableProps<T = any> {
+export interface DataTableProps<T extends object = Record<string, unknown>> {
   data: T[]
   columns: Column<T>[]
   loading?: boolean
@@ -47,7 +47,7 @@ export interface DataTableProps<T = any> {
   mobileCardComponent?: React.ComponentType<{
     item: T
     onViewDetails: () => void
-    t: (key: string, options?: any) => string
+    t: (key: string, options?: Record<string, unknown>) => string
     isAr: boolean
   }>
   emptyMessage?: string
@@ -75,7 +75,11 @@ const getPageNumbers = (current: number, last: number) => {
 }
 
 // Skeleton loading component
-function DataTableSkeleton({ columns }: { columns: Column[] }) {
+function DataTableSkeleton<T extends object = Record<string, unknown>>({
+  columns,
+}: {
+  columns: Column<T>[]
+}) {
   return (
     <div className="rounded-md border border-border">
       <div className="min-w-3xl">
@@ -126,7 +130,7 @@ interface DataTablePaginationProps {
   total: number
   perPage?: number
   onPageChange: (page: number) => void
-  t: (key: string, options?: any) => string
+  t: (key: string, options?: Record<string, unknown>) => string
 }
 
 function DataTablePagination({
@@ -203,7 +207,7 @@ function DataTablePagination({
 }
 
 // Main DataTable component
-export function DataTable<T = any>({
+export function DataTable<T extends object = Record<string, unknown>>({
   data,
   columns,
   loading = false,
@@ -308,7 +312,9 @@ export function DataTable<T = any>({
               >
                 {columns.map((column) => (
                   <TableCell key={column.key} className={cn("text-sm py-2.5", column.className)}>
-                    {column.cell ? column.cell(item) : (item as any)[column.key] || "—"}
+                  {column.cell
+                    ? column.cell(item)
+                    : ((item as Record<string, unknown>)[column.key] as React.ReactNode) || "—"}
                   </TableCell>
                 ))}
               </TableRow>

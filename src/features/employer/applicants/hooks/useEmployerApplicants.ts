@@ -8,8 +8,15 @@ import type {
   EmployerInterviewInput,
 } from "../types/employerApplicants.types"
 
-function apiErrorCode(error: any) {
-  return error?.code ?? error?.response?.data?.code
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+function apiErrorCode(error: unknown) {
+  if (!isRecord(error)) return undefined
+  const response = isRecord(error.response) ? error.response : undefined
+  const data = response && isRecord(response.data) ? response.data : undefined
+  return (error.code ?? data?.code) as string | undefined
 }
 
 export function useEmployerApplicants(jobId?: string | number) {
@@ -35,8 +42,14 @@ export function useEmployerApplicants(jobId?: string | number) {
       await client.invalidateQueries({ queryKey: rootKey })
       showSuccessToast(t("toasts.statusUpdated"))
     },
-    onError: (error: any) => {
-      const message = error?.response?.data?.message || error?.message || "Failed to update status"
+    onError: (error: unknown) => {
+      const message =
+        (isRecord(error) &&
+          ((isRecord(error.response) &&
+            isRecord(error.response.data) &&
+            (error.response.data.message as string | undefined)) ||
+            (error.message as string | undefined))) ||
+        "Failed to update status"
       const code = apiErrorCode(error)
       if (code === "INVALID_STATUS_TRANSITION") {
         showErrorToast(t("errors.invalidTransition"))

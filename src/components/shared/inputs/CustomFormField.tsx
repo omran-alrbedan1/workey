@@ -2,7 +2,7 @@
 
 import { useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { Controller, FieldValues } from "react-hook-form"
+import { Controller, type ControllerRenderProps, type FieldValues, type Path } from "react-hook-form"
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -110,7 +110,7 @@ const CustomFormField = <T extends FieldValues>(props: CustomFormFieldProps<T>) 
   const resolvedDir = dir ?? i18n.dir()
 
   const renderField = useCallback(
-    (field: any) => {
+    (field: ControllerRenderProps<T, Path<T>>) => {
       const commonProps = {
         field,
         disabled,

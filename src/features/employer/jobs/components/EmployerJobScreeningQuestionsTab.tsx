@@ -1,11 +1,15 @@
 import EmployerJobScreeningQuestions from "./EmployerJobScreeningQuestions"
+import type { JobScreeningQuestion, JobScreeningQuestionInput } from "../types/employerJobs.types"
 
 interface EmployerJobScreeningQuestionsTabProps {
-  questions: any[]
+  questions: JobScreeningQuestion[]
   isLoading: boolean
   isPending: boolean
-  onCreate: (input: any) => Promise<unknown>
-  onUpdate: (questionId: string | number, input: any) => Promise<unknown>
+  onCreate: (input: JobScreeningQuestionInput) => Promise<unknown>
+  onUpdate: (
+    questionId: string | number,
+    input: Partial<JobScreeningQuestionInput>,
+  ) => Promise<unknown>
   onDelete: (questionId: string | number) => Promise<unknown>
 }
 

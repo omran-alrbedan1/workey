@@ -1,9 +1,10 @@
 import React, { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface CurrencyFieldProps {
-  field: any
+  field: SharedFieldController
   placeholder?: string
   disabled?: boolean
   inputClassName?: string

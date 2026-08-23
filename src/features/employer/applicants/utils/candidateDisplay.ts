@@ -1,5 +1,19 @@
 import type { EmployerApplicant } from "../types/employerApplicants.types"
 
+type CandidateLike = {
+  full_name?: string | null
+  name?: string | null
+  email?: string | null
+  user?: {
+    name?: string | null
+    email?: string | null
+  } | null
+}
+
+type EmployerApplicantWithCandidate = EmployerApplicant & {
+  candidate?: CandidateLike | null
+}
+
 function compact(parts: Array<string | null | undefined>) {
   return parts
     .map((part) => part?.trim())
@@ -25,9 +39,10 @@ export function candidateDisplayName(
   application: EmployerApplicant | null | undefined,
   fallback: string,
 ) {
+  const applicant = application as EmployerApplicantWithCandidate | null | undefined
   const identity = application?.submitted_snapshot?.profile?.identity
   const profile = application?.job_seeker_profile
-  const candidate = (application as any)?.candidate
+  const candidate = applicant?.candidate
   const historyName = candidateFromStatusHistory(application)
 
   return (
@@ -58,10 +73,11 @@ export function candidateSecondaryText(
   application: EmployerApplicant | null | undefined,
   fallback = "-",
 ) {
+  const applicant = application as EmployerApplicantWithCandidate | null | undefined
   const identity = application?.submitted_snapshot?.profile?.identity
   const professional = application?.submitted_snapshot?.profile?.professional
   const profile = application?.job_seeker_profile
-  const candidate = (application as any)?.candidate
+  const candidate = applicant?.candidate
 
   return (
     application?.candidate_summary?.email ||

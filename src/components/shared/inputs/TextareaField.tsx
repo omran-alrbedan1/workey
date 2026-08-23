@@ -1,9 +1,10 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface TextareaFieldProps {
-  field: any
+  field: SharedFieldController
   placeholder?: string
   disabled?: boolean
   inputClassName?: string

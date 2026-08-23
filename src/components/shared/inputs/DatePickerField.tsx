@@ -5,10 +5,12 @@ import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { useTranslation } from "react-i18next"
+import type { Matcher } from "react-day-picker"
 import { DateOption } from "@/types/customFormField.types"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface DatePickerFieldProps {
-  field: any
+  field: SharedFieldController
   dateOptions?: DateOption
   disabled?: boolean
   inputClassName?: string
@@ -37,24 +39,21 @@ export const DatePickerField: React.FC<DatePickerFieldProps> = ({
   }, [open])
 
   const getDisabled = () => {
-    const disabledOptions: any = {}
+    const disabledOptions: Matcher[] = []
 
     if (dateOptions?.minDate) {
-      disabledOptions.before = dateOptions.minDate
+      disabledOptions.push({ before: dateOptions.minDate })
     }
     if (dateOptions?.maxDate) {
-      disabledOptions.after = dateOptions.maxDate
+      disabledOptions.push({ after: dateOptions.maxDate })
     }
 
     const disabledDays = dateOptions?.disabledDays
     if (disabledDays && disabledDays.length > 0) {
-      if (Object.keys(disabledOptions).length > 0) {
-        return [disabledOptions, ...disabledDays]
-      }
-      return disabledDays
+      disabledOptions.push(...disabledDays)
     }
 
-    return Object.keys(disabledOptions).length > 0 ? disabledOptions : undefined
+    return disabledOptions.length > 0 ? disabledOptions : undefined
   }
 
   return (

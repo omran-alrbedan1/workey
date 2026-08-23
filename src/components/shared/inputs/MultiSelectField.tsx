@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/command"
 import { ChevronDown, Check } from "lucide-react"
 import { Option } from "@/types/customFormField.types"
+import type { SharedFieldController } from "./fieldTypes"
 interface MultiSelectFieldProps {
-  field: any
+  field: SharedFieldController
   placeholder?: string
   disabled?: boolean
   inputClassName?: string

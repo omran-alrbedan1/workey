@@ -6,9 +6,10 @@ import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { DateOption, DateRange } from "@/types/customFormField.types"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface DateRangeFieldProps {
-  field: any
+  field: SharedFieldController
   dateOptions?: DateOption
   disabled?: boolean
   inputClassName?: string
@@ -22,7 +23,9 @@ export const DateRangeField: React.FC<DateRangeFieldProps> = ({
 }) => {
   const { t } = useTranslation("common")
   const [open, setOpen] = useState(false)
-  const [range, setRange] = useState<DateRange>(field.value || { from: undefined, to: undefined })
+  const [range, setRange] = useState<DateRange>(
+    (field.value as DateRange | undefined) || { from: undefined, to: undefined },
+  )
   const containerRef = useRef<HTMLDivElement>(null)
 
   const getDisabledDays = () => {

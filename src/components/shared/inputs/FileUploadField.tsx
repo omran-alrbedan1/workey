@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button"
 import { Upload, Image as ImageIcon, FileText, Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { FileUploadOption } from "@/types/customFormField.types"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface FileUploadFieldProps {
-  field: any
+  field: SharedFieldController
   placeholder?: string
   disabled?: boolean
   inputClassName?: string

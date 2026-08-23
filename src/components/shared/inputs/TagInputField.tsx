@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface TagInputFieldProps {
-  field: any
+  field: SharedFieldController
   placeholder?: string
   disabled?: boolean
   inputClassName?: string

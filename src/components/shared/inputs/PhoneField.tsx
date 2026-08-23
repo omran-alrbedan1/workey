@@ -3,9 +3,10 @@ import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { BaseField } from "./BaseField"
 import { formatPhoneNumber } from "@/lib/formatter"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface PhoneFieldProps {
-  field: any
+  field: SharedFieldController
   placeholder?: string
   disabled?: boolean
   inputClassName?: string

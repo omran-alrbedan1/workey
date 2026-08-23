@@ -1,9 +1,10 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 import { Slider } from "@/components/ui/slider"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface SliderFieldProps {
-  field: any
+  field: SharedFieldController
   disabled?: boolean
   inputClassName?: string
   min?: number

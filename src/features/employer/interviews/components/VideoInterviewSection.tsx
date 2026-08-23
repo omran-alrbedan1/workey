@@ -8,10 +8,28 @@ import { employerInterviewsService } from "../services/employerInterviews.servic
 import type { VideoSessionResponse } from "../types/videoInterview.types"
 import VideoInterviewRoom from "./VideoInterviewRoom"
 
-function videoSessionErrorMessage(error: any, fallback: string, t: (key: string) => string) {
-  const status = error?.status ?? error?.response?.status
-  const code = String(error?.code ?? error?.response?.data?.code ?? "").toLowerCase()
-  const message = error?.message ?? error?.response?.data?.message
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+type VideoErrorLike = {
+  status?: number
+  code?: string
+  message?: string
+  response?: {
+    status?: number
+    data?: {
+      code?: string
+      message?: string
+    }
+  }
+}
+
+function videoSessionErrorMessage(error: unknown, fallback: string, t: (key: string) => string) {
+  const typedError = isRecord(error) ? (error as VideoErrorLike) : undefined
+  const status = typedError?.status ?? typedError?.response?.status
+  const code = String(typedError?.code ?? typedError?.response?.data?.code ?? "").toLowerCase()
+  const message = typedError?.message ?? typedError?.response?.data?.message
 
   if (status === 401 || code.includes("token")) {
     return t("common:videoErrors.sessionExpired")

@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/select"
 import { Option } from "@/types/customFormField.types"
 import { LucideIcon } from "lucide-react"
+import type { SharedFieldController } from "./fieldTypes"
 
 const EMPTY_OPTION_VALUE = "__empty_select_option__"
 
 interface SelectFieldProps {
-  field: any
+  field: SharedFieldController
   placeholder?: string
   disabled?: boolean
   inputClassName?: string

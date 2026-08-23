@@ -7,12 +7,22 @@ import type {
 } from "../types/employerApplicants.types"
 import { showSuccessToast, showErrorToast } from "@/lib/toast"
 
-function apiErrorCode(error: any) {
-  return error?.code ?? error?.response?.data?.code
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
 }
 
-function apiErrorMessage(error: any, fallback: string) {
-  return error?.message ?? error?.response?.data?.message ?? fallback
+function apiErrorCode(error: unknown) {
+  if (!isRecord(error)) return undefined
+  const response = isRecord(error.response) ? error.response : undefined
+  const data = response && isRecord(response.data) ? response.data : undefined
+  return (error.code ?? data?.code) as string | undefined
+}
+
+function apiErrorMessage(error: unknown, fallback: string) {
+  if (!isRecord(error)) return fallback
+  const response = isRecord(error.response) ? error.response : undefined
+  const data = response && isRecord(response.data) ? response.data : undefined
+  return (error.message as string | undefined) ?? (data?.message as string | undefined) ?? fallback
 }
 
 /**
@@ -47,7 +57,7 @@ export function useInformationRequests(applicationId: string | number | undefine
       refreshAfterChange()
       showSuccessToast("Information request created")
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message = apiErrorMessage(error, "Failed to create information request")
       if (apiErrorCode(error) === "APPLICATION_INFORMATION_REQUEST_ALREADY_OPEN") {
         showErrorToast("A pending information request already exists")
@@ -69,7 +79,7 @@ export function useInformationRequests(applicationId: string | number | undefine
       queryClient.invalidateQueries({ queryKey: ["informationRequests", applicationId] })
       showSuccessToast("Information request updated")
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       showErrorToast(apiErrorMessage(error, "Failed to update information request"))
     },
   })
@@ -86,7 +96,7 @@ export function useInformationRequests(applicationId: string | number | undefine
       refreshAfterChange()
       showSuccessToast("Information request cancelled")
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       showErrorToast(apiErrorMessage(error, "Failed to cancel information request"))
     },
   })
@@ -129,7 +139,7 @@ export function useDownloadAttachment() {
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
         showSuccessToast("Attachment downloaded")
-      } catch (error: any) {
+      } catch (error: unknown) {
         showErrorToast(apiErrorMessage(error, "Failed to download attachment"))
       }
     },

@@ -1,6 +1,41 @@
 import { keyOf, valueOf } from "@/lib/keyValue"
 import type { EmployerInterview } from "../types/employerInterviews.types"
 
+type InterviewCandidateLike = {
+  full_name?: string | null
+  name?: string | null
+  email?: string | null
+  user?: {
+    name?: string | null
+    email?: string | null
+  } | null
+}
+
+type InterviewProfileLike = {
+  name?: string | null
+  user?: {
+    name?: string | null
+    email?: string | null
+  } | null
+}
+
+type InterviewHistoryEntryLike = {
+  changed_by?: {
+    role?: unknown
+    name?: string | null
+  } | null
+}
+
+type InterviewDisplayLike = EmployerInterview & {
+  candidate?: InterviewCandidateLike | null
+  job_seeker_profile?: InterviewProfileLike | null
+  job_application?: EmployerInterview["job_application"] & {
+    candidate?: InterviewCandidateLike | null
+    job_seeker_profile?: InterviewProfileLike | null
+    status_history?: InterviewHistoryEntryLike[] | null
+  }
+}
+
 export function interviewKey(value: unknown, fallback = "") {
   return keyOf(value, fallback)
 }
@@ -10,14 +45,15 @@ export function interviewValue(value: unknown, fallback = "-") {
 }
 
 export function interviewCandidateName(interview: EmployerInterview, fallback: string) {
-  const application = interview.job_application
+  const interviewData = interview as InterviewDisplayLike
+  const application = interviewData.job_application
   const summary = application?.candidate_summary
   const identity = application?.submitted_snapshot?.profile?.identity
-  const candidate = (interview as any).candidate ?? (application as any)?.candidate
-  const profile = (application as any)?.job_seeker_profile ?? (interview as any).job_seeker_profile
-  const candidateActor = (application as any)?.status_history?.find((entry: any) => {
+  const candidate = interviewData.candidate ?? application?.candidate
+  const profile = application?.job_seeker_profile ?? interviewData.job_seeker_profile
+  const candidateActor = application?.status_history?.find((entry) => {
     const role = entry?.changed_by?.role
-    const roleKey = typeof role === "string" ? role : role?.key
+    const roleKey = keyOf(role)
     return roleKey === "job_seeker" && entry.changed_by?.name
   })?.changed_by?.name
 

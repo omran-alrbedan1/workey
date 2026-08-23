@@ -14,6 +14,7 @@ import { authService } from "../services/auth.service"
 import { showSuccessToast } from "@/lib/toast"
 import { keyOf } from "@/lib/keyValue"
 import { images } from "@/constants/images"
+import { isAxiosError } from "axios"
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
@@ -44,9 +45,11 @@ const Login: React.FC = () => {
         navigate("/", { replace: true })
       }
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const message =
+        isAxiosError(error) ? error.response?.data?.message : error instanceof Error ? error.message : ""
       form.setError("root", {
-        message: error.message || t("loginPage.invalidCredentials"),
+        message: message || t("loginPage.invalidCredentials"),
       })
     },
   })

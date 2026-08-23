@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Clock } from "lucide-react"
 import { format, setHours, setMinutes } from "date-fns"
 import { TimeOption } from "@/types/customFormField.types"
+import type { SharedFieldController } from "./fieldTypes"
 
 interface TimePickerFieldProps {
-  field: any
+  field: SharedFieldController
   timeOptions?: TimeOption
   disabled?: boolean
   inputClassName?: string
