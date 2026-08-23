@@ -413,12 +413,23 @@ function InterviewInfoSection({
           isRtl={isRtl}
           icon={isOnline ? Video : MapPin}
           label={t("schedule.mode")}
-          value={
-            isOnline
-              ? data.meeting_link || t("interviewModes.video")
-              : data.location_text || data.location || interviewValue(interviewMode) || "-"
-          }
+          value={interviewValue(interviewMode) || "-"}
         />
+        {isOnline ? (
+          <DetailItem
+            isRtl={isRtl}
+            icon={ExternalLink}
+            label={t("schedule.meetingLink")}
+            value={data.meeting_link || "-"}
+          />
+        ) : (
+          <DetailItem
+            isRtl={isRtl}
+            icon={MapPin}
+            label={t("schedule.location")}
+            value={data.location_text || data.location || "-"}
+          />
+        )}
         {data.candidate_confirmation_status && (
           <DetailItem
             isRtl={isRtl}
