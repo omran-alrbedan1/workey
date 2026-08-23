@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { keyOf } from "@/lib/keyValue"
 import type { ApplicationScreeningAnswer } from "../../types/employerApplicants.types"
+import { valueOf } from "@/lib/keyValue"
 
 interface ScreeningAnswersTabProps {
   answers: ApplicationScreeningAnswer[]
@@ -13,13 +14,14 @@ function AnswerDisplay({ answer }: { answer: ApplicationScreeningAnswer }) {
   const type = keyOf(answer.question_type)
   const Icon = type === "boolean" ? CheckCircle2 : type === "number" ? ChevronDown : MessageSquare
 
-  // Extract answer based on new contract
   let answerText = "—"
   if (answer.answer.value != null) {
     if (typeof answer.answer.value === "boolean") {
       answerText = answer.answer.value ? t("answers.yes") : t("answers.no")
+    } else if (Array.isArray(answer.answer.value)) {
+      answerText = answer.answer.value.map((item) => valueOf(item, String(item))).join(", ")
     } else {
-      answerText = String(answer.answer.value)
+      answerText = valueOf(answer.answer.value, String(answer.answer.value))
     }
   } else if (answer.answer.selected_options?.length > 0) {
     answerText = answer.answer.selected_options.map((o) => o.option_text).join(", ")
