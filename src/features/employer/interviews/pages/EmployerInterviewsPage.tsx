@@ -124,11 +124,6 @@ function InterviewScopeSelector({ model }: { model: EmployerInterviewsPageModel 
                       <UserRound className="h-3.5 w-3.5 text-primary" />
                       {candidateName}
                     </span>
-                    <span className="truncate text-xs text-text-muted">
-                      {t("scope.interviewCount", {
-                        count: application.interviews_count ?? 0,
-                      })}
-                    </span>
                   </div>
                 </SelectItem>
               ))}

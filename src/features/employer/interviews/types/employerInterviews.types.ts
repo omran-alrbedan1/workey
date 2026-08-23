@@ -135,6 +135,7 @@ export interface EmployerInterviewInput {
   scheduled_end_at: string
   duration_minutes?: number
   meeting_link?: string | null
+  video_provider?: "livekit" | null
   location_text?: string | null
   candidate_message?: string
   internal_note?: string

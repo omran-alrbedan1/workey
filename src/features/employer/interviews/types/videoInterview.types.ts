@@ -1,7 +1,15 @@
 export interface VideoSessionResponse {
   token: string
   url: string
-  room?: string
+  provider?: string
+  participant_token?: string
+  fallback_meeting_link?: string | null
+  room?: string | { name?: string }
+  participant?: {
+    identity?: string
+    display_name?: string
+    role?: "employer" | "candidate"
+  }
   access_token?: string
   livekit_token?: string
   livekit_url?: string

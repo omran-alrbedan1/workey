@@ -12,6 +12,7 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
   const { t } = useTranslation("employerInterviews")
   const roomRef = useRef<Room | null>(null)
   const leavingRef = useRef(false)
+  const connectAttemptRef = useRef(0)
 
   const [connectionState, setConnectionState] = useState<VideoRoomConnectionState>("idle")
   const [participants, setParticipants] = useState<Participant[]>([])
@@ -99,6 +100,8 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
   const connect = useCallback(async () => {
     if (!url || !token || roomRef.current) return
 
+    leavingRef.current = false
+    const attemptId = ++connectAttemptRef.current
     const room = new Room({
       adaptiveStream: true,
       dynacast: true,
@@ -144,6 +147,15 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
       setError(null)
       setUnexpectedDisconnect(false)
       await room.connect(url, token, { autoSubscribe: true })
+
+      // Ignore stale connects that completed after the component cleanup
+      // or after a newer attempt replaced this one.
+      if (leavingRef.current || connectAttemptRef.current !== attemptId || roomRef.current !== room) {
+        cleanupRoom(room)
+        if (roomRef.current === room) roomRef.current = null
+        return
+      }
+
       setConnectionState("connected")
 
       // Request permissions and publish local tracks. Handle each device
@@ -165,6 +177,13 @@ export function useVideoRoom({ url, token }: UseVideoRoomOptions) {
 
       refreshParticipants(room)
     } catch (err) {
+      // React StrictMode replays effects in development. Ignore disconnects
+      // caused by cleanup or replaced connection attempts.
+      if (leavingRef.current || connectAttemptRef.current !== attemptId || roomRef.current !== room) {
+        cleanupRoom(room)
+        if (roomRef.current === room) roomRef.current = null
+        return
+      }
       setError(describeConnectError(err))
       setConnectionState("error")
       cleanupRoom(room)

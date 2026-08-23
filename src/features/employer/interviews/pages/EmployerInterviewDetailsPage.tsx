@@ -82,6 +82,39 @@ export default function EmployerInterviewDetailsPage() {
   const [cancelOpen, setCancelOpen] = useState(false)
   const [attendanceOpen, setAttendanceOpen] = useState(false)
   const [noShowOpen, setNoShowOpen] = useState(false)
+  const data = interview.data
+
+  useEffect(() => {
+    if (import.meta.env.PROD || !data) return
+
+    const statusKey = interviewKey(data.status)
+    const interviewType = data.type ?? data.interview_type
+    const interviewMode = data.mode ?? data.interview_mode
+    const modeKey = interviewKey(interviewMode)
+    const isOnline = modeKey === "online"
+    const active = isActiveInterview(data)
+    const canJoinVideo = isOnline && active && data.embedded_video_available === true
+    const startAt = scheduledStart(data)
+    const endAt = scheduledEnd(data)
+    const durationMinutes =
+      startAt && endAt
+        ? Math.round((new Date(endAt).getTime() - new Date(startAt).getTime()) / 60_000)
+        : data.duration_minutes
+
+    console.debug("[EmployerInterviewDetailsPage] interview info", {
+      id: data.id,
+      status: statusKey,
+      type: interviewValue(interviewType),
+      mode: interviewValue(interviewMode),
+      scheduledStart: startAt,
+      scheduledEnd: endAt,
+      durationMinutes,
+      canJoinVideo,
+      embeddedVideoAvailable: data.embedded_video_available,
+      videoProvider: data.video_provider,
+      meetingLink: data.meeting_link,
+    })
+  }, [data])
 
   if (interview.isPending) {
     return (
@@ -109,11 +142,10 @@ export default function EmployerInterviewDetailsPage() {
     )
   }
 
-  if (!interview.data) {
+  if (!data) {
     return <ErrorState title={t("errors.title")} description={t("errors.notFound")} />
   }
 
-  const data = interview.data
   const statusKey = interviewKey(data.status)
   const startAt = scheduledStart(data)
   const endAt = scheduledEnd(data)
@@ -129,7 +161,8 @@ export default function EmployerInterviewDetailsPage() {
   const canMarkNoShow = actionAllowed(data, "no_show")
   const canComplete = actionAllowed(data, "complete")
   const canEvaluate = actionAllowed(data, "evaluate") && !data.evaluation
-  const canJoinVideo = isOnline && active && actionAllowed(data, "join_video")
+  const canJoinVideo = isOnline && active && data.embedded_video_available === true
+  const canStartMeeting = isOnline && active && Boolean(data.meeting_link)
   const durationMinutes =
     startAt && endAt
       ? Math.round((new Date(endAt).getTime() - new Date(startAt).getTime()) / 60_000)
@@ -149,19 +182,29 @@ export default function EmployerInterviewDetailsPage() {
         backButtonLabel={t("back")}
         onBackClick={() => navigate(ROUTES.employer.interviews)}
         rightContent={
-          <InterviewActionsMenu
-            isRtl={isRtl}
-            canReschedule={canReschedule}
-            canRecordAttendance={canRecordAttendance}
-            canComplete={canComplete}
-            canMarkNoShow={canMarkNoShow}
-            canCancel={canCancel}
-            onReschedule={() => setRescheduleOpen(true)}
-            onRecordAttendance={() => setAttendanceOpen(true)}
-            onComplete={() => setCompleteOpen(true)}
-            onMarkNoShow={() => setNoShowOpen(true)}
-            onCancel={() => setCancelOpen(true)}
-          />
+          <div className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
+            {canStartMeeting && data.meeting_link ? (
+              <Button asChild size="sm">
+                <a href={data.meeting_link} target="_blank" rel="noreferrer">
+                  <Video className="h-4 w-4" />
+                  {t("video.start")}
+                </a>
+              </Button>
+            ) : null}
+            <InterviewActionsMenu
+              isRtl={isRtl}
+              canReschedule={canReschedule}
+              canRecordAttendance={canRecordAttendance}
+              canComplete={canComplete}
+              canMarkNoShow={canMarkNoShow}
+              canCancel={canCancel}
+              onReschedule={() => setRescheduleOpen(true)}
+              onRecordAttendance={() => setAttendanceOpen(true)}
+              onComplete={() => setCompleteOpen(true)}
+              onMarkNoShow={() => setNoShowOpen(true)}
+              onCancel={() => setCancelOpen(true)}
+            />
+          </div>
         }
       />
 

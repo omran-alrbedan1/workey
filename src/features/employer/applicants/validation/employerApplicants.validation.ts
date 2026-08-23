@@ -43,13 +43,7 @@ export const scheduleInterviewSchema = z
 
     if (values.mode === "online") {
       const link = values.meeting_link?.trim()
-      if (!link) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["meeting_link"],
-          message: "Meeting link is required for online interviews",
-        })
-      } else if (!z.string().url().safeParse(link).success) {
+      if (link && !z.string().url().safeParse(link).success) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["meeting_link"],
@@ -58,7 +52,7 @@ export const scheduleInterviewSchema = z
       }
     }
 
-    if (values.mode === "on_site" && !values.location) {
+    if (values.mode === "on_site" && !values.location?.trim()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["location"],

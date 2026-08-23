@@ -76,6 +76,7 @@ export default function ScheduleInterviewDialog({
       scheduled_start_at: start.toISOString(),
       scheduled_end_at: end.toISOString(),
       mode: values.interview_mode === "on_site" ? "on_site" : "online",
+      video_provider: values.interview_mode === "online" ? "livekit" : undefined,
       meeting_link:
         values.interview_mode === "online" ? values.meeting_link || undefined : undefined,
       location_text: values.interview_mode === "on_site" ? values.location || undefined : undefined,
@@ -141,7 +142,7 @@ export default function ScheduleInterviewDialog({
                   control={form.control}
                   name="meeting_link"
                   label={t("schedule.meetingLink")}
-                  placeholder="https://meet.example.com/..."
+                  placeholder="https://meet.example.com/... (optional fallback)"
                   leftIcon={Link2}
                 />
               )}

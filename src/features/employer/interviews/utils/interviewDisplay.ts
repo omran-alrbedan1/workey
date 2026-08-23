@@ -87,7 +87,38 @@ export function actionAllowed(interview: EmployerInterview, action: string, fall
   if (actions && typeof actions === "object") {
     return Boolean(actions[action as keyof typeof actions])
   }
-  return fallback
+
+  const canManage = interview.permissions?.MANAGE_INTERVIEWS !== false
+  const canEvaluate = interview.permissions?.EVALUATE_INTERVIEWS !== false
+  const status = interviewKey(interview.status)
+  const started = hasStarted(interview)
+  const active = isActiveInterview(interview)
+  const bothPresent = bothPartiesPresent(interview)
+
+  switch (action) {
+    case "update":
+      return canManage && status === "scheduled"
+    case "reschedule":
+    case "cancel":
+    case "no_show":
+      return canManage && active && (action !== "no_show" || started)
+    case "attendance":
+      return canEvaluate && active && started
+    case "complete":
+      return canEvaluate && status === "confirmed" && started && bothPresent
+    case "evaluate":
+      return canEvaluate && status === "completed" && !interview.evaluation
+    case "view_history":
+      return canManage
+    case "join_video":
+      return (
+        interviewKey(interview.mode ?? interview.interview_mode) === "online" &&
+        active &&
+        interview.embedded_video_available === true
+      )
+    default:
+      return fallback
+  }
 }
 
 export function scheduledStart(interview: EmployerInterview) {

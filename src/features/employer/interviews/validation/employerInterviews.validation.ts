@@ -64,13 +64,7 @@ export const scheduleInterviewSchema = z
     }
     if (values.interview_mode === "online") {
       const link = values.meeting_link?.trim()
-      if (!link) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["meeting_link"],
-          message: "Meeting link is required",
-        })
-      } else if (!z.string().url().safeParse(link).success) {
+      if (link && !z.string().url().safeParse(link).success) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["meeting_link"],
@@ -129,13 +123,7 @@ export function createRescheduleInterviewSchema(t: TFunction) {
       }
       if (values.mode === "online") {
         const link = values.meeting_link?.trim()
-        if (!link) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["meeting_link"],
-            message: t("reschedule.validation.meetingLinkRequired"),
-          })
-        } else if (!z.string().url().safeParse(link).success) {
+        if (link && !z.string().url().safeParse(link).success) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["meeting_link"],

@@ -169,9 +169,8 @@ export default function RescheduleInterviewDialog({
                   control={form.control}
                   name="meeting_link"
                   label={t("reschedule.meetingLink")}
-                  placeholder="https://meet.example.com/interview"
+                  placeholder="https://meet.example.com/interview (optional fallback)"
                   leftIcon={Link2}
-                  required
                 />
               ) : (
                 <CustomFormField

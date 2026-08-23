@@ -22,14 +22,22 @@ import type { VideoSessionResponse } from "../types/videoInterview.types"
 
 function normalizeVideoSession(response: unknown): VideoSessionResponse {
   const session = unwrapEmployerEntity<VideoSessionResponse>(response)
-  const token = session.token ?? session.access_token ?? session.livekit_token
+  const token =
+    session.token ??
+    session.participant_token ??
+    session.access_token ??
+    session.livekit_token
   const url = session.url ?? session.livekit_url ?? session.ws_url ?? session.server_url
+  const room =
+    typeof session.room === "string"
+      ? session.room
+      : session.room?.name ?? session.room_name
 
   return {
     ...session,
     token,
     url,
-    room: session.room ?? session.room_name,
+    room,
   }
 }
 

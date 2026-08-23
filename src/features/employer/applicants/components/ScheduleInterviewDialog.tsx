@@ -86,6 +86,7 @@ export default function ScheduleInterviewDialog({
       scheduled_start_at: start.toISOString(),
       scheduled_end_at: end.toISOString(),
       duration_minutes: values.duration_minutes,
+      video_provider: values.mode === "online" ? "livekit" : undefined,
       meeting_link: values.mode === "online" ? values.meeting_link : undefined,
       location_text: values.mode === "on_site" ? values.location : undefined,
       candidate_message: values.notes || undefined,
@@ -181,11 +182,10 @@ export default function ScheduleInterviewDialog({
                     control={form.control}
                     name="meeting_link"
                     label={t("interview.meetingLink")}
-                    placeholder={t("interview.meetingLinkPlaceholder")}
+                    placeholder={`${t("interview.meetingLinkPlaceholder")} (${t("common:optional", "optional")} fallback)`}
                     leftIcon={Link2}
                     iconPosition="left"
                     disabled={isPending}
-                    required
                   />
                 ) : (
                   <CustomFormField
