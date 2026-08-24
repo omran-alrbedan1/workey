@@ -11,13 +11,14 @@ export interface AdminAuditLogRecord {
   action: AdminKeyValueField
   actor_user_id?: string | number | null
   actor?: AdminAuditLogActor | null
-  user?: AdminAuditLogActor | null
-  entity_type?: AdminKeyValueField
+  entity_type?: string | null
+  entity?: AdminKeyValueField | null
   entity_id?: string | number | null
-  description?: AdminKeyValueField
+  before_values?: Record<string, unknown> | null
+  after_values?: Record<string, unknown> | null
   metadata?: Record<string, unknown> | null
-  properties?: Record<string, unknown> | null
   ip_address?: string | null
+  user_agent?: string | null
   created_at?: string
 }
 
@@ -25,4 +26,7 @@ export interface AdminAuditLogFilters {
   action?: string
   entity_type?: string
   actor_user_id?: string
+  entity_id?: string
+  date_from?: string
+  date_to?: string
 }

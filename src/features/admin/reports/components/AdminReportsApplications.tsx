@@ -1,106 +1,78 @@
 import { useTranslation } from "react-i18next"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 import EmptyState from "@/components/shared/states/EmptyState"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import type { AdminApplicationsReport } from "../types/adminReports.types"
 
-interface AdminReportsApplicationsProps {
+interface Props {
   data?: AdminApplicationsReport
   isLoading: boolean
 }
 
-export default function AdminReportsApplications({
-  data,
-  isLoading,
-}: AdminReportsApplicationsProps) {
+export default function AdminReportsApplications({ data, isLoading }: Props) {
   const { t, i18n } = useTranslation("adminReports")
-
-  const statusCounts = data?.status_counts
-  const dailyCounts = data?.daily_counts
-
-  if (isLoading) {
+  if (isLoading)
     return (
       <SectionCard icon={() => null} title={t("applications.title")}>
-        <div className="animate-pulse space-y-3">
-          <div className="h-4 w-48 rounded bg-muted" />
-          <div className="h-4 w-32 rounded bg-muted" />
-          <div className="h-4 w-40 rounded bg-muted" />
-        </div>
+        <div className="h-32 animate-pulse rounded bg-muted" />
       </SectionCard>
     )
-  }
-
+  if (!data)
+    return (
+      <SectionCard icon={() => null} title={t("applications.title")}>
+        <EmptyState title={t("applications.empty")} description={t("applications.empty")} />
+      </SectionCard>
+    )
+  const summaries = [
+    ["applications.total", data.total],
+    ["applications.active", data.active],
+    ["applications.final", data.final],
+    ["applications.accepted", data.accepted],
+    ["applications.rejected", data.rejected],
+  ] as const
+  const perDay = Object.entries(data.per_day)
   return (
     <SectionCard icon={() => null} title={t("applications.title")}>
       <div className="space-y-6">
-        {statusCounts && Object.keys(statusCounts).length > 0 && (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {summaries.map(([label, count]) => (
+            <div key={label} className="rounded-lg border border-border/60 p-3">
+              <p className="text-xs text-text-secondary">{t(label)}</p>
+              <p className="mt-1 text-xl font-bold">{count.toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
+        {data.by_status.length > 0 && (
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-text-secondary">
-              {t("applications.statusCounts")}
-            </h3>
+            <h3 className="mb-3 text-sm font-semibold">{t("applications.statusCounts")}</h3>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {Object.entries(statusCounts).map(([status, count]) => (
+              {data.by_status.map((status) => (
                 <div
-                  key={status}
-                  className="flex items-center justify-between rounded-lg border border-border/60 bg-background-card/50 px-4 py-3"
+                  key={status.key}
+                  className="flex justify-between rounded-lg border border-border/60 px-4 py-3"
                 >
-                  <span className="text-sm font-medium text-text-secondary capitalize">
-                    {status.replace(/_/g, " ")}
-                  </span>
-                  <span className="text-lg font-bold text-text-primary">
-                    {count.toLocaleString()}
-                  </span>
+                  <span className="text-sm text-text-secondary">{status.value}</span>
+                  <b>{status.count.toLocaleString()}</b>
                 </div>
               ))}
             </div>
           </div>
         )}
-
-        {dailyCounts && dailyCounts.length > 0 && (
+        {perDay.length > 0 && (
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-text-secondary">
-              {t("applications.dailyCounts")}
-            </h3>
-            <div className="overflow-x-auto rounded-lg border border-border/60">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("applications.date")}</TableHead>
-                    <TableHead className="text-end">{t("applications.count")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {dailyCounts.map((row) => (
-                    <TableRow key={row.date}>
-                      <TableCell className="text-sm text-text-primary">
-                        {new Date(row.date).toLocaleDateString(i18n.language)}
-                      </TableCell>
-                      <TableCell className="text-end text-sm font-semibold text-text-primary">
-                        {row.count.toLocaleString()}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <h3 className="mb-3 text-sm font-semibold">{t("applications.dailyCounts")}</h3>
+            <div className="space-y-2">
+              {perDay.map(([date, count]) => (
+                <div
+                  key={date}
+                  className="flex justify-between rounded-lg bg-background-secondary px-4 py-2 text-sm"
+                >
+                  <span>{new Date(`${date}T00:00:00`).toLocaleDateString(i18n.language)}</span>
+                  <b>{count.toLocaleString()}</b>
+                </div>
+              ))}
             </div>
           </div>
         )}
-
-        {(!statusCounts || Object.keys(statusCounts).length === 0) &&
-          (!dailyCounts || dailyCounts.length === 0) && (
-            <EmptyState
-              title={t("applications.empty")}
-              description={t("applications.empty")}
-              className="rounded-lg border border-dashed border-border/60 bg-background-secondary/40 py-8"
-            />
-          )}
       </div>
     </SectionCard>
   )

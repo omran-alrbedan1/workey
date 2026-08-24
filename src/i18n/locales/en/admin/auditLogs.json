@@ -11,8 +11,30 @@
     "actionPlaceholder": "Action, e.g. job.published",
     "entityPlaceholder": "Entity class, e.g. App\\Models\\JobPosting",
     "actorPlaceholder": "Actor user ID",
+    "entity": "Entity",
+    "entityId": "Entity ID",
+    "dateFrom": "From date",
+    "dateTo": "To date",
     "apply": "Apply filters",
     "reset": "Reset filters"
+  },
+  "entities": {
+    "user": "User",
+    "company": "Company",
+    "job": "Job posting",
+    "application": "Application",
+    "interview": "Interview",
+    "test": "Test"
+  },
+  "details": {
+    "open": "View details",
+    "title": "Audit log details",
+    "entityId": "Entity ID",
+    "ipAddress": "IP address",
+    "userAgent": "User agent",
+    "metadata": "Metadata",
+    "before": "Before values",
+    "after": "After values"
   },
   "audit": {
     "actions": {

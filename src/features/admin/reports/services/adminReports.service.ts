@@ -23,14 +23,20 @@ export const adminReportsService = {
   },
 
   async applications(filters: AdminReportFilters = {}): Promise<AdminApplicationsReport> {
+    const { date_from, date_to, company_id, job_id } = filters
     return unwrapEntity<AdminApplicationsReport>(
-      await api.get(API_ENDPOINTS.admin.reports.applications, { params: cleanFilters(filters) }),
+      await api.get(API_ENDPOINTS.admin.reports.applications, {
+        params: cleanFilters({ date_from, date_to, company_id, job_id }),
+      }),
     )
   },
 
   async jobs(filters: AdminReportFilters = {}): Promise<AdminJobsReport> {
+    const { date_from, date_to, company_id, status } = filters
     return unwrapEntity<AdminJobsReport>(
-      await api.get(API_ENDPOINTS.admin.reports.jobs, { params: cleanFilters(filters) }),
+      await api.get(API_ENDPOINTS.admin.reports.jobs, {
+        params: cleanFilters({ date_from, date_to, company_id, status }),
+      }),
     )
   },
 

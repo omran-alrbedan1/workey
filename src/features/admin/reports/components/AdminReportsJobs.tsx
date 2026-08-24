@@ -2,69 +2,58 @@ import { useTranslation } from "react-i18next"
 import { SectionCard } from "@/components/shared/cards/SectionCard"
 import type { AdminJobsReport } from "../types/adminReports.types"
 
-interface AdminReportsJobsProps {
+interface Props {
   data?: AdminJobsReport
   isLoading: boolean
 }
 
-export default function AdminReportsJobs({ data, isLoading }: AdminReportsJobsProps) {
+export default function AdminReportsJobs({ data, isLoading }: Props) {
   const { t } = useTranslation("adminReports")
-
-  if (isLoading) {
+  if (isLoading)
     return (
       <SectionCard icon={() => null} title={t("jobs.title")}>
-        <div className="animate-pulse space-y-3">
-          <div className="h-4 w-48 rounded bg-muted" />
-          <div className="h-4 w-32 rounded bg-muted" />
-        </div>
+        <div className="h-32 animate-pulse rounded bg-muted" />
       </SectionCard>
     )
-  }
-
-  const statusCounts = data?.status_counts ?? {}
-  const avgApplications = data?.average_applications_per_job
-  const hasStatusCounts = Boolean(statusCounts && Object.keys(statusCounts).length > 0)
-  const hasAvgApplications = typeof avgApplications === "number"
-
+  if (!data)
+    return (
+      <SectionCard icon={() => null} title={t("jobs.title")}>
+        <p className="text-sm text-text-muted">{t("jobs.empty")}</p>
+      </SectionCard>
+    )
+  const summaries = [
+    ["jobs.total", data.total],
+    ["jobs.published", data.published],
+    ["jobs.closed", data.closed],
+    ["jobs.draft", data.draft],
+    ["jobs.avgApplications", data.average_applications_per_job],
+  ] as const
   return (
     <SectionCard icon={() => null} title={t("jobs.title")}>
       <div className="space-y-6">
-        {hasAvgApplications && (
-          <div className="flex items-center gap-4 rounded-lg border border-border/60 bg-background-card/50 px-5 py-4">
-            <span className="text-sm font-medium text-text-secondary">
-              {t("jobs.avgApplications")}
-            </span>
-            <span className="text-2xl font-bold text-text-primary">
-              {avgApplications.toLocaleString(undefined, { maximumFractionDigits: 1 })}
-            </span>
-          </div>
-        )}
-
-        {hasStatusCounts && (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {summaries.map(([label, count]) => (
+            <div key={label} className="rounded-lg border border-border/60 p-3">
+              <p className="text-xs text-text-secondary">{t(label)}</p>
+              <p className="mt-1 text-xl font-bold">{count.toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
+        {data.by_status.length > 0 && (
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-text-secondary">
-              {t("jobs.statusCounts")}
-            </h3>
+            <h3 className="mb-3 text-sm font-semibold">{t("jobs.statusCounts")}</h3>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {Object.entries(statusCounts).map(([status, count]) => (
+              {data.by_status.map((status) => (
                 <div
-                  key={status}
-                  className="flex items-center justify-between rounded-lg border border-border/60 bg-background-card/50 px-4 py-3"
+                  key={status.key}
+                  className="flex justify-between rounded-lg border border-border/60 px-4 py-3"
                 >
-                  <span className="text-sm font-medium text-text-secondary capitalize">
-                    {status.replace(/_/g, " ")}
-                  </span>
-                  <span className="text-lg font-bold text-text-primary">
-                    {count.toLocaleString()}
-                  </span>
+                  <span className="text-sm text-text-secondary">{status.value}</span>
+                  <b>{status.count.toLocaleString()}</b>
                 </div>
               ))}
             </div>
           </div>
-        )}
-
-        {!hasStatusCounts && !hasAvgApplications && (
-          <p className="text-sm text-text-muted">{t("jobs.empty")}</p>
         )}
       </div>
     </SectionCard>

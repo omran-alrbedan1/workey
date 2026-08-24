@@ -1,13 +1,16 @@
-import { Activity, Boxes, CalendarClock, UserRound } from "lucide-react"
+import { useState } from "react"
+import { Activity, Boxes, CalendarClock, Eye, UserRound } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { DataTable, type Column } from "@/components/shared/custom/DataTable"
 import type { AdminPagination } from "@/features/admin/shared/types/adminApi.types"
 import { keyOf, valueOf } from "@/lib/keyValue"
+import { Button } from "@/components/ui/button"
+import AuditLogDetailsDialog from "./AuditLogDetailsDialog"
 import type { AdminAuditLogRecord } from "../types/adminAuditLogs.types"
 
-function entityName(value: unknown) {
-  return valueOf(value).split("\\").pop() || "-"
+function entityName(log: AdminAuditLogRecord) {
+  return valueOf(log.entity, log.entity_type?.split("\\").pop() || "-")
 }
 
 function readableAction(action: string) {
@@ -20,6 +23,8 @@ function translatedAction(
 ) {
   const actionKey = keyOf(action, valueOf(action))
   if (!actionKey) return "-"
+  const backendLabel = valueOf(action)
+  if (backendLabel && backendLabel !== actionKey) return backendLabel
   return t(`audit.actions.${actionKey}`, { defaultValue: readableAction(actionKey) })
 }
 
@@ -29,7 +34,7 @@ interface AdminAuditLogMobileCardProps {
 
 const AdminAuditLogMobileCard = ({ item: log }: AdminAuditLogMobileCardProps) => {
   const { t, i18n } = useTranslation("adminAuditLogs")
-  const actor = log.actor ?? log.user
+  const actor = log.actor
 
   return (
     <article className="rounded-2xl border border-border bg-background-card p-4 shadow-card">
@@ -41,9 +46,6 @@ const AdminAuditLogMobileCard = ({ item: log }: AdminAuditLogMobileCardProps) =>
           <h3 className="truncate font-semibold text-text-primary">
             {translatedAction(t, log.action)}
           </h3>
-          {log.description && (
-            <p className="truncate text-xs text-text-muted">{valueOf(log.description)}</p>
-          )}
         </div>
       </div>
 
@@ -57,7 +59,7 @@ const AdminAuditLogMobileCard = ({ item: log }: AdminAuditLogMobileCardProps) =>
         </p>
         <p className="flex items-center gap-2">
           <Boxes className="h-3.5 w-3.5 text-primary" />
-          {entityName(log.entity_type)}
+          {entityName(log)}
           <span className="text-text-muted">#{log.entity_id ?? "-"}</span>
         </p>
         {log.created_at && (
@@ -86,6 +88,7 @@ export default function AdminAuditLogsTable({
   onPageChange: (page: number) => void
 }) {
   const { t, i18n } = useTranslation("adminAuditLogs")
+  const [selected, setSelected] = useState<AdminAuditLogRecord | null>(null)
   const columns: Column<AdminAuditLogRecord>[] = [
     {
       key: "action",
@@ -94,9 +97,6 @@ export default function AdminAuditLogsTable({
       cell: (log) => (
         <div>
           <p className="font-semibold text-text-primary">{translatedAction(t, log.action)}</p>
-          {log.description && (
-            <p className="mt-1 max-w-sm text-xs text-text-muted">{valueOf(log.description)}</p>
-          )}
         </div>
       ),
     },
@@ -105,7 +105,7 @@ export default function AdminAuditLogsTable({
       header: t("columns.actor"),
       headerIcon: UserRound,
       cell: (log) => {
-        const actor = log.actor ?? log.user
+        const actor = log.actor
         return (
           <div>
             <p className="font-medium text-text-primary">
@@ -124,7 +124,7 @@ export default function AdminAuditLogsTable({
       headerIcon: Boxes,
       cell: (log) => (
         <div>
-          <p>{entityName(log.entity_type)}</p>
+          <p>{entityName(log)}</p>
           <p className="text-xs text-text-muted">#{log.entity_id ?? "-"}</p>
         </div>
       ),
@@ -141,25 +141,46 @@ export default function AdminAuditLogsTable({
             }).format(new Date(log.created_at))
           : "-",
     },
+    {
+      key: "details",
+      header: t("details.open"),
+      cell: (log) => (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setSelected(log)}
+          aria-label={t("details.open")}
+        >
+          <Eye />
+        </Button>
+      ),
+    },
   ]
 
   return (
-    <DataTable
-      data={logs}
-      columns={columns}
-      getRowId={(log) => log.id}
-      loading={isLoading}
-      pagination={{
-        total: pagination?.total ?? logs.length,
-        page: pagination?.currentPage ?? 1,
-        lastPage: pagination?.lastPage ?? 1,
-        perPage: pagination?.perPage,
-      }}
-      onPageChange={onPageChange}
-      mobileCardComponent={AdminAuditLogMobileCard}
-      emptyMessage={t("empty")}
-      emptyDescription={t("emptyDescription")}
-      className="rounded-b-2xl mt-4 bg-background-card shadow-card"
-    />
+    <>
+      <DataTable
+        data={logs}
+        columns={columns}
+        getRowId={(log) => log.id}
+        loading={isLoading}
+        pagination={{
+          total: pagination?.total ?? logs.length,
+          page: pagination?.currentPage ?? 1,
+          lastPage: pagination?.lastPage ?? 1,
+          perPage: pagination?.perPage,
+        }}
+        onPageChange={onPageChange}
+        mobileCardComponent={AdminAuditLogMobileCard}
+        emptyMessage={t("empty")}
+        emptyDescription={t("emptyDescription")}
+        className="rounded-b-2xl mt-4 bg-background-card shadow-card"
+      />
+      <AuditLogDetailsDialog
+        log={selected}
+        open={selected !== null}
+        onOpenChange={(open) => !open && setSelected(null)}
+      />
+    </>
   )
 }
