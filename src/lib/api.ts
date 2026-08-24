@@ -49,11 +49,13 @@ const backendErrorMessages: Record<string, string> = {
   CV_SUMMARY_TIMEOUT: "CV summary generation timed out. Please try again.",
 }
 
-function preferredLanguage(): string {
+export function resolveApiLanguage(value: string | null | undefined): "ar" | "en" {
+  return value?.trim().toLowerCase().startsWith("ar") ? "ar" : "en"
+}
+
+export function preferredLanguage(): "ar" | "en" {
   if (typeof window === "undefined") return "en"
-  const stored = localStorage.getItem("i18nextLng") || navigator.language || "en"
-  const normalized = stored.toLowerCase().split("-")[0]
-  return normalized === "ar" ? "ar" : "en"
+  return resolveApiLanguage(localStorage.getItem(STORAGE_KEYS.locale) || navigator.language)
 }
 
 const API: AxiosInstance = axios.create({

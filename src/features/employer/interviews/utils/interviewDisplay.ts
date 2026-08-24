@@ -146,3 +146,24 @@ export function bothPartiesPresent(interview: EmployerInterview) {
     interviewKey(interview.interviewer_attendance_status) === "present"
   )
 }
+
+export type InterviewCompletionBlocker =
+  | "not_confirmed"
+  | "not_started"
+  | "candidate_attendance"
+  | "interviewer_attendance"
+  | null
+
+export function interviewCompletionBlocker(
+  interview: EmployerInterview,
+): InterviewCompletionBlocker {
+  if (interviewKey(interview.status) !== "confirmed") return "not_confirmed"
+  if (!hasStarted(interview)) return "not_started"
+  if (interviewKey(interview.candidate_attendance_status) !== "present") {
+    return "candidate_attendance"
+  }
+  if (interviewKey(interview.interviewer_attendance_status) !== "present") {
+    return "interviewer_attendance"
+  }
+  return null
+}

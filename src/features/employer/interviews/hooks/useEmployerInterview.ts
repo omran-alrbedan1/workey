@@ -77,6 +77,7 @@ export function useEmployerInterview(interviewId?: string | number) {
       employerInterviewsService.complete(interviewId!, { completion_note: completionNote }),
     onSuccess: async () => {
       await client.invalidateQueries({ queryKey: ["employer", "interviews"] })
+      await client.invalidateQueries({ queryKey: ["employer", "applicants"] })
       showSuccessToast(t("toasts.completed"))
     },
   })

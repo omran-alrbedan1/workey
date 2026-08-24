@@ -1,0 +1,91 @@
+{
+  "brand": "WORKEY",
+  "nav": {
+    "features": "Features",
+    "workflow": "Recruitment workflow",
+    "ai": "AI assistance",
+    "signIn": "Sign in",
+    "createAccount": "Create company account"
+  },
+  "hero": {
+    "eyebrow": "Recruitment, in one workspace",
+    "title": "Manage your entire hiring cycle with clarity.",
+    "description": "WORKEY helps HR teams publish jobs, manage applicants, run assessments and interviews, and make well-documented final decisions from one connected recruitment workflow.",
+    "primaryCta": "Create company account",
+    "secondaryCta": "Sign in",
+    "humanDecision": "AI provides decision support. Your HR team always makes the final decision."
+  },
+  "preview": {
+    "label": "A connected recruitment pipeline",
+    "title": "Keep every candidate moving",
+    "items": [
+      "Review applications and shortlist candidates",
+      "Assign assessments and track results",
+      "Schedule, complete, and evaluate interviews",
+      "Record a final, human-led decision"
+    ]
+  },
+  "features": {
+    "eyebrow": "Built for practical hiring",
+    "title": "The tools your recruitment team uses every day",
+    "description": "Only the capabilities available in WORKEY are represented here.",
+    "items": [
+      {
+        "title": "Job posting management",
+        "description": "Create, publish, and manage company job postings."
+      },
+      {
+        "title": "Applicant tracking",
+        "description": "Review applicants in one pipeline with status history."
+      },
+      {
+        "title": "Candidate matching context",
+        "description": "Use matching scores and skill context as decision support."
+      },
+      {
+        "title": "CV summaries",
+        "description": "Review candidate CV summaries alongside the submitted profile."
+      },
+      {
+        "title": "Tests and assessments",
+        "description": "Assign assessments, follow attempts, and review results."
+      },
+      {
+        "title": "Interview scheduling",
+        "description": "Schedule interviews, record attendance, complete, and evaluate them."
+      },
+      {
+        "title": "Notifications and team access",
+        "description": "Keep your hiring team informed with company roles and permissions."
+      }
+    ]
+  },
+  "workflow": {
+    "eyebrow": "A clear path for every application",
+    "title": "From opening a role to a documented outcome",
+    "steps": [
+      "Create job",
+      "Receive applications",
+      "Review and shortlist",
+      "Test",
+      "Interview",
+      "Final review"
+    ]
+  },
+  "ai": {
+    "eyebrow": "AI assistance with human accountability",
+    "title": "More context, never an automatic hiring decision",
+    "description": "WORKEY can surface candidate matching scores, matched and missing skills, and CV summaries to help your team review consistently.",
+    "items": [
+      "Candidate matching score",
+      "Matched skills",
+      "Missing skills",
+      "CV summary and ranking context"
+    ]
+  },
+  "finalCta": {
+    "title": "Build a more organized hiring process.",
+    "description": "Create your company account and submit it for approval.",
+    "action": "Create company account"
+  }
+}

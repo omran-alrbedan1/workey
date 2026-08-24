@@ -64,6 +64,14 @@ export function getAllowedApplicationActions(
   const hasBackendActions = Array.isArray(application?.allowed_actions)
   const raw = (application?.allowed_actions ?? []).map(normalizeAction).filter(Boolean)
 
+  if (derived.isTerminal) {
+    return {
+      statusTargets: [],
+      flows: [],
+      source: hasBackendActions ? "allowed_actions" : "unavailable",
+    }
+  }
+
   if (raw.length === 0) {
     if (hasBackendActions) return { statusTargets: [], flows: [], source: "allowed_actions" }
     return {

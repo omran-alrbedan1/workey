@@ -65,6 +65,23 @@
     "noShow": "عدم الحضور",
     "cancel": "إلغاء المقابلة"
   },
+  "progress": {
+    "title": "تقدم المقابلة",
+    "description": "تابع دورة المقابلة وأكمل الإجراء المطلوب التالي.",
+    "currentStatus": "الحالة الحالية",
+    "candidateConfirmation": "تأكيد المرشح",
+    "candidateAttendance": "حضور المرشح",
+    "interviewerAttendance": "حضور المحاور",
+    "nextAction": "الإجراء المطلوب التالي",
+    "ready": "حدد المقابلة كمكتملة.",
+    "recordAttendance": "سجل الحضور قبل إكمال المقابلة.",
+    "blockers": {
+      "not_confirmed": "يجب تأكيد المقابلة أولاً.",
+      "not_started": "يمكن إكمال المقابلة بعد بدء موعدها.",
+      "candidate_attendance": "سجل حضور المرشح كحاضر قبل إكمال المقابلة.",
+      "interviewer_attendance": "سجل حضور المحاور كحاضر قبل إكمال المقابلة."
+    }
+  },
   "cancel": {
     "title": "إلغاء المقابلة",
     "description": "إلغاء هذه المقابلة باستخدام إجراء الإلغاء المخصص.",

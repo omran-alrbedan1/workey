@@ -7,6 +7,7 @@ export const ROUTES = Object.freeze({
     emailVerification: "/email-verification",
   },
   public: {
+    employerLanding: "/for-employers",
     companyInvitation: (token = ":token") => `/company-invitations/${token}`,
   },
   admin: {

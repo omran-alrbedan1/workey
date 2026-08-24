@@ -63,6 +63,23 @@
     "noShow": "No-show",
     "cancel": "Cancel interview"
   },
+  "progress": {
+    "title": "Interview progress",
+    "description": "Follow the interview lifecycle and complete the next required step.",
+    "currentStatus": "Current status",
+    "candidateConfirmation": "Candidate confirmation",
+    "candidateAttendance": "Candidate attendance",
+    "interviewerAttendance": "Interviewer attendance",
+    "nextAction": "Next required action",
+    "ready": "Mark interview as completed.",
+    "recordAttendance": "Record attendance before completing the interview.",
+    "blockers": {
+      "not_confirmed": "The interview must be confirmed first.",
+      "not_started": "The interview can be completed after it starts.",
+      "candidate_attendance": "Record the candidate as present before completing the interview.",
+      "interviewer_attendance": "Record the interviewer as present before completing the interview."
+    }
+  },
   "cancel": {
     "title": "Cancel interview",
     "description": "Cancel this interview using the dedicated cancellation workflow.",

@@ -11,6 +11,9 @@ const ForgotPasswordPage = lazy(() => import("@/shared/auth/pages/ForgotPassword
 const ResetPasswordPage = lazy(() => import("@/shared/auth/pages/ResetPasswordPage"))
 const EmailVerificationPage = lazy(() => import("@/shared/auth/pages/EmailVerificationPage"))
 const Login = lazy(() => import("@/shared/auth/pages/Login"))
+const EmployerRegisterPage = lazy(
+  () => import("@/features/employer/auth/pages/EmployerRegisterPage"),
+)
 const AccessDeniedPage = lazy(() => import("@/components/shared/states/AccessDeniedPage"))
 const NotFoundPage = lazy(() => import("@/components/shared/states/NotFoundPage"))
 
@@ -27,7 +30,7 @@ const router = createBrowserRouter(
       element: withRouteSuspense(<ResetPasswordPage loginPath={ROUTES.auth.login} />),
     },
     { path: ROUTES.auth.emailVerification, element: withRouteSuspense(<EmailVerificationPage />) },
-    { path: ROUTES.employer.register, element: <Navigate to={ROUTES.auth.login} replace /> },
+    { path: ROUTES.employer.register, element: withRouteSuspense(<EmployerRegisterPage />) },
     {
       path: ROUTES.employer.forgotPassword,
       element: withRouteSuspense(<ForgotPasswordPage loginPath={ROUTES.auth.login} />),

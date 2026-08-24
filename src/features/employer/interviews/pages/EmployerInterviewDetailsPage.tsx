@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react"
-import {
-  Calendar,
-  Video,
-} from "lucide-react"
+import { Calendar, CheckCircle2, ListChecks, Video } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import PageHeader from "@/components/shared/headers/PageHeader"
@@ -31,6 +28,7 @@ import {
   interviewCandidateName,
   interviewKey,
   interviewValue,
+  interviewCompletionBlocker,
   isActiveInterview,
   scheduledEnd,
   scheduledStart,
@@ -136,6 +134,7 @@ export default function EmployerInterviewDetailsPage() {
   const hasHistory = Boolean(data.status_history?.length || data.schedule_history?.length)
   const applicationId = data.job_application_id ?? data.application_id ?? data.job_application?.id
   const snapshotProfile = data.job_application?.submitted_snapshot?.profile
+  const completionBlocker = interviewCompletionBlocker(data)
 
   return (
     <div className="space-y-6">
@@ -154,6 +153,12 @@ export default function EmployerInterviewDetailsPage() {
                   <Video className="h-4 w-4" />
                   {t("video.start")}
                 </a>
+              </Button>
+            ) : null}
+            {canComplete ? (
+              <Button size="sm" onClick={() => setCompleteOpen(true)}>
+                <CheckCircle2 className="h-4 w-4" />
+                {t("actions.complete")}
               </Button>
             ) : null}
             <InterviewActionsMenu
@@ -185,6 +190,67 @@ export default function EmployerInterviewDetailsPage() {
         startAt={startAt}
         durationMinutes={durationMinutes}
       />
+
+      <section className="rounded-xl border border-border bg-background-card p-5 shadow-card">
+        <div
+          className={cn(
+            "flex flex-col justify-between gap-4 sm:flex-row sm:items-start",
+            isRtl && "sm:flex-row-reverse",
+          )}
+        >
+          <div className={cn(isRtl && "sm:text-right")}>
+            <h2 className="text-lg font-semibold text-text-primary">{t("progress.title")}</h2>
+            <p className="mt-1 text-sm text-text-secondary">{t("progress.description")}</p>
+          </div>
+          {canComplete ? (
+            <Button
+              onClick={() => setCompleteOpen(true)}
+              disabled={interview.completeMutation.isPending}
+            >
+              <CheckCircle2 className="h-4 w-4" /> {t("actions.complete")}
+            </Button>
+          ) : canRecordAttendance ? (
+            <Button variant="outline" onClick={() => setAttendanceOpen(true)}>
+              <ListChecks className="h-4 w-4" /> {t("actions.attendance")}
+            </Button>
+          ) : null}
+        </div>
+        <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            [t("progress.currentStatus"), interviewValue(data.status)],
+            [
+              t("progress.candidateConfirmation"),
+              interviewValue(data.candidate_confirmation_status),
+            ],
+            [t("progress.candidateAttendance"), interviewValue(data.candidate_attendance_status)],
+            [
+              t("progress.interviewerAttendance"),
+              interviewValue(data.interviewer_attendance_status),
+            ],
+          ].map(([label, value]) => (
+            <div
+              key={label}
+              className={cn("rounded-lg bg-background-secondary p-3", isRtl && "text-right")}
+            >
+              <dt className="text-xs text-text-muted">{label}</dt>
+              <dd className="mt-1 text-sm font-medium text-text-primary">{value || "-"}</dd>
+            </div>
+          ))}
+        </dl>
+        <div
+          className={cn(
+            "mt-4 rounded-lg bg-primary/5 p-3 text-sm text-text-secondary",
+            isRtl && "text-right",
+          )}
+        >
+          <span className="font-medium text-text-primary">{t("progress.nextAction")}: </span>
+          {canComplete
+            ? t("progress.ready")
+            : canRecordAttendance
+              ? t("progress.recordAttendance")
+              : t(`progress.blockers.${completionBlocker ?? "not_confirmed"}`)}
+        </div>
+      </section>
 
       <section className="space-y-4">
         <div className={cn(isRtl && "text-end")}>
@@ -262,4 +328,3 @@ export default function EmployerInterviewDetailsPage() {
     </div>
   )
 }
-

@@ -19,6 +19,7 @@ import arEmployerAuth from "./locales/ar/employer/auth.json"
 import arEmployerCompany from "./locales/ar/employer/company.json"
 import arEmployerDashboard from "./locales/ar/employer/dashboard.json"
 import arEmployerInterviews from "./locales/ar/employer/interviews.json"
+import arEmployerLanding from "./locales/ar/employer/landing.json"
 import arEmployerJobs from "./locales/ar/employer/jobs.json"
 import arEmployerNavigation from "./locales/ar/employer/navigation.json"
 import arEmployerNotifications from "./locales/ar/employer/notifications.json"
@@ -48,6 +49,7 @@ import enEmployerAuth from "./locales/en/employer/auth.json"
 import enEmployerCompany from "./locales/en/employer/company.json"
 import enEmployerDashboard from "./locales/en/employer/dashboard.json"
 import enEmployerInterviews from "./locales/en/employer/interviews.json"
+import enEmployerLanding from "./locales/en/employer/landing.json"
 import enEmployerJobs from "./locales/en/employer/jobs.json"
 import enEmployerNavigation from "./locales/en/employer/navigation.json"
 import enEmployerNotifications from "./locales/en/employer/notifications.json"
@@ -83,6 +85,7 @@ export const resources = {
     employerCompany: enEmployerCompany,
     employerDashboard: enEmployerDashboard,
     employerInterviews: enEmployerInterviews,
+    employerLanding: enEmployerLanding,
     employerJobs: enEmployerJobs,
     employerNavigation: enEmployerNavigation,
     employerNotifications: enEmployerNotifications,
@@ -114,6 +117,7 @@ export const resources = {
     employerCompany: arEmployerCompany,
     employerDashboard: arEmployerDashboard,
     employerInterviews: arEmployerInterviews,
+    employerLanding: arEmployerLanding,
     employerJobs: arEmployerJobs,
     employerNavigation: arEmployerNavigation,
     employerNotifications: arEmployerNotifications,
